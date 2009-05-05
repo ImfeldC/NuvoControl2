@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common", "Common\NuvoControl.Common\NuvoControl.Common.csproj", "{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common.Interfaces", "Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj", "{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.CommunicationDriver", "Server\NuvoControl.Server.CommunicationDriver\NuvoControl.Server.CommunicationDriver.csproj", "{295804DA-0A18-4B2D-A9EE-4B1813A408BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver", "Server\NuvoControl.Server.ProtocolDriver\NuvoControl.Server.ProtocolDriver.csproj", "{C5C321D7-92B9-4A5B-A278-F89FF09664B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Service", "Server\NuvoControl.Server.Service\NuvoControl.Server.Service.csproj", "{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
