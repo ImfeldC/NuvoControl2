@@ -47,6 +47,16 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj">
+      <Project>{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}</Project>
+      <Name>NuvoControl.Common.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
+      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
+      <Name>NuvoControl.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
