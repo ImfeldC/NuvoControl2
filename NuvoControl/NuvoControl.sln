@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.COMListene
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.RS232", "Test\NuvoControl.Test.RS232\NuvoControl.Test.RS232.csproj", "{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test", "Test\NuvoControl.Test\NuvoControl.Test\NuvoControl.Test.csproj", "{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,6 +51,10 @@ Global
 		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
