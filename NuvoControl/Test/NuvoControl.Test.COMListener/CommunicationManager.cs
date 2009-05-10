@@ -162,7 +162,7 @@ namespace NuvoControl.Test.COMListener
                     //if its not open then open it
                     if (!(comPort.IsOpen == true)) comPort.Open();
                     //send the message to the port
-                    comPort.Write(msg);
+                    comPort.Write(msg + "\r");  // Add 0x0D at the end, to match Nuvo Essentia needs
                     //display the message
                     DisplayData(MessageType.Outgoing, msg + "\n");
                     break;
