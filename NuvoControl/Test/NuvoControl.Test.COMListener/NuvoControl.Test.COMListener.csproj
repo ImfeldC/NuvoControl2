@@ -54,7 +54,7 @@
     <Compile Include="NuvoControl.Test.COMListener.COMListener.Designer.cs">
       <DependentUpon>NuvoControl.Test.COMListener.COMListener.cs</DependentUpon>
     </Compile>
-    <Compile Include="CommunicationManager.cs" />
+    <Compile Include="NuvoControl.Test.COMListener.CommunicationManager.cs" />
     <Compile Include="NuvoControl.Test.COMListener.Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="NuvoControl.Test.COMListener.COMListener.resx">
