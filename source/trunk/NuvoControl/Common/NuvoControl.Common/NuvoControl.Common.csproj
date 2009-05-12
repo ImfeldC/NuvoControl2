@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -35,6 +35,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -45,6 +46,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\Building.cs" />
+    <Compile Include="Configuration\Source.cs" />
+    <Compile Include="Configuration\Floor.cs" />
+    <Compile Include="Configuration\Function.cs" />
+    <Compile Include="Configuration\Graphic.cs" />
+    <Compile Include="Configuration\Hardware.cs" />
+    <Compile Include="Configuration\NuvoEssentia.cs" />
+    <Compile Include="Configuration\SystemKonfiguration.cs" />
+    <Compile Include="Configuration\Zone.cs" />
     <Compile Include="NuvoEnumerations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
