@@ -8,7 +8,7 @@
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
- *   File Name:      HardwareConfiguration.cs
+ *   File Name:      SystemKonfiguration.cs
  * 
  ***************************************************************************************************
  * 
@@ -25,29 +25,45 @@ using System.Text;
 namespace NuvoControl.Common.Configuration
 {
     [Serializable]
-    public class Hardware
+    public class SystemConfiguration
     {
         #region Private Members
 
-        private List<NuvoEssentia> _devices = new List<NuvoEssentia>();
+        private Building _building = null;
+        private Graphic _graphic = null;
+        private List<Function> _functions = new List<Function>();
 
         #endregion
 
-        #region Constructors
+        #region SystemConfiguration
 
-        public Hardware(List<NuvoEssentia> devices)
+        public SystemConfiguration(Building building, Graphic graphic, List<Function> functions)
         {
-            this._devices = devices;
+            this._building = building;
+            this._graphic = graphic;
+            this._functions = functions;
         }
 
         #endregion
 
         #region Public Interface
 
-        public List<NuvoEssentia> Devices
+        public Building Building
         {
-            get { return _devices; }
-            set { _devices = value; }
+            get { return _building; }
+            set { _building = value; }
+        }
+
+        public Graphic Graphic
+        {
+            get { return _graphic; }
+            set { _graphic = value; }
+        }
+
+        public List<Function> Functions
+        {
+            get { return _functions; }
+            set { _functions = value; }
         }
 
         #endregion
