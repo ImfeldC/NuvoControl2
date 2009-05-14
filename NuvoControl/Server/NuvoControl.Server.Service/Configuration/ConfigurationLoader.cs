@@ -5,15 +5,15 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Common
+ *   SubProject:     NuvoControl.Server.Service
  *   Author:         Bernhard Limacher
- *   Creation Date:  12.05.2009
- *   File Name:      HardwareConfiguration.cs
+ *   Creation Date:  14.05.2009
+ *   File Name:      ConfigurationLoader.cs
  * 
  ***************************************************************************************************
  * 
  * Revisions:
- * 1) 12.05.2009, Bernhard Limacher: First implementation.
+ * 1) 14.05.2009, Bernhard Limacher: First implmentation.
  * 
  **************************************************************************************************/
 
@@ -21,33 +21,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Linq;
+using System.IO;
 
-namespace NuvoControl.Common.Configuration
+
+namespace NuvoControl.Server.Service.Configuration
 {
-    [Serializable]
-    public class Hardware
+    public class ConfigurationLoader
     {
-        #region Private Members
-
-        private List<NuvoEssentia> _devices = new List<NuvoEssentia>();
-
-        #endregion
-
         #region Constructors
 
-        public Hardware(List<NuvoEssentia> devices)
-        {
-            this._devices = devices;
+        public ConfigurationLoader(string file)
+        {   
+            XDocument configuration = XDocument.Load(file);
         }
 
         #endregion
 
         #region Public Interface
 
-        public List<NuvoEssentia> Devices
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="IOException"
+        public bool Validate()
         {
-            get { return _devices; }
-            set { _devices = value; }
+            return true;
         }
 
         #endregion

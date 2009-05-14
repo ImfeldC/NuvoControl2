@@ -25,8 +25,40 @@ using System.Text;
 namespace NuvoControl.Common.Configuration
 {
     [Serializable]
-    public class Function
+    public abstract class Function
     {
+        #region Private Members
+
+        private int _id = -1;
+        private string _name = String.Empty;
+
+        #endregion
+
+        #region Constructors
+
+        public Function(int id, string name)
+        {
+            this._id = id;
+            this._name = name;
+        }
+
+        #endregion
+
+        #region Public Interface
+
+        public int Id
+        {
+            get { return _id; }
+            set { _id = value; }
+        }
+
+        public string Name
+        {
+            get { return _name; }
+            set { _name = value; }
+        }
+
+        #endregion
     }
 }
 
