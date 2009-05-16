@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace NuvoControl.Server.ProtocolDriver.Test
+namespace NuvoControl.Server.ProtocolDriver.UnitTest
 {
     /// <summary>
     /// Summary description for UnitTest1

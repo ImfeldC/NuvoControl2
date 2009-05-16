@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuvoControl.Server.ProtocolDriver.Interface;
 
-namespace NuvoControl.Server.ProtocolDriver.Test
+namespace NuvoControl.Server.ProtocolDriver.UnitTest
 {
     
     
