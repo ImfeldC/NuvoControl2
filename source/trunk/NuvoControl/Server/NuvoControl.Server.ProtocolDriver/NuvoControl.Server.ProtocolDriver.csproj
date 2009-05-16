@@ -47,7 +47,13 @@
   <ItemGroup>
     <Compile Include="NuvoEnumerations.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SerialPortWrapper.cs" />
+    <Compile Include="SerialPort.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
+      <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
