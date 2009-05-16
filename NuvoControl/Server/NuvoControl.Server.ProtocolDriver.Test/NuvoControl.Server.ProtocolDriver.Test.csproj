@@ -1,17 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}</ProjectGuid>
+    <ProjectGuid>{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuvoControl.Server.Service</RootNamespace>
-    <AssemblyName>NuvoControl.Server.Service</AssemblyName>
+    <RootNamespace>NuvoControl.Server.ProtocolDriver.Test</RootNamespace>
+    <AssemblyName>NuvoControl.Server.ProtocolDriver.Test</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,39 +31,42 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Xml.Linq">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\Configuration.cs" />
-    <Compile Include="Configuration\ConfigurationLoader.cs" />
-    <Compile Include="Configuration\IConfigureInternal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SerialPortTest.cs" />
+    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj">
-      <Project>{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}</Project>
-      <Name>NuvoControl.Common.Interfaces</Name>
+    <Content Include="AuthoringTests.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
+      <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
-      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
-      <Name>NuvoControl.Common</Name>
+    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver\NuvoControl.Server.ProtocolDriver.csproj">
+      <Project>{C5C321D7-92B9-4A5B-A278-F89FF09664B2}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Configuration\" />
+    <Shadow Include="Test References\NuvoControl.Server.ProtocolDriver.accessor" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
