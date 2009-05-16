@@ -1,0 +1,10 @@
+
+Dieses Readme-File enthält einige Informationen zu der NuvoControl Solution.
+
+1) Subversion Integration in Visual Studio
+------------------------------------------
+Wir verwenden AnkhSVN um Subversion in Visual Studio zu integrieren.
+Da wir die neueste Subversion Client Version 1.6 verwenden, müssen wir bei AnkhSVN einen Pre-Release bzw. Daily-Build verwenden.
+Dieser kann über den Link http://ankhsvn.open.collab.net/daily/ heruntergeladen werden.
+Wir verwenden die Version "AnkhSVN 2.1.6768"
+
