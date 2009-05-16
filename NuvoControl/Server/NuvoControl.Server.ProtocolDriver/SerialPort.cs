@@ -7,7 +7,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
-    class SerialPort : ISerialPort
+    public class SerialPort : ISerialPort
     {
         private System.IO.Ports.SerialPort _comPort; 
         private SerialPortConnectInformation _serialPortConnectInformation;
@@ -20,7 +20,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region ISerialPort Members
 
-        public event SerialPortEventHandler OnDataReceived;
+        public event SerialPortEventHandler onDataReceived;
 
         public void Open(SerialPortConnectInformation serialPortConnectInformation)
         {
@@ -59,9 +59,9 @@ namespace NuvoControl.Server.ProtocolDriver
             //read data waiting in the buffer
             string msg = _comPort.ReadExisting();
             //raise the event, and pass data to next layer
-            if (OnDataReceived != null)
+            if (onDataReceived != null)
             {
-                OnDataReceived(this,
+                onDataReceived(this,
                   new SerialPortEventArgs(msg));
             }
         }

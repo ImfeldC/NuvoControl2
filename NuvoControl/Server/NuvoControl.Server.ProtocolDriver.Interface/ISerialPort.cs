@@ -14,6 +14,11 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         string _msg;
 
+        public string Message
+        {
+            get { return _msg; }
+        }
+
         public SerialPortEventArgs(string msg)
         {
             _msg = msg;
@@ -183,7 +188,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public interface ISerialPort
     {
 
-        event SerialPortEventHandler OnDataReceived;
+        event SerialPortEventHandler onDataReceived;
 
         //
         // Summary:

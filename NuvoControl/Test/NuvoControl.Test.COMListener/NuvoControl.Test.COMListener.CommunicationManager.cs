@@ -10,6 +10,7 @@ using System.Text;
 using System.Drawing;
 using System.IO.Ports;
 using System.Windows.Forms;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Test.COMListener
 {
@@ -36,9 +37,16 @@ namespace NuvoControl.Test.COMListener
         private string _portName = string.Empty;
         private TransmissionType _transType;
         private RichTextBox _displayWindow;
+
+        SerialPortConnectInformation _serialPortConnectInformation;
+
         //global manager variables
         private Color[] MessageColor = { Color.Blue, Color.Green, Color.Black, Color.Orange, Color.Red };
-        private SerialPort comPort = new SerialPort();
+        
+        // Private member for the serial port
+        private SerialPort comNativePort = new SerialPort();
+        private ISerialPort comSerialPort = new NuvoControl.Server.ProtocolDriver.SerialPort();
+
         #endregion
 
 
@@ -132,8 +140,17 @@ namespace NuvoControl.Test.COMListener
             _dataBits = dBits;
             _portName = name;
             _displayWindow = rtb;
+
+            _serialPortConnectInformation = new SerialPortConnectInformation(
+                name,
+                int.Parse(_baudRate), 
+                (Parity)Enum.Parse(typeof(Parity), _parity),
+                int.Parse(_dataBits),
+                (StopBits)Enum.Parse(typeof(StopBits), _stopBits)  );
+
             //now add an event handler
-            comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
+            comNativePort.DataReceived += new SerialDataReceivedEventHandler(comNativePort_DataReceived);
+            comSerialPort.onDataReceived += new SerialPortEventHandler(comSerialPort_DataReceived);
         }
 
         /// <summary>
@@ -148,21 +165,29 @@ namespace NuvoControl.Test.COMListener
             _dataBits = string.Empty;
             _portName = "COM1";
             _displayWindow = null;
+            _serialPortConnectInformation = null;
         }
         #endregion
 
 
         #region WriteData
+
         public void WriteData(string msg)
+        {
+            WriteSerialData(msg);
+        }
+
+        #region WriteNativeData
+        private void WriteNativeData(string msg)
         {
             switch (CurrentTransmissionType)
             {
                 case TransmissionType.Text:
                     //first make sure the port is open
                     //if its not open then open it
-                    if (!(comPort.IsOpen == true)) comPort.Open();
+                    if (!(comNativePort.IsOpen == true)) comNativePort.Open();
                     //send the message to the port
-                    comPort.Write(msg + "\r");  // Add 0x0D at the end, to match Nuvo Essentia needs
+                    comNativePort.Write(msg + "\r");  // Add 0x0D at the end, to match Nuvo Essentia needs
                     //display the message
                     DisplayData(MessageType.Outgoing, msg + "\n");
                     break;
@@ -172,7 +197,7 @@ namespace NuvoControl.Test.COMListener
                         //convert the message to byte array
                         byte[] newMsg = HexToByte(msg);
                         //send the message to the port
-                        comPort.Write(newMsg, 0, newMsg.Length);
+                        comNativePort.Write(newMsg, 0, newMsg.Length);
                         //convert back to hex and display
                         DisplayData(MessageType.Outgoing, ByteToHex(newMsg) + "\n");
                     }
@@ -189,15 +214,49 @@ namespace NuvoControl.Test.COMListener
                 default:
                     //first make sure the port is open
                     //if its not open then open it
-                    if (!(comPort.IsOpen == true)) comPort.Open();
+                    if (!(comNativePort.IsOpen == true)) comNativePort.Open();
                     //send the message to the port
-                    comPort.Write(msg);
+                    comNativePort.Write(msg);
                     //display the message
                     DisplayData(MessageType.Outgoing, msg + "\n");
                     break;
             }
         }
         #endregion
+
+        #region WriteSerialData
+        private void WriteSerialData(string msg)
+        {
+            switch (CurrentTransmissionType)
+            {
+                case TransmissionType.Text:
+                    //first make sure the port is open
+                    //if its not open then open it
+                    if (!(comSerialPort.IsOpen == true)) comSerialPort.Open(_serialPortConnectInformation);
+                    //send the message to the port
+                    comSerialPort.Write(msg + "\r");  // Add 0x0D at the end, to match Nuvo Essentia needs
+                    //display the message
+                    DisplayData(MessageType.Outgoing, msg + "\n");
+                    break;
+                case TransmissionType.Hex:
+                    //display error message
+                    DisplayData(MessageType.Error, "Transmission type 'Hex' is not supported for this serial port");
+                    break;
+                default:
+                    //first make sure the port is open
+                    //if its not open then open it
+                    if (!(comSerialPort.IsOpen == true)) comSerialPort.Open(_serialPortConnectInformation);
+                    //send the message to the port
+                    comSerialPort.Write(msg);
+                    //display the message
+                    DisplayData(MessageType.Outgoing, msg + "\n");
+                    break;
+            }
+        }
+        #endregion
+
+        #endregion
+
 
         #region HexToByte
         /// <summary>
@@ -262,32 +321,39 @@ namespace NuvoControl.Test.COMListener
         }
         #endregion
 
-        #region OpenPort
+
+        # region OpenPort
         public bool OpenPort()
+        {
+            return OpenSerialPort();
+        }
+
+        #region OpenNativePort
+        private bool OpenNativePort()
         {
             try
             {
                 //first check if the port is already open
                 //if its open then close it
-                if (comPort.IsOpen == true) comPort.Close();
+                if (comNativePort.IsOpen == true) comNativePort.Close();
 
                 //set the properties of our SerialPort Object
-                comPort.BaudRate = int.Parse(_baudRate);    //BaudRate
-                comPort.DataBits = int.Parse(_dataBits);    //DataBits
-                comPort.StopBits = (StopBits)Enum.Parse(typeof(StopBits), _stopBits);    //StopBits
-                comPort.Parity = (Parity)Enum.Parse(typeof(Parity), _parity);    //Parity
-                comPort.PortName = _portName;   //PortName
+                comNativePort.BaudRate = int.Parse(_baudRate);    //BaudRate
+                comNativePort.DataBits = int.Parse(_dataBits);    //DataBits
+                comNativePort.StopBits = (StopBits)Enum.Parse(typeof(StopBits), _stopBits);    //StopBits
+                comNativePort.Parity = (Parity)Enum.Parse(typeof(Parity), _parity);    //Parity
+                comNativePort.PortName = _portName;   //PortName
                 //comPort.ReadTimeout = 100;
 
                 //now open the port
-                comPort.Open();
+                comNativePort.Open();
                 //display message
-                DisplayData(MessageType.Normal, "Port opened at " + DateTime.Now + "\n");
+                DisplayData(MessageType.Normal, "Native Port opened at " + DateTime.Now + "\n");
                 //return true
 
                 //add event handler
-                comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
-                comPort.RtsEnable = true;
+                //comNativePort.DataReceived += new SerialDataReceivedEventHandler(comNativePort_DataReceived);
+                comNativePort.RtsEnable = true;
                 
                 return true;
             }
@@ -299,13 +365,44 @@ namespace NuvoControl.Test.COMListener
         }
         #endregion
 
-        #region comPort_DataReceived
+        #region OpenSerialPort
+        private bool OpenSerialPort()
+        {
+            try
+            {
+                //first check if the port is already open
+                //if its open then close it
+                if (comSerialPort.IsOpen == true) comSerialPort.Close();
+
+                //now open the port
+                comSerialPort.Open(_serialPortConnectInformation);
+                //display message
+                DisplayData(MessageType.Normal, "Serial Port opened at " + DateTime.Now + "\n");
+                //return true
+
+                //add event handler
+                //comSerialPort.onDataReceived += new SerialPortEventHandler(comSerialPort_DataReceived);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                DisplayData(MessageType.Error, ex.Message);
+                return false;
+            }
+        }
+        #endregion
+
+        #endregion
+
+
+        #region comNativePort_DataReceived
         /// <summary>
         /// method that will be called when theres data waiting in the buffer
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
+        void comNativePort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             //determine the mode the user selected (binary/string)
             switch (CurrentTransmissionType)
@@ -313,30 +410,46 @@ namespace NuvoControl.Test.COMListener
                 //user chose string
                 case TransmissionType.Text:
                     //read data waiting in the buffer
-                    string msg = comPort.ReadExisting();
+                    string msg = comNativePort.ReadExisting();
                     //display the data to the user
                     DisplayData(MessageType.Incoming, msg + "\n");
                     break;
                 //user chose binary
                 case TransmissionType.Hex:
                     //retrieve number of bytes in the buffer
-                    int bytes = comPort.BytesToRead;
+                    int bytes = comNativePort.BytesToRead;
                     //create a byte array to hold the awaiting data
                     byte[] comBuffer = new byte[bytes];
                     //read the data and store it
-                    comPort.Read(comBuffer, 0, bytes);
+                    comNativePort.Read(comBuffer, 0, bytes);
                     //display the data to the user
                     DisplayData(MessageType.Incoming, ByteToHex(comBuffer) + "\n");
                     break;
                 default:
                     //read data waiting in the buffer
-                    string str = comPort.ReadExisting();
+                    string str = comNativePort.ReadExisting();
                     //display the data to the user
                     DisplayData(MessageType.Incoming, str + "\n");
                     break;
             }
         }
         #endregion
+
+        #region comSerialPort_DataReceived
+        /// <summary>
+        /// method that will be called when theres data waiting in the buffer
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void comSerialPort_DataReceived(object sender, SerialPortEventArgs e)
+        {
+            //read data waiting in the buffer
+            string str = e.Message;
+            //display the data to the user
+            DisplayData(MessageType.Incoming, str + "\n");
+        }
+        #endregion
+
 
         #region SetParityValues
         public void SetParityValues(object obj)
