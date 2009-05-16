@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Protocol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Service.UnitTest", "Server\NuvoControl.Server.Service.UnitTest\NuvoControl.Server.Service.UnitTest.csproj", "{05289193-1724-4430-9EED-CD1E2D819F4D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver.Test", "Server\NuvoControl.Server.ProtocolDriver.Test\NuvoControl.Server.ProtocolDriver.Test.csproj", "{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver.UnitTest", "Server\NuvoControl.Server.ProtocolDriver.Test\NuvoControl.Server.ProtocolDriver.UnitTest.csproj", "{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D3BB3D4-A8C6-4145-88F3-355FF74233CA}"
 	ProjectSection(SolutionItems) = preProject
