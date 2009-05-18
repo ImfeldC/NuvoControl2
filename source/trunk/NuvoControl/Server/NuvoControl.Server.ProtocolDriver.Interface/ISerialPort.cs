@@ -26,6 +26,15 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     }
 
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// \class	SerialPortConnectInformation
+    ///
+    /// \brief	Information about the serial port connect. 
+    ///
+    /// \author	Administrator
+    /// \date	18.05.2009
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
     public class SerialPortConnectInformation
     {
         private string _portName;
