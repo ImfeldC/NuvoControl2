@@ -30,7 +30,7 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private int _id = -1;
+        private UniqueZoneId _id = new UniqueZoneId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
         private string _name = String.Empty;
         string _picturePath = String.Empty;
         private string _pictureType = String.Empty;
@@ -40,7 +40,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public Zone(int id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates)
+        public Zone(UniqueZoneId id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates)
         {
             this._id = id;
             this._name = name;
@@ -53,7 +53,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface Members
 
-        public int Id
+        public UniqueZoneId Id
         {
             get { return _id; }
             set { _id = value; }

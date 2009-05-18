@@ -31,20 +31,20 @@ namespace NuvoControl.Common.Configuration
 
         private TimeSpan _alarmTime = new TimeSpan(7, 0, 0);
         private TimeSpan _alarmDuration = new TimeSpan(0, 10, 0);
-        private UniqueSourceId _uniqueSourceId = new UniqueSourceId(-1, -1);
+        private UniqueSourceId _uniqueSourceId = new UniqueSourceId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
         private List<DayOfWeek> _validOnDays = new List<DayOfWeek>();
 
         #endregion
 
         #region Constructors
 
-        public AlarmFunction(int id, string name, TimeSpan alarmTime, TimeSpan alarmDuration, UniqueSourceId uniqueSourceId, List<DayOfWeek> validOnDays)
-            : base(id, name)
+        public AlarmFunction(Guid id, UniqueZoneId uniqueZoneId, UniqueSourceId uniqueSourceId, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
+            : base(id, uniqueZoneId)
         {
             this._alarmTime = alarmTime;
             this._alarmDuration = alarmDuration;
             this._uniqueSourceId = uniqueSourceId;
-            List<DayOfWeek> _validOnDays = validOnDays;
+            this._validOnDays = validOnDays;
         }
 
         #endregion

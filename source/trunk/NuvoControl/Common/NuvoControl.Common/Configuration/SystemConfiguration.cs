@@ -27,9 +27,18 @@ namespace NuvoControl.Common.Configuration
     [Serializable]
     public class SystemConfiguration
     {
+        #region Constants
+
+        public const string VERSION = "1.0";
+        public const int ID_UNDEFINED = -1;
+        public const char ID_SEPARATOR = '.';
+
+
+        #endregion
+
         #region Private Members
 
-        private Building _building = null;
+        private Hardware _hardware = null;
         private Graphic _graphic = null;
         private List<Function> _functions = new List<Function>();
 
@@ -37,9 +46,9 @@ namespace NuvoControl.Common.Configuration
 
         #region SystemConfiguration
 
-        public SystemConfiguration(Building building, Graphic graphic, List<Function> functions)
+        public SystemConfiguration(Hardware hardware, Graphic graphic, List<Function> functions)
         {
-            this._building = building;
+            this._hardware = hardware;
             this._graphic = graphic;
             this._functions = functions;
         }
@@ -48,10 +57,10 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
-        public Building Building
+        public Hardware Hardware
         {
-            get { return _building; }
-            set { _building = value; }
+            get { return _hardware; }
+            set { _hardware = value; }
         }
 
         public Graphic Graphic

@@ -29,7 +29,7 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private int _id = -1;
+        private int _id = SystemConfiguration.ID_UNDEFINED;
         private string _port = "COM1";
         private int _baudRate = 9600;
         private int _dataBits = 8;

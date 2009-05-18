@@ -10,17 +10,17 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private int _sourceId = -1;
-        private int _deviceId = -1;
+        private int _sourceId = SystemConfiguration.ID_UNDEFINED;
+        private int _deviceId = SystemConfiguration.ID_UNDEFINED;
 
         #endregion
 
         #region Constructors
 
-        public UniqueSourceId(int sourceId, int deviceId)
+        public UniqueSourceId(int deviceId, int sourceId)
         {
-            this._sourceId = sourceId;
             this._deviceId = deviceId;
+            this._sourceId = sourceId;
         }
 
         #endregion
@@ -38,6 +38,35 @@ namespace NuvoControl.Common.Configuration
             get { return _deviceId; }
             set { _deviceId = value; }
         }
+
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            UniqueSourceId id = obj as UniqueSourceId;
+            if ((object)id == null)
+                return false;
+
+            return (_deviceId == id._deviceId) && (_sourceId == id._sourceId);
+        }
+
+
+        public bool Equals(UniqueSourceId id)
+        {
+            if ((object)id == null)
+                return false;
+
+            return (_deviceId == id._deviceId) && (_sourceId == id._sourceId);
+        }
+
+
+        public override int GetHashCode()
+        {
+            return _deviceId ^ _sourceId;
+        }
+
 
         #endregion
     }

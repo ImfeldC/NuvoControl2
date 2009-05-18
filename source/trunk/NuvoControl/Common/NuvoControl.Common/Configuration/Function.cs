@@ -29,33 +29,33 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private int _id = -1;
-        private string _name = String.Empty;
+        private Guid _id = Guid.NewGuid();
+        private UniqueZoneId _uniqueZoneId = new UniqueZoneId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
         #endregion
 
         #region Constructors
 
-        public Function(int id, string name)
+        public Function(Guid id, UniqueZoneId uniqueZoneId)
         {
             this._id = id;
-            this._name = name;
+            this._uniqueZoneId = uniqueZoneId;
         }
 
         #endregion
 
         #region Public Interface
 
-        public int Id
+        public Guid Id
         {
             get { return _id; }
             set { _id = value; }
         }
 
-        public string Name
+        public UniqueZoneId ZoneId
         {
-            get { return _name; }
-            set { _name = value; }
+            get { return _uniqueZoneId; }
+            set { _uniqueZoneId = value; }
         }
 
         #endregion
