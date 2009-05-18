@@ -50,6 +50,8 @@ namespace NuvoControl.Test.COMListener
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new COMListener());
+
+            log.Debug(m => m("End of COMListener! (Version={0})", Application.ProductVersion));
         }
     }
 }
