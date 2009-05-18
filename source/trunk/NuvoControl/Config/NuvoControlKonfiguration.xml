@@ -152,28 +152,28 @@
         </Floor>
       </Building>
       <Sources>
-        <Source Id="1" Name="Tuner A">
+        <Source Id="100.1" Name="Tuner A">
           <Picture RelativePath=".\Images\Tuner.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="2" Name="Tuner B">
+        <Source Id="100.2" Name="Tuner B">
           <Picture RelativePath=".\Images\Tuner.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="3" Name="CD Player">
+        <Source Id="100.3" Name="CD Player">
           <Picture RelativePath=".\Images\CDPlayer.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="4" Name="TV">
+        <Source Id="100.4" Name="TV">
           <Picture RelativePath=".\Images\TV.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="6" Name="Media Server">
+        <Source Id="100.6" Name="Media Server">
           <Picture RelativePath=".\Images\MediaServer.jpg" PictureType="jpg" />
         </Source>
       </Sources>
     </Graphic>
     <Functions>
-      <SleepFunction Id="Guid1" ZoneId="100.1" SleepDuration="60">
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.1" SleepDuration="60">
         <Validity ActiveFrom="23:00" ActiveTo="02:00"></Validity>
       </SleepFunction>
-      <AlarmFunction Id="Guid2" ZoneId="100.2" AlarmTime="07:00" AlarmDuration="10" SourceId="100.2">
+      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c93" ZoneId="100.2" AlarmTime="07:00" AlarmDuration="10" SourceId="100.2">
         <Validity>
           <Days>
             <Day Name="Monday" />
@@ -181,7 +181,7 @@
           </Days>
         </Validity>
       </AlarmFunction>
-      <AlarmFunction Id="Guid3" ZoneId="100.2" AlarmTime="07:30" AlarmDuration="10" SourceId="100.2">
+      <AlarmFunction Id="9901106d-4811-48c3-a734-dab53f15d73d" ZoneId="100.2" AlarmTime="07:30" AlarmDuration="10" SourceId="100.2">
         <Validity>
           <Days>
             <Day Name="Wednesday" />
