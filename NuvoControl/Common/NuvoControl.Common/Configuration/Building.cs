@@ -29,25 +29,25 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private List<Floor> _zones = new List<Floor>();
+        private List<Floor> _floors = new List<Floor>();
 
         #endregion
 
         #region Constructors
 
-        public Building(List<Floor> zones)
+        public Building(List<Floor> floors)
         {
-            this._zones = zones;
+            this._floors = floors;
         }
 
         #endregion
 
         #region Private Members
 
-        public List<Floor> Zones
+        public List<Floor> Floors
         {
-            get { return _zones; }
-            set { _zones = value; }
+            get { return _floors; }
+            set { _floors = value; }
         }
 
         #endregion

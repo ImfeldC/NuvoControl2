@@ -46,6 +46,12 @@ namespace NuvoControl.Common.Configuration
 
         #region Private Members
 
+        public Building Building
+        {
+            get { return _building; }
+            set { _building = value; }
+        }
+
         public List<Source> Sources
         {
             get { return _sources; }

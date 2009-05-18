@@ -37,8 +37,8 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public SleepFunction(int id, string name, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
-            : base(id, name)
+        public SleepFunction(Guid id, UniqueZoneId uniqueZoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
+            : base(id, uniqueZoneId)
         {
             this._sleepDuration = sleepDuration;
             this._validFrom = validFrom;

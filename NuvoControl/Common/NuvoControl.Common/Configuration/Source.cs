@@ -29,7 +29,7 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private int _id = -1;
+        private UniqueSourceId _id = new UniqueSourceId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
         private string _name = String.Empty;
         private string _picturePath = String.Empty;
         private string _pictureType = String.Empty;
@@ -38,7 +38,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public Source(int id, string name, string picturePath, string pictureType)
+        public Source(UniqueSourceId id, string name, string picturePath, string pictureType)
         {
             this._id = id;
             this._name = name;
@@ -50,7 +50,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
-        public int Id
+        public UniqueSourceId Id
         {
             get { return _id; }
             set { _id = value; }
