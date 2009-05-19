@@ -7,13 +7,13 @@
  *   Project:        NuvoControl
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
- *   Creation Date:  12.05.2009
- *   File Name:      UniqueSourceId.cs
+ *   Creation Date:  19.05.2009
+ *   File Name:      ProtocolDriver.cs
  * 
  ***************************************************************************************************
  * 
  * Revisions:
- * 1) 12.05.2009, Bernhard Limacher: First implementation.
+ * 1) 19.05.2009, Bernhard Limacher: First implementation.
  * 
  **************************************************************************************************/
 
@@ -25,65 +25,45 @@ using System.Text;
 namespace NuvoControl.Common.Configuration
 {
     [Serializable]
-    public class UniqueZoneId
+    public class ProtocolDriver
     {
         #region Private Members
 
-        private int _zoneId = SystemConfiguration.ID_UNDEFINED;
-        private int _deviceId = SystemConfiguration.ID_UNDEFINED;
+        private string _name = String.Empty;
+        private string _assemblyName = String.Empty;
+        private string _className = String.Empty;
 
         #endregion
 
         #region Constructors
 
-        public UniqueZoneId(int deviceId, int zoneId)
+        public ProtocolDriver(string name, string assemblyName, string className)
         {
-            this._deviceId = deviceId;
-            this._zoneId = zoneId;
+            this._name = name;
+            this._assemblyName = assemblyName;
+            this._className = className;
         }
 
         #endregion
 
         #region Public Interface
 
-        public int ZoneId
+        public string Name
         {
-            get { return _zoneId; }
-            set { _zoneId = value; }
+            get { return _name; }
+            set { _name = value; }
         }
 
-        public int DeviceId
+        public string AssemblyName
         {
-            get { return _deviceId; }
-            set { _deviceId = value; }
+            get { return _assemblyName; }
+            set { _assemblyName = value; }
         }
 
-
-        public override bool Equals(object obj)
+        public string ClassName
         {
-            if (obj == null)
-                return false;
-
-            UniqueZoneId id = obj as UniqueZoneId;
-            if ((object)id == null)
-                return false;
-
-            return (_deviceId == id._deviceId) && (_zoneId == id._zoneId);
-        }
-
-
-        public bool Equals(UniqueZoneId id)
-        {
-            if ((object)id == null)
-                return false;
-
-            return (_deviceId == id._deviceId) && (_zoneId == id._zoneId);
-        }
-
-
-        public override int GetHashCode()
-        {
-            return _deviceId ^ _zoneId;
+            get { return _className; }
+            set { _className = value; }
         }
 
 

@@ -7,13 +7,13 @@
  *   Project:        NuvoControl
  *   SubProject:     NuvoControl.Common.Interfaces
  *   Author:         Bernhard Limacher
- *   Creation Date:  12.05.2009
- *   File Name:      IConfigure.cs
+ *   Creation Date:  19.05.2009
+ *   File Name:      INuvoControl.cs
  * 
  ***************************************************************************************************
  * 
  * Revisions:
- * 1) 12.05.2009, Bernhard Limacher: Definition of the interface.
+ * 1) 19.05.2009, Bernhard Limacher: Definition of the interface.
  * 
  **************************************************************************************************/
 
@@ -22,22 +22,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-using NuvoControl.Common.Configuration;
-
 namespace NuvoControl.Common.Interfaces
 {
     /// <summary>
-    /// Defines functionality to read the actual configuration of the NuvoControl system.
-    /// Defines functionality to modify the actual configuration of the NuvoControl system.
-    /// Defines functionality to save the actual configuration of the NuvoControl system.
+    /// Defines the entry functions for the NuvoControl service
     /// </summary>
-    public interface IConfigure
+    public interface INuvoControl
     {
-        Graphic GetGraphicConfiguration();
-        Zone GetZoneKonfiguration(int zoneId);
-        Function GetFunction(Guid id);
-        List<Function> GetFunctions(UniqueZoneId zoneId);
-        bool AddFunction(Function newFunction);
+        void StartUp(string configurationFile);
+        void ShutDown();
+        void CreateSession();
+        IConfigure IConfigure { get; }
+        IMonitor IMonitor { get; }
+        IControl IControl { get; }
     }
 }
 
