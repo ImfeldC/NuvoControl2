@@ -35,6 +35,7 @@ namespace NuvoControl.Common.Configuration
         private int _dataBits = 8;
         private int _parityBit = 1;
         private string _parityMode = "No";
+        private ProtocolDriver _protocolDriver = null;
         private List<int> _zones = new List<int>();
         private List<int> _sources = new List<int>();
 
@@ -42,7 +43,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public NuvoEssentia(int id, string port, int baudRate, int dataBits, int parityBit, string parityMode, List<int> zones, List<int> sources)
+        public NuvoEssentia(int id, string port, int baudRate, int dataBits, int parityBit, string parityMode, ProtocolDriver protocolDriver, List<int> zones, List<int> sources)
         {
             this._id = id;
             this._port = port;
@@ -50,6 +51,7 @@ namespace NuvoControl.Common.Configuration
             this._dataBits = dataBits;
             this._parityBit = parityBit;
             this._parityMode = parityMode;
+            this._protocolDriver = protocolDriver;
             this._zones = zones;
             this._sources = sources;
         }
@@ -92,6 +94,12 @@ namespace NuvoControl.Common.Configuration
         {
             get { return _parityMode; }
             set { _parityMode = value; }
+        }
+
+        public ProtocolDriver ProtocolDriver
+        {
+            get { return _protocolDriver; }
+            set { _protocolDriver = value; }
         }
 
         public List<int> Zones
