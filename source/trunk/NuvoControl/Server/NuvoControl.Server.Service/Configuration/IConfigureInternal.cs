@@ -22,12 +22,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NuvoControl.Common.Configuration;
+
 namespace NuvoControl.Server.Service.Configuration
 {
     internal interface IConfigureInternal
     {
-        void Initialize();
-        void GetSystemKonfiguration();
+        SystemConfiguration SystemConfiguration { get; }
     }
 }
 
