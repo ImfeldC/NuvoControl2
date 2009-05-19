@@ -166,6 +166,11 @@ namespace NuvoControl.Server.Service.UnitTest
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ParityBit, 1);
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ParityMode, "No");
 
+            TestContext.WriteLine("Testing device protocol driver parameters...");
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.Name, "Nuvo Essentia Protkoll Driver");
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.AssemblyName, "NuvoControl.Server.ProtocolDriver");
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.ClassName, "NuvoControl.Server.NuvoEssentiaProtocolDriver");
+
             TestContext.WriteLine("Testing device zone parameters...");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones.Count, 12);
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[0], 1);

@@ -106,6 +106,7 @@ namespace NuvoControl.Server.Service.Configuration
                     (int)device.Element("Communication").Attribute("DataBits"),
                     (int)device.Element("Communication").Attribute("ParityBit"),
                     (string)device.Element("Communication").Attribute("ParityMode"),
+                    new ProtocolDriver(device.Element("ProtocolDriver").Attribute("Name"), device.Element("ProtocolDriver").Attribute("AssemblyName"), device.Element("ProtocolDriver").Attribute("ClassName")),
                     (from zone in device.Element("Zones").Elements("Zone") select (int)zone.Attribute("Id")).ToList<int>(),
                     (from source in device.Element("Sources").Elements("Source") select (int)source.Attribute("Id")).ToList<int>()
                     );

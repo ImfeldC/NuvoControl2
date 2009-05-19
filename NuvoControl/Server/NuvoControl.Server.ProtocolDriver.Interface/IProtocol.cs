@@ -6,7 +6,7 @@ using System.Text;
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
 
-    interface IProtocol
+    public interface IProtocol
     {
     }
 }
