@@ -92,32 +92,57 @@ namespace NuvoControl.Server.ProtocolDriver
             // Add received message to the telegram
             _currentTelegramBuffer += e.Message;
             cutAndSendTelegram();
+            while (IsTelegramComplete)
+            {
+                cutAndSendTelegram();
+            }
         }
 
-
-        private void cutLeadingCharacters()
+        private bool IsTelegramComplete
         {
-            int startSignPosition = _currentTelegramBuffer.IndexOf('#');
+            get{
+                return ((_currentTelegramBuffer.IndexOf('#') > -1) && (_currentTelegramBuffer.IndexOf('\r') > 0));
+            }
+        }
+
+        private string cutLeadingCharacters( string telegram )
+        {
+            int startSignPosition = telegram.IndexOf('#');
             if (startSignPosition == -1)
             {
                 // Start sign not received ...
                 // Discarge the content and wait for start sign
-                _log.Debug(m => m("Delete content received on serial port, start sign is missing. {0}", _currentTelegramBuffer));
-                _currentTelegramBuffer = "";
+                _log.Debug(m => m("Delete content received on serial port, start sign is missing. {0}", telegram));
+                telegram = "";
             }
             else if (startSignPosition > 0)
             {
                 // Start sign received, but not at the start ...
                 // Discarge starting characters, till the start sign
-                string delChars = _currentTelegramBuffer.Substring(0, startSignPosition);
-                _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, startSignPosition);
+                string delChars = telegram.Substring(0, startSignPosition);
+                telegram = telegram.Remove(0, startSignPosition);
                 _log.Debug(m => m("Delete content received on serial port, up to the start sign. {0}", delChars));
             }
+            return telegram;
+        }
+
+        private string cutLeadingStartSigns(string telegram)
+        {
+            while (telegram.Contains("#") == true)
+            {
+                int startSignPosition = telegram.IndexOf('#');
+                // Start sign received, but not at the start ...
+                // Discarge starting characters, till the start sign
+                string delChars = telegram.Substring(0, startSignPosition);
+                telegram = telegram.Remove(0, startSignPosition+1);
+                _log.Debug(m => m("Delete content received on serial port, up to the start sign. {0}", delChars));
+            }
+            return telegram;
         }
 
         private void cutAndSendTelegram()
         {
-            cutLeadingCharacters();
+            _currentTelegramBuffer = cutLeadingCharacters(_currentTelegramBuffer);
 
             // Do further processing, if start sign is available ...
             if (_currentTelegramBuffer.IndexOf('#') == 0)
@@ -126,8 +151,10 @@ namespace NuvoControl.Server.ProtocolDriver
                 int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
                 if (endSignPosition > 0)
                 {
-                    string telegramFound = _currentTelegramBuffer.Substring(0, endSignPosition);
-                    _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, endSignPosition);
+                    string telegramFound = _currentTelegramBuffer.Substring(1, endSignPosition - 1);
+                    _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, endSignPosition + 1);
+
+                    telegramFound = cutLeadingStartSigns(telegramFound);
                     //raise the event, and pass data to next layer
                     if (onTelegramReceived != null)
                     {

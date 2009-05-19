@@ -17,6 +17,20 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
 
         private TestContext testContextInstance;
+        bool _eventRaised = false;
+        int _eventRaisedCount = 0;
+        NuvoTelegramEventArgs _nuvoTelegramEventArgs = null;
+        string _eventMessageString = "";
+
+        // callback function for receiving data from telegram layer
+        void serialPort_TelegramReceived(object sender, NuvoTelegramEventArgs e)
+        {
+            _eventRaised = true;
+            _eventRaisedCount++;
+            _nuvoTelegramEventArgs = e;
+            _eventMessageString += e.Message;
+        }
+
 
         /// <summary>
         ///Gets or sets the test context which provides
@@ -49,118 +63,195 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         //public static void MyClassCleanup()
         //{
         //}
-        //
+
         //Use TestInitialize to run code before running each test
-        //[TestInitialize()]
-        //public void MyTestInitialize()
-        //{
-        //}
-        //
+        [TestInitialize()]
+        public void MyTestInitialize()
+        {
+            _eventRaised = false;
+            _eventRaisedCount = 0;
+            _nuvoTelegramEventArgs = null;
+            _eventMessageString = "";
+        }
+        
         //Use TestCleanup to run code after each test has run
-        //[TestCleanup()]
-        //public void MyTestCleanup()
-        //{
-        //}
-        //
+        [TestCleanup()]
+        public void MyTestCleanup()
+        {
+        }
+
         #endregion
 
 
         /// <summary>
-        ///A test for serialPort_DataReceived
-        ///</summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Regular telegram (command is unknown, but not relevant for this test)
+        /// Expected: Return 'RET'
+        /// </summary>
         [TestMethod()]
-        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
-        public void serialPort_DataReceivedTest()
+        public void onTelegramReceived1Test()
         {
-            PrivateObject param0 = null; // TODO: Initialize to an appropriate value
-            NuvoTelegram_Accessor target = new NuvoTelegram_Accessor(param0); // TODO: Initialize to an appropriate value
-            object sender = null; // TODO: Initialize to an appropriate value
-            SerialPortEventArgs e = null; // TODO: Initialize to an appropriate value
-            target.serialPort_DataReceived(sender, e);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for SendTelegram
-        ///</summary>
-        [TestMethod()]
-        public void SendTelegramTest()
-        {
-            bool eventRaised = false;
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
-            target.onTelegramReceived += delegate(object sender, NuvoTelegramEventArgs e)
-            {
-                eventRaised = true;
-            };
+            target.onTelegramReceived += new NuvoTelegramEventHandler( serialPort_TelegramReceived );
 
-            string telegram = string.Empty; // TODO: Initialize to an appropriate value
-            //target.SendTelegram(telegram);
             serialPort.passDataToTestClass("#RET\r");
-
-            Assert.IsTrue(eventRaised);
+            Assert.IsTrue(_eventRaised);                                        // event has been raised
+            Assert.IsTrue(_eventRaisedCount==1);                                // event has been raised just once
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.Length == 3);          // telegram length is 3 (= RET)
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.CompareTo("RET")==0);  // telegram is equal "RET"
         }
 
         /// <summary>
-        ///A test for Open
-        ///</summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Leading characters
+        /// Expected: Return 'COMAND'
+        /// </summary>
         [TestMethod()]
-        public void OpenTest()
+        public void onTelegramReceived2Test()
         {
-            ISerialPort serialPort = null; // TODO: Initialize to an appropriate value
-            NuvoTelegram target = new NuvoTelegram(serialPort); // TODO: Initialize to an appropriate value
-            SerialPortConnectInformation serialPortConnectInformation = null; // TODO: Initialize to an appropriate value
-            target.Open(serialPortConnectInformation);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for cutLeadingCharacters
-        ///</summary>
-        [TestMethod()]
-        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
-        public void cutLeadingCharactersTest()
-        {
-            PrivateObject param0 = null; // TODO: Initialize to an appropriate value
-            NuvoTelegram_Accessor target = new NuvoTelegram_Accessor(param0); // TODO: Initialize to an appropriate value
-            target.cutLeadingCharacters();
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for cutAndSendTelegram
-        ///</summary>
-        [TestMethod()]
-        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
-        public void cutAndSendTelegramTest()
-        {
-            PrivateObject param0 = null; // TODO: Initialize to an appropriate value
-            NuvoTelegram_Accessor target = new NuvoTelegram_Accessor(param0); // TODO: Initialize to an appropriate value
-            target.cutAndSendTelegram();
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for Close
-        ///</summary>
-        [TestMethod()]
-        public void CloseTest()
-        {
-            ISerialPort serialPort = null; // TODO: Initialize to an appropriate value
-            NuvoTelegram target = new NuvoTelegram(serialPort); // TODO: Initialize to an appropriate value
-            target.Close();
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for NuvoTelegram Constructor
-        ///</summary>
-        [TestMethod()]
-        public void NuvoTelegramConstructorTest()
-        {
-            ISerialPort serialPort = null; // TODO: Initialize to an appropriate value
+            SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
-            Assert.Inconclusive("TODO: Implement code to verify target");
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+
+            serialPort.passDataToTestClass("...#COMAND\r");
+            Assert.IsTrue(_eventRaised);                                                // event has been raised
+            Assert.IsTrue(_eventRaisedCount == 1);                                      // event has been raised just once
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.Length == 6);                  // telegram length is 7 (= COMAND)
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.CompareTo("COMAND") == 0);     // telegram is equal "COMAND"
         }
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Multiple commands received in one package
+        /// Expected: Return 'COMANDAAAA' and 'COMANDBB'
+        /// </summary>
+        [TestMethod()]
+        public void onTelegramReceived3Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+
+            serialPort.passDataToTestClass("...#COMANDAAAA\r...#COMANDBB\r");
+            Assert.IsTrue(_eventRaised);                                                // event has been raised
+            Assert.IsTrue(_eventRaisedCount == 2);                                      // event has been raised twice
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.CompareTo("COMANDBB") == 0);   // telegram is equal "COMANDBB"
+        }
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Multiple commands received in several package
+        /// Expected: Return 'COMAND1' till 'COMAND6'
+        /// </summary>
+        [TestMethod()]
+        public void onTelegramReceived4Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+
+            serialPort.passDataToTestClass("...#COMAND1\r#COM");
+            Assert.IsTrue(_eventRaisedCount == 1);                                      // event has been raised 1 times
+            serialPort.passDataToTestClass("AND2\r#COMAND3\r#COMAN");
+            Assert.IsTrue(_eventRaisedCount == 3);                                      // event has been raised 3 times
+            serialPort.passDataToTestClass("D4\r....#COMAND5\r...#");
+            Assert.IsTrue(_eventRaisedCount == 5);                                      // event has been raised 5 times
+            serialPort.passDataToTestClass("COMAND6\r...");
+            Assert.IsTrue(_eventRaisedCount == 6);                                      // event has been raised 6 times
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.CompareTo("COMAND6") == 0);    // telegram is equal "COMAND6"
+            Assert.IsTrue(_eventMessageString.CompareTo("COMAND1COMAND2COMAND3COMAND4COMAND5COMAND6") == 0);
+        }
+
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Receive 'empty' telegram
+        /// Expected: Return ''
+        /// </summary>
+        [TestMethod()]
+        public void onTelegramReceived5Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+
+            serialPort.passDataToTestClass("...#\r...");
+            Assert.IsTrue(_eventRaisedCount == 1);                      // event has been raised 1 times
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.Length==0);    // telegram is equal ""
+        }
+
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Receive 'empty' telegram
+        /// Expected: Return '' and telegram buffer contains 3 charachters
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void onTelegramReceived6Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram_Accessor target = new NuvoTelegram_Accessor(serialPort);
+
+            serialPort.passDataToTestClass("...#\r...");
+            Assert.IsTrue(target._currentTelegramBuffer.Length == 3);   // telegram buffer contains 3 charachters
+        }
+
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Receive 'incomplete' telegram (start with '\r')
+        /// Expected: Return 'COMAND'
+        /// </summary>
+        [TestMethod()]
+        public void onTelegramReceived7Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+
+            serialPort.passDataToTestClass("...\r..#COMAND\r.");
+            Assert.IsTrue(_eventRaisedCount == 1);                                   // event has been raised 1 times
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.CompareTo("COMAND") == 0);  // telegram is equal "COMAND"
+        }
+
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Receive buggy telegram (start with '\r' and several '#' signs)
+        /// Expected: Return 'COMAND'
+        /// </summary>
+        [TestMethod()]
+        public void onTelegramReceived8Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+
+            serialPort.passDataToTestClass("...\r...#....#COMAND\r.");
+            Assert.IsTrue(_eventRaisedCount == 1);                                   // event has been raised 1 times
+            Assert.IsTrue(_nuvoTelegramEventArgs.Message.CompareTo("COMAND") == 0);  // telegram is equal "COMAND"
+        }
+
+
+        /// <summary>
+        /// Unittest to test the event onTelegramReceived of the telegram layer.
+        /// Test: Receive 'incomplete' telegram (no start sign '#' has been received)
+        /// Expected: Return nothing, internal telegram buffer is empty
+        /// </summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void onTelegramReceived9Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram_Accessor target = new NuvoTelegram_Accessor(serialPort);
+
+            serialPort.passDataToTestClass("...\r.......COMAND\r.");
+            serialPort.passDataToTestClass("...\r.......COMAND\r.");
+            Assert.IsTrue(target._currentTelegramBuffer.Length == 0);
+        }
+
+
     }
 }
