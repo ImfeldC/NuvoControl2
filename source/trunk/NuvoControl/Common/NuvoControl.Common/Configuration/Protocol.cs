@@ -25,7 +25,7 @@ using System.Text;
 namespace NuvoControl.Common.Configuration
 {
     [Serializable]
-    public class ProtocolDriver
+    public class Protocol
     {
         #region Private Members
 
@@ -37,7 +37,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public ProtocolDriver(string name, string assemblyName, string className)
+        public Protocol(string name, string assemblyName, string className)
         {
             this._name = name;
             this._assemblyName = assemblyName;

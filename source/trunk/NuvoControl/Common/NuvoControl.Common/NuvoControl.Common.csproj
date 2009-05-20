@@ -52,7 +52,7 @@
   <ItemGroup>
     <Compile Include="Configuration\AlarmFunction.cs" />
     <Compile Include="Configuration\Building.cs" />
-    <Compile Include="Configuration\ProtocolDriver.cs" />
+    <Compile Include="Configuration\Protocol.cs" />
     <Compile Include="Configuration\UniqueZoneId.cs" />
     <Compile Include="Configuration\SleepFunction.cs" />
     <Compile Include="Configuration\Source.cs" />
