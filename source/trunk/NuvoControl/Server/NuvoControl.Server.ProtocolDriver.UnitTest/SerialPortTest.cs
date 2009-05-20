@@ -73,7 +73,8 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
             SerialPort target = new SerialPort(); // TODO: Initialize to an appropriate value
             SerialPortConnectInformation serialPortConnectInformation = null; // TODO: Initialize to an appropriate value
             target.Open(serialPortConnectInformation);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+            bool actual = target.IsOpen;
+            Assert.AreEqual(false, actual);
         }
 
         /// <summary>
@@ -82,10 +83,9 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
         [TestMethod()]
         public void IsOpenTest()
         {
-            SerialPort target = new SerialPort(); // TODO: Initialize to an appropriate value
-            bool actual;
-            actual = target.IsOpen;
-            Assert.AreEqual(actual, false);
+            SerialPort target = new SerialPort();
+            bool actual = target.IsOpen;
+            Assert.AreEqual(false,actual);
         }
 
         /// <summary>
@@ -95,45 +95,24 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
         public void WriteTest()
         {
             SerialPort target = new SerialPort();
-            string text = string.Empty; // TODO: Initialize to an appropriate value
+            string text = string.Empty;
             target.Write(text);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+            bool actual = target.IsOpen;
+            Assert.AreEqual(true, actual);
         }
 
         /// <summary>
-        ///A test for OpenPort
+        ///A test for OpenPort.
         ///</summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void OpenPortTest()
         {
-            SerialPort_Accessor target = new SerialPort_Accessor(); // TODO: Initialize to an appropriate value
+            SerialPort_Accessor target = new SerialPort_Accessor();
             bool actual;
             actual = target.OpenPort();
             Assert.AreEqual(false, actual);
         }
 
-        /// <summary>
-        ///A test for Close
-        ///</summary>
-        [TestMethod()]
-        public void CloseTest()
-        {
-            SerialPort target = new SerialPort(); // TODO: Initialize to an appropriate value
-            SerialPortConnectInformation serialPortConnectInformation = null; // TODO: Initialize to an appropriate value
-            target.Open(serialPortConnectInformation);
-            target.Close();
-        }
-
-        /// <summary>
-        ///A test for SerialPort Constructor
-        ///</summary>
-        [TestMethod()]
-        public void SerialPortConstructorTest()
-        {
-            SerialPort target = new SerialPort();
-            bool actual = target.IsOpen;
-            Assert.AreEqual(false, actual);
-        }
     }
 }

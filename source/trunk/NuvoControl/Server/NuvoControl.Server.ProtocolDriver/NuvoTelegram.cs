@@ -61,7 +61,7 @@ namespace NuvoControl.Server.ProtocolDriver
             string text = telegram;
             if( text[0] != '*' )
             {
-                text.Insert(0, "*");
+                text = text.Insert(0, "*");
             }
             if (text[text.Length - 1] != '\r')
             {
@@ -92,13 +92,13 @@ namespace NuvoControl.Server.ProtocolDriver
             // Add received message to the telegram
             _currentTelegramBuffer += e.Message;
             cutAndSendTelegram();
-            while (IsTelegramComplete)
+            while (IsResponseTelegramComplete)
             {
                 cutAndSendTelegram();
             }
         }
 
-        private bool IsTelegramComplete
+        private bool IsResponseTelegramComplete
         {
             get{
                 return ((_currentTelegramBuffer.IndexOf('#') > -1) && (_currentTelegramBuffer.IndexOf('\r') > 0));

@@ -83,6 +83,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         #endregion
 
 
+        #region onTelegramReceived Unittests
+
         /// <summary>
         /// Unittest to test the event onTelegramReceived of the telegram layer.
         /// Test: Regular telegram (command is unknown, but not relevant for this test)
@@ -250,6 +252,27 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             serialPort.passDataToTestClass("...\r.......COMAND\r.");
             serialPort.passDataToTestClass("...\r.......COMAND\r.");
             Assert.IsTrue(target._currentTelegramBuffer.Length == 0);
+        }
+
+        #endregion
+
+
+
+        /// <summary>
+        /// Unittest to test the write method of the telegram layer.
+        /// Test: Send regular telegram
+        /// Expected: Telegram is send, adding leading #-sign and ending '\r'-sign
+        /// </summary>
+        [TestMethod()]
+        public void Write1Test()
+        {
+            SerialPortMock serialPort = new SerialPortMock();
+            NuvoTelegram target = new NuvoTelegram(serialPort);
+
+            target.SendTelegram("SendMessage");
+            Assert.AreEqual('*', serialPort.WriteText[0]);
+            Assert.AreEqual('\r', serialPort.WriteText[serialPort.WriteText.Length - 1]);
+            Assert.AreEqual("*SendMessage\r", serialPort.WriteText);
         }
 
 
