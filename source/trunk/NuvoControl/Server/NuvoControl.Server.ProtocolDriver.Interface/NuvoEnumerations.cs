@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 
-namespace NuvoControl.Server.ProtocolDriver
+namespace NuvoControl.Server.ProtocolDriver.Interface
 {
 
 	//===========================================================
