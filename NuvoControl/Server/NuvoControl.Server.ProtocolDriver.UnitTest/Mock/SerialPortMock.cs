@@ -9,7 +9,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
 {
     class SerialPortMock : ISerialPort
     {
-        private ILog _log = LogManager.GetCurrentClassLogger(); 
+        private ILog _log = LogManager.GetCurrentClassLogger();
+        private string _writeText = "";
 
         #region ISerialPort Members
 
@@ -38,10 +39,14 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
         public void Write(string text)
         {
             _log.Debug(m => m("Write called."));
+            WriteText = text;
         }
 
         #endregion
 
+        //
+        // Mock Specific Methods
+        //
 
         public void passDataToTestClass( string msg )
         {
@@ -52,5 +57,13 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
                   new SerialPortEventArgs(msg));
             }
         }
+
+        public string WriteText
+        {
+            get { return _writeText; }
+            set { _writeText = value; }
+        }
+
+    
     }
 }
