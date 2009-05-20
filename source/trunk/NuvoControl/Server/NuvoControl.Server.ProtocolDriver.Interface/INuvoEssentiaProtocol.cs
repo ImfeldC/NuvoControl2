@@ -35,11 +35,12 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         public NuvoEssentiaCommand(NuvoEssentiaProtocolEventArgs args)
         {
-            _command = 0;
+            //TODO extract from args the correct command
+            _command = ENuvoEssentiaCommands.NoCommand;
         }
     }
 
-    interface INuvoEssentiaProtocol
+    public interface INuvoEssentiaProtocol
     {
 
         event NuvoEssentiaProtocolEventHandler onCommandReceived;
@@ -48,8 +49,19 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         void Close();
 
+        /// <summary>
+        /// Send the command passed as string to the lower system.
+        /// If the command string cannot be converted into a valid
+        /// Nuvo Essentia command, nothing is sent to the lower 
+        /// system.
+        /// </summary>
+        /// <param name="command">Nuvo Essentia command (as string). Without starting *-sign.</param>
         void SendCommand(string command);
 
+        /// <summary>
+        /// Send the command passed as object to the lower system.
+        /// </summary>
+        /// <param name="command">Nuvo Essentia command.</param>
         void SendCommand(NuvoEssentiaCommand command);
     
     }
