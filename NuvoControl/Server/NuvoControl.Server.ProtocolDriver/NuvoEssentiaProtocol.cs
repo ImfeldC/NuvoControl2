@@ -12,26 +12,14 @@ namespace NuvoControl.Server.ProtocolDriver
     class NuvoEssentiaProtocol : INuvoEssentiaProtocol
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
+        private Profile _profile;
 
         private INuvoTelegram _serialPort;
 
-        // static?
-        private Hashtable _OutgoingCommand;
-        private Hashtable _IncomingCommand;
-
-        private void initHashtables()
-        {
-            Profile m_profile;
-            m_profile = new Xml();
-            _log.Debug(m=>m("Open settings file {0}", m_profile.Name));
-
-            _OutgoingCommand.Add(ENuvoEssentiaCommands.ReadStatusSOURCEIR, "IRSETSR");
-            _IncomingCommand.Add(ENuvoEssentiaCommands.ReadStatusSOURCEIR, "IRSET:aa,bb,cc,dd,ee,ff");
-        }
-
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
         {
-            initHashtables();
+            _profile = new Xml("E:\\ImfeldC-NuvoControl\\source\\trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml");
+            _log.Debug(m => m("Open profile file: {0}", _profile.Name));
 
             if (nuvoTelegram == null)
                 _serialPort = new NuvoTelegram(null);
@@ -62,7 +50,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public void SendCommand(string command)
         {
-            throw new NotImplementedException();
+            searchNuvoEssentiaCommandForOutgoingCommand(command);
         }
 
         public void SendCommand(NuvoEssentiaCommand command)
@@ -80,6 +68,21 @@ namespace NuvoControl.Server.ProtocolDriver
         private NuvoEssentiaCommand convertString2NuvoEssentiaCommand(string command)
         {
             return new NuvoEssentiaCommand(ENuvoEssentiaCommands.NoCommand);
+        }
+
+
+        private ENuvoEssentiaCommands searchNuvoEssentiaCommandForOutgoingCommand(string outgoingCommand)
+        {
+            string[] sectionNames = _profile.GetSectionNames();
+            foreach (string section in sectionNames)
+            {
+                string[] sectionEntries = _profile.GetEntryNames(section);
+                foreach (string entry in sectionEntries)
+                {
+                    _log.Debug(m => m("Entry found: Entry={0}, Section={1}", entry, section));
+                }
+            }
+            return ENuvoEssentiaCommands.NoCommand;
         }
     }
 }
