@@ -79,10 +79,15 @@ namespace NuvoControl.Server.ProtocolDriver
                 string[] sectionEntries = _profile.GetEntryNames(section);
                 foreach (string entry in sectionEntries)
                 {
-                    _log.Debug(m => m("Entry found: Entry={0}, Section={1}", entry, section));
+                    if ( ((string)_profile.GetValue(section, entry)).Equals(outgoingCommand))
+                    {
+                        _log.Debug(m => m("Entry found: Entry={0}, Section={1}", entry, section));
+                        return (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), section, true);
+                    }
                 }
             }
             return ENuvoEssentiaCommands.NoCommand;
         }
+
     }
 }
