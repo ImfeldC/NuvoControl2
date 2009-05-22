@@ -10,33 +10,53 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     public class NuvoEssentiaProtocolEventArgs : EventArgs
     {
-        string _msg;
+        NuvoEssentiaCommand _command;
 
-        public string Message
+        public NuvoEssentiaCommand Command
         {
-            get { return _msg; }
+            get { return _command; }
         }
 
-        public NuvoEssentiaProtocolEventArgs(string msg)
+        public NuvoEssentiaProtocolEventArgs(NuvoEssentiaCommand command)
         {
-            _msg = msg;
+            _command = command;
         }
 
     }
 
     public class NuvoEssentiaCommand
     {
+        DateTime _createDateTime;
+        DateTime _sendDateTime;
+        DateTime _receiveDateTime;
         ENuvoEssentiaCommands _command;
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
         {
             _command = command;
+            _createDateTime = DateTime.Now;
         }
 
-        public NuvoEssentiaCommand(NuvoEssentiaProtocolEventArgs args)
+        public ENuvoEssentiaCommands Command
         {
-            //TODO extract from args the correct command
-            _command = ENuvoEssentiaCommands.NoCommand;
+            get { return _command; }
+        }
+
+        public bool Valid
+        {
+            get { return _command != ENuvoEssentiaCommands.NoCommand; }
+        }
+
+        public DateTime SendDateTime
+        {
+            get { return _sendDateTime; }
+            set { _sendDateTime = value; }
+        }
+
+        public DateTime ReceiveDateTime
+        {
+            get { return _receiveDateTime; }
+            set { _receiveDateTime = value; }
         }
     }
 

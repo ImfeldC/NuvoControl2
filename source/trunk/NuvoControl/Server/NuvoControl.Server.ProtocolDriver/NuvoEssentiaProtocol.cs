@@ -18,6 +18,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
         {
+            //TODO replace hard-coded path
             _profile = new Xml("E:\\ImfeldC-NuvoControl\\source\\trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml");
             _log.Debug(m => m("Open profile file: {0}", _profile.Name));
 
@@ -30,7 +31,16 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
-            throw new NotImplementedException();
+            NuvoEssentiaCommand command = convertString2NuvoEssentiaCommand(e.Message);
+            if (command.Valid)
+            {
+                //raise the event, and pass data to next layer
+                if (onCommandReceived != null)
+                {
+                    onCommandReceived(this,
+                      new NuvoEssentiaProtocolEventArgs(command));
+                }
+            }
         }
 
 
@@ -48,17 +58,25 @@ namespace NuvoControl.Server.ProtocolDriver
             _serialPort.Close();
         }
 
-        public void SendCommand(string command)
+        public void SendCommand(string commandString)
         {
-            searchNuvoEssentiaCommandForOutgoingCommand(command);
+            NuvoEssentiaCommand command = convertString2NuvoEssentiaCommand(commandString);
+            Send(command);
         }
 
         public void SendCommand(NuvoEssentiaCommand command)
         {
-            throw new NotImplementedException();
+            Send(command);
         }
 
         #endregion
+
+
+        private void Send(NuvoEssentiaCommand command)
+        {
+            command.SendDateTime = DateTime.Now;
+        }
+
 
         /// <summary>
         /// Converts the command string to a Nuvo Essentia command.
@@ -67,11 +85,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <returns></returns>
         private NuvoEssentiaCommand convertString2NuvoEssentiaCommand(string command)
         {
-            return new NuvoEssentiaCommand(ENuvoEssentiaCommands.NoCommand);
+            return new NuvoEssentiaCommand(searchNuvoEssentiaCommand(command));
         }
 
-
-        private ENuvoEssentiaCommands searchNuvoEssentiaCommandForOutgoingCommand(string outgoingCommand)
+        /// <summary>
+        /// Searches in the profile the command passed as string.
+        /// This can either be an incomming- or outgoing-command.
+        /// </summary>
+        /// <param name="command">Command (passed as string)</param>
+        /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
+        private ENuvoEssentiaCommands searchNuvoEssentiaCommand(string command)
         {
             string[] sectionNames = _profile.GetSectionNames();
             foreach (string section in sectionNames)
@@ -79,15 +102,63 @@ namespace NuvoControl.Server.ProtocolDriver
                 string[] sectionEntries = _profile.GetEntryNames(section);
                 foreach (string entry in sectionEntries)
                 {
-                    if ( ((string)_profile.GetValue(section, entry)).Equals(outgoingCommand))
+                    if ( compareCommandString((string)_profile.GetValue(section, entry),command) )
                     {
                         _log.Debug(m => m("Entry found: Entry={0}, Section={1}", entry, section));
                         return (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), section, true);
                     }
                 }
             }
+            // command not found
             return ENuvoEssentiaCommands.NoCommand;
         }
 
+        /// <summary>
+        /// Compares the received command string with a configured command string.
+        /// The comparision takes into account, that ...
+        /// - Placeholders in the configured command string are set with the specific value in the received command string
+        /// - Depending on the zone status the received command string has another length then expected
+        /// </summary>
+        /// <param name="configuredCommand">Configured command string.</param>
+        /// <param name="receivedCommand">Received command string.</param>
+        /// <returns>True of the received command string is equal to the configured command string.</returns>
+        private bool compareCommandString(string configuredCommand, string receivedCommand)
+        {
+            // The strings are equal, when ...
+            // a) The configured string is equal to the received string OR
+            // b) The received string contains PWRON (=Power ON) and 
+            //    the length of the received string is 1 smaller than the received string
+            //    (This is because the configured string contains 3 placeholders, for either OFF or ON)
+            // c) The format of the received string is equal to the received string
+            //    (don't compare lower characters, because they are placeholders)
+
+            // Check Length first ...
+            if ((configuredCommand.Length == receivedCommand.Length) ||
+                (receivedCommand.Contains("PWRON") && (configuredCommand.Length - 1 == receivedCommand.Length))
+              )
+            {
+                // replace PWRON with PWR_ON, this allows future comparison on character level (both strings have the same size)
+                receivedCommand = receivedCommand.Replace("PWRON", "PWRXON");
+
+                // Compare each character
+                for (int i = 0; i < receivedCommand.Length; i++)
+                {
+                    if ((receivedCommand[i] != configuredCommand[i]) &&
+                        (!Char.IsLetter(configuredCommand[i]) || Char.IsUpper(configuredCommand[i])) )
+                    {
+                        // Format missmatch
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Size missmatch
+                return false;
+            }
+
+            // Comparison ok
+            return true;
+        }
     }
 }

@@ -239,6 +239,27 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// </summary>
         ReadVersion = 29,
 
+        /// <summary>
+        /// RESPONSE: #EXTMON<CR> Issued whenever the External MUTE first activates (closure to ground) and 0 whenever the External MUTE de-activates (open connection to ground).
+        /// NOTE – there is no COMMAND associated with this response; it is always initiated by a change at the EXT. MUTE input.
+        /// </summary>
+        ExternalMuteActivated = 30,
+
+        /// <summary>
+        /// RESPONSE: #EXTMOFF<CR> Issued whenever External MUTE de-activates (open connection to ground).
+        /// NOTE – there is no COMMAND associated with this response; it is always initiated by a change at the EXT. MUTE input
+        /// </summary>
+        ExternalMuteDeactivated = 31,
+
+        /// <summary>
+        /// RESPONSE: #?<CR> If a command has an error in it (does not adhere to exact command syntax), the E6D will respond with a "#?<CR>" string.
+        /// NOTE – there is no COMMAND associated with this response; it is always initiated if an error has been found in a command.
+        /// </summary>
+        ErrorInCommand = 32,
+
+        ///
+        /// COMMON NON-NUVO COMMANDS
+        ///
 
         /// <summary>
         /// COMMAND: Three commands => TurnZoneON, SetVolume and SetSource.
@@ -257,22 +278,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// RESPONSE: see the single command
         /// </summary>
         VolumeDOWN2db = 62,
-
-        ///
-        /// COMMON NON-NUVO COMMANDS
-        ///
-
-        /// <summary>
-        /// RESPONSE: #EXTMON<CR> Issued whenever the External MUTE first activates (closure to ground) and 0 whenever the External MUTE de-activates (open connection to ground).
-        /// NOTE – there is no COMMAND associated with this response; it is always initiated by a change at the EXT. MUTE input.
-        /// </summary>
-        ExternalMuteActivated = 98,
-
-        /// <summary>
-        /// RESPONSE: #EXTMOFF<CR> Issued whenever External MUTE de-activates (open connection to ground).
-        /// NOTE – there is no COMMAND associated with this response; it is always initiated by a change at the EXT. MUTE input
-        /// </summary>
-        ExternalMuteDeactivated = 99,
 
         /// <summary>
         /// NO Comamnd
