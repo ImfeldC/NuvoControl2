@@ -16,6 +16,10 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private INuvoTelegram _serialPort;
 
+        // TODO replace with list, to enable multiple running commands
+        private INuvoEssentiaCommand _runningCommand;
+
+
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
         {
             //TODO replace hard-coded path
@@ -31,7 +35,17 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
-            NuvoEssentiaCommand command = convertString2NuvoEssentiaCommand(e.Message);
+            INuvoEssentiaCommand command = convertString2NuvoEssentiaCommand(e.Message);
+
+            if (_runningCommand != null)
+            {
+                if (_runningCommand.Command == command.Command)
+                {
+                    command = _runningCommand;
+                    _runningCommand = null;
+                }
+            }
+            command.ReceiveDateTime = DateTime.Now;
             if (command.Valid)
             {
                 //raise the event, and pass data to next layer
@@ -64,7 +78,7 @@ namespace NuvoControl.Server.ProtocolDriver
             Send(command);
         }
 
-        public void SendCommand(NuvoEssentiaCommand command)
+        public void SendCommand(INuvoEssentiaCommand command)
         {
             Send(command);
         }
@@ -72,9 +86,11 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
 
-        private void Send(NuvoEssentiaCommand command)
+        private void Send(INuvoEssentiaCommand command)
         {
             command.SendDateTime = DateTime.Now;
+            _serialPort.SendTelegram(command.OutgoingCommand);
+            _runningCommand = command;
         }
 
 

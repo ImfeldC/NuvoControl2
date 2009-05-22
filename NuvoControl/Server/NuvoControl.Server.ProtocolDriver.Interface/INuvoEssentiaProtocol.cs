@@ -10,54 +10,32 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     public class NuvoEssentiaProtocolEventArgs : EventArgs
     {
-        NuvoEssentiaCommand _command;
+        INuvoEssentiaCommand _command;
 
-        public NuvoEssentiaCommand Command
+        public INuvoEssentiaCommand Command
         {
             get { return _command; }
         }
 
-        public NuvoEssentiaProtocolEventArgs(NuvoEssentiaCommand command)
+        public NuvoEssentiaProtocolEventArgs(INuvoEssentiaCommand command)
         {
             _command = command;
         }
 
     }
 
-    public class NuvoEssentiaCommand
+    public interface INuvoEssentiaCommand : IComparable
     {
-        DateTime _createDateTime;
-        DateTime _sendDateTime;
-        DateTime _receiveDateTime;
-        ENuvoEssentiaCommands _command;
+        Guid Guid { get; }
+        ENuvoEssentiaCommands Command { get; }
+        bool Valid { get; }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
-        {
-            _command = command;
-            _createDateTime = DateTime.Now;
-        }
+        DateTime CreatedDateTime { get; }
+        DateTime SendDateTime { get; set; }
+        DateTime ReceiveDateTime { get; set; }
 
-        public ENuvoEssentiaCommands Command
-        {
-            get { return _command; }
-        }
-
-        public bool Valid
-        {
-            get { return _command != ENuvoEssentiaCommands.NoCommand; }
-        }
-
-        public DateTime SendDateTime
-        {
-            get { return _sendDateTime; }
-            set { _sendDateTime = value; }
-        }
-
-        public DateTime ReceiveDateTime
-        {
-            get { return _receiveDateTime; }
-            set { _receiveDateTime = value; }
-        }
+        string OutgoingCommand { get; }
+        string IncomingCommand { get; }
     }
 
     public interface INuvoEssentiaProtocol
@@ -82,7 +60,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// Send the command passed as object to the lower system.
         /// </summary>
         /// <param name="command">Nuvo Essentia command.</param>
-        void SendCommand(NuvoEssentiaCommand command);
+        void SendCommand(INuvoEssentiaCommand command);
     
     }
 }

@@ -13,12 +13,12 @@
   </section>
   <section name="SetSOURCEIR56">
     <entry name="Id">2</entry>
-    <entry name="OutgoingCommand">SxIR56SET</entry>
+    <entry name="OutgoingCommand">SsIR56SET</entry>
     <entry name="IncomingCommand">IRSET:aa,bb,cc,dd,ee,ff</entry>
   </section>
   <section name="SetSOURCEIR38">
     <entry name="Id">3</entry>
-    <entry name="OutgoingCommand">SxIR38SET</entry>
+    <entry name="OutgoingCommand">SsIR38SET</entry>
     <entry name="IncomingCommand">IRSET:aa,bb,cc,dd,ee,ff</entry>
   </section>
 

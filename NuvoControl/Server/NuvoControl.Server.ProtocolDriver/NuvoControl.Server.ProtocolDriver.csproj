@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NuvoEssentiaCommand.cs" />
     <Compile Include="NuvoEssentiaProtocol.cs" />
     <Compile Include="NuvoTelegram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
