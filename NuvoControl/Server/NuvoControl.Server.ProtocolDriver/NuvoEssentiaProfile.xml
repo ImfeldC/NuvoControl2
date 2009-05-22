@@ -172,5 +172,10 @@
     <entry name="OutgoingCommand"></entry>
     <entry name="IncomingCommand">EXTMOFF</entry>
   </section>
+  <section name="ErrorInCommand">
+    <entry name="Id">32</entry>
+    <entry name="OutgoingCommand"></entry>
+    <entry name="IncomingCommand">?</entry>
+  </section>
 
 </profile>
