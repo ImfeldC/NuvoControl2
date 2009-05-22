@@ -70,7 +70,12 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         /// <summary>
         /// COMMAND: *ZxxCONSR<CR> - Connect STATUS REQUEST where xx is zone # from 1 to 12
-        /// RESPONSE:#ZxxPWRppp,SRCs,GRPq,VOL-yy<CR>-ppp = "ON" (2 characters)or "OFF" (3 characters)-s = SOURCE NUMBER 1 to 6-q = 0 if SOURCE GROUP is ON1 if SOURCE GROUP is OFF-yy = level below max in dB: -00 to -79 dB (include lead 0 for all single-digit values)-yy = "MT" if in MUTE state-yy = "XM" if external MUTE is being held active 
+        /// RESPONSE:#ZxxPWRppp,SRCs,GRPq,VOL-yy<CR>
+        /// -ppp = "ON" (2 characters)or "OFF" (3 characters)
+        /// -s = SOURCE NUMBER 1 to 6
+        /// -q = 0 if SOURCE GROUP is ON1 if SOURCE GROUP is OFF
+        /// -yy = level below max in dB: -00 to -79 dB (include lead 0 for all single-digit values)
+        /// -yy = "MT" if in MUTE state-yy = "XM" if external MUTE is being held active 
         /// This response will also be issued in response to pressing the ON/OFF, VOLUME, or SOURCEkeys on a KEYPAD. NOTE – the response will be issued if a SOURCE key is press`ed on azone that is powered OFF even though the key press has no effect on the system. It will beoutput at every increment during a volume ramp initiated by HOLDING a VOLUME UP orVOLUME DOWN key on a keypad. It will also be issued at every increment of a volumeramp commanded by the *ZxxVOL+<CR> and *ZxxVOL-<CR> commands (see below).
         /// The MUTE value will be asserted if a *ZxMTON<CR> command has been received, OR if thevolume is run all the way to the lowest possible point (volume off). An active EXTERNALMUTE input, however, will always override other volume response values with the "XM" response.
         /// </summary>
@@ -78,9 +83,15 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         /// <summary>
         /// COMMAND:*ZxxSETSR<CR> – ZoneSet STATUS REQUEST where xx is zone # from 1 to 12
-        /// RESPONSE:#ZxxORp,BASSyy,TREByy,GRPq,VRSTr<CR>-p = 1 if DIP switches are overridden*0 if DIP switches are in control-yy = EQ level, dB, –8 to +0 (flat) to+8 in 1 dB increments-q = 0 if SOURCE GROUP is ON1 if SOURCE GROUP is OFF(This follows DIP switch definition.)-r = 0 if VOLUME RESET is ON1 if VOLUME RESET is OFF(This follows DIP switch definition.)
+        /// RESPONSE:#ZxxORp,BASSyy,TREByy,GRPq,VRSTr<CR>
+        /// -p = 1 if DIP switches are overridden*0 if DIP switches are in control
+        /// -yy = EQ level, dB, –8 to +0 (flat) to+8 in 1 dB increments
+        /// -q = 0 if SOURCE GROUP is ON / 1 if SOURCE GROUP is OFF (This follows DIP switch definition.)
+        /// -r = 0 if VOLUME RESET is ON / 1 if VOLUME RESET is OFF (This follows DIP switch definition.)
         /// *override set to 1 FOR THIS ZONE only if one of commands *ZxxBASSyy<CR>, *ZxxTREByy<CR>, *ZxxGRPq<CR>, or *ZxxVRSTr<CR> are issued (seedescriptions below).
-        /// Once it is SET by one of these commands:a. It will remain set until power is cycled on the unit.b. Non-address DIP switch changes on a connected KEYPAD connected to this zone will be ignored.
+        /// Once it is SET by one of these commands:
+        /// a. It will remain set until power is cycled on the unit.
+        /// b. Non-address DIP switch changes on a connected KEYPAD connected to this zone will be ignored.
         /// If override state is "0", this response is also issued whenever non-address KEYPAD DIP switches are changed
         /// </summary>
         ReadStatusZONE = 5,
@@ -659,4 +670,28 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     }
     #endregion
 
+
+    #region IR Carrier Frequency
+    /// <summary>
+    /// IR carrier frequency
+    /// </summary>
+    [Serializable]
+    public enum EIRCarrierFrequency
+    {
+        /// <summary>
+        /// IR carrier frequency is 38kHz
+        /// </summary>
+        IR38kHz = 0,
+
+        /// <summary>
+        /// IR carrier frequency is 55kHz
+        /// </summary>
+        IR55kHz = 1,
+
+        /// <summary>
+        /// IR carrier frequency is unknown (invalid)
+        /// </summary>
+        IRUnknown = 2,
+    }
+    #endregion
 }
