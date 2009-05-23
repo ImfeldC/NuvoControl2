@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -51,19 +51,16 @@ namespace NuvoControl.Common.Configuration
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
         public string AssemblyName
         {
             get { return _assemblyName; }
-            set { _assemblyName = value; }
         }
 
         public string ClassName
         {
             get { return _className; }
-            set { _className = value; }
         }
 
 

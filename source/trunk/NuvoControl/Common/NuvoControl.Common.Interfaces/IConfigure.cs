@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -36,7 +36,7 @@ namespace NuvoControl.Common.Interfaces
         Graphic GetGraphicConfiguration();
         Zone GetZoneKonfiguration(int zoneId);
         Function GetFunction(Guid id);
-        List<Function> GetFunctions(UniqueZoneId zoneId);
+        List<Function> GetFunctions(Address zoneId);
         bool AddFunction(Function newFunction);
     }
 }

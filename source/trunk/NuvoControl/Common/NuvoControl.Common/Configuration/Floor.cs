@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -59,19 +59,16 @@ namespace NuvoControl.Common.Configuration
         public string FloorPlanPath
         {
             get { return _floorPlanPath; }
-            set { _floorPlanPath = value; }
         }
 
         public string FloorPlanType
         {
             get { return _floorPlanType; }
-            set { _floorPlanType = value; }
         }
 
         public List<Zone> Zones
         {
             get { return _zones; }
-            set { _zones = value; }
         }
 
         #endregion

@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -49,13 +49,11 @@ namespace NuvoControl.Common.Configuration
         public Building Building
         {
             get { return _building; }
-            set { _building = value; }
         }
 
         public List<Source> Sources
         {
             get { return _sources; }
-            set { _sources = value; }
         }
 
         #endregion

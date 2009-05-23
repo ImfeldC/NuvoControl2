@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -29,12 +29,42 @@ namespace NuvoControl.Common.Interfaces
     /// </summary>
     public interface INuvoControl
     {
+        /// <summary>
+        /// Starts up the service. To be called once. Instantates all service objects.
+        /// </summary>
+        /// <param name="configurationFile">The Nuvo Control configuration.</param>
         void StartUp(string configurationFile);
+
+        /// <summary>
+        /// Shuts down the service.
+        /// </summary>
         void ShutDown();
-        void CreateSession();
+
+        /// <summary>
+        /// Starts a session for a new client.
+        /// </summary>
+        /// <param name="clientId">The Id of the client.</param>
+        /// <returns>True, in case of success. Otherwise false.</returns>
+        bool StartSession(Guid clientId);
+
+        /// <summary>
+        /// Terminates a client session. All subscriptions of the client are deleted.
+        /// </summary>
+        /// <param name="clientId"></param>
+        /// <returns>True, in case of success. Otherwise false.</returns>
+        bool EndSession(Guid clientId);
+
+        /// <summary>
+        /// Returns the <see cref="IConfigure"/> interface.
+        /// This provides access to functionality related to the system configuration of the service.
+        /// </summary>
         IConfigure IConfigure { get; }
-        IMonitor IMonitor { get; }
-        IControl IControl { get; }
+
+        /// <summary>
+        /// Returns the <see cref="IMonitorAndControl"/> interface.
+        /// This provides access to functionality related to controlling and monitoring the state of the service with its zones
+        /// </summary>
+        IMonitorAndControl IMonitorAndControl { get; }
     }
 }
 

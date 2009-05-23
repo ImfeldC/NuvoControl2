@@ -50,8 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IConfigure.cs" />
-    <Compile Include="IControl.cs" />
-    <Compile Include="IMonitor.cs" />
+    <Compile Include="IMonitorAndControl.cs" />
     <Compile Include="INuvoControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

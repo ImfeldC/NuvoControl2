@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -47,7 +47,6 @@ namespace NuvoControl.Common.Configuration
         public List<NuvoEssentia> Devices
         {
             get { return _devices; }
-            set { _devices = value; }
         }
 
         #endregion
