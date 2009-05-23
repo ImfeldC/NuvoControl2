@@ -11,6 +11,8 @@ namespace NuvoControl.Server.ProtocolDriver
     public class NuvoEssentiaCommand : INuvoEssentiaCommand
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
+        //TODO replace hard-coded path
+        private Profile _profile = new Xml("E:\\ImfeldC-NuvoControl\\source\\trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml");
 
         Guid _guid;
         DateTime _createDateTime;
@@ -20,7 +22,9 @@ namespace NuvoControl.Server.ProtocolDriver
 
         int _id;
         string _outgoingCommand;
+        string _outgoingCommandTemplate;
         string _incomingCommand;
+        string _incomingCommandTemplate;
 
         ENuvoEssentiaZones _zoneId = ENuvoEssentiaZones.NoZone;
         ENuvoEssentiaSources _sourceId = ENuvoEssentiaSources.NoSource;
@@ -30,21 +34,26 @@ namespace NuvoControl.Server.ProtocolDriver
         int _basslevel = -999;
         int _treblelevel = -999;
 
+        #region Outgoing Command Constructors
+
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
         {
             initMembers(command);
+            _outgoingCommand = buildOutgoingCommand();
         }
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaSources source)
         {
             initMembers(command);
             _sourceId = source;
+            _outgoingCommand = buildOutgoingCommand();
         }
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
         {
             initMembers(command);
             _zoneId = zone;
+            _outgoingCommand = buildOutgoingCommand();
         }
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
@@ -52,20 +61,39 @@ namespace NuvoControl.Server.ProtocolDriver
             initMembers(command);
             _zoneId = zone;
             _sourceId = source;
+            _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, int volume)
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int volume)
         {
             initMembers(command);
+            _zoneId = zone;
             _volume = volume;
+            _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, int basslevel, int treblelevel)
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int basslevel, int treblelevel)
         {
             initMembers(command);
+            _zoneId = zone;
             _basslevel = basslevel;
             _treblelevel = treblelevel;
+            _outgoingCommand = buildOutgoingCommand();
         }
+
+        #endregion
+
+        #region Incoming Command Constructors
+
+        public NuvoEssentiaCommand(string receivedCommand)
+        {
+            ENuvoEssentiaCommands command = searchNuvoEssentiaCommand(receivedCommand);
+            initMembers(command);
+            _incomingCommand = receivedCommand;
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Private method to initialize the members.
@@ -82,14 +110,34 @@ namespace NuvoControl.Server.ProtocolDriver
                 _irCarrierFrequencySource[i] = EIRCarrierFrequency.IRUnknown;
             }
 
-            //TODO replace hard-coded path
-            Profile profile = new Xml("E:\\ImfeldC-NuvoControl\\source\\trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml");
-
             // Load profile for this command
-            _id = Convert.ToInt32((string)profile.GetValue(command.ToString(), "Id"));
-            _outgoingCommand = (string)profile.GetValue(command.ToString(), "OutgoingCommand");
-            _incomingCommand = (string)profile.GetValue(command.ToString(), "IncomingCommand");
+            _id = Convert.ToInt32((string)_profile.GetValue(command.ToString(), "Id"));
+            _outgoingCommandTemplate = (string)_profile.GetValue(command.ToString(), "OutgoingCommand");
+            _incomingCommandTemplate = (string)_profile.GetValue(command.ToString(), "IncomingCommand");
         }
+
+        /// <summary>
+        /// Searches in the profile the command passed as string.
+        /// This can either be an incomming- or outgoing-command.
+        /// </summary>
+        /// <param name="command">Command (passed as string)</param>
+        /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
+        private ENuvoEssentiaCommands searchNuvoEssentiaCommand(string command)
+        {
+            string[] sectionNames = _profile.GetSectionNames();
+            foreach (string section in sectionNames)
+            {
+                string incomingCommand = (string)_profile.GetValue(section,"IncomingCommand");
+                if (NuvoEssentiaProtocol.compareCommandString(incomingCommand, command))
+                {
+                    _log.Debug(m => m("Entry found: Command={0}, IncomingCommand={1}, Section={2}", command, incomingCommand, section));
+                    return (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), section, true);
+                }
+            }
+            // command not found
+            return ENuvoEssentiaCommands.NoCommand;
+        }
+
 
 
         #region IComparable Members
@@ -136,6 +184,16 @@ namespace NuvoControl.Server.ProtocolDriver
             get { return _createDateTime; }
         }
 
+        public string OutgoingCommandTemplate
+        {
+            get { return _outgoingCommandTemplate; }
+        }
+
+        public string IncomingCommandTemplate
+        {
+            get { return _incomingCommandTemplate; }
+        }
+
         public string OutgoingCommand
         {
             get { return _outgoingCommand; }
@@ -143,13 +201,55 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public string IncomingCommand
         {
-            get { return _incomingCommand; }
+            get
+            {
+                return _incomingCommand;
+            }
+            set
+            {
+                _incomingCommand = value;
+            }
+        }
+
+        public ENuvoEssentiaZones ZoneId
+        {
+            get { return _zoneId; }
+        }
+
+        public ENuvoEssentiaSources SourceId
+        {
+            get { return _sourceId; }
+        }
+
+        public EZonePowerStatus PowerStatus
+        {
+            get { return _powerStatus; }
+        }
+
+        public EIRCarrierFrequency IrCarrierFrequencySource(ENuvoEssentiaSources source)
+        {
+            return _irCarrierFrequencySource[(int)source-1];
+        }
+
+        public int VolumeLevel
+        {
+            get { return _volume; }
+        }
+
+        public int BassLevel
+        {
+            get { return _basslevel; }
+        }
+
+        public int TrebleLevel
+        {
+            get { return _treblelevel; }
         }
 
         #endregion
 
 
-        #region Replace Section
+        #region Command Replace Section
         ///
         /// This section contains public and private methods to replace placeholders
         /// in the command string.
@@ -171,22 +271,177 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Only replacements in outgoing commands are executed. For the incoming commands refer the Parse Section.
         /// 
 
+
+        /// <summary>
+        /// Builds the outgoing command string, for this command.
+        /// Replaces all placeholders with its corresponding values. 
+        /// </summary>
+        /// <returns>Outgoing command string.</returns>
+        private string buildOutgoingCommand()
+        {
+            string outgoingCommand="";
+            if (_command != ENuvoEssentiaCommands.NoCommand)
+            {
+                switch (_command)
+                {
+                    // commands without parameter
+                    case ENuvoEssentiaCommands.ReadStatusSOURCEIR:
+                    case ENuvoEssentiaCommands.RestoreDefaultSOURCEIR:
+                    case ENuvoEssentiaCommands.SetSOURCEIR38:
+                    case ENuvoEssentiaCommands.SetSOURCEIR56:
+                    case ENuvoEssentiaCommands.TurnALLZoneOFF:
+                    case ENuvoEssentiaCommands.RampVolumeALLZoneDOWN:
+                    case ENuvoEssentiaCommands.RampVolumeALLZoneUP:
+                    case ENuvoEssentiaCommands.StopRampVolumeALLZone:
+                    case ENuvoEssentiaCommands.MuteALLZoneOFF:
+                    case ENuvoEssentiaCommands.MuteALLZoneON:
+                    case ENuvoEssentiaCommands.ReadVersion:
+                        // No replacement required (command has not parameters)
+                        outgoingCommand = _outgoingCommandTemplate;
+                        break;
+
+                    // commands with zone parameter only
+                    case ENuvoEssentiaCommands.ReadStatusCONNECT:
+                    case ENuvoEssentiaCommands.ReadStatusZONE:
+                    case ENuvoEssentiaCommands.TurnZoneON:
+                    case ENuvoEssentiaCommands.TurnZoneOFF:
+                    case ENuvoEssentiaCommands.RampVolumeDOWN:
+                    case ENuvoEssentiaCommands.RampVolumeUP:
+                    case ENuvoEssentiaCommands.StopRampVolume:
+                    case ENuvoEssentiaCommands.MuteOFF:
+                    case ENuvoEssentiaCommands.MuteON:
+                    case ENuvoEssentiaCommands.SetSourceGroupOFF:
+                    case ENuvoEssentiaCommands.SetSourceGroupON:
+                    case ENuvoEssentiaCommands.SetVolumeResetOFF:
+                    case ENuvoEssentiaCommands.SetVolumeResetON:
+                    case ENuvoEssentiaCommands.SetKeypadLockOFF:
+                    case ENuvoEssentiaCommands.SetKeypadLockON:
+                        // replace zone placeholder
+                        outgoingCommand = replacePlaceholderForZone(_outgoingCommandTemplate, _zoneId);
+                        break;
+
+                    // commands with zone and source parameter 
+                    case ENuvoEssentiaCommands.SetSource:
+                        // replace zone placeholder
+                        outgoingCommand = replacePlaceholderForZone(_outgoingCommandTemplate, _zoneId);
+                        // replace source placeholder
+                        outgoingCommand = replacePlaceholderForSource(outgoingCommand, _sourceId);
+                        break;
+
+                    // commands with zone and volume parameter 
+                    case ENuvoEssentiaCommands.SetVolume:
+                        // replace zone placeholder
+                        outgoingCommand = replacePlaceholderForZone(_outgoingCommandTemplate, _zoneId);
+                        // replace volume level
+                        outgoingCommand = replacePlaceholderWithVolumeLevel(outgoingCommand, _volume);
+                        break;
+
+                    // commands with zone and bass parameter 
+                    case ENuvoEssentiaCommands.SetBassLevel:
+                        // replace zone placeholder
+                        outgoingCommand = replacePlaceholderForZone(_outgoingCommandTemplate, _zoneId);
+                        // replace bass level
+                        outgoingCommand = replacePlaceholderWithBassLevel(outgoingCommand, _basslevel);
+                        break;
+
+                    // commands with zone and treble parameter 
+                    case ENuvoEssentiaCommands.SetTrebleLevel:
+                        // replace zone placeholder
+                        outgoingCommand = replacePlaceholderForZone(_outgoingCommandTemplate, _zoneId);
+                        // replace treble level
+                        outgoingCommand = replacePlaceholderWithTrebleLevel(outgoingCommand, _treblelevel);
+                        break;
+
+                    // incoming command ONLY
+                    case ENuvoEssentiaCommands.ExternalMuteActivated:
+                    case ENuvoEssentiaCommands.ExternalMuteDeactivated:
+                    case ENuvoEssentiaCommands.ErrorInCommand:
+                        outgoingCommand = "";
+                        _log.Error(m => m("Error, cannot build outgoing command string for the command '{0}'!", _command));
+                        break;
+
+                    // unkown command 
+                    default:
+                        // replace all knwon replacements so far
+                        outgoingCommand = replacePlaceholders(_outgoingCommandTemplate);
+                        _log.Warn(m => m("Warning, for this command '{0}' may not all required replacements implemented!", _command));
+                        break;
+                }
+            }
+            else
+            {
+                _log.Warn(m => m("Cannot build outgoing command, because command is unkown!"));
+                return "";
+            }
+
+            return outgoingCommand;
+        }
+
+        /*
+                    case ENuvoEssentiaCommands.MuteALLZoneOFF:
+                    case ENuvoEssentiaCommands.MuteALLZoneON:
+                    case ENuvoEssentiaCommands.MuteOFF:
+                    case ENuvoEssentiaCommands.MuteON:
+                    case ENuvoEssentiaCommands.RampVolumeALLZoneDOWN:
+                    case ENuvoEssentiaCommands.RampVolumeALLZoneUP:
+                    case ENuvoEssentiaCommands.RampVolumeDOWN:
+                    case ENuvoEssentiaCommands.RampVolumeUP:
+                    case ENuvoEssentiaCommands.ReadStatusCONNECT:
+                    case ENuvoEssentiaCommands.ReadStatusSOURCEIR:
+                    case ENuvoEssentiaCommands.ReadStatusZONE:
+                    case ENuvoEssentiaCommands.ReadVersion:
+                    case ENuvoEssentiaCommands.RestoreDefaultSOURCEIR:
+                    case ENuvoEssentiaCommands.SetBassLevel:
+                    case ENuvoEssentiaCommands.SetKeypadLockOFF:
+                    case ENuvoEssentiaCommands.SetKeypadLockON:
+                    case ENuvoEssentiaCommands.SetSource:
+                    case ENuvoEssentiaCommands.SetSourceGroupOFF:
+                    case ENuvoEssentiaCommands.SetSourceGroupON:
+                    case ENuvoEssentiaCommands.SetSOURCEIR38:
+                    case ENuvoEssentiaCommands.SetSOURCEIR56:
+                    case ENuvoEssentiaCommands.SetTrebleLevel:
+                    case ENuvoEssentiaCommands.SetVolume:
+                    case ENuvoEssentiaCommands.SetVolumeResetOFF:
+                    case ENuvoEssentiaCommands.SetVolumeResetON:
+                    case ENuvoEssentiaCommands.StopRampVolume:
+                    case ENuvoEssentiaCommands.StopRampVolumeALLZone:
+                    case ENuvoEssentiaCommands.TurnALLZoneOFF:
+                    case ENuvoEssentiaCommands.TurnZoneOFF:
+                    case ENuvoEssentiaCommands.TurnZoneON:
+
+         */
+
+
         /// <summary>
         /// Replaces the placeholders in the input command with its corresponding
         /// values. Returns a string containing the values.
+        /// This method executes all known replacements.
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
         private string replacePlaceholders(string command)
         {
-            command = replacePlaceholderForZone(command, _zoneId, "xx");
-            command = replacePlaceholderForSource(command, _sourceId, "s");
-            command = replacePlaceholderWithVolumeLevel(command, _volume, "yy");
-            command = replacePlaceholderWithBassTrebleLevel(command, _basslevel, "uuu");
-            command = replacePlaceholderWithBassTrebleLevel(command, _treblelevel, "ttt");
+            command = replacePlaceholderForZone(command, _zoneId);
+            command = replacePlaceholderForSource(command, _sourceId);
+            command = replacePlaceholderWithVolumeLevel(command, _volume);
+            command = replacePlaceholderWithBassLevel(command, _basslevel);
+            command = replacePlaceholderWithTrebleLevel(command, _treblelevel);
+            command = replacePlaceholderForPowerStatus(command, _powerStatus);
+            command = replacePlaceholderForIRFrequency(command, _irCarrierFrequencySource);
             return command;
         }
 
+
+        /// <summary>
+        /// Replaces the default volume level placeholder with the volume level in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="volume">Volume level</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderWithVolumeLevel(string command, int volume)
+        {
+            return replacePlaceholderWithVolumeLevel(command, volume, "yy");
+        }
 
         /// <summary>
         /// Replaces the volume level placeholder with the volume level in the command string.
@@ -212,6 +467,28 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
             }
             return command;
+        }
+
+        /// <summary>
+        /// Replaces the default bass placeholder with the level in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="level">Bass level</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderWithBassLevel(string command, int level)
+        {
+            return replacePlaceholderWithBassTrebleLevel(command, level, "uuu");
+        }
+
+        /// <summary>
+        /// Replaces the default treble placeholder with the level in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="level">Treble level</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderWithTrebleLevel(string command, int level)
+        {
+            return replacePlaceholderWithBassTrebleLevel(command, level, "ttt");
         }
 
         /// <summary>
@@ -241,6 +518,17 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
+        /// Replaces the default power status placeholder with the power status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="zonepwrstatus">Zone power status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderForPowerStatus(string command, EZonePowerStatus zonepwrstatus)
+        {
+            return replacePlaceholderForPowerStatus(command, zonepwrstatus, "ppp");
+        }
+
+        /// <summary>
         /// Replaces the power status placeholder with the power status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
@@ -261,6 +549,17 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
             }
             return command;
+        }
+
+        /// <summary>
+        /// Replaces the default zone placeholder with the zone id in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="zone">Zone Id</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderForZone(string command, ENuvoEssentiaZones zone)
+        {
+            return replacePlaceholderForZone(command, zone, "xx");
         }
 
         /// <summary>
@@ -287,6 +586,23 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
+        /// Replaces the default IR carrier frequency placeholder with the IR carrier frequency (=ircf) in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="ircf">IR Carrier Frequency, either 38kHz or 55kHz</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderForIRFrequency(string command, EIRCarrierFrequency[] ircf)
+        {
+            command = replacePlaceholderForIRFrequency(command, ircf[0], "aa");    // Source 1
+            command = replacePlaceholderForIRFrequency(command, ircf[1], "bb");    // Source 2
+            command = replacePlaceholderForIRFrequency(command, ircf[2], "cc");    // Source 3
+            command = replacePlaceholderForIRFrequency(command, ircf[3], "dd");    // Source 4
+            command = replacePlaceholderForIRFrequency(command, ircf[4], "ee");    // Source 5
+            command = replacePlaceholderForIRFrequency(command, ircf[5], "ff");    // Source 6
+            return command;
+        }
+
+        /// <summary>
         /// Replaces the IR carrier frequency placeholder with the IR carrier frequency (=ircf) in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
@@ -307,6 +623,17 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
             }
             return command;
+        }
+
+        /// <summary>
+        /// Replaces the default source placeholder with the source id in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">Source Id</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        private string replacePlaceholderForSource(string command, ENuvoEssentiaSources source)
+        {
+            return replacePlaceholderForSource(command, source, "s");
         }
 
         /// <summary>
@@ -371,6 +698,8 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         #endregion
+
+
     }
 
 }

@@ -89,7 +89,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private void Send(INuvoEssentiaCommand command)
         {
             command.SendDateTime = DateTime.Now;
-            _serialPort.SendTelegram(command.OutgoingCommand);
+            _serialPort.SendTelegram(command.OutgoingCommandTemplate);
             _runningCommand = command;
         }
 
@@ -138,7 +138,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="configuredCommand">Configured command string.</param>
         /// <param name="receivedCommand">Received command string.</param>
         /// <returns>True of the received command string is equal to the configured command string.</returns>
-        private bool compareCommandString(string configuredCommand, string receivedCommand)
+        public static bool compareCommandString(string configuredCommand, string receivedCommand)
         {
             // The strings are equal, when ...
             // a) The configured string is equal to the received string OR
