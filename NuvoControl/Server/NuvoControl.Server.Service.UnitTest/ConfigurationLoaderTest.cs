@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -149,6 +149,78 @@ namespace NuvoControl.Server.Service.UnitTest
 
 
         /// <summary>
+        ///A test for Validate
+        ///</summary>
+        [TestMethod()]
+        public void ValidateTestNotDistinctZones()
+        {
+            string file = @"..\..\..\Config\NuvoControlKonfigurationNotDistinctZones.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            Assert.AreEqual(false, target.Validate());
+        }
+
+
+        /// <summary>
+        ///A test for Validate
+        ///</summary>
+        [TestMethod()]
+        public void ValidateTestNotDistinctSources()
+        {
+            string file = @"..\..\..\Config\NuvoControlKonfigurationNotDistinctSources.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            Assert.AreEqual(false, target.Validate());
+        }
+
+
+        /// <summary>
+        ///A test for Validate
+        ///</summary>
+        [TestMethod()]
+        public void ValidateTestInvalidZoneIdInGraphic()
+        {
+            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            Assert.AreEqual(false, target.Validate());
+        }
+
+
+        /// <summary>
+        ///A test for Validate
+        ///</summary>
+        [TestMethod()]
+        public void ValidateTestInvalidSourceIdInGraphic()
+        {
+            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            Assert.AreEqual(false, target.Validate());
+        }
+
+
+        /// <summary>
+        ///A test for Validate
+        ///</summary>
+        [TestMethod()]
+        public void ValidateTestInvalidZoneIdInSleepFunction()
+        {
+            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            Assert.AreEqual(false, target.Validate());
+        }
+
+
+        /// <summary>
+        ///A test for Validate
+        ///</summary>
+        [TestMethod()]
+        public void ValidateTestInvalidSourceIdInAlarmFunction()
+        {
+            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            Assert.AreEqual(false, target.Validate());
+        }
+
+
+        /// <summary>
         ///A test for GetConfiguration
         ///</summary>
         [TestMethod()]
@@ -161,10 +233,10 @@ namespace NuvoControl.Server.Service.UnitTest
 
             TestContext.WriteLine("Testing device communication parameters...");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Id, 100);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].BaudRate, 9600);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].DataBits, 8);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ParityBit, 1);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ParityMode, "No");
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Communication.BaudRate, 9600);
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Communication.DataBits, 8);
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Communication.ParityBit, 1);
+            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Communication.ParityMode, "No");
 
             TestContext.WriteLine("Testing device protocol driver parameters...");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.Name, "Nuvo Essentia Protkoll Driver");
@@ -201,7 +273,7 @@ namespace NuvoControl.Server.Service.UnitTest
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].FloorPlanPath, @".\Images\Wohnbereich.jpg");
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].FloorPlanType, "jpg");
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones.Count, 9);
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].Id, new UniqueZoneId(100, 1));
+            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].Id, new Address(100, 1));
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].Name, "Esszimmer");
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].PicturePath, @".\Images\Esszimmer.jpg");
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].PictureType, "jpg");
@@ -209,7 +281,7 @@ namespace NuvoControl.Server.Service.UnitTest
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].X, 10);
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].Y, 15);
             Assert.AreEqual(systemConfiguration.Graphic.Sources.Count, 5);
-            Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Id, new UniqueSourceId(100, 1));
+            Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Id, new Address(100, 1));
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Name, "Tuner A");
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PicturePath, @".\Images\Tuner.jpg");
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PictureType, "jpg");
@@ -218,16 +290,16 @@ namespace NuvoControl.Server.Service.UnitTest
             Assert.AreEqual(systemConfiguration.Functions.Count, 3);
             SleepFunction sleepFct = systemConfiguration.Functions[0] as SleepFunction;
             Assert.AreEqual(sleepFct.Id, new Guid("2445f69e-a5a7-465e-95be-9179913d3786"));
-            Assert.AreEqual(sleepFct.ZoneId, new UniqueZoneId(100, 1));
+            Assert.AreEqual(sleepFct.ZoneId, new Address(100, 1));
             Assert.AreEqual(sleepFct.SleepDuration, new TimeSpan(0, 60, 0));
             Assert.AreEqual(sleepFct.ValidFrom, new TimeSpan(23, 0, 0));
             Assert.AreEqual(sleepFct.ValidTo, new TimeSpan(2, 0, 0));
             AlarmFunction alarmFct = systemConfiguration.Functions[1] as AlarmFunction;
             Assert.AreEqual(alarmFct.Id, new Guid("14bdca34-ea36-4419-8cd4-788a73a81c93"));
-            Assert.AreEqual(alarmFct.ZoneId, new UniqueZoneId(100, 2));
+            Assert.AreEqual(alarmFct.ZoneId, new Address(100, 2));
             Assert.AreEqual(alarmFct.AlarmTime, new TimeSpan(7, 0, 0));
             Assert.AreEqual(alarmFct.AlarmDuration, new TimeSpan(0, 10, 0));
-            Assert.AreEqual(alarmFct.UniqueSourceId, new UniqueSourceId(100, 2));
+            Assert.AreEqual(alarmFct.SourceId, new Address(100, 2));
             Assert.AreEqual(alarmFct.ValidOnDays.Count, 2);
             Assert.AreEqual(alarmFct.ValidOnDays[0], DayOfWeek.Monday);
             Assert.AreEqual(alarmFct.ValidOnDays[1], DayOfWeek.Tuesday);
