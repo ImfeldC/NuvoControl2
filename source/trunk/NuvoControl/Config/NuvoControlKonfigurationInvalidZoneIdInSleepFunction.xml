@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--Authors: C. Imfeld, B. Limacher-->
+<!--Date: 05.05.2009-->
+<NuvoControl>
+  <Configuration Version="1.0">
+    <Hardware>
+      <NuvoEssentia Id="100">
+        <ProtocolDriver Name="Nuvo Essentia Protkoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.NuvoEssentiaProtocolDriver" />
+        <Communication Port="COM1" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="No" />
+        <Zones>
+          <Zone Id="1" />
+          <Zone Id="2" />
+          <Zone Id="3" />
+          <Zone Id="4" />
+          <Zone Id="5" />
+          <Zone Id="6" />
+          <Zone Id="7" />
+          <Zone Id="8" />
+          <Zone Id="9" />
+          <Zone Id="10" />
+          <Zone Id="11" />
+          <Zone Id="12" />
+        </Zones>
+        <Sources>
+          <Source Id="1" />
+          <Source Id="2" />
+          <Source Id="3" />
+          <Source Id="4" />
+          <Source Id="5" />
+          <Source Id="6" />
+        </Sources>
+      </NuvoEssentia>
+    </Hardware>
+    <Graphic>
+      <Building>
+        <Floor Name="Wohnbereich">
+          <FloorPlan RelativePath=".\Images\Wohnbereich.jpg" PictureType="jpg" />
+          <Zones>
+            <Zone Id="100.1" Name="Esszimmer">
+              <Picture RelativePath=".\Images\Esszimmer.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.2" Name="Wohnzimmer">
+              <Picture RelativePath=".\Images\Wohnzimmer.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.3" Name="Schlafzimmer">
+              <Picture RelativePath=".\Images\Schlafzimmer.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.4" Name="Bad/WC">
+              <Picture RelativePath=".\Images\BadWC.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.5" Name="Küche">
+              <Picture RelativePath=".\Images\Küche.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.6" Name="Dusche">
+              <Picture RelativePath=".\Images\Dusche.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.7" Name="Büro Christian">
+              <Picture RelativePath=".\Images\BüroChristian.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.8" Name="Hasenzimmer">
+              <Picture RelativePath=".\Images\Hasenzimmer.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.11" Name="Balkon">
+              <Picture RelativePath=".\Images\Balkon.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+          </Zones>
+        </Floor>
+        <Floor Name="Galerie">
+          <FloorPlan RelativePath=".\Images\Galerie.jpg" PictureType="jpg" />
+          <Zones>
+            <Zone Id="100.9" Name="Büro Anita">
+              <Picture RelativePath=".\Images\BüroAnita.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.10" Name="Fernsehecke">
+              <Picture RelativePath=".\Images\Fernsehecke.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+            <Zone Id="100.12" Name="Funk">
+              <Picture RelativePath=".\Images\Funk.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="10" y="10" />
+                <Point x="10" y="15" />
+                <Point x="15" y="15" />
+                <Point x="15" y="10" />
+              </FloorPlanCoordinates>
+            </Zone>
+          </Zones>
+        </Floor>
+      </Building>
+      <Sources>
+        <Source Id="100.1" Name="Tuner A">
+          <Picture RelativePath=".\Images\Tuner.jpg" PictureType="jpg" />
+        </Source>
+        <Source Id="100.2" Name="Tuner B">
+          <Picture RelativePath=".\Images\Tuner.jpg" PictureType="jpg" />
+        </Source>
+        <Source Id="100.3" Name="CD Player">
+          <Picture RelativePath=".\Images\CDPlayer.jpg" PictureType="jpg" />
+        </Source>
+        <Source Id="100.4" Name="TV">
+          <Picture RelativePath=".\Images\TV.jpg" PictureType="jpg" />
+        </Source>
+        <Source Id="100.6" Name="Media Server">
+          <Picture RelativePath=".\Images\MediaServer.jpg" PictureType="jpg" />
+        </Source>
+      </Sources>
+    </Graphic>
+    <Functions>
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="101.1" SleepDuration="60">
+        <Validity ActiveFrom="23:00" ActiveTo="02:00"></Validity>
+      </SleepFunction>
+      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c93" ZoneId="100.2" AlarmTime="07:00" AlarmDuration="10" SourceId="100.2">
+        <Validity>
+          <Days>
+            <Day Name="Monday" />
+            <Day Name="Tuesday" />
+          </Days>
+        </Validity>
+      </AlarmFunction>
+      <AlarmFunction Id="9901106d-4811-48c3-a734-dab53f15d73d" ZoneId="100.2" AlarmTime="07:30" AlarmDuration="10" SourceId="100.2">
+        <Validity>
+          <Days>
+            <Day Name="Wednesday" />
+            <Day Name="Thursday" />
+            <Day Name="Friday" />
+          </Days>
+        </Validity>
+      </AlarmFunction>
+    </Functions>
+  </Configuration>
+</NuvoControl>
