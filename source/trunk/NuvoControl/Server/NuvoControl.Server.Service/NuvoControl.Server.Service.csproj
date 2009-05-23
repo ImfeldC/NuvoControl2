@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ExternalLibraries\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -53,8 +57,11 @@
     <Compile Include="Configuration\NuvoControlConfiguration.cs" />
     <Compile Include="Configuration\ConfigurationLoader.cs" />
     <Compile Include="Configuration\IConfigureInternal.cs" />
+    <Compile Include="MandC\IZoneController.cs" />
+    <Compile Include="MandC\MonitorAndControl.cs" />
     <Compile Include="NuvoControlService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MandC\ZoneController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj">

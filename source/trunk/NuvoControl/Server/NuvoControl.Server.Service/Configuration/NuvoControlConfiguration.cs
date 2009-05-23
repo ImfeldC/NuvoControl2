@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -65,7 +65,7 @@ namespace NuvoControl.Server.Service.Configuration
             throw new NotImplementedException();
         }
 
-        public List<Function> GetFunctions(UniqueZoneId zoneId)
+        public List<Function> GetFunctions(Address zoneId)
         {
             throw new NotImplementedException();
         }

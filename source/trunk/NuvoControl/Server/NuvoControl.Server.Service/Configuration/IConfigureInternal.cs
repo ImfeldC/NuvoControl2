@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -26,8 +26,14 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.Service.Configuration
 {
+    /// <summary>
+    /// An internal interface to access the whole Nuvo Control system configuration.
+    /// </summary>
     internal interface IConfigureInternal
     {
+        /// <summary>
+        /// Returns the Nuvo Control system configuration.
+        /// </summary>
         SystemConfiguration SystemConfiguration { get; }
     }
 }
