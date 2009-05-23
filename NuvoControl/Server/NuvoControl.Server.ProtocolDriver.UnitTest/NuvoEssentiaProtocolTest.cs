@@ -214,18 +214,15 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void compareCommandStringTest()
         {
-            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
-            NuvoEssentiaProtocol_Accessor target = new NuvoEssentiaProtocol_Accessor(nuvoTelegram);
-
-            Assert.AreEqual(true, target.compareCommandString("VER", "VER"));
-            Assert.AreEqual(false, target.compareCommandString("VER", "VERX"));
-            Assert.AreEqual(true, target.compareCommandString("NUVO_E6D_vx.yy", "NUVO_E6D_v1.23"));
-            Assert.AreEqual(false, target.compareCommandString("NUVO_E6D_vx.yy", "NUVO_E6D_v1,23"));
-            Assert.AreEqual(false, target.compareCommandString("NUVO_E6D_vx.yy", "NUVO-E6D_v1.23"));
-            Assert.AreEqual(true, target.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWRON,SRC2,GRP0,VOL-00"));
-            Assert.AreEqual(true, target.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWROFF,SRC4,GRP1,VOL-79"));
-            Assert.AreEqual(false, target.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWRON,SRC2.GRP0,VOL-00"));
-            Assert.AreEqual(false, target.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWROFF,SRC4.GRP1,VOL-79"));
+            Assert.AreEqual(true, NuvoEssentiaProtocol.compareCommandString("VER", "VER"));
+            Assert.AreEqual(false, NuvoEssentiaProtocol.compareCommandString("VER", "VERX"));
+            Assert.AreEqual(true, NuvoEssentiaProtocol.compareCommandString("NUVO_E6D_vx.yy", "NUVO_E6D_v1.23"));
+            Assert.AreEqual(false, NuvoEssentiaProtocol.compareCommandString("NUVO_E6D_vx.yy", "NUVO_E6D_v1,23"));
+            Assert.AreEqual(false, NuvoEssentiaProtocol.compareCommandString("NUVO_E6D_vx.yy", "NUVO-E6D_v1.23"));
+            Assert.AreEqual(true, NuvoEssentiaProtocol.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWRON,SRC2,GRP0,VOL-00"));
+            Assert.AreEqual(true, NuvoEssentiaProtocol.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWROFF,SRC4,GRP1,VOL-79"));
+            Assert.AreEqual(false, NuvoEssentiaProtocol.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWRON,SRC2.GRP0,VOL-00"));
+            Assert.AreEqual(false, NuvoEssentiaProtocol.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWROFF,SRC4.GRP1,VOL-79"));
 
         }
     }

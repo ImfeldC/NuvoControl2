@@ -89,7 +89,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void IncomingCommandTest()
         {
             NuvoEssentiaCommand target = new NuvoEssentiaCommand(ENuvoEssentiaCommands.RampVolumeUP);
-            string actual= target.IncomingCommand;
+            string actual= target.IncomingCommandTemplate;
             Assert.IsTrue(actual.CompareTo("ZxxPWRppp,SRCs,GRPq,VOL-yy") == 0);
         }
 
@@ -101,7 +101,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void OutgoingCommandTest()
         {
             NuvoEssentiaCommand target = new NuvoEssentiaCommand(ENuvoEssentiaCommands.RampVolumeUP);
-            string actual = target.OutgoingCommand;
+            string actual = target.OutgoingCommandTemplate;
             Assert.IsTrue(actual.CompareTo("ZxxVOL+") == 0);
         }
 
@@ -258,6 +258,93 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             actual = target.replacePlaceholders("IRSET:aa,bb,cc,dd,ee,ff");
             Assert.AreEqual("IRSET:aa,bb,cc,dd,ee,ff", actual);
+        }
+
+        /// <summary>
+        ///A test for buildOutgoingCommand: Read Version
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void buildOutgoingCommand1Test()
+        {
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.ReadVersion);
+            string actual = target.buildOutgoingCommand();
+            Assert.AreEqual("VER", actual);
+        }
+
+        /// <summary>
+        ///A test for buildOutgoingCommand: Read Status Connect for Zone 5
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void buildOutgoingCommand2Test()
+        {
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                (ENuvoEssentiaCommands.ReadStatusCONNECT,ENuvoEssentiaZones.Zone5);
+            string actual = target.buildOutgoingCommand();
+            Assert.AreEqual("Z05CONSR", actual);
+        }
+
+        /// <summary>
+        ///A test for buildOutgoingCommand: Set Source for Zone 10 and Source 2
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void buildOutgoingCommand3Test()
+        {
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                (ENuvoEssentiaCommands.SetSource, ENuvoEssentiaZones.Zone10, ENuvoEssentiaSources.Source2);
+            string actual = target.buildOutgoingCommand();
+            Assert.AreEqual("Z10SRC2", actual);
+        }
+
+        /// <summary>
+        ///A test for buildOutgoingCommand: Set Volume for Zone 12 and Volume Level -60
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void buildOutgoingCommand4Test()
+        {
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                (ENuvoEssentiaCommands.SetVolume, ENuvoEssentiaZones.Zone12,-60);
+            string actual = target.buildOutgoingCommand();
+            Assert.AreEqual("Z12VOL60", actual);
+        }
+
+        /// <summary>
+        ///A test for buildOutgoingCommand: Set Bass and Treble Level
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void buildOutgoingCommand5Test()
+        {
+            {
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                    (ENuvoEssentiaCommands.SetBassLevel, ENuvoEssentiaZones.Zone12, -10, 0);    // ignore treble level
+                string actual = target.buildOutgoingCommand();
+                Assert.AreEqual("Z12BASS-10", actual);
+            }
+
+            {
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                    (ENuvoEssentiaCommands.SetBassLevel, ENuvoEssentiaZones.Zone12, 5, 0);      // ignore treble level
+                string actual = target.buildOutgoingCommand();
+                Assert.AreEqual("Z12BASS+05", actual);
+            }
+
+            {
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                    (ENuvoEssentiaCommands.SetTrebleLevel, ENuvoEssentiaZones.Zone8, 5, 12);   // ignore bass level
+                string actual = target.buildOutgoingCommand();
+                Assert.AreEqual("Z08TREB+12", actual);
+            }
+
+            {
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor
+                    (ENuvoEssentiaCommands.SetTrebleLevel, ENuvoEssentiaZones.Zone9, 5, -12);   // ignore bass level
+                string actual = target.buildOutgoingCommand();
+                Assert.AreEqual("Z09TREB-12", actual);
+            }
         }
     }
 }

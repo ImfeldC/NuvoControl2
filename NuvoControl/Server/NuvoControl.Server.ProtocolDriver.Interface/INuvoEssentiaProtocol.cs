@@ -34,8 +34,18 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         DateTime SendDateTime { get; set; }
         DateTime ReceiveDateTime { get; set; }
 
+        string OutgoingCommandTemplate { get; }
         string OutgoingCommand { get; }
-        string IncomingCommand { get; }
+        string IncomingCommandTemplate { get; }
+        string IncomingCommand { get; set; }
+
+        ENuvoEssentiaZones ZoneId { get; }
+        ENuvoEssentiaSources SourceId { get; }
+        EZonePowerStatus PowerStatus { get; }
+        EIRCarrierFrequency IrCarrierFrequencySource( ENuvoEssentiaSources source );
+        int VolumeLevel { get; }
+        int BassLevel { get; }
+        int TrebleLevel { get; }
     }
 
     public interface INuvoEssentiaProtocol
