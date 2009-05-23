@@ -90,6 +90,7 @@ namespace NuvoControl.Server.ProtocolDriver
             ENuvoEssentiaCommands command = searchNuvoEssentiaCommand(receivedCommand);
             initMembers(command);
             _incomingCommand = receivedCommand;
+            parseIncomingCommand();
         }
 
         #endregion
@@ -207,6 +208,7 @@ namespace NuvoControl.Server.ProtocolDriver
             set
             {
                 _incomingCommand = value;
+                parseIncomingCommand();
             }
         }
 
@@ -248,7 +250,6 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
 
-        #region Command Replace Section
         ///
         /// This section contains public and private methods to replace placeholders
         /// in the command string.
@@ -270,6 +271,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Only replacements in outgoing commands are executed. For the incoming commands refer the Parse Section.
         /// 
 
+        #region Command Replace Section
 
         /// <summary>
         /// Builds the outgoing command string, for this command.
@@ -375,41 +377,6 @@ namespace NuvoControl.Server.ProtocolDriver
 
             return outgoingCommand;
         }
-
-        /*
-                    case ENuvoEssentiaCommands.MuteALLZoneOFF:
-                    case ENuvoEssentiaCommands.MuteALLZoneON:
-                    case ENuvoEssentiaCommands.MuteOFF:
-                    case ENuvoEssentiaCommands.MuteON:
-                    case ENuvoEssentiaCommands.RampVolumeALLZoneDOWN:
-                    case ENuvoEssentiaCommands.RampVolumeALLZoneUP:
-                    case ENuvoEssentiaCommands.RampVolumeDOWN:
-                    case ENuvoEssentiaCommands.RampVolumeUP:
-                    case ENuvoEssentiaCommands.ReadStatusCONNECT:
-                    case ENuvoEssentiaCommands.ReadStatusSOURCEIR:
-                    case ENuvoEssentiaCommands.ReadStatusZONE:
-                    case ENuvoEssentiaCommands.ReadVersion:
-                    case ENuvoEssentiaCommands.RestoreDefaultSOURCEIR:
-                    case ENuvoEssentiaCommands.SetBassLevel:
-                    case ENuvoEssentiaCommands.SetKeypadLockOFF:
-                    case ENuvoEssentiaCommands.SetKeypadLockON:
-                    case ENuvoEssentiaCommands.SetSource:
-                    case ENuvoEssentiaCommands.SetSourceGroupOFF:
-                    case ENuvoEssentiaCommands.SetSourceGroupON:
-                    case ENuvoEssentiaCommands.SetSOURCEIR38:
-                    case ENuvoEssentiaCommands.SetSOURCEIR56:
-                    case ENuvoEssentiaCommands.SetTrebleLevel:
-                    case ENuvoEssentiaCommands.SetVolume:
-                    case ENuvoEssentiaCommands.SetVolumeResetOFF:
-                    case ENuvoEssentiaCommands.SetVolumeResetON:
-                    case ENuvoEssentiaCommands.StopRampVolume:
-                    case ENuvoEssentiaCommands.StopRampVolumeALLZone:
-                    case ENuvoEssentiaCommands.TurnALLZoneOFF:
-                    case ENuvoEssentiaCommands.TurnZoneOFF:
-                    case ENuvoEssentiaCommands.TurnZoneON:
-
-         */
-
 
         /// <summary>
         /// Replaces the placeholders in the input command with its corresponding
@@ -698,6 +665,135 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
         #region Command Parse Section
+
+
+        /// <summary>
+        /// Parses the incoming command string and extracts its values.
+        /// </summary>
+        private void parseIncomingCommand()
+        {
+            if (_incomingCommand != "")
+            {
+                if (_command != ENuvoEssentiaCommands.NoCommand)
+                {
+                    switch (_command)
+                    {
+                        // commands with IR carrie frequency parameter
+                        case ENuvoEssentiaCommands.ReadStatusSOURCEIR:
+                        case ENuvoEssentiaCommands.RestoreDefaultSOURCEIR:
+                        case ENuvoEssentiaCommands.SetSOURCEIR38:
+                        case ENuvoEssentiaCommands.SetSOURCEIR56:
+                            //TODO add IR parser
+                            break;
+
+                        // commands without parameter
+                        case ENuvoEssentiaCommands.TurnALLZoneOFF:
+                        case ENuvoEssentiaCommands.RampVolumeALLZoneDOWN:
+                        case ENuvoEssentiaCommands.RampVolumeALLZoneUP:
+                        case ENuvoEssentiaCommands.StopRampVolumeALLZone:
+                        case ENuvoEssentiaCommands.MuteALLZoneOFF:
+                        case ENuvoEssentiaCommands.MuteALLZoneON:
+                            // No extraction (incoming command has not parameters)
+                            break;
+
+                        // commands with zone parameter only
+                        case ENuvoEssentiaCommands.StopRampVolume:
+                        case ENuvoEssentiaCommands.SetKeypadLockOFF:
+                        case ENuvoEssentiaCommands.SetKeypadLockON:
+                            // extract zone id
+                            _zoneId = parseCommandForZone(_incomingCommand);
+                            break;
+
+                        // commands with zone, Power Status, Source, Source Group, Volume Level
+                        case ENuvoEssentiaCommands.ReadStatusCONNECT:
+                        case ENuvoEssentiaCommands.TurnZoneON:
+                        case ENuvoEssentiaCommands.TurnZoneOFF:
+                        case ENuvoEssentiaCommands.SetSource:
+                        case ENuvoEssentiaCommands.SetVolume:
+                        case ENuvoEssentiaCommands.RampVolumeDOWN:
+                        case ENuvoEssentiaCommands.RampVolumeUP:
+                        case ENuvoEssentiaCommands.MuteOFF:
+                        case ENuvoEssentiaCommands.MuteON:
+                            // extract zone id
+                            _zoneId = parseCommandForZone(_incomingCommand);
+                            // extract power status
+                            _powerStatus = parseCommandForPowerStatus(_incomingCommand);
+                            // extract source placeholder
+                            _sourceId = parseCommandForSource(_incomingCommand);
+                            // extract volume level
+                            _volume = parseCommandForVolumeLevel(_incomingCommand);
+                            break;
+
+                        // commands with zone, DIP Switch Override, Bass-, Treble Level, Source Group, Volume Reset
+                        case ENuvoEssentiaCommands.ReadStatusZONE:
+                        case ENuvoEssentiaCommands.SetBassLevel:
+                        case ENuvoEssentiaCommands.SetTrebleLevel:
+                        case ENuvoEssentiaCommands.SetSourceGroupOFF:
+                        case ENuvoEssentiaCommands.SetSourceGroupON:
+                        case ENuvoEssentiaCommands.SetVolumeResetOFF:
+                        case ENuvoEssentiaCommands.SetVolumeResetON:
+                            // extract zone id
+                            _zoneId = parseCommandForZone(_incomingCommand);
+                            // extract bass level
+                            _basslevel = parseCommandForBassLevel(_incomingCommand);
+                            // replace treble level
+                            _treblelevel = parseCommandForTrebleLevel(_incomingCommand);
+                            break;
+
+                        // read firmware version
+                        case ENuvoEssentiaCommands.ReadVersion:
+                            //TODO parse for firmware version
+                            break;
+
+                        // incoming command ONLY
+                        case ENuvoEssentiaCommands.ExternalMuteActivated:
+                        case ENuvoEssentiaCommands.ExternalMuteDeactivated:
+                            // No parsing (incoming command has not parameters)
+                            _log.Debug(m => m("External mute has changed '{0}'!", _command));
+                            break;
+
+                        case ENuvoEssentiaCommands.ErrorInCommand:
+                            _log.Error(m => m("Error, received error command '{0}' from Nuvo Essentia!", _command));
+                            break;
+
+                        // unkown command 
+                        default:
+                            // replace all knwon replacements so far
+                            parseCommand(_incomingCommand);
+                            _log.Warn(m => m("Warning, for this command '{0}' may not all required parsers are implemented!", _command));
+                            break;
+                    }
+                }
+                else
+                {
+                    _log.Warn(m => m("Cannot parse incoming command, because the underlying command is unkown!"));
+                }
+            }
+            else
+            {
+                _log.Warn(m => m("Cannot parse incoming command, because command is empty!"));
+            }
+        }
+
+
+        /// <summary>
+        /// Replaces the placeholders in the input command with its corresponding
+        /// values. Returns a string containing the values.
+        /// This method executes all known replacements.
+        /// </summary>
+        /// <param name="command">Command string with placeholders</param>
+        /// <returns>Result string, placeholders replaced with values.</returns>
+        private string parseCommand(string command)
+        {
+            parseCommandForZone(command);
+            parseCommandForSource(command);
+            parseCommandForPowerStatus(command);
+            parseCommandForVolumeLevel(command);
+            parseCommandForBassLevel(command);
+            parseCommandForTrebleLevel(command);
+            //TODO add parser for IR carrie frequency
+            return command;
+        }
 
         /// <summary>
         /// Extracts the zone id out of the recieved command string.
