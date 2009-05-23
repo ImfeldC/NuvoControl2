@@ -28,7 +28,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
 
         public void SendTelegram(string telegram)
         {
-            throw new NotImplementedException();
+            _log.Debug(m => m("Send called. {0}", telegram));
         }
 
 

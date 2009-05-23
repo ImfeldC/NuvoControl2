@@ -175,7 +175,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
                 target.SendCommand(command3);
-                nuvoTelegram.passDataToTestClass("ZxxORp,BASSyy,TREByy,GRPq,VRSTr");    // return value for ReadStatusZONE
+                nuvoTelegram.passDataToTestClass("ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr");    // return value for ReadStatusZONE
 
                 Assert.IsTrue(_eventRaisedCount == 3);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command3.Command);

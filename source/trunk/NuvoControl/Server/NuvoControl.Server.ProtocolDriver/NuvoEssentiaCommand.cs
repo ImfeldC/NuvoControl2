@@ -117,8 +117,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
-        /// Searches in the profile the command passed as string.
-        /// This can either be an incomming- or outgoing-command.
+        /// Searches in the profile the command passed as string the corresponding incoming template.
         /// </summary>
         /// <param name="command">Command (passed as string)</param>
         /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
@@ -431,7 +430,6 @@ namespace NuvoControl.Server.ProtocolDriver
             return command;
         }
 
-
         /// <summary>
         /// Replaces the default volume level placeholder with the volume level in the command string.
         /// </summary>
@@ -653,7 +651,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source member is not set", placeholder, command));
+                    _log.Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source member is not set", placeholder, command));
                 }
             }
             return command;
@@ -699,7 +697,99 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
+        #region Command Parse Section
 
+        /// <summary>
+        /// Extracts the power status out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Power status, extracted out of the command string.</returns>
+        private EZonePowerStatus parseCommandForPowerStatus(string incomingCommand)
+        {
+            string stringPowerStatus = parseCommand(incomingCommand, _incomingCommandTemplate, "ppp");
+            EZonePowerStatus zonePowerStatus;
+            switch (stringPowerStatus)
+            {
+                case "OFF":
+                    zonePowerStatus = EZonePowerStatus.ZoneStatusOFF;
+                    break;
+                case "ON":
+                case " ON":
+                    zonePowerStatus = EZonePowerStatus.ZoneStatusON;
+                    break;
+                default:
+                    zonePowerStatus = EZonePowerStatus.ZoneStatusUnkown;
+                    break;
+            }
+            return zonePowerStatus;
+        }
+
+        /// <summary>
+        /// Extracts the zone id out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Zone id, extracted out of the command string.</returns>
+        private ENuvoEssentiaZones parseCommandForZone(string incomingCommand)
+        {
+            string stringZone = parseCommand(incomingCommand, _incomingCommandTemplate, "xx");
+            return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
+        }
+
+        /// <summary>
+        /// Extracts the source id out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Source id, extracted out of the command string.</returns>
+        private ENuvoEssentiaSources parseCommandForSource(string incomingCommand)
+        {
+            string stringSource = parseCommand(incomingCommand, _incomingCommandTemplate, "s");
+            return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
+        }
+
+        /// <summary>
+        /// Parses the command string and extracts the content, according to the placeholder
+        /// in the command template.
+        /// </summary>
+        /// <param name="command">Command string to parse.</param>
+        /// <param name="commandTemplate">Command Template string.</param>
+        /// <param name="placeholder">Placeholder string. Represents the part in the command template, which will be extracted from command string.</param>
+        /// <returns>Extracted string out of command string.</returns>
+        private static string parseCommand(string command, string commandTemplate, string placeholder)
+        {
+            string result="";
+            if (commandTemplate != null && commandTemplate.Contains(placeholder) && placeholder.Length > 0)
+            {
+                // consider special case of power status, which can be either ON or OFF
+                if (commandTemplate.Contains("ppp"))
+                {
+                    // template contains power status, replace 'ON' status with ' ON'
+                    // this ensures that the command string has the same length as the template
+                    command = command.Replace("ON", " ON");
+                }
+                // extract string in received command, according to the command template
+                int startindex = commandTemplate.IndexOf(placeholder);
+                if (startindex >= 0)
+                {
+                    result = command.Substring(startindex, placeholder.Length);
+                }
+                else
+                {
+                    result = "";
+                }
+            }
+            else
+            {
+                // placeholder is not in the command template
+                // It's not possible to parse the command string.
+                result = "";
+            }
+            return result;
+        }
+
+        #endregion
     }
 
 }
