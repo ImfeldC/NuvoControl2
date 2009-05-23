@@ -73,7 +73,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// RESPONSE:#ZxxPWRppp,SRCs,GRPq,VOL-yy<CR>
         /// -ppp = "ON" (2 characters)or "OFF" (3 characters)
         /// -s = SOURCE NUMBER 1 to 6
-        /// -q = 0 if SOURCE GROUP is ON1 if SOURCE GROUP is OFF
+        /// -q = 0 if SOURCE GROUP is ON / 1 if SOURCE GROUP is OFF
         /// -yy = level below max in dB: -00 to -79 dB (include lead 0 for all single-digit values)
         /// -yy = "MT" if in MUTE state-yy = "XM" if external MUTE is being held active 
         /// This response will also be issued in response to pressing the ON/OFF, VOLUME, or SOURCEkeys on a KEYPAD. NOTE – the response will be issued if a SOURCE key is press`ed on azone that is powered OFF even though the key press has no effect on the system. It will beoutput at every increment during a volume ramp initiated by HOLDING a VOLUME UP orVOLUME DOWN key on a keypad. It will also be issued at every increment of a volumeramp commanded by the *ZxxVOL+<CR> and *ZxxVOL-<CR> commands (see below).
@@ -85,7 +85,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// COMMAND:*ZxxSETSR<CR> – ZoneSet STATUS REQUEST where xx is zone # from 1 to 12
         /// RESPONSE:#ZxxORp,BASSyy,TREByy,GRPq,VRSTr<CR>
         /// -p = 1 if DIP switches are overridden*0 if DIP switches are in control
-        /// -yy = EQ level, dB, –8 to +0 (flat) to+8 in 1 dB increments
+        /// -yy = EQ level, dB, –8 to +0 (flat) to +8 in 1 dB increments
         /// -q = 0 if SOURCE GROUP is ON / 1 if SOURCE GROUP is OFF (This follows DIP switch definition.)
         /// -r = 0 if VOLUME RESET is ON / 1 if VOLUME RESET is OFF (This follows DIP switch definition.)
         /// *override set to 1 FOR THIS ZONE only if one of commands *ZxxBASSyy<CR>, *ZxxTREByy<CR>, *ZxxGRPq<CR>, or *ZxxVRSTr<CR> are issued (seedescriptions below).
