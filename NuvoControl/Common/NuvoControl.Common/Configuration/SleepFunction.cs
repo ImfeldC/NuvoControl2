@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -37,8 +37,8 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public SleepFunction(Guid id, UniqueZoneId uniqueZoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
-            : base(id, uniqueZoneId)
+        public SleepFunction(Guid id, Address zoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
+            : base(id, zoneId)
         {
             this._sleepDuration = sleepDuration;
             this._validFrom = validFrom;
@@ -52,19 +52,16 @@ namespace NuvoControl.Common.Configuration
         public TimeSpan SleepDuration
         {
             get { return _sleepDuration; }
-            set { _sleepDuration = value; }
         }
 
         public TimeSpan ValidFrom
         {
             get { return _validFrom; }
-            set { _validFrom = value; }
         }
 
         public TimeSpan ValidTo
         {
             get { return _validTo; }
-            set { _validTo = value; }
         }
 
         #endregion

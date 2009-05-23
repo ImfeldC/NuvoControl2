@@ -7,13 +7,13 @@
  *   Project:        NuvoControl
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
- *   Creation Date:  12.05.2009
- *   File Name:      Zone.cs
+ *   Creation Date:  19.05.2009
+ *   File Name:      Communication.cs
  * 
  ***************************************************************************************************
  * 
  * Revisions:
- * 1) 12.05.2009, Bernhard Limacher: First implementation.
+ * 1) 19.05.2009, Bernhard Limacher: First implementation.
  * 
  **************************************************************************************************/
 
@@ -21,61 +21,60 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Drawing;
 
 namespace NuvoControl.Common.Configuration
 {
     [Serializable]
-    public class Zone
+    public class Communication
     {
         #region Private Members
 
-        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
-        private string _name = String.Empty;
-        string _picturePath = String.Empty;
-        private string _pictureType = String.Empty;
-        private List<Point> _floorPlanCoordinates = new List<Point>();
+        private string _port = "COM1";
+        private int _baudRate = 9600;
+        private int _dataBits = 8;
+        private int _parityBit = 1;
+        private string _parityMode = "No";
 
         #endregion
 
         #region Constructors
 
-        public Zone(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates)
+        public Communication(string port, int baudRate, int dataBits, int parityBit, string parityMode)
         {
-            this._id = id;
-            this._name = name;
-            this._picturePath = picturePath;
-            this._pictureType = pictureType;
-            this._floorPlanCoordinates = floorPlanCoordinates;
+            this._port = port;
+            this._baudRate = baudRate;
+            this._dataBits = dataBits;
+            this._parityBit = parityBit;
+            this._parityMode = parityMode;
         }
 
         #endregion
 
-        #region Public Interface Members
+        #region Public Interface
 
-        public Address Id
+        public string Port
         {
-            get { return _id; }
+            get { return _port; }
         }
 
-        public string Name
+        public int BaudRate
         {
-            get { return _name; }
+            get { return _baudRate; }
         }
 
-        public string PicturePath
+        public int DataBits
         {
-            get { return _picturePath; }
+            get { return _dataBits; }
         }
 
-        public string PictureType
+        public int ParityBit
         {
-            get { return _pictureType; }
+            get { return _parityBit; }
         }
 
-        public List<Point> FloorPlanCoordinates
+        public string ParityMode
         {
-            get { return _floorPlanCoordinates; }
+            get { return _parityMode; }
         }
 
         #endregion

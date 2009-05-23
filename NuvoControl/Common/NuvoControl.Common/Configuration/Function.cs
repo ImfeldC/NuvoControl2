@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -30,16 +30,16 @@ namespace NuvoControl.Common.Configuration
         #region Private Members
 
         private Guid _id = Guid.NewGuid();
-        private UniqueZoneId _uniqueZoneId = new UniqueZoneId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        private Address _zoneId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
         #endregion
 
         #region Constructors
 
-        public Function(Guid id, UniqueZoneId uniqueZoneId)
+        public Function(Guid id, Address zoneId)
         {
             this._id = id;
-            this._uniqueZoneId = uniqueZoneId;
+            this._zoneId = zoneId;
         }
 
         #endregion
@@ -49,13 +49,11 @@ namespace NuvoControl.Common.Configuration
         public Guid Id
         {
             get { return _id; }
-            set { _id = value; }
         }
 
-        public UniqueZoneId ZoneId
+        public Address ZoneId
         {
-            get { return _uniqueZoneId; }
-            set { _uniqueZoneId = value; }
+            get { return _zoneId; }
         }
 
         #endregion

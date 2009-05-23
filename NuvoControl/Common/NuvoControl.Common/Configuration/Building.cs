@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -47,7 +47,6 @@ namespace NuvoControl.Common.Configuration
         public List<Floor> Floors
         {
             get { return _floors; }
-            set { _floors = value; }
         }
 
         #endregion

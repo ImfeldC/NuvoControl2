@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -60,19 +60,16 @@ namespace NuvoControl.Common.Configuration
         public Hardware Hardware
         {
             get { return _hardware; }
-            set { _hardware = value; }
         }
 
         public Graphic Graphic
         {
             get { return _graphic; }
-            set { _graphic = value; }
         }
 
         public List<Function> Functions
         {
             get { return _functions; }
-            set { _functions = value; }
         }
 
         #endregion

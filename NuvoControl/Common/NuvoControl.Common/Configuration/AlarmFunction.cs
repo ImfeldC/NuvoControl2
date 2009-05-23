@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -31,19 +31,19 @@ namespace NuvoControl.Common.Configuration
 
         private TimeSpan _alarmTime = new TimeSpan(7, 0, 0);
         private TimeSpan _alarmDuration = new TimeSpan(0, 10, 0);
-        private UniqueSourceId _uniqueSourceId = new UniqueSourceId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        private Address _sourceId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
         private List<DayOfWeek> _validOnDays = new List<DayOfWeek>();
 
         #endregion
 
         #region Constructors
 
-        public AlarmFunction(Guid id, UniqueZoneId uniqueZoneId, UniqueSourceId uniqueSourceId, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
-            : base(id, uniqueZoneId)
+        public AlarmFunction(Guid id, Address zoneId, Address sourceId, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
+            : base(id, zoneId)
         {
             this._alarmTime = alarmTime;
             this._alarmDuration = alarmDuration;
-            this._uniqueSourceId = uniqueSourceId;
+            this._sourceId = sourceId;
             this._validOnDays = validOnDays;
         }
 
@@ -54,25 +54,21 @@ namespace NuvoControl.Common.Configuration
         public TimeSpan AlarmTime
         {
             get { return _alarmTime; }
-            set { _alarmTime = value; }
         }
 
         public TimeSpan AlarmDuration
         {
             get { return _alarmDuration; }
-            set { _alarmDuration = value; }
         }
 
-        public UniqueSourceId UniqueSourceId
+        public Address SourceId
         {
-            get { return _uniqueSourceId; }
-            set { _uniqueSourceId = value; }
+            get { return _sourceId; }
         }
 
         public List<DayOfWeek> ValidOnDays
         {
             get { return _validOnDays; }
-            set { _validOnDays = value; }
         }
 
         #endregion

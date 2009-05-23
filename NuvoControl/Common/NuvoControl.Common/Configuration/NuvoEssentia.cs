@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -30,11 +30,7 @@ namespace NuvoControl.Common.Configuration
         #region Private Members
 
         private int _id = SystemConfiguration.ID_UNDEFINED;
-        private string _port = "COM1";
-        private int _baudRate = 9600;
-        private int _dataBits = 8;
-        private int _parityBit = 1;
-        private string _parityMode = "No";
+        Communication _communication = null;
         private Protocol _protocolDriver = null;
         private List<int> _zones = new List<int>();
         private List<int> _sources = new List<int>();
@@ -43,14 +39,10 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public NuvoEssentia(int id, string port, int baudRate, int dataBits, int parityBit, string parityMode, Protocol protocolDriver, List<int> zones, List<int> sources)
+        public NuvoEssentia(int id, Communication communication, Protocol protocolDriver, List<int> zones, List<int> sources)
         {
             this._id = id;
-            this._port = port;
-            this._baudRate = baudRate;
-            this._dataBits = dataBits;
-            this._parityBit = parityBit;
-            this._parityMode = parityMode;
+            this._communication = communication;
             this._protocolDriver = protocolDriver;
             this._zones = zones;
             this._sources = sources;
@@ -63,55 +55,26 @@ namespace NuvoControl.Common.Configuration
         public int Id
         {
             get { return _id; }
-            set { _id = value; }
         }
 
-        public string Port
+        public Communication Communication
         {
-            get { return _port; }
-            set { _port = value; }
-        }
-
-        public int BaudRate
-        {
-            get { return _baudRate; }
-            set { _baudRate = value; }
-        }
-
-        public int DataBits
-        {
-            get { return _dataBits; }
-            set { _dataBits = value; }
-        }
-
-        public int ParityBit
-        {
-            get { return _parityBit; }
-            set { _parityBit = value; }
-        }
-
-        public string ParityMode
-        {
-            get { return _parityMode; }
-            set { _parityMode = value; }
+            get { return _communication; }
         }
 
         public Protocol ProtocolDriver
         {
             get { return _protocolDriver; }
-            set { _protocolDriver = value; }
         }
 
         public List<int> Zones
         {
             get { return _zones; }
-            set { _zones = value; }
         }
 
         public List<int> Sources
         {
             get { return _sources; }
-            set { _sources = value; }
         }
 
         #endregion

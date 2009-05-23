@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) Siemens AG 2006 All Rights Reserved. Confidential
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
  * 
  ***************************************************************************************************
  *
@@ -29,7 +29,7 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private UniqueSourceId _id = new UniqueSourceId(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
         private string _name = String.Empty;
         private string _picturePath = String.Empty;
         private string _pictureType = String.Empty;
@@ -38,7 +38,7 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
-        public Source(UniqueSourceId id, string name, string picturePath, string pictureType)
+        public Source(Address id, string name, string picturePath, string pictureType)
         {
             this._id = id;
             this._name = name;
@@ -50,28 +50,24 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
-        public UniqueSourceId Id
+        public Address Id
         {
             get { return _id; }
-            set { _id = value; }
         }
 
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
         public string PicturePath
         {
             get { return _picturePath; }
-            set { _picturePath = value; }
         }
 
         public string PictureType
         {
             get { return _pictureType; }
-            set { _pictureType = value; }
         }
 
         #endregion
