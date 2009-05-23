@@ -491,5 +491,56 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 Assert.AreEqual(EZonePowerStatus.ZoneStatusUnkown, actual);
             }
         }
+
+        /// <summary>
+        ///A test for parseCommandForBassLevel
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void parseCommandForBassAndTrebleLevelTest()
+        {
+            {
+                string incomingCommand = "Z03OR0,BASS-10,TREB+10,GRP0,VRST0";
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(incomingCommand);
+                int actualBassLevel = target.parseCommandForBassLevel(incomingCommand);
+                int actualTrebleLevel = target.parseCommandForTrebleLevel(incomingCommand);
+                Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, target._command);
+                Assert.AreEqual(-10, actualBassLevel);
+                Assert.AreEqual(10, actualTrebleLevel);
+            }
+            {
+                string incomingCommand = "Z03OR0,BASS+05,TREB-04,GRP0,VRST0";
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(incomingCommand);
+                int actualBassLevel = target.parseCommandForBassLevel(incomingCommand);
+                int actualTrebleLevel = target.parseCommandForTrebleLevel(incomingCommand);
+                Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, target._command);
+                Assert.AreEqual(5, actualBassLevel);
+                Assert.AreEqual(-4, actualTrebleLevel);
+            }
+        }
+
+        /// <summary>
+        ///A test for parseCommandForVolumeLevel
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void parseCommandForVolumeLevelTest()
+        {
+            {
+                string incomingCommand = "Z02PWROFF,SRC4,GRP0,VOL-50";
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(incomingCommand);
+                int actualVolumeLevel = target.parseCommandForVolumeLevel(incomingCommand);
+                Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
+                Assert.AreEqual(-50, actualVolumeLevel);
+            }
+            {
+                string incomingCommand = "Z02PWROFF,SRC4,GRP0,VOL+50";  // invalid command
+                NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(incomingCommand);
+                int actualVolumeLevel = target.parseCommandForVolumeLevel(incomingCommand);
+                Assert.AreEqual(ENuvoEssentiaCommands.NoCommand, target._command);
+                Assert.AreEqual(-999, actualVolumeLevel);
+            }
+        }
+
     }
 }

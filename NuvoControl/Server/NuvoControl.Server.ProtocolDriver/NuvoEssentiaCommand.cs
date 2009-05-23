@@ -700,6 +700,30 @@ namespace NuvoControl.Server.ProtocolDriver
         #region Command Parse Section
 
         /// <summary>
+        /// Extracts the zone id out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Zone id, extracted out of the command string.</returns>
+        private ENuvoEssentiaZones parseCommandForZone(string incomingCommand)
+        {
+            string stringZone = parseCommand(incomingCommand, _incomingCommandTemplate, "xx");
+            return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
+        }
+
+        /// <summary>
+        /// Extracts the source id out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Source id, extracted out of the command string.</returns>
+        private ENuvoEssentiaSources parseCommandForSource(string incomingCommand)
+        {
+            string stringSource = parseCommand(incomingCommand, _incomingCommandTemplate, "s");
+            return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
+        }
+
+        /// <summary>
         /// Extracts the power status out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
@@ -726,27 +750,42 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
-        /// Extracts the zone id out of the recieved command string.
+        /// Extracts the volume level out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
-        /// <returns>Zone id, extracted out of the command string.</returns>
-        private ENuvoEssentiaZones parseCommandForZone(string incomingCommand)
+        /// <returns>Volume level, extracted out of the command string.</returns>
+        private int parseCommandForVolumeLevel(string incomingCommand)
         {
-            string stringZone = parseCommand(incomingCommand, _incomingCommandTemplate, "xx");
-            return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
+            string stringVolumeLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "yy");
+            if (stringVolumeLevel != "")
+                return Convert.ToInt32(stringVolumeLevel) * -1;
+            else
+                return -999;    //TODO replace with constant
         }
 
         /// <summary>
-        /// Extracts the source id out of the recieved command string.
+        /// Extracts the bass level out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
-        /// <returns>Source id, extracted out of the command string.</returns>
-        private ENuvoEssentiaSources parseCommandForSource(string incomingCommand)
+        /// <returns>Bass level, extracted out of the command string.</returns>
+        private int parseCommandForBassLevel(string incomingCommand)
         {
-            string stringSource = parseCommand(incomingCommand, _incomingCommandTemplate, "s");
-            return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
+            string stringBassLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "uuu");
+            return Convert.ToInt32(stringBassLevel);
+        }
+
+        /// <summary>
+        /// Extracts the treble level out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Treble level, extracted out of the command string.</returns>
+        private int parseCommandForTrebleLevel(string incomingCommand)
+        {
+            string stringTrebleLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "ttt");
+            return Convert.ToInt32(stringTrebleLevel);
         }
 
         /// <summary>
