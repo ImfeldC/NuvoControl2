@@ -112,16 +112,17 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderForIRFrequencyTest()
         {
-            PrivateObject param0 = null; // TODO: Initialize to an appropriate value
-            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(param0); // TODO: Initialize to an appropriate value
-            string command = string.Empty; // TODO: Initialize to an appropriate value
-            EIRCarrierFrequency ircf = new EIRCarrierFrequency(); // TODO: Initialize to an appropriate value
-            string placeholder = string.Empty; // TODO: Initialize to an appropriate value
-            string expected = string.Empty; // TODO: Initialize to an appropriate value
-            string actual;
- //           actual = target.replacePlaceholderForIRFrequency(command, ircf, placeholder);
- //           Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholderForIRFrequency("IRSET:aa,bb,cc,dd,ee,ff", EIRCarrierFrequency.IRUnknown, "bb");
+            Assert.AreEqual("IRSET:aa,bb,cc,dd,ee,ff", actual);
+
+            actual = target.replacePlaceholderForIRFrequency("IRSET:aa,bb,cc,dd,ee,ff", EIRCarrierFrequency.IR38kHz, "bb");
+            Assert.AreEqual("IRSET:aa,38,cc,dd,ee,ff", actual);
+
+            actual = target.replacePlaceholderForIRFrequency("IRSET:aa,bb,cc,dd,ee,ff", EIRCarrierFrequency.IR55kHz, "bb");
+            Assert.AreEqual("IRSET:aa,55,cc,dd,ee,ff", actual);
         }
 
         /// <summary>
@@ -131,9 +132,132 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderForSourceTest()
         {
+            string actual = "";
             NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
-            string actual = target.replacePlaceholderForSource("XXXsXXXXsXXXX", ENuvoEssentiaSources.Source2, "s");
+
+            actual = target.replacePlaceholderForSource("XXXsXXXXsXXXX", ENuvoEssentiaSources.Source2, "s");
             Assert.AreEqual("XXX2XXXX2XXXX", actual);
+
+            actual = target.replacePlaceholderForSource("XXXssXXXXssXXXX", ENuvoEssentiaSources.Source4, "ss");
+            Assert.AreEqual("XXX04XXXX04XXXX", actual);
+
+        }
+
+        /// <summary>
+        ///A test for replacePlaceholderForZone
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void replacePlaceholderForZoneTest()
+        {
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholderForZone("ZxxORp,BASSyy,TREByy,GRPq,VRSTr", ENuvoEssentiaZones.Zone1, "xx");
+            Assert.AreEqual("Z01ORp,BASSyy,TREByy,GRPq,VRSTr", actual);
+
+            actual = target.replacePlaceholderForZone("ZxxORp,BASSyy,TREByy,GRPq,VRSTr", ENuvoEssentiaZones.Zone11, "xx");
+            Assert.AreEqual("Z11ORp,BASSyy,TREByy,GRPq,VRSTr", actual);
+        }
+
+        /// <summary>
+        ///A test for replacePlaceholderForPowerStatus
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void replacePlaceholderForPowerStatusTest()
+        {
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholderForPowerStatus("ZxxPWRppp,SRCs,GRPq,VOL-yy", EZonePowerStatus.ZoneStatusON, "ppp");
+            Assert.AreEqual("ZxxPWRON,SRCs,GRPq,VOL-yy", actual);
+
+            actual = target.replacePlaceholderForPowerStatus("ZxxPWRppp,SRCs,GRPq,VOL-yy", EZonePowerStatus.ZoneStatusOFF, "ppp");
+            Assert.AreEqual("ZxxPWROFF,SRCs,GRPq,VOL-yy", actual);
+        }
+
+        /// <summary>
+        ///A test for replacePlaceholderWithVolumeLevel
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void replacePlaceholderWithVolumeLevelTest()
+        {
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholderWithVolumeLevel("ZxxPWRppp,SRCs,GRPq,VOL-yy", -60, "yy");
+            Assert.AreEqual("ZxxPWRppp,SRCs,GRPq,VOL-60", actual);
+
+            actual = target.replacePlaceholderWithVolumeLevel("ZxxPWRppp,SRCs,GRPq,VOL-yy", -5, "yy");
+            Assert.AreEqual("ZxxPWRppp,SRCs,GRPq,VOL-05", actual);
+
+            actual = target.replacePlaceholderWithVolumeLevel("ZxxVOLyy", -5, "yy");
+            Assert.AreEqual("ZxxVOL05", actual);
+
+            actual = target.replacePlaceholderWithVolumeLevel("ZxxVOLyy", -999, "yy");
+            Assert.AreEqual("ZxxVOLyy", actual);
+        }
+
+        /// <summary>
+        ///A test for replacePlaceholderWithBassTrebleLevel
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void replacePlaceholderWithBassTrebleLevelTest()
+        {
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholderWithBassTrebleLevel("ZxxTREBttt", -10, "ttt");
+            Assert.AreEqual("ZxxTREB-10", actual);
+
+            actual = target.replacePlaceholderWithBassTrebleLevel("ZxxTREBttt", -12, "ttt");
+            Assert.AreEqual("ZxxTREB-12", actual);
+
+            actual = target.replacePlaceholderWithBassTrebleLevel("ZxxTREBttt", 5, "ttt");
+            Assert.AreEqual("ZxxTREB+05", actual);
+
+            actual = target.replacePlaceholderWithBassTrebleLevel("ZxxTREBttt", 13, "ttt");
+            Assert.AreEqual("ZxxTREBttt", actual);
+        }
+
+        /// <summary>
+        ///A test for replacePlaceholderWithNumberConsideringPlusMinus
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void replacePlaceholderWithNumberConsideringPlusMinusTest()
+        {
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholderWithNumberConsideringPlusMinus("XXXtttXXX", 10, "ttt");
+            Assert.AreEqual("XXX+10XXX", actual);
+
+            actual = target.replacePlaceholderWithNumberConsideringPlusMinus("XXXtttXXX", -10, "ttt");
+            Assert.AreEqual("XXX-10XXX", actual);
+
+            actual = target.replacePlaceholderWithNumberConsideringPlusMinus("XXXtttXXX", 5, "ttt");
+            Assert.AreEqual("XXX+05XXX", actual);
+
+            actual = target.replacePlaceholderWithNumberConsideringPlusMinus("XXXtttXXX", -5, "ttt");
+            Assert.AreEqual("XXX-05XXX", actual);
+        }
+
+        /// <summary>
+        ///A test for replacePlaceholders
+        ///</summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void replacePlaceholdersTest()
+        {
+            string actual = "";
+            NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(ENuvoEssentiaCommands.NoCommand);
+
+            actual = target.replacePlaceholders("IRSET:aa,bb,cc,dd,ee,ff");
+            Assert.AreEqual("IRSET:aa,bb,cc,dd,ee,ff", actual);
         }
     }
 }

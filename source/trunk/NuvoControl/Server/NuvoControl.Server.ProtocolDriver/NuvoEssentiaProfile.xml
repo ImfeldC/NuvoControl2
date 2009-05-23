@@ -31,7 +31,7 @@
   <section name="ReadStatusZONE">
     <entry name="Id">5</entry>
     <entry name="OutgoingCommand">ZxxSETSR</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
 
   <section name="TurnZoneON">
@@ -79,7 +79,7 @@
 
   <section name="SetSource">
     <entry name="Id">14</entry>
-    <entry name="OutgoingCommand">ZxxSRCp</entry>
+    <entry name="OutgoingCommand">ZxxSRCs</entry>
     <entry name="IncomingCommand">ZxxPWRppp,SRCs,GRPq,VOL-yy</entry>
   </section>
   <section name="SetVolume">
@@ -115,34 +115,34 @@
 
   <section name="SetBassLevel">
     <entry name="Id">21</entry>
-    <entry name="OutgoingCommand">ZxxBASSyyy</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="OutgoingCommand">ZxxBASSuuu</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetTrebleLevel">
     <entry name="Id">22</entry>
-    <entry name="OutgoingCommand">ZxxTREByyy</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="OutgoingCommand">ZxxTREBttt</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   
   <section name="SetSourceGroupON">
     <entry name="Id">23</entry>
     <entry name="OutgoingCommand">ZxxGRPON</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetSourceGroupOFF">
     <entry name="Id">24</entry>
     <entry name="OutgoingCommand">ZxxGRPOFF</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetVolumeResetON">
     <entry name="Id">25</entry>
     <entry name="OutgoingCommand">ZxxVRSTON</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetVolumeResetOFF">
     <entry name="Id">26</entry>
     <entry name="OutgoingCommand">ZxxVRSTOFF</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSyy,TREByy,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   
   <section name="SetKeypadLockON">
@@ -159,7 +159,7 @@
   <section name="ReadVersion">
     <entry name="Id">29</entry>
     <entry name="OutgoingCommand">VER</entry>
-    <entry name="IncomingCommand">NUVO_E6D_vx.yy</entry>
+    <entry name="IncomingCommand">NUVO_E6D_vz.zz</entry>
   </section>
 
   <section name="ExternalMuteActivated">
