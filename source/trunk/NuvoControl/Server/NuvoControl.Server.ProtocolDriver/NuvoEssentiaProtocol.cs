@@ -35,17 +35,9 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
-            INuvoEssentiaCommand command = convertString2NuvoEssentiaCommand(e.Message);
+            INuvoEssentiaCommand command = compareIncomingCommandWithRunningCommand(e.Message);
 
-            if (_runningCommand != null)
-            {
-                if (_runningCommand.Command == command.Command)
-                {
-                    command = _runningCommand;
-                    _runningCommand = null;
-                }
-            }
-            command.ReceiveDateTime = DateTime.Now;
+            command.IncomingCommand = e.Message;
             if (command.Valid)
             {
                 //raise the event, and pass data to next layer
@@ -57,6 +49,20 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
+        private INuvoEssentiaCommand compareIncomingCommandWithRunningCommand(string incomingCommand)
+        {
+            INuvoEssentiaCommand command = null;
+            if (_runningCommand != null && compareCommandString(_runningCommand.IncomingCommandTemplate, incomingCommand))
+            {
+                command = _runningCommand;
+                _runningCommand = null;
+            }
+            else
+            {
+                command = convertString2NuvoEssentiaCommand(incomingCommand);
+            }
+            return command;
+        }
 
         #region INuvoEssentiaProtocol Members
 
