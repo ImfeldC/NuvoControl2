@@ -32,7 +32,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         DateTime CreatedDateTime { get; }
         DateTime SendDateTime { get; set; }
-        DateTime ReceiveDateTime { get; set; }
+        DateTime ReceiveDateTime { get; }
 
         string OutgoingCommandTemplate { get; }
         string OutgoingCommand { get; }
@@ -46,6 +46,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         int VolumeLevel { get; }
         int BassLevel { get; }
         int TrebleLevel { get; }
+        string FirmwareVersion { get; }
     }
 
     public interface INuvoEssentiaProtocol

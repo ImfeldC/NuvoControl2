@@ -33,6 +33,7 @@ namespace NuvoControl.Server.ProtocolDriver
         int _volume = -999;
         int _basslevel = -999;
         int _treblelevel = -999;
+        string _firmwareVersion = "";
 
         #region Outgoing Command Constructors
 
@@ -176,7 +177,6 @@ namespace NuvoControl.Server.ProtocolDriver
         public DateTime ReceiveDateTime
         {
             get { return _receiveDateTime; }
-            set { _receiveDateTime = value; }
         }
 
         public DateTime CreatedDateTime
@@ -208,6 +208,7 @@ namespace NuvoControl.Server.ProtocolDriver
             set
             {
                 _incomingCommand = value;
+                _receiveDateTime = DateTime.Now;
                 parseIncomingCommand();
             }
         }
@@ -245,6 +246,11 @@ namespace NuvoControl.Server.ProtocolDriver
         public int TrebleLevel
         {
             get { return _treblelevel; }
+        }
+
+        public string FirmwareVersion
+        {
+            get { return _firmwareVersion; }
         }
 
         #endregion
@@ -742,7 +748,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
                         // read firmware version
                         case ENuvoEssentiaCommands.ReadVersion:
-                            //TODO parse for firmware version
+                            _firmwareVersion = parseCommandForFirmwareVersion(_incomingCommand);
                             break;
 
                         // incoming command ONLY
@@ -783,16 +789,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
-        private string parseCommand(string command)
+        private void parseCommand(string command)
         {
-            parseCommandForZone(command);
-            parseCommandForSource(command);
-            parseCommandForPowerStatus(command);
-            parseCommandForVolumeLevel(command);
-            parseCommandForBassLevel(command);
-            parseCommandForTrebleLevel(command);
+            _zoneId = parseCommandForZone(command);
+            _sourceId = parseCommandForSource(command);
+            _powerStatus = parseCommandForPowerStatus(command);
+            _volume = parseCommandForVolumeLevel(command);
+            _basslevel = parseCommandForBassLevel(command);
+            _treblelevel = parseCommandForTrebleLevel(command);
+            _firmwareVersion = parseCommandForFirmwareVersion(command);
             //TODO add parser for IR carrie frequency
-            return command;
         }
 
         /// <summary>
@@ -804,7 +810,15 @@ namespace NuvoControl.Server.ProtocolDriver
         private ENuvoEssentiaZones parseCommandForZone(string incomingCommand)
         {
             string stringZone = parseCommand(incomingCommand, _incomingCommandTemplate, "xx");
-            return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
+            try
+            {
+                return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
+            }
+            catch( System.ArgumentException ex )
+            {
+                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Zone. Wrong zone id '{0}' received! Exception={1}", stringZone, ex));
+            }
+            return ENuvoEssentiaZones.NoZone;
         }
 
         /// <summary>
@@ -816,7 +830,15 @@ namespace NuvoControl.Server.ProtocolDriver
         private ENuvoEssentiaSources parseCommandForSource(string incomingCommand)
         {
             string stringSource = parseCommand(incomingCommand, _incomingCommandTemplate, "s");
-            return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
+            try
+            {
+                return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
+            }
+            catch (System.ArgumentException ex)
+            {
+                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Source. Wrong source id '{0}' received! Exception={1}", stringSource, ex));
+            }
+            return ENuvoEssentiaSources.NoSource;
         }
 
         /// <summary>
@@ -839,6 +861,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     zonePowerStatus = EZonePowerStatus.ZoneStatusON;
                     break;
                 default:
+                    _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Power Status. Wrong status '{0}' received!", stringPowerStatus));
                     zonePowerStatus = EZonePowerStatus.ZoneStatusUnkown;
                     break;
             }
@@ -855,9 +878,17 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             string stringVolumeLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "yy");
             if (stringVolumeLevel != "")
-                return Convert.ToInt32(stringVolumeLevel) * -1;
-            else
-                return -999;    //TODO replace with constant
+            {
+                try
+                {
+                    return Convert.ToInt32(stringVolumeLevel) * -1;
+                }
+                catch (System.FormatException ex)
+                {
+                    _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Level. Wrong command '{0}' received! Exception={1}", stringVolumeLevel, ex));
+                }
+            }
+            return -999;    //TODO replace with constant
         }
 
         /// <summary>
@@ -869,7 +900,18 @@ namespace NuvoControl.Server.ProtocolDriver
         private int parseCommandForBassLevel(string incomingCommand)
         {
             string stringBassLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "uuu");
-            return Convert.ToInt32(stringBassLevel);
+            if (stringBassLevel != "")
+            {
+               try
+                {
+                    return Convert.ToInt32(stringBassLevel);
+                }
+               catch (System.FormatException ex)
+               {
+                   _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Bass Level. Wrong command '{0}' received! Exception={1}", stringBassLevel, ex));
+               }
+            }
+            return -999;    //TODO replace with constant
         }
 
         /// <summary>
@@ -881,7 +923,29 @@ namespace NuvoControl.Server.ProtocolDriver
         private int parseCommandForTrebleLevel(string incomingCommand)
         {
             string stringTrebleLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "ttt");
-            return Convert.ToInt32(stringTrebleLevel);
+            if (stringTrebleLevel != "")
+            {
+               try
+                {
+                   return Convert.ToInt32(stringTrebleLevel);
+                }
+               catch (System.FormatException ex)
+               {
+                   _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Treble Level. Wrong command '{0}' received! Exception={1}", stringTrebleLevel, ex));
+               }
+            }
+            return -999;    //TODO replace with constant
+        }
+
+        /// <summary>
+        /// Extracts the firmware version out of the recieved command string.
+        /// The member _incomingCommandTemplate needs to be set prior.
+        /// </summary>
+        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <returns>Firmware Version, extracted out of the command string.</returns>
+        private string parseCommandForFirmwareVersion(string incomingCommand)
+        {
+            return parseCommand(incomingCommand, _incomingCommandTemplate, "vz.zz");
         }
 
         /// <summary>
@@ -925,6 +989,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         #endregion
+
     }
 
 }
