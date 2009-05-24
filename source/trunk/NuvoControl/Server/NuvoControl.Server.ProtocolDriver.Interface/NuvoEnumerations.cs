@@ -11,7 +11,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 	// Enumeration Defintions
     //===========================================================
 
-
     #region NuVo Systems
     /// <summary>
 	/// NuVo Systems
@@ -30,7 +29,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 		NuVoTunerT2 = 1,
     }
     #endregion
-
 
     #region NuVo Essentia Commands
     /// <summary>
@@ -297,7 +295,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     }
     #endregion
 
-
     #region NuVo Tuner T2 Commands
     /// <summary>
     /// NuVo Tuner T2 Commands 
@@ -525,7 +522,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 	}
     #endregion
 
-
     #region NuVo Essentia Sources
     /// <summary>
     /// NuVo Essentia Sources
@@ -569,7 +565,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 		NoSource = 99,
     }
     #endregion
-
 
     #region NuVo Essentia Zones
     /// <summary>
@@ -645,7 +640,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     }
     #endregion
 
-
     #region Zone Power Status
     /// <summary>
 	/// Zone Power Status
@@ -664,12 +658,83 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 		ZoneStatusON = 1,
 
 		/// <summary>
-		/// Zone Status is Invalid
+		/// Zone Status is Unknown
 		/// </summary>
-		ZoneStatusUnkown = 2,
+		ZoneStatusUnknown = 2,
     }
     #endregion
 
+    #region Source Group Status
+    /// <summary>
+    /// Source Group Status
+    /// </summary>
+    [Serializable]
+    public enum ESourceGroupStatus
+    {
+        /// <summary>
+        /// Source Group is OFF
+        /// </summary>
+        SourceGroupOFF = 0,
+
+        /// <summary>
+        /// Source Group is ON
+        /// </summary>
+        SourceGroupON = 1,
+
+        /// <summary>
+        /// Source Group is Unknown
+        /// </summary>
+        SourceGroupUnknown = 2,
+    }
+    #endregion
+
+    #region Volume Reset Status
+    /// <summary>
+    /// Volume Reset Status
+    /// </summary>
+    [Serializable]
+    public enum EVolumeResetStatus
+    {
+        /// <summary>
+        /// Volume Reset is OFF
+        /// </summary>
+        VolumeResetOFF = 0,
+
+        /// <summary>
+        /// Volume Reset is ON
+        /// </summary>
+        VolumeResetON = 1,
+
+        /// <summary>
+        /// VolumeReset is Unknown
+        /// </summary>
+        VolumeResetUnknown = 2,
+    }
+    #endregion
+
+    #region DIP Switch Override Status
+    /// <summary>
+    /// DIP Switch Override Status
+    /// </summary>
+    [Serializable]
+    public enum EDIPSwitchOverrideStatus
+    {
+        /// <summary>
+        /// DIP Switch Override is OFF
+        /// </summary>
+        DIPSwitchOverrideOFF = 0,
+
+        /// <summary>
+        /// DIP Switch Override is ON
+        /// </summary>
+        DIPSwitchOverrideON = 1,
+
+        /// <summary>
+        /// DIP Switch Override Status is Unknown
+        /// </summary>
+        DIPSwitchOverrideUnknown = 2,
+    }
+    #endregion
 
     #region IR Carrier Frequency
     /// <summary>

@@ -31,7 +31,7 @@
   <section name="ReadStatusZONE">
     <entry name="Id">5</entry>
     <entry name="OutgoingCommand">ZxxSETSR</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
 
   <section name="TurnZoneON">
@@ -116,33 +116,33 @@
   <section name="SetBassLevel">
     <entry name="Id">21</entry>
     <entry name="OutgoingCommand">ZxxBASSuuu</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetTrebleLevel">
     <entry name="Id">22</entry>
     <entry name="OutgoingCommand">ZxxTREBttt</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   
   <section name="SetSourceGroupON">
     <entry name="Id">23</entry>
     <entry name="OutgoingCommand">ZxxGRPON</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetSourceGroupOFF">
     <entry name="Id">24</entry>
     <entry name="OutgoingCommand">ZxxGRPOFF</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetVolumeResetON">
     <entry name="Id">25</entry>
     <entry name="OutgoingCommand">ZxxVRSTON</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   <section name="SetVolumeResetOFF">
     <entry name="Id">26</entry>
     <entry name="OutgoingCommand">ZxxVRSTOFF</entry>
-    <entry name="IncomingCommand">ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr</entry>
+    <entry name="IncomingCommand">ZxxORi,BASSuuu,TREBttt,GRPq,VRSTr</entry>
   </section>
   
   <section name="SetKeypadLockON">

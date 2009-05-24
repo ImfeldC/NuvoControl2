@@ -46,6 +46,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         int VolumeLevel { get; }
         int BassLevel { get; }
         int TrebleLevel { get; }
+        EVolumeResetStatus VolumeResetStatus { get; }
+        EDIPSwitchOverrideStatus DIPSwitchOverrideStatus { get; }
+        ESourceGroupStatus SourceGrupStatus { get; }
         string FirmwareVersion { get; }
     }
 
