@@ -488,7 +488,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 NuvoEssentiaCommand_Accessor target = new NuvoEssentiaCommand_Accessor(incomingCommand);
                 EZonePowerStatus actual = target.parseCommandForPowerStatus(incomingCommand);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
-                Assert.AreEqual(EZonePowerStatus.ZoneStatusUnkown, actual);
+                Assert.AreEqual(EZonePowerStatus.ZoneStatusUnknown, actual);
             }
         }
 
