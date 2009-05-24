@@ -70,8 +70,8 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
         [TestMethod()]
         public void OpenTest()
         {
-            SerialPort target = new SerialPort(); // TODO: Initialize to an appropriate value
-            SerialPortConnectInformation serialPortConnectInformation = null; // TODO: Initialize to an appropriate value
+            SerialPort target = new SerialPort();
+            SerialPortConnectInformation serialPortConnectInformation = null; 
             target.Open(serialPortConnectInformation);
             bool actual = target.IsOpen;
             Assert.AreEqual(false, actual);

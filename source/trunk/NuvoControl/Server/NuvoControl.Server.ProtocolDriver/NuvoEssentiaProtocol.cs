@@ -16,9 +16,8 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private INuvoTelegram _serialPort;
 
-        // TODO replace with list, to enable multiple running commands
-        private INuvoEssentiaCommand _runningCommand;
-
+        private Queue<INuvoEssentiaCommand> _runningCommands = new Queue<INuvoEssentiaCommand>();
+        private NuvoEssentiaCommand _errorNuvoEssentiaCommand = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ErrorInCommand);
 
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
         {
@@ -51,14 +50,21 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private INuvoEssentiaCommand compareIncomingCommandWithRunningCommand(string incomingCommand)
         {
-            INuvoEssentiaCommand command = null;
-            if (_runningCommand != null && compareCommandString(_runningCommand.IncomingCommandTemplate, incomingCommand))
+            INuvoEssentiaCommand command = _runningCommands.Peek();
+            if (command != null && compareCommandString(command.IncomingCommandTemplate, incomingCommand))
             {
-                command = _runningCommand;
-                _runningCommand = null;
+                // incoming command matches a previous outgoing command
+                command = _runningCommands.Dequeue();
+            }
+            else if (compareCommandString(_errorNuvoEssentiaCommand.IncomingCommandTemplate, incomingCommand))
+            {
+                // incoming command indicates an error, assign them to the first command in queue
+                command = _runningCommands.Dequeue();
+                _log.Error(m => m("An error returned by Nuvo Essentia to the command '{0}'", command));
             }
             else
             {
+                // no outgoing command found. This command has been issued unsolicied
                 command = convertString2NuvoEssentiaCommand(incomingCommand);
             }
             return command;
@@ -96,7 +102,7 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             command.SendDateTime = DateTime.Now;
             _serialPort.SendTelegram(command.OutgoingCommandTemplate);
-            _runningCommand = command;
+            _runningCommands.Enqueue(command);
         }
 
 
