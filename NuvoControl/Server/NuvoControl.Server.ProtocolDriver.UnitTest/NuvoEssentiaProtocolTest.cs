@@ -334,6 +334,205 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         }
 
         /// <summary>
+        /// A test for SendCommand. Multiple commands are send to the protcol layer
+        /// before getting the answer from Nuvo Essentia. 
+        /// It's expected that the commands are queued and processed in the correct order.
+        /// </summary>
+        [TestMethod()]
+        public void SendMultipleCommand1Test()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
+            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command1);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command2);
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("Z02OR0,BASS-00,TREB+00,GRP0,VRST0");
+            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+
+            Assert.IsTrue(_eventRaisedCount == 2);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event1.Command.Command);
+            Assert.AreEqual(command1.Guid, event1.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command2.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event2.Command.Command);
+            Assert.AreEqual(command2.Guid, event2.Command.Guid); // return same instance of command
+        }
+
+        /// <summary>
+        /// A test for SendCommand. Multiple commands are send to the protcol layer
+        /// before getting the answer from Nuvo Essentia. 
+        /// It's expected that the commands are queued and processed in the correct order.
+        /// </summary>
+        [TestMethod()]
+        public void SendMultipleCommand2Test()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
+            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command1);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command2);
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            target.SendCommand(command3);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command4 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
+            target.SendCommand(command4);
+
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("Z02OR0,BASS-00,TREB+00,GRP0,VRST0");
+            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("Z03OR0,BASS-00,TREB+00,GRP0,VRST0");
+            NuvoEssentiaProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
+
+            Assert.IsTrue(_eventRaisedCount == 4);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event1.Command.Command);
+            Assert.AreEqual(command1.Guid, event1.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command2.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event2.Command.Command);
+            Assert.AreEqual(command2.Guid, event2.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command3.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event3.Command.Command);
+            Assert.AreEqual(command3.Guid, event3.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command4.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event4.Command.Command);
+            Assert.AreEqual(command4.Guid, event4.Command.Guid); // return same instance of command
+        }
+
+        /// <summary>
+        /// A test for SendCommand. Multiple commands are send to the protcol layer
+        /// before getting the answer from Nuvo Essentia. 
+        /// One command fails with an error.
+        /// </summary>
+        [TestMethod()]
+        public void SendMultipleCommandWithSomeErrorTest()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
+            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command1);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command2);
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            target.SendCommand(command3);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command4 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
+            target.SendCommand(command4);
+
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("?");  // ERROR
+            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("Z03OR0,BASS-00,TREB+00,GRP0,VRST0");
+            NuvoEssentiaProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
+
+            Assert.IsTrue(_eventRaisedCount == 4);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event1.Command.Command);
+            Assert.AreEqual(command1.Guid, event1.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command2.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event2.Command.Command);
+            Assert.AreEqual(command2.Guid, event2.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command3.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event3.Command.Command);
+            Assert.AreEqual(command3.Guid, event3.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command4.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event4.Command.Command);
+            Assert.AreEqual(command4.Guid, event4.Command.Guid); // return same instance of command
+        }
+
+        /// <summary>
+        /// A test for SendCommand. Multiple commands are send to the protcol layer
+        /// before getting the answer from Nuvo Essentia. 
+        /// In addition a spontaneous command ir received from Nuvo Essentia.
+        /// </summary>
+        [TestMethod()]
+        public void SendMultipleCommandWithSpontaneousAdditionalAnswersTest()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
+            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command1);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            target.SendCommand(command2);
+            // Send ReadStatusCONNECT
+            NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            target.SendCommand(command3);
+            // Send ReadStatusZONE
+            NuvoEssentiaCommand command4 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
+            target.SendCommand(command4);
+
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("Z02OR0,BASS-00,TREB+00,GRP0,VRST0");
+            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
+            // Additional command 
+            nuvoTelegram.passDataToTestClass("Z06PWRON,SRC6,GRP0,VOL-50");
+            NuvoEssentiaProtocolEventArgs eventx = _nuvoProtocolEventArgs;  // save return argument
+            // Return command for ReadStatusZONE
+            nuvoTelegram.passDataToTestClass("Z03OR0,BASS-00,TREB+00,GRP0,VRST0");
+            NuvoEssentiaProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
+
+            Assert.IsTrue(_eventRaisedCount == 5);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event1.Command.Command);
+            Assert.AreEqual(command1.Guid, event1.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command2.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event2.Command.Command);
+            Assert.AreEqual(command2.Guid, event2.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command3.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event3.Command.Command);
+            Assert.AreEqual(command3.Guid, event3.Command.Guid); // return same instance of command
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, command4.Command);
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, event4.Command.Command);
+            Assert.AreEqual(command4.Guid, event4.Command.Guid); // return same instance of command
+
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, eventx.Command.Command);
+        }
+
+
+        /// <summary>
         ///A test for NuvoEssentiaProtocol Constructor
         ///</summary>
         [TestMethod()]

@@ -1103,7 +1103,14 @@ namespace NuvoControl.Server.ProtocolDriver
                 int startindex = commandTemplate.IndexOf(placeholder);
                 if (startindex >= 0)
                 {
-                    result = command.Substring(startindex, placeholder.Length);
+                    try
+                    {
+                        result = command.Substring(startindex, placeholder.Length);
+                    }
+                    catch (System.ArgumentOutOfRangeException ex)
+                    {
+                        result = "";
+                    }
                 }
                 else
                 {

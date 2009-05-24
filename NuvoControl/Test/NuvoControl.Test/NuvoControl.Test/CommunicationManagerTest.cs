@@ -69,7 +69,7 @@ namespace NuvoControl.Test
         [DeploymentItem("NuvoControl.Test.COMListener.exe")]
         public void ByteToHexTest()
         {
-            CommunicationManager_Accessor target = new CommunicationManager_Accessor(); // TODO: Initialize to an appropriate value
+            CommunicationManager_Accessor target = new CommunicationManager_Accessor(); 
             byte[] comByte = { 42, 86, 69, 82, 13 };
             string expected = "2A 56 45 52 0D ";
             string actual;
@@ -84,7 +84,7 @@ namespace NuvoControl.Test
         [DeploymentItem("NuvoControl.Test.COMListener.exe")]
         public void HexToByteTest()
         {
-            CommunicationManager_Accessor target = new CommunicationManager_Accessor(); // TODO: Initialize to an appropriate value
+            CommunicationManager_Accessor target = new CommunicationManager_Accessor();
             string msg = "2A 56 45 52 0D";  // = "*VER<CR>"
             byte[] expected = { 42, 86, 69, 82, 13 };
             byte[] actual;
