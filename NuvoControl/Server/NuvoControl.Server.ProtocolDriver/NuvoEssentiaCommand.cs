@@ -11,8 +11,10 @@ namespace NuvoControl.Server.ProtocolDriver
     public class NuvoEssentiaCommand : INuvoEssentiaCommand
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
-        //TODO replace hard-coded path
-        private Profile _profile = new Xml("E:\\ImfeldC-NuvoControl\\source\\trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml");
+
+        // read profile filename from user settings
+        // http://msdn.microsoft.com/en-us/library/aa730869(VS.80).aspx
+        private Profile _profile = new Xml(Properties.Settings.Default.ProfileFileName);
 
         Guid _guid;
         DateTime _createDateTime;

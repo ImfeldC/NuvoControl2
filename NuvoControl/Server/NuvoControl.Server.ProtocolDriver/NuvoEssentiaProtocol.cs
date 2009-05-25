@@ -21,8 +21,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
         {
-            //TODO replace hard-coded path
-            _profile = new Xml("E:\\ImfeldC-NuvoControl\\source\\trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml");
+            _profile = new Xml(Properties.Settings.Default.ProfileFileName);
             _log.Debug(m => m("Open profile file: {0}", _profile.Name));
 
             if (nuvoTelegram == null)

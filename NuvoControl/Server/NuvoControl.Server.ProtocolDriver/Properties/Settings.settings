@@ -1,5 +1,9 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NuvoControl.Server.ProtocolDriver.Properties" GeneratedClassName="Settings">
   <Profiles />
-  <Settings />
+  <Settings>
+    <Setting Name="ProfileFileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">E:\ImfeldC-NuvoControl\source\trunk\NuvoControl\Server\NuvoControl.Server.ProtocolDriver\NuvoEssentiaProfile.xml</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>
