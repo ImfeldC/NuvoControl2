@@ -31,7 +31,7 @@ using NuvoControl.Server.Dal;
 
 namespace NuvoControl.Server.Service.Configuration
 {
-    public class NuvoControlConfiguration : IConfigure, IConfigureInternal
+    public class NuvoControlConfiguration : IConfigureInternal
     {
         #region Fields
 
