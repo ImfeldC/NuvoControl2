@@ -55,7 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Configuration\NuvoControlConfiguration.cs" />
-    <Compile Include="Configuration\ConfigurationLoader.cs" />
     <Compile Include="Configuration\IConfigureInternal.cs" />
     <Compile Include="MandC\IZoneController.cs" />
     <Compile Include="MandC\MonitorAndControl.cs" />
@@ -72,10 +71,17 @@
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj">
+      <Project>{295025FA-7870-4A53-996F-2CDCE2AFBAFF}</Project>
+      <Name>NuvoControl.Server.Dal</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
       <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
       <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Schedule\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
