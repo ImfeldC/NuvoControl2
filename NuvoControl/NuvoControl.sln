@@ -26,17 +26,20 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D3BB3D4-A8C6-4145-88F3-355FF74233CA}"
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		NuvoControl.vsmdi = NuvoControl.vsmdi
+		NuvoControl1.vsmdi = NuvoControl1.vsmdi
+		NuvoControl3.vsmdi = NuvoControl3.vsmdi
+		NuvoControl4.vsmdi = NuvoControl4.vsmdi
+		NuvoControl5.vsmdi = NuvoControl5.vsmdi
 		READ-ME.txt = READ-ME.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal.UnitTest", "Server\NuvoControl.Server.Dal.UnitTest\NuvoControl.Server.Dal.UnitTest.csproj", "{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal", "Server\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj", "{295025FA-7870-4A53-996F-2CDCE2AFBAFF}"
+EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NuvoControl.vsmdi
+		CategoryFile = NuvoControl5.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,8 +90,20 @@ Global
 		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
