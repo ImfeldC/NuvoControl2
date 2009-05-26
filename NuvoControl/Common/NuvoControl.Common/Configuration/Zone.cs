@@ -23,9 +23,12 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 
+using System.Runtime.Serialization;
+using System.ServiceModel;
+
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Zone
     {
         #region Private Members
@@ -40,6 +43,10 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        public Zone()
+        {
+        }
+
         public Zone(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates)
         {
             this._id = id;
@@ -53,29 +60,39 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface Members
 
+        [DataMember]
         public Address Id
         {
             get { return _id; }
+            set { _id = value; }
         }
 
+        [DataMember]
         public string Name
         {
             get { return _name; }
+            set { _name = value; }
         }
 
+        [DataMember]
         public string PicturePath
         {
             get { return _picturePath; }
+            set { _picturePath = value; }
         }
 
+        [DataMember]
         public string PictureType
         {
             get { return _pictureType; }
+            set { _pictureType = value; }
         }
 
+        [DataMember]
         public List<Point> FloorPlanCoordinates
         {
             get { return _floorPlanCoordinates; }
+            set { _floorPlanCoordinates = value; }
         }
 
         #endregion
