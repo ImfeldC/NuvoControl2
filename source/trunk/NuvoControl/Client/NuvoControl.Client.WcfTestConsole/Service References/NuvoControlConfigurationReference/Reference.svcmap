@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="c04e5cd9-eed1-439f-8570-6f08217e48cc" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8080/NuvoControlConfiguration" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="NuvoControlConfiguration.xsd" MetadataType="Schema" ID="27d7168c-566f-49d3-89ac-ebe70899fef2" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlConfiguration?xsd=xsd0" />
+    <MetadataFile FileName="NuvoControlConfiguration1.xsd" MetadataType="Schema" ID="81f2e54a-2bfc-4ba5-aa5e-e87dd483ea5e" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlConfiguration?xsd=xsd1" />
+    <MetadataFile FileName="NuvoControlConfiguration2.xsd" MetadataType="Schema" ID="05fd5a0e-a45c-4624-81c6-3001786dab92" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlConfiguration?xsd=xsd2" />
+    <MetadataFile FileName="NuvoControlConfiguration.wsdl" MetadataType="Wsdl" ID="916bf15b-2361-45c1-989e-335f29bc2dcb" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlConfiguration?wsdl" />
+    <MetadataFile FileName="NuvoControlConfiguration.disco" MetadataType="Disco" ID="9a85ac6e-40f5-4afa-a156-83a0f378b4cd" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlConfiguration?disco" />
+    <MetadataFile FileName="NuvoControlConfiguration3.xsd" MetadataType="Schema" ID="c567600b-77dc-4a13-a536-2c2cd859bba8" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlConfiguration?xsd=xsd3" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
