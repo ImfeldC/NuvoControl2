@@ -22,11 +22,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.ServiceModel;
+
 namespace NuvoControl.Common.Interfaces
 {
     /// <summary>
     /// Defines the entry functions for the NuvoControl service
     /// </summary>
+    [ServiceContract]
     public interface INuvoControl
     {
         /// <summary>
@@ -45,6 +48,7 @@ namespace NuvoControl.Common.Interfaces
         /// </summary>
         /// <param name="clientId">The Id of the client.</param>
         /// <returns>True, in case of success. Otherwise false.</returns>
+        [OperationContract]
         bool StartSession(Guid clientId);
 
         /// <summary>
@@ -52,6 +56,7 @@ namespace NuvoControl.Common.Interfaces
         /// </summary>
         /// <param name="clientId"></param>
         /// <returns>True, in case of success. Otherwise false.</returns>
+        [OperationContract]
         bool EndSession(Guid clientId);
 
         /// <summary>
@@ -59,6 +64,9 @@ namespace NuvoControl.Common.Interfaces
         /// This provides access to functionality related to the system configuration of the service.
         /// </summary>
         IConfigure IConfigure { get; }
+
+        [OperationContract]
+        IConfigure IConfigureIfc();
 
         /// <summary>
         /// Returns the <see cref="IMonitorAndControl"/> interface.

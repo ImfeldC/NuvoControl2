@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 
 using NuvoControl.Common.Configuration;
+using System.ServiceModel;
 
 namespace NuvoControl.Common.Interfaces
 {
@@ -31,9 +32,11 @@ namespace NuvoControl.Common.Interfaces
     /// Defines functionality to modify the actual configuration of the NuvoControl system.
     /// Defines functionality to save the actual configuration of the NuvoControl system.
     /// </summary>
+    [ServiceContract]
     public interface IConfigure
     {
         Graphic GetGraphicConfiguration();
+        [OperationContract]
         Zone GetZoneKonfiguration(int zoneId);
         Function GetFunction(Guid id);
         List<Function> GetFunctions(Address zoneId);

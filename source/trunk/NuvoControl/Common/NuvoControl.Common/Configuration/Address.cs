@@ -22,9 +22,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using System.Runtime.Serialization;
+using System.ServiceModel;
+
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Address
     {
         #region Private Members
@@ -36,6 +39,10 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        public Address()
+        {
+        }
+
         public Address(int deviceId, int objectId)
         {
             this._deviceId = deviceId;
@@ -46,14 +53,18 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
+        [DataMember]
         public int ObjectId
         {
             get { return _objectId; }
+            set { _objectId = value; }
         }
 
+        [DataMember]
         public int DeviceId
         {
             get { return _deviceId; }
+            set { _deviceId = value; }
         }
 
 
