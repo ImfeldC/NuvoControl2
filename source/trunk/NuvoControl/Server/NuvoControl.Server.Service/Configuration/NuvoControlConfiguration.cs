@@ -28,9 +28,12 @@ using NuvoControl.Common.Interfaces;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.Dal;
 
+using System.ServiceModel;
+
 
 namespace NuvoControl.Server.Service.Configuration
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class NuvoControlConfiguration : IConfigureInternal
     {
         #region Fields
@@ -62,7 +65,7 @@ namespace NuvoControl.Server.Service.Configuration
 
         public Zone GetZoneKonfiguration(int zoneId)
         {
-            throw new NotImplementedException();
+            return _systemConfiguration.Graphic.Building.Floors[0].Zones[2];
         }
 
         public Function GetFunction(Guid id)
