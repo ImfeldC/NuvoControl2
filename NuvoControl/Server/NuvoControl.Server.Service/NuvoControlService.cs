@@ -31,6 +31,8 @@ using NuvoControl.Server.Service.Configuration;
 using NuvoControl.Server.Service.MandC;
 using NuvoControl.Server.ProtocolDriver.Interface;
 
+using System.ServiceModel;
+
 namespace NuvoControl.Server.Service
 {
     /// <summary>
@@ -39,6 +41,7 @@ namespace NuvoControl.Server.Service
     /// Its responsibility is to "bootstrap" and configure all other objects of the service.
     /// Furthermore it manages all the connected clients.
     /// </summary>
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class NuvoControlService: INuvoControl
     {
         #region Fields
@@ -98,7 +101,7 @@ namespace NuvoControl.Server.Service
                 LoadNuvoControlConfiguration(configurationFile);
                 LoadProtocolDrivers();
                 ReadCommuncationParameters();
-                CreateProcessModel();
+                //CreateProcessModel();
             }
         }
 
@@ -166,6 +169,11 @@ namespace NuvoControl.Server.Service
         public IConfigure IConfigure
         {
             get { return _configuration; }
+        }
+
+        public IConfigure IConfigureIfc()
+        {
+            return _configuration as IConfigure;
         }
 
         /// <summary>
