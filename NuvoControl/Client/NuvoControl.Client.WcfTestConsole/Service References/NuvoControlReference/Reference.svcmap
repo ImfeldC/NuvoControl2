@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d6ebcbd3-cf9c-49e4-9228-e5447abe2f64" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8080/NuvoControlService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="NuvoControlService.wsdl" MetadataType="Wsdl" ID="d929d2d5-d31a-4b8a-af16-cb42ba07f4e5" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlService?wsdl" />
+    <MetadataFile FileName="NuvoControlService.disco" MetadataType="Disco" ID="d67ce703-e6d5-4656-92c4-a3cbd3c00cc0" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlService?disco" />
+    <MetadataFile FileName="NuvoControlService.xsd" MetadataType="Schema" ID="8db7e6f9-7c4a-47d3-b0c2-4e90fa99b88f" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlService?xsd=xsd0" />
+    <MetadataFile FileName="NuvoControlService1.xsd" MetadataType="Schema" ID="0db4b06d-aec3-4dbc-93a9-06517c7604a2" SourceId="1" SourceUrl="http://localhost:8080/NuvoControlService?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
