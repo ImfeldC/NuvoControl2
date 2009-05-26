@@ -1,0 +1,118 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common", "Common\NuvoControl.Common\NuvoControl.Common.csproj", "{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common.Interfaces", "Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj", "{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.CommunicationDriver", "Server\NuvoControl.Server.CommunicationDriver\NuvoControl.Server.CommunicationDriver.csproj", "{295804DA-0A18-4B2D-A9EE-4B1813A408BC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver", "Server\NuvoControl.Server.ProtocolDriver\NuvoControl.Server.ProtocolDriver.csproj", "{C5C321D7-92B9-4A5B-A278-F89FF09664B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Service", "Server\NuvoControl.Server.Service\NuvoControl.Server.Service.csproj", "{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.COMListener", "Test\NuvoControl.Test.COMListener\NuvoControl.Test.COMListener.csproj", "{65167131-3AD1-4032-8777-5F5F6D3DAE72}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.RS232", "Test\NuvoControl.Test.RS232\NuvoControl.Test.RS232.csproj", "{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test", "Test\NuvoControl.Test\NuvoControl.Test\NuvoControl.Test.csproj", "{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver.Interface", "Server\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj", "{817F6C4B-65C6-4A90-966E-F76FD8AC4202}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Service.UnitTest", "Server\NuvoControl.Server.Service.UnitTest\NuvoControl.Server.Service.UnitTest.csproj", "{05289193-1724-4430-9EED-CD1E2D819F4D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver.UnitTest", "Server\NuvoControl.Server.ProtocolDriver.UnitTest\NuvoControl.Server.ProtocolDriver.UnitTest.csproj", "{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4D3BB3D4-A8C6-4145-88F3-355FF74233CA}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		NuvoControl1.vsmdi = NuvoControl1.vsmdi
+		NuvoControl3.vsmdi = NuvoControl3.vsmdi
+		NuvoControl4.vsmdi = NuvoControl4.vsmdi
+		NuvoControl5.vsmdi = NuvoControl5.vsmdi
+		READ-ME.txt = READ-ME.txt
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal.UnitTest", "Server\NuvoControl.Server.Dal.UnitTest\NuvoControl.Server.Dal.UnitTest.csproj", "{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal", "Server\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj", "{295025FA-7870-4A53-996F-2CDCE2AFBAFF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Client.WcfTestConsole", "Client\NuvoControl.Client.WcfTestConsole\NuvoControl.Client.WcfTestConsole.csproj", "{09F03602-94BB-4424-B410-77282BA5174D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.WcfHostConsole", "Server\NuvoControl.Server.WcfHostConsole\NuvoControl.Server.WcfHostConsole.csproj", "{58DCB860-91E2-4A66-8459-1FBE41C64FCC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC6A2772-4CB1-4ED1-85DF-56EF5BA133C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal
