@@ -33,9 +33,10 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
-            INuvoEssentiaCommand command = compareIncomingCommandWithRunningCommand(e.Message);
-
+            INuvoEssentiaCommand command = new NuvoEssentiaCommand(e.Message);
             command.IncomingCommand = e.Message;
+            command = compareIncomingCommandWithRunningCommand(command);
+
             if (command.Valid)
             {
                 //raise the event, and pass data to next layer
@@ -47,25 +48,40 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
-        private INuvoEssentiaCommand compareIncomingCommandWithRunningCommand(string incomingCommand)
+        private INuvoEssentiaCommand compareIncomingCommandWithRunningCommand(INuvoEssentiaCommand incomingCommand)
         {
-            INuvoEssentiaCommand command = _runningCommands.Peek();
-            if (command != null && compareCommandString(command.IncomingCommandTemplate, incomingCommand))
+            INuvoEssentiaCommand command = null;
+
+            if (_runningCommands.Count > 0)
             {
-                // incoming command matches a previous outgoing command
-                command = _runningCommands.Dequeue();
-            }
-            else if (compareCommandString(_errorNuvoEssentiaCommand.IncomingCommandTemplate, incomingCommand))
-            {
-                // incoming command indicates an error, assign them to the first command in queue
-                command = _runningCommands.Dequeue();
-                _log.Error(m => m("An error returned by Nuvo Essentia to the command '{0}'", command));
+                command = _runningCommands.Peek();
+                //if (command != null && compareCommands(command, incomingCommand))
+                if (command != null && compareCommandString(command.IncomingCommandTemplate, incomingCommand.IncomingCommand)
+                                    && compareZoneIds(command.ZoneId, incomingCommand.ZoneId) )
+                {
+                    // incoming command matches a previous outgoing command
+                    command = _runningCommands.Dequeue();
+                    command.IncomingCommand = incomingCommand.IncomingCommand;
+                }
+                else if (compareCommandString(_errorNuvoEssentiaCommand.IncomingCommandTemplate, incomingCommand.IncomingCommand))
+                {
+                    // incoming command indicates an error, assign them to the first command in queue
+                    command = _runningCommands.Dequeue();
+                    command.IncomingCommand = incomingCommand.IncomingCommand;
+                    _log.Error(m => m("An error returned by Nuvo Essentia to the command '{0}'", command));
+                }
+                else
+                {
+                    // no outgoing command found. This command has been issued unsolicied
+                    command = incomingCommand;
+                }
             }
             else
             {
-                // no outgoing command found. This command has been issued unsolicied
-                command = convertString2NuvoEssentiaCommand(incomingCommand);
+                // no outgoing command available. This command has been issued unsolicied
+                command = incomingCommand;
             }
+
             return command;
         }
 
@@ -185,6 +201,24 @@ namespace NuvoControl.Server.ProtocolDriver
             }
 
             // Comparison ok
+            return true;
+        }
+
+
+        public static bool compareZoneIds(ENuvoEssentiaZones zone1, ENuvoEssentiaZones zone2)
+        {
+            if ((zone1 != ENuvoEssentiaZones.NoZone) && (zone2 != ENuvoEssentiaZones.NoZone))
+            {
+                if (zone1 != zone2)
+                {
+                    // Zone ids are not the same
+                    return false;
+                }
+            }
+
+            // Either trrrhe zone ids are the same, or ...
+            // At least one zone is not defined, so we can't compare them
+            // return in this case 'true'
             return true;
         }
     }
