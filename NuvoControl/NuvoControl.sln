@@ -27,9 +27,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
 		NuvoControl1.vsmdi = NuvoControl1.vsmdi
+		NuvoControl2.vsmdi = NuvoControl2.vsmdi
 		NuvoControl3.vsmdi = NuvoControl3.vsmdi
 		NuvoControl4.vsmdi = NuvoControl4.vsmdi
-		NuvoControl5.vsmdi = NuvoControl5.vsmdi
 		READ-ME.txt = READ-ME.txt
 	EndProjectSection
 EndProject
@@ -38,8 +38,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal", "Server\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj", "{295025FA-7870-4A53-996F-2CDCE2AFBAFF}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NuvoControl5.vsmdi
+		CategoryFile = NuvoControl2.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,9 +105,5 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
