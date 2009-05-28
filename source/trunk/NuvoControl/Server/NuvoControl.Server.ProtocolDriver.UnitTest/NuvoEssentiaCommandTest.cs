@@ -5,7 +5,6 @@ using NuvoControl.Server.ProtocolDriver;
 namespace NuvoControl.Server.ProtocolDriver.Test
 {
     
-    
     /// <summary>
     ///This is a test class for NuvoEssentiaCommandTest and is intended
     ///to contain all NuvoEssentiaCommandTest Unit Tests
