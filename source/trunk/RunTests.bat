@@ -1,4 +1,5 @@
-re
+@echo off
+rem
 rem Start Unit Test of Visual Studio 2008 ...
 rem
 del TestResults1.xml
