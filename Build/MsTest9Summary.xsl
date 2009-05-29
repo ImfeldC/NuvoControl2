@@ -12,12 +12,17 @@ Based on the original XSL distributed with ccnet.
 
   <xsl:output method="html"/>
 
-  <xsl:template match="/">
-    <xsl:variable name="pass_count" select="cruisecontrol/build/tt:TestRun/tt:ResultSummary/tt:Counters/@passed"/>
+  <xsl:template match="cruisecontrol">
+    <xsl:for-each select="build">
+      <xsl:apply-templates select="tt:TestRun"/>
+    </xsl:for-each>
+  </xsl:template>
+  <xsl:template match="tt:TestRun">
+    <xsl:variable name="pass_count" select="tt:ResultSummary/tt:Counters/@passed"/>
 
-    <xsl:variable name="inconclusive_count" select="cruisecontrol/build/tt:TestRun/tt:ResultSummary/tt:Counters/@inconclusive"/>
-    <xsl:variable name="failed_count" select="cruisecontrol/build/tt:TestRun/tt:ResultSummary/tt:Counters/@failed"/>
-    <xsl:variable name="total_count" select="cruisecontrol/build/tt:TestRun/tt:ResultSummary/tt:Counters/@total"/>
+    <xsl:variable name="inconclusive_count" select="tt:ResultSummary/tt:Counters/@inconclusive"/>
+    <xsl:variable name="failed_count" select="tt:ResultSummary/tt:Counters/@failed"/>
+    <xsl:variable name="total_count" select="tt:ResultSummary/tt:Counters/@total"/>
     <xsl:if test="$total_count != 0">
       <table class="section-table" cellpadding="2" cellspacing="0" border="0" width="98%">
         <tr>
@@ -44,7 +49,7 @@ Based on the original XSL distributed with ccnet.
                     <th align="left">Message</th>
                     <th align="left">Stack Trace</th>
                   </tr>
-                  <xsl:apply-templates select="/cruisecontrol/build/tt:TestRun/tt:Results/tt:UnitTestResult[@outcome!= 'Passed']" />
+                  <xsl:apply-templates select="/tt:Results/tt:UnitTestResult[@outcome!= 'Passed']" />
                 </table>
               </td>
             </tr>
