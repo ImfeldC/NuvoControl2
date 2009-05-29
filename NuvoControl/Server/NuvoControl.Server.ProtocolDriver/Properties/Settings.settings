@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ProfileFileName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">E:\ImfeldC-NuvoControl\source\trunk\NuvoControl\Server\NuvoControl.Server.ProtocolDriver\NuvoEssentiaProfile.xml</Value>
+      <Value Profile="(Default)">NuvoEssentiaProfile.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>
