@@ -22,17 +22,5 @@ namespace NuvoControl.Server.ProtocolDriver.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NuvoEssentiaProfile.xml")]
-        public string ProfileFileName {
-            get {
-                return ((string)(this["ProfileFileName"]));
-            }
-            set {
-                this["ProfileFileName"] = value;
-            }
-        }
     }
 }

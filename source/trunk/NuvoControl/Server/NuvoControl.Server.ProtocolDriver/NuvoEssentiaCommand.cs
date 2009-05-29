@@ -119,9 +119,9 @@ namespace NuvoControl.Server.ProtocolDriver
 
             try
             {
-                // read profile filename from user settings
-                // http://msdn.microsoft.com/en-us/library/aa730869(VS.80).aspx
-                _profile = new Xml(Properties.Settings.Default.ProfileFileName);
+                // If no filename is provided, it searches the defintions
+                // of the commong application xml file (e.g. nuvocontrol.server.protocoldriver.test.dll.config)
+                _profile = new Xml("NuvoEssentiaProfile.xml");
             }
             catch (Exception ex)
             {
