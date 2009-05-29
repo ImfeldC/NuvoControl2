@@ -10,11 +10,8 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     public class NuvoEssentiaCommand : INuvoEssentiaCommand
     {
-        private ILog _log = LogManager.GetCurrentClassLogger();
-
-        // read profile filename from user settings
-        // http://msdn.microsoft.com/en-us/library/aa730869(VS.80).aspx
-        private Profile _profile = new Xml(Properties.Settings.Default.ProfileFileName);
+        private ILog _log;
+        private Profile _profile;
 
         Guid _guid;
         DateTime _createDateTime;
@@ -44,12 +41,14 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
         {
+            constructMembers();
             initMembers(command);
             _outgoingCommand = buildOutgoingCommand();
         }
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaSources source)
         {
+            constructMembers();
             initMembers(command);
             _sourceId = source;
             _outgoingCommand = buildOutgoingCommand();
@@ -57,6 +56,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
         {
+            constructMembers();
             initMembers(command);
             _zoneId = zone;
             _outgoingCommand = buildOutgoingCommand();
@@ -64,6 +64,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
         {
+            constructMembers();
             initMembers(command);
             _zoneId = zone;
             _sourceId = source;
@@ -72,6 +73,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int volume)
         {
+            constructMembers();
             initMembers(command);
             _zoneId = zone;
             _volume = volume;
@@ -80,6 +82,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int basslevel, int treblelevel)
         {
+            constructMembers();
             initMembers(command);
             _zoneId = zone;
             _basslevel = basslevel;
@@ -93,6 +96,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public NuvoEssentiaCommand(string receivedCommand)
         {
+            constructMembers();
             ENuvoEssentiaCommands command = searchNuvoEssentiaCommand(receivedCommand);
             initMembers(command);
             _incomingCommand = receivedCommand;
@@ -101,6 +105,30 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
+        private void constructMembers()
+        {
+            try
+            {
+                _log = LogManager.GetCurrentClassLogger();
+            }
+            catch (Exception ex)
+            {
+                // log is not available
+                _log = null;
+            }
+
+            try
+            {
+                // read profile filename from user settings
+                // http://msdn.microsoft.com/en-us/library/aa730869(VS.80).aspx
+                _profile = new Xml(Properties.Settings.Default.ProfileFileName);
+            }
+            catch (Exception ex)
+            {
+                 // log is not available
+                _profile = null;
+            }
+        }
 
         /// <summary>
         /// Private method to initialize the members.
