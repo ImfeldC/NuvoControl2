@@ -5,7 +5,8 @@ using System.Text;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
-    public interface INuvoEssentiaCommand : INuvoEssentiaSingleCommand
+    public interface INuvoEssentiaCommand
     {
+        INuvoEssentiaSingleCommand[] commandList { get; }
     }
 }
