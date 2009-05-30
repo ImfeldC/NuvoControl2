@@ -17,7 +17,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private INuvoTelegram _serialPort;
 
         private Queue<INuvoEssentiaCommand> _runningCommands = new Queue<INuvoEssentiaCommand>();
-        private NuvoEssentiaCommand _errorNuvoEssentiaCommand = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ErrorInCommand);
+        private NuvoEssentiaSingleCommand _errorNuvoEssentiaCommand = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ErrorInCommand);
 
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
         {
@@ -33,7 +33,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
-            INuvoEssentiaCommand command = new NuvoEssentiaCommand(e.Message);
+            INuvoEssentiaCommand command = new NuvoEssentiaSingleCommand(e.Message);
             command.IncomingCommand = e.Message;
             command = compareIncomingCommandWithRunningCommand(command);
 
@@ -101,7 +101,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public void SendCommand(string commandString)
         {
-            NuvoEssentiaCommand command = convertString2NuvoEssentiaCommand(commandString);
+            NuvoEssentiaSingleCommand command = convertString2NuvoEssentiaCommand(commandString);
             Send(command);
         }
 
@@ -126,9 +126,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Nuvo Essentia command string.</param>
         /// <returns></returns>
-        private NuvoEssentiaCommand convertString2NuvoEssentiaCommand(string command)
+        private NuvoEssentiaSingleCommand convertString2NuvoEssentiaCommand(string command)
         {
-            return new NuvoEssentiaCommand(searchNuvoEssentiaCommand(command));
+            return new NuvoEssentiaSingleCommand(searchNuvoEssentiaCommand(command));
         }
 
         /// <summary>

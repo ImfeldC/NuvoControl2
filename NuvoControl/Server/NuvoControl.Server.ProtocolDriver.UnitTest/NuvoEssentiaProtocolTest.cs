@@ -112,7 +112,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
-            NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadVersion);
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
             target.SendCommand(command);
             nuvoTelegram.passDataToTestClass("NUVO_E6D_vx.yy");
 
@@ -171,7 +171,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadVersion
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadVersion);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("NUVO_E6D_v1.23");
 
@@ -183,7 +183,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
                 target.SendCommand(command2);
                 nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
 
@@ -195,7 +195,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command3 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
                 target.SendCommand(command3);
                 nuvoTelegram.passDataToTestClass("ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr");    // return value for ReadStatusZONE
 
@@ -222,7 +222,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadVersion
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadVersion);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("NUVO_E6D_v1.23");
 
@@ -235,7 +235,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusSOURCEIR
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusSOURCEIR);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusSOURCEIR);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("IRSET:38,55,55,38,38,55");
 
@@ -253,7 +253,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z04PWROFF,SRC3,GRP1,VOL-34");
 
@@ -270,7 +270,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z12OR1,BASS-10,TREB+02,GRP1,VRST0");    // return value for ReadStatusZONE
 
@@ -303,7 +303,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: SetSOURCEIR56
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetSOURCEIR56);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetSOURCEIR56);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("IRSET:55,38,55,38,55,88");
 
@@ -321,7 +321,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: MuteON
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.MuteON);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.MuteON);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z11PWRON,SRC6,GRP0,VOL-34");     // return value for ReadStatusCONNECT
 
@@ -338,7 +338,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: SetBassLevel
             {
-                NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetBassLevel);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetBassLevel);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z08OR0,BASS+04,TREB+00,GRP0,VRST1");    // return value for ReadStatusZONE
 
@@ -356,6 +356,29 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         }
 
         /// <summary>
+        /// A test for SendCommand
+        /// Send a the non-nuvo command 'SetInitialZoneStatus' and test return value.
+        /// </summary>
+        [TestMethod()]
+        public void SendCommand7Test()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
+            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+/*
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetInitialZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source4,-50);
+            target.SendCommand(command);
+            // Three commands => TurnZoneON, SetVolume and SetSource.
+            nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
+            nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
+            nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
+
+            Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
+            Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, _nuvoProtocolEventArgs.Command.Command);   // return same command      
+  */      }
+
+
+        /// <summary>
         /// A test for SendCommand. Multiple commands are send to the protcol layer
         /// before getting the answer from Nuvo Essentia. 
         /// It's expected that the commands are queued and processed in the correct order.
@@ -368,10 +391,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command1);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command2);
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
@@ -402,16 +425,16 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command1);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command2);
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command3 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command3);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command4 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command4 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command4);
 
             // Return command for ReadStatusCONNECT
@@ -455,16 +478,16 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command1);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command2);
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command3 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command3);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command4 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command4 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command4);
 
             // Return command for ReadStatusCONNECT
@@ -508,16 +531,16 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command1);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command2);
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command3 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command3 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command3);
             // Send ReadStatusZONE
-            NuvoEssentiaCommand command4 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command4 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusZONE, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command4);
 
             // Return command for ReadStatusCONNECT
@@ -567,10 +590,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
+            NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
             target.SendCommand(command1);
             // Send ReadStatusCONNECT
-            NuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
+            NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone3);
             target.SendCommand(command2);
 
             // Return command for ReadStatusCONNECT
