@@ -10,14 +10,14 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     public class NuvoEssentiaProtocolEventArgs : EventArgs
     {
-        INuvoEssentiaCommand _command;
+        INuvoEssentiaSingleCommand _command;
 
-        public INuvoEssentiaCommand Command
+        public INuvoEssentiaSingleCommand Command
         {
             get { return _command; }
         }
 
-        public NuvoEssentiaProtocolEventArgs(INuvoEssentiaCommand command)
+        public NuvoEssentiaProtocolEventArgs(INuvoEssentiaSingleCommand command)
         {
             _command = command;
         }
@@ -46,7 +46,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// Send the command passed as object to the lower system.
         /// </summary>
         /// <param name="command">Nuvo Essentia command.</param>
-        void SendCommand(INuvoEssentiaCommand command);
+        void SendCommand(INuvoEssentiaSingleCommand command);
     
     }
 }

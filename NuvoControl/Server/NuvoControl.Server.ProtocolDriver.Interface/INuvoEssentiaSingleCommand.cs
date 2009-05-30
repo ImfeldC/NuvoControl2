@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
-    public interface INuvoEssentiaCommand : IComparable
+    public interface INuvoEssentiaSingleCommand : IComparable
     {
         Guid Guid { get; }
         ENuvoEssentiaCommands Command { get; }
