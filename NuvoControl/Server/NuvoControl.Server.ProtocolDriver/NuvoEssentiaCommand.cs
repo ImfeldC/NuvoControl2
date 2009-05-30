@@ -10,136 +10,64 @@ namespace NuvoControl.Server.ProtocolDriver
     {
         private NuvoEssentiaSingleCommand[] _commandList;
 
+        Guid _guid;
+        DateTime _createDateTime;
+        ENuvoEssentiaCommands _command = ENuvoEssentiaCommands.NoCommand;
+
+        #region Nuvo Essentia Values
+        ENuvoEssentiaZones _zoneId = ENuvoEssentiaZones.NoZone;
+        ENuvoEssentiaSources _sourceId = ENuvoEssentiaSources.NoSource;
+        int _volume = -999;
+        #endregion
+
+
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
+        {
+            initMembers(command);
+        }
+
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
+        {
+            initMembers(command);
+            _zoneId = zone;
+        }
+
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
+        {
+            initMembers(command);
+            _zoneId = zone;
+            _sourceId = source;
+        }
+
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume)
+        {
+            initMembers(command);
+            _zoneId = zone;
+            _sourceId = source;
+            _volume = volume;
+        }
+
+
+        /// <summary>
+        /// Private method to initialize the members.
+        /// Call this method in each constructur at start.
+        /// </summary>
+        private void initMembers(ENuvoEssentiaCommands command)
+        {
+            _command = command;
+            _createDateTime = DateTime.Now;
+            _guid = Guid.NewGuid();
+        }
+
+
         #region INuvoEssentiaCommand Members
 
-        public Guid Guid
+        public INuvoEssentiaSingleCommand[] commandList
         {
-            get { throw new NotImplementedException(); }
-        }
-
-        public ENuvoEssentiaCommands Command
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool Valid
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public DateTime CreatedDateTime
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public DateTime SendDateTime
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public DateTime ReceiveDateTime
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string OutgoingCommandTemplate
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string OutgoingCommand
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string IncomingCommandTemplate
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string IncomingCommand
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public ENuvoEssentiaZones ZoneId
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public ENuvoEssentiaSources SourceId
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public EZonePowerStatus PowerStatus
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public EIRCarrierFrequency IrCarrierFrequencySource(ENuvoEssentiaSources source)
-        {
-            throw new NotImplementedException();
-        }
-
-        public int VolumeLevel
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public int BassLevel
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public int TrebleLevel
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public EVolumeResetStatus VolumeResetStatus
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public EDIPSwitchOverrideStatus DIPSwitchOverrideStatus
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public ESourceGroupStatus SourceGrupStatus
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public string FirmwareVersion
-        {
-            get { throw new NotImplementedException(); }
+            get { return _commandList; }
         }
 
         #endregion
 
-        #region IComparable Members
-
-        public int CompareTo(object obj)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 }
