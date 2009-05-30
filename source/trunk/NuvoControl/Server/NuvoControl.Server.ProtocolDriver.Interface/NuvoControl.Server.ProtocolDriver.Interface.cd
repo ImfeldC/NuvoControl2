@@ -72,11 +72,11 @@
       <FileName>ISerialPort.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoEssentiaCommand">
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoEssentiaSingleCommand">
     <Position X="6.75" Y="2.75" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAwAAAiAAAAAAEgAAgABBBAAAAIHICgkAAABAAACAA=</HashCode>
-      <FileName>INuvoEssentiaCommand.cs</FileName>
+      <FileName>INuvoEssentiaSingleCommand.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoSystem">

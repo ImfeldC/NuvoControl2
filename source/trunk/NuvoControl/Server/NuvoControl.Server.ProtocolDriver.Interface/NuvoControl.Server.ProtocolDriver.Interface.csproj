@@ -53,7 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="INuvoEssentiaCommand.cs" />
+    <Compile Include="INuvoEssentiaSingleCommand.cs" />
     <Compile Include="INuvoEssentiaProtocol.cs" />
     <Compile Include="INuvoTelegram.cs" />
     <Compile Include="IProtocol.cs" />
