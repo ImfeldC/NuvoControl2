@@ -18,7 +18,7 @@ namespace NuvoControl.Server.ProtocolDriver
     /// replace the placeholders in the out-going command, or to store the information retrieved
     /// from the incoming command
     /// </summary>
-    public class NuvoEssentiaSingleCommand : INuvoEssentiaCommand
+    public class NuvoEssentiaSingleCommand : INuvoEssentiaSingleCommand
     {
         private ILog _log;
         private Profile _profile;

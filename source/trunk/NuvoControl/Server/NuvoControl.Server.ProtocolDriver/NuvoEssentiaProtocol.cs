@@ -16,7 +16,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private INuvoTelegram _serialPort;
 
-        private Queue<INuvoEssentiaCommand> _runningCommands = new Queue<INuvoEssentiaCommand>();
+        private Queue<INuvoEssentiaSingleCommand> _runningCommands = new Queue<INuvoEssentiaSingleCommand>();
         private NuvoEssentiaSingleCommand _errorNuvoEssentiaCommand = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ErrorInCommand);
 
         public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
@@ -33,7 +33,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
-            INuvoEssentiaCommand command = new NuvoEssentiaSingleCommand(e.Message);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(e.Message);
             command.IncomingCommand = e.Message;
             command = compareIncomingCommandWithRunningCommand(command);
 
@@ -48,9 +48,9 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
-        private INuvoEssentiaCommand compareIncomingCommandWithRunningCommand(INuvoEssentiaCommand incomingCommand)
+        private INuvoEssentiaSingleCommand compareIncomingCommandWithRunningCommand(INuvoEssentiaSingleCommand incomingCommand)
         {
-            INuvoEssentiaCommand command = null;
+            INuvoEssentiaSingleCommand command = null;
 
             if (_runningCommands.Count > 0)
             {
@@ -105,7 +105,7 @@ namespace NuvoControl.Server.ProtocolDriver
             Send(command);
         }
 
-        public void SendCommand(INuvoEssentiaCommand command)
+        public void SendCommand(INuvoEssentiaSingleCommand command)
         {
             Send(command);
         }
@@ -113,7 +113,7 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
 
-        private void Send(INuvoEssentiaCommand command)
+        private void Send(INuvoEssentiaSingleCommand command)
         {
             command.SendDateTime = DateTime.Now;
             _serialPort.SendTelegram(command.OutgoingCommandTemplate);
