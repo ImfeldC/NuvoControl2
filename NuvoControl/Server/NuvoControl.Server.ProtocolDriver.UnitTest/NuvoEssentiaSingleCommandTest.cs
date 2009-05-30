@@ -99,7 +99,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void NuvoEssentiaCommandConstructor3Test()
         {
-            string incomingCommand = "IRSET:38,55,38,38,55,55";
+            string incomingCommand = "IRSET:38,56,38,38,56,56";
             NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusSOURCEIR, target._command);
         }
@@ -161,7 +161,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void IncomingCommandTest()
         {
-            NuvoEssentiaSingleCommand target = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.RampVolumeUP);
+            NuvoEssentiaSingleCommand target = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.RampVolumeUP,ENuvoEssentiaZones.Zone3);
             string actual= target.IncomingCommandTemplate;
             Assert.IsTrue(actual.CompareTo("ZxxPWRppp,SRCs,GRPq,VOL-yy") == 0);
         }
@@ -173,9 +173,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void OutgoingCommandTest()
         {
-            NuvoEssentiaSingleCommand target = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.RampVolumeUP);
-            string actual = target.OutgoingCommandTemplate;
-            Assert.IsTrue(actual.CompareTo("ZxxVOL+") == 0);
+            NuvoEssentiaSingleCommand target = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.RampVolumeUP,ENuvoEssentiaZones.Zone9);
+            Assert.AreEqual("ZxxVOL+", target.OutgoingCommandTemplate);
+            Assert.AreEqual("Z09VOL+", target.OutgoingCommand);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.AreEqual("IRSET:aa,38,cc,dd,ee,ff", actual);
 
             actual = target.replacePlaceholderForIRFrequency("IRSET:aa,bb,cc,dd,ee,ff", EIRCarrierFrequency.IR55kHz, "bb");
-            Assert.AreEqual("IRSET:aa,55,cc,dd,ee,ff", actual);
+            Assert.AreEqual("IRSET:aa,56,cc,dd,ee,ff", actual);
         }
 
         /// <summary>
@@ -563,5 +563,24 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             }
         }
 
+
+        /// <summary>
+        /// A test for checkOutgoingCommand.
+        /// We expect that the checkOutgoingCommandTest() method returns false, if the
+        /// string passed to the method contains a 'lowercase' character.
+        /// </summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void checkOutgoingCommandTest()
+        {
+            string emptyCommand = "Z02PWROFF,SRC4,GRP0,VOL-50";
+            NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(emptyCommand);
+            Assert.AreEqual(true, target.checkOutgoingCommand("EEEE"));
+            Assert.AreEqual(false, target.checkOutgoingCommand("XXXwWWW"));
+            Assert.AreEqual(true, target.checkOutgoingCommand("EEEE11111"));
+            Assert.AreEqual(false, target.checkOutgoingCommand("XXXwWWW1111"));
+            Assert.AreEqual(true, target.checkOutgoingCommand("EEEE11111_+()"));
+            Assert.AreEqual(false, target.checkOutgoingCommand("XXXwWWW1111_+()"));
+        }
     }
 }

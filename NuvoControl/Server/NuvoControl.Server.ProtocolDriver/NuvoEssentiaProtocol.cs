@@ -116,7 +116,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private void Send(INuvoEssentiaSingleCommand command)
         {
             command.SendDateTime = DateTime.Now;
-            _serialPort.SendTelegram(command.OutgoingCommandTemplate);
+            _serialPort.SendTelegram(command.OutgoingCommand);
             _runningCommands.Enqueue(command);
         }
 
