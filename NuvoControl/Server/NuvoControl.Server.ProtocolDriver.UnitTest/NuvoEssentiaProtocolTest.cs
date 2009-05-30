@@ -364,8 +364,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(nuvoTelegram);
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
-/*
-            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetInitialZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source4,-50);
+
+            NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetInitialZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source4,-50);
             target.SendCommand(command);
             // Three commands => TurnZoneON, SetVolume and SetSource.
             nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
@@ -374,7 +374,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
             Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, _nuvoProtocolEventArgs.Command.Command);   // return same command      
-  */      }
+        }
 
 
         /// <summary>

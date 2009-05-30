@@ -41,6 +41,15 @@ namespace NuvoControl.Server.ProtocolDriver
             _volume = volume;
         }
 
+        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume)
+        {
+            initMembers();
+            _zoneId = zone;
+            _sourceId = source;
+            _volume = volume;
+            addCommand(command);
+        }
+
 
         /// <summary>
         /// Private method to initialize the members.
@@ -65,10 +74,19 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             switch( command )
             {
-                // combined commands -> not handled by the single command class
+                // combined commands -> TurnZoneON, SetVolume and SetSource.
                 case ENuvoEssentiaCommands.SetInitialZoneStatus:
+                    _commandList.Enqueue(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.TurnZoneON,_zoneId));
+                    _commandList.Enqueue(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetVolume, _zoneId, _volume));
+                    _commandList.Enqueue(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetSource, _zoneId, _sourceId));
+                    break;
+
+                // combined commands -> not handled by the single command class
                 case ENuvoEssentiaCommands.VolumeDOWN2db:
                 case ENuvoEssentiaCommands.VolumeUP2db:
+                    _commandList.Enqueue(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, _zoneId));
+                    _commandList.Enqueue(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetVolume, _zoneId, _volume)); //TODO use current volume to set new volume level
+                    break;
 
                 case ENuvoEssentiaCommands.NoCommand:
                     break;

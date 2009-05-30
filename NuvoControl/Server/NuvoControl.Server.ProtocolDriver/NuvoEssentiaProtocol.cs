@@ -110,6 +110,12 @@ namespace NuvoControl.Server.ProtocolDriver
             Send(command);
         }
 
+        public void SendCommand(INuvoEssentiaCommand command)
+        {
+            //TODO get list and send them to the system
+            throw new NotImplementedException();
+        }
+
         #endregion
 
 
@@ -221,5 +227,6 @@ namespace NuvoControl.Server.ProtocolDriver
             // return in this case 'true'
             return true;
         }
+
     }
 }
