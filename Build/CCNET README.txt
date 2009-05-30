@@ -35,9 +35,13 @@ and to C:\Program Files\CruiseControl.NET\webdashboard\xsl
 - The working space for NuvoControl is E:\ccnet\NuvoControl
 
 
-(D) Restart the ccnet service or executable
-- ccnet.exe at C:\Program Files\CruiseControl.NET\server
-- ccservice.exe at C:\Program Files\CruiseControl.NET\server
+(D) Restart the ccnet service/executable and/or the web server
+Changes at the ccnet config files require a restart of the ccnet service/executable
+  - ccnet.exe at C:\Program Files\CruiseControl.NET\server
+  - ccservice.exe at C:\Program Files\CruiseControl.NET\server
+Changes at the dashboard configuration reuires 
+  - a restart of the IIS and (iisreset)
+  - a re-call (enforced refresh) of the web page (Ctrl and F5)
 
 
 (E) The Web Ui is available at
