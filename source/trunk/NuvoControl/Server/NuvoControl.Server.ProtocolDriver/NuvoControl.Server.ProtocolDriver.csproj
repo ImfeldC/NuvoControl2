@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NuvoEssentiaCommand.cs" />
+    <Compile Include="NuvoEssentiaSingleCommand.cs" />
     <Compile Include="NuvoEssentiaProtocol.cs" />
     <Compile Include="NuvoTelegram.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -71,6 +72,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="ProtocolDriverException.cs" />
     <Compile Include="SerialPort.cs" />
   </ItemGroup>
   <ItemGroup>

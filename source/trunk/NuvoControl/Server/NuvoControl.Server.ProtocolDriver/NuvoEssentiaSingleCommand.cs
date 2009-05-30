@@ -8,7 +8,17 @@ using Common.Logging;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
-    public class NuvoEssentiaCommand : INuvoEssentiaCommand
+    /// <summary>
+    /// This class represents a single Nuvo Essentia command.
+    /// It has members for all possible values send and/or received from Nuvo Essentia.
+    /// Depending on the specified command not all members will be used and set at runtime
+    /// to the correct value received from Nuvo Essentia.
+    /// Mainly it has several parse and replace methods to build and parse the command string
+    /// send to and received from Nuvo Essentia. The members are either used as input data to
+    /// replace the placeholders in the out-going command, or to store the information retrieved
+    /// from the incoming command
+    /// </summary>
+    public class NuvoEssentiaSingleCommand : INuvoEssentiaCommand
     {
         private ILog _log;
         private Profile _profile;
@@ -19,12 +29,15 @@ namespace NuvoControl.Server.ProtocolDriver
         DateTime _receiveDateTime;
         ENuvoEssentiaCommands _command = ENuvoEssentiaCommands.NoCommand;
 
+        #region Profile Values (read from xml file)
         int _id;
         string _outgoingCommand;
         string _outgoingCommandTemplate;
         string _incomingCommand;
         string _incomingCommandTemplate;
+        #endregion
 
+        #region Nuvo Essentia Values
         ENuvoEssentiaZones _zoneId = ENuvoEssentiaZones.NoZone;
         ENuvoEssentiaSources _sourceId = ENuvoEssentiaSources.NoSource;
         EZonePowerStatus _powerStatus = EZonePowerStatus.ZoneStatusUnknown;
@@ -36,17 +49,18 @@ namespace NuvoControl.Server.ProtocolDriver
         EVolumeResetStatus _volumeResetStatus = EVolumeResetStatus.VolumeResetUnknown;
         ESourceGroupStatus _sourceGroupStatus = ESourceGroupStatus.SourceGroupUnknown;
         string _firmwareVersion = "";
+        #endregion
 
         #region Outgoing Command Constructors
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command)
         {
             constructMembers();
             initMembers(command);
             _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaSources source)
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaSources source)
         {
             constructMembers();
             initMembers(command);
@@ -54,7 +68,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
         {
             constructMembers();
             initMembers(command);
@@ -62,7 +76,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
         {
             constructMembers();
             initMembers(command);
@@ -71,7 +85,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int volume)
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int volume)
         {
             constructMembers();
             initMembers(command);
@@ -80,7 +94,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int basslevel, int treblelevel)
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int basslevel, int treblelevel)
         {
             constructMembers();
             initMembers(command);
@@ -94,7 +108,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region Incoming Command Constructors
 
-        public NuvoEssentiaCommand(string receivedCommand)
+        public NuvoEssentiaSingleCommand(string receivedCommand)
         {
             constructMembers();
             ENuvoEssentiaCommands command = searchNuvoEssentiaCommand(receivedCommand);
@@ -105,6 +119,10 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
+        /// <summary>
+        /// This private mathod instantiates the class members.
+        /// (e.g. Logger, XML Profile reader, etc.)
+        /// </summary>
         private void constructMembers()
         {
             try
@@ -178,7 +196,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public int CompareTo(object obj)
         {
-            return this._guid.CompareTo(((NuvoEssentiaCommand)obj)._guid);
+            return this._guid.CompareTo(((NuvoEssentiaSingleCommand)obj)._guid);
         }
 
         #endregion
@@ -415,6 +433,13 @@ namespace NuvoControl.Server.ProtocolDriver
                         _log.Error(m => m("Error, cannot build outgoing command string for the command '{0}'!", _command));
                         break;
 
+                    // combined commands -> not handled by the single command class
+                    case ENuvoEssentiaCommands.SetInitialZoneStatus:
+                    case ENuvoEssentiaCommands.VolumeDOWN2db:
+                    case ENuvoEssentiaCommands.VolumeUP2db:
+                        throw new ProtocolDriverException(string.Format("The command '{0}' is not handled by this single command class. Use the container class instead!", _command));
+                        break;
+
                     // unkown command 
                     default:
                         // replace all knwon replacements so far
@@ -441,13 +466,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <returns>Result string, placeholders replaced with values.</returns>
         private string replacePlaceholders(string command)
         {
-            command = replacePlaceholderForZone(command, _zoneId);
-            command = replacePlaceholderForSource(command, _sourceId);
-            command = replacePlaceholderWithVolumeLevel(command, _volume);
-            command = replacePlaceholderWithBassLevel(command, _basslevel);
-            command = replacePlaceholderWithTrebleLevel(command, _treblelevel);
-            command = replacePlaceholderForPowerStatus(command, _powerStatus);
-            command = replacePlaceholderForIRFrequency(command, _irCarrierFrequencySource);
+            if (command != null)
+            {
+                command = replacePlaceholderForZone(command, _zoneId);
+                command = replacePlaceholderForSource(command, _sourceId);
+                command = replacePlaceholderWithVolumeLevel(command, _volume);
+                command = replacePlaceholderWithBassLevel(command, _basslevel);
+                command = replacePlaceholderWithTrebleLevel(command, _treblelevel);
+                command = replacePlaceholderForPowerStatus(command, _powerStatus);
+                command = replacePlaceholderForIRFrequency(command, _irCarrierFrequencySource);
+            }
             return command;
         }
 

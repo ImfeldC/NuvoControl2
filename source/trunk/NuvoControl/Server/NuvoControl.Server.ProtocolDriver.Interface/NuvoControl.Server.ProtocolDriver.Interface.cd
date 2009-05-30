@@ -37,7 +37,7 @@
     </TypeIdentifier>
   </Class>
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.ICommand">
-    <Position X="7.5" Y="2.75" Width="2.5" />
+    <Position X="8.75" Y="2.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAgAAACAAAAAAAgAAgAAABAAAAIBIAAAAAAAAAAAAA=</HashCode>
       <FileName>IProtocol.cs</FileName>
@@ -59,7 +59,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.IProtocol">
-    <Position X="5" Y="4.75" Width="1.5" />
+    <Position X="8.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAAAAA=</HashCode>
       <FileName>IProtocol.cs</FileName>
@@ -70,6 +70,13 @@
     <TypeIdentifier>
       <HashCode>IAAQAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAGAAAA=</HashCode>
       <FileName>ISerialPort.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoEssentiaCommand">
+    <Position X="6.75" Y="2.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAwAAAiAAAAAAEgAAgABBBAAAAIHICgkAAABAAACAA=</HashCode>
+      <FileName>INuvoEssentiaCommand.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoSystem">
