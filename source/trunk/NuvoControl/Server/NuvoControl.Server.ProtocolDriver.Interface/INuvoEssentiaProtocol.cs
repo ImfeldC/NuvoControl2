@@ -43,10 +43,16 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         void SendCommand(string command);
 
         /// <summary>
-        /// Send the command passed as object to the lower system.
+        /// Send the single command passed as object to the lower system.
         /// </summary>
-        /// <param name="command">Nuvo Essentia command.</param>
+        /// <param name="command">Single Nuvo Essentia command.</param>
         void SendCommand(INuvoEssentiaSingleCommand command);
-    
+
+        /// <summary>
+        /// Send the multiple command passed as object to the lower system.
+        /// </summary>
+        /// <param name="command">Multiple Nuvo Essentia command.</param>
+        void SendCommand(INuvoEssentiaCommand command);
+
     }
 }
