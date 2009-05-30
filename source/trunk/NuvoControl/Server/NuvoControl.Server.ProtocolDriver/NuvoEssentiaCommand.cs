@@ -8,11 +8,10 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     public class NuvoEssentiaCommand : INuvoEssentiaCommand
     {
-        private NuvoEssentiaSingleCommand[] _commandList;
+        private Queue<INuvoEssentiaSingleCommand> _commandList = new Queue<INuvoEssentiaSingleCommand>();
 
         Guid _guid;
         DateTime _createDateTime;
-        ENuvoEssentiaCommands _command = ENuvoEssentiaCommands.NoCommand;
 
         #region Nuvo Essentia Values
         ENuvoEssentiaZones _zoneId = ENuvoEssentiaZones.NoZone;
@@ -21,27 +20,22 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command)
+        public NuvoEssentiaCommand(ENuvoEssentiaZones zone)
         {
-            initMembers(command);
-        }
-
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
-        {
-            initMembers(command);
+            initMembers();
             _zoneId = zone;
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
+        public NuvoEssentiaCommand(ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
         {
-            initMembers(command);
+            initMembers();
             _zoneId = zone;
             _sourceId = source;
         }
 
-        public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume)
+        public NuvoEssentiaCommand(ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume)
         {
-            initMembers(command);
+            initMembers();
             _zoneId = zone;
             _sourceId = source;
             _volume = volume;
@@ -52,9 +46,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Private method to initialize the members.
         /// Call this method in each constructur at start.
         /// </summary>
-        private void initMembers(ENuvoEssentiaCommands command)
+        private void initMembers()
         {
-            _command = command;
+            _commandList.Clear();
             _createDateTime = DateTime.Now;
             _guid = Guid.NewGuid();
         }
@@ -62,12 +56,30 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region INuvoEssentiaCommand Members
 
-        public INuvoEssentiaSingleCommand[] commandList
+        public Queue<INuvoEssentiaSingleCommand> commandList
         {
             get { return _commandList; }
         }
 
-        #endregion
+        public void addCommand(ENuvoEssentiaCommands command)
+        {
+            switch( command )
+            {
+                // combined commands -> not handled by the single command class
+                case ENuvoEssentiaCommands.SetInitialZoneStatus:
+                case ENuvoEssentiaCommands.VolumeDOWN2db:
+                case ENuvoEssentiaCommands.VolumeUP2db:
 
+                case ENuvoEssentiaCommands.NoCommand:
+                    break;
+
+                // default, assume single command and add them to the list
+                default:
+                    _commandList.Enqueue(new NuvoEssentiaSingleCommand(command));
+                    break;
+            }
+        }
+
+        #endregion
     }
 }

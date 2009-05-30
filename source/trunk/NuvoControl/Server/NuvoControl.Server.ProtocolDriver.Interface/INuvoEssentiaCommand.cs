@@ -7,6 +7,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 {
     public interface INuvoEssentiaCommand
     {
-        INuvoEssentiaSingleCommand[] commandList { get; }
+        void addCommand(ENuvoEssentiaCommands command);
+
+        Queue<INuvoEssentiaSingleCommand> commandList { get; }
     }
 }

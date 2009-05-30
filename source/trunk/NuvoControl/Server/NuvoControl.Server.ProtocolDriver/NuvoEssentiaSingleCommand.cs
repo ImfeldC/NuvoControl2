@@ -190,6 +190,23 @@ namespace NuvoControl.Server.ProtocolDriver
             return ENuvoEssentiaCommands.NoCommand;
         }
 
+        /// <summary>
+        /// Method to check the outgoing command. Are alle placeholders replaced?
+        /// </summary>
+        /// <param name="command">Command string to check</param>
+        /// <returns>true, if all placeholders have been replaced. false, if not.</returns>
+        private bool checkOutgoingCommand(string command)
+        {
+            foreach (char c in command)
+            {
+                if (Char.IsLetter(c) && Char.IsLower(c))
+                {
+                    // not all placeholders replaced.
+                    return false;
+                }
+            }
+            return true;
+        }
 
 
         #region IComparable Members
@@ -321,7 +338,6 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
-
         ///
         /// This section contains public and private methods to replace placeholders
         /// in the command string.
@@ -340,7 +356,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// x -  r   --> Volume reset (on/off). Parsed with parseCommandForVolumeResetStatus().
         /// x -  vz.zz --> Firmware version. Parsed with parseCommandForFirmwareVersion().
         /// 
-        /// Only replacements in outgoing commands are executed. For the incoming commands refer the Parse Section.
+        /// In outgoing commands Replacement methods are used. 
+        /// For the incoming commands refer the Parse Section.
         /// 
 
         #region Command Replace Section
@@ -360,8 +377,6 @@ namespace NuvoControl.Server.ProtocolDriver
                     // commands without parameter
                     case ENuvoEssentiaCommands.ReadStatusSOURCEIR:
                     case ENuvoEssentiaCommands.RestoreDefaultSOURCEIR:
-                    case ENuvoEssentiaCommands.SetSOURCEIR38:
-                    case ENuvoEssentiaCommands.SetSOURCEIR56:
                     case ENuvoEssentiaCommands.TurnALLZoneOFF:
                     case ENuvoEssentiaCommands.RampVolumeALLZoneDOWN:
                     case ENuvoEssentiaCommands.RampVolumeALLZoneUP:
@@ -391,6 +406,13 @@ namespace NuvoControl.Server.ProtocolDriver
                     case ENuvoEssentiaCommands.SetKeypadLockON:
                         // replace zone placeholder
                         outgoingCommand = replacePlaceholderForZone(_outgoingCommandTemplate, _zoneId);
+                        break;
+
+                    // commands with source parameter
+                    case ENuvoEssentiaCommands.SetSOURCEIR38:
+                    case ENuvoEssentiaCommands.SetSOURCEIR56:
+                        // replace source placeholder
+                        outgoingCommand = replacePlaceholderForSource(outgoingCommand, _sourceId);
                         break;
 
                     // commands with zone and source parameter 
@@ -451,7 +473,13 @@ namespace NuvoControl.Server.ProtocolDriver
             else
             {
                 _log.Warn(m => m("Cannot build outgoing command, because command is unkown!"));
-                return "";
+            }
+
+            if (!checkOutgoingCommand(outgoingCommand))
+            {
+                string message = string.Format("Not all placeholders have been replaced, for the command {0}", _command );
+                _log.Warn(m => m(message));
+                throw new ProtocolDriverException(message);
             }
 
             return outgoingCommand;
@@ -662,7 +690,7 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 if (ircf != EIRCarrierFrequency.IRUnknown)
                 {
-                    command = command.Replace(placeholder, (ircf == EIRCarrierFrequency.IR38kHz ? "38" : "55"));
+                    command = command.Replace(placeholder, (ircf == EIRCarrierFrequency.IR38kHz ? "38" : "56"));
                 }
                 else
                 {
@@ -919,7 +947,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 case "38":
                     irCarrierFrequency = EIRCarrierFrequency.IR38kHz;
                     break;
-                case "55":
+                case "56":
                     irCarrierFrequency = EIRCarrierFrequency.IR55kHz;
                     break;
                 default:

@@ -14,14 +14,12 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     [TestClass()]
     public class NuvoEssentiaProtocolTest
     {
-        bool _eventRaised = false;
         int _eventRaisedCount = 0;
         NuvoEssentiaProtocolEventArgs _nuvoProtocolEventArgs = null;
 
         // callback function for receiving data from telegram layer
         void serialPort_CommandReceived(object sender, NuvoEssentiaProtocolEventArgs e)
         {
-            _eventRaised = true;
             _eventRaisedCount++;
             _nuvoProtocolEventArgs = e;
         }
@@ -65,7 +63,6 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestInitialize()]
         public void MyTestInitialize()
         {
-            _eventRaised = false;
             _eventRaisedCount = 0;
             _nuvoProtocolEventArgs = null;
         }
@@ -137,6 +134,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
             Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, _nuvoProtocolEventArgs.Command.Command);   // return same command      
+            Assert.AreEqual("VER", nuvoTelegram.Telegram);
         }
 
         /// <summary>
@@ -183,7 +181,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command2 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
                 target.SendCommand(command2);
                 nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
 
@@ -191,13 +189,14 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command2.Command);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, _nuvoProtocolEventArgs.Command.Command);   // return same command      
                 Assert.AreEqual(command2.Guid, _nuvoProtocolEventArgs.Command.Guid);                                // return same instance of command
+                Assert.AreEqual("Z02CONSR", nuvoTelegram.Telegram);
             }
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaSingleCommand command3 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command3 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT,ENuvoEssentiaZones.Zone6);
                 target.SendCommand(command3);
-                nuvoTelegram.passDataToTestClass("ZxxORp,BASSuuu,TREBttt,GRPq,VRSTr");    // return value for ReadStatusZONE
+                nuvoTelegram.passDataToTestClass("Z06ORp,BASSuuu,TREBttt,GRPq,VRSTr");    // return value for ReadStatusZONE
 
                 Assert.IsTrue(_eventRaisedCount == 3);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command3.Command);
@@ -237,7 +236,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusSOURCEIR);
                 target.SendCommand(command);
-                nuvoTelegram.passDataToTestClass("IRSET:38,55,55,38,38,55");
+                nuvoTelegram.passDataToTestClass("IRSET:38,56,56,38,38,56");
 
                 Assert.IsTrue(_eventRaisedCount == 2);                                                        // event has been raised 1 times
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusSOURCEIR, command.Command);
@@ -253,15 +252,15 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT,ENuvoEssentiaZones.Zone7);
                 target.SendCommand(command);
-                nuvoTelegram.passDataToTestClass("Z04PWROFF,SRC3,GRP1,VOL-34");
+                nuvoTelegram.passDataToTestClass("Z07PWROFF,SRC3,GRP1,VOL-34");
 
                 Assert.IsTrue(_eventRaisedCount == 3);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command.Command);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, _nuvoProtocolEventArgs.Command.Command);   // return same command      
                 Assert.AreEqual(command.Guid, _nuvoProtocolEventArgs.Command.Guid);                                // return same instance of command
-                Assert.AreEqual(ENuvoEssentiaZones.Zone4, _nuvoProtocolEventArgs.Command.ZoneId);
+                Assert.AreEqual(ENuvoEssentiaZones.Zone7, _nuvoProtocolEventArgs.Command.ZoneId);
                 Assert.AreEqual(ENuvoEssentiaSources.Source3, _nuvoProtocolEventArgs.Command.SourceId);
                 Assert.AreEqual(-34, _nuvoProtocolEventArgs.Command.VolumeLevel);
                 Assert.AreEqual(EZonePowerStatus.ZoneStatusOFF, _nuvoProtocolEventArgs.Command.PowerStatus);
@@ -270,7 +269,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: ReadStatusCONNECT
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone12);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z12OR1,BASS-10,TREB+02,GRP1,VRST0");    // return value for ReadStatusZONE
 
@@ -303,9 +302,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: SetSOURCEIR56
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetSOURCEIR56);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetSOURCEIR56,ENuvoEssentiaSources.Source3);
                 target.SendCommand(command);
-                nuvoTelegram.passDataToTestClass("IRSET:55,38,55,38,55,88");
+                nuvoTelegram.passDataToTestClass("IRSET:56,38,56,38,56,88");
 
                 Assert.IsTrue(_eventRaisedCount == 1);                                                        // event has been raised 1 times
                 Assert.AreEqual(ENuvoEssentiaCommands.SetSOURCEIR56, command.Command);
@@ -321,7 +320,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: MuteON
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.MuteON);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.MuteON, ENuvoEssentiaZones.Zone11);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z11PWRON,SRC6,GRP0,VOL-34");     // return value for ReadStatusCONNECT
 
@@ -338,7 +337,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Command: SetBassLevel
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetBassLevel);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetBassLevel, ENuvoEssentiaZones.Zone8, 4, 0);
                 target.SendCommand(command);
                 nuvoTelegram.passDataToTestClass("Z08OR0,BASS+04,TREB+00,GRP0,VRST1");    // return value for ReadStatusZONE
 
