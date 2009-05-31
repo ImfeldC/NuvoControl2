@@ -276,17 +276,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// </summary>
         SetInitialZoneStatus = 60,
 
-        /// <summary>
-        /// COMMAND: One command => SetVolume; with the actual value +2dB
-        /// RESPONSE: see the single command
-        /// </summary>
-        VolumeUP2db = 61,
-
-        /// <summary>
-        /// COMMAND: One command => SetVolume; with the actual value -2dB
-        /// RESPONSE: see the single command
-        /// </summary>
-        VolumeDOWN2db = 62,
 
         /// <summary>
         /// NO Comamnd

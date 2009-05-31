@@ -112,8 +112,12 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public void SendCommand(INuvoEssentiaCommand command)
         {
-            //TODO get list and send them to the system
-            throw new NotImplementedException();
+            for (INuvoEssentiaSingleCommand singleCommand = command.getNextCommand(null);
+                singleCommand != null;
+                singleCommand = command.getNextCommand(singleCommand)  )
+            {
+                Send(singleCommand);
+            }
         }
 
         #endregion
