@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
@@ -10,39 +11,45 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     public class ProtocolEventArgs : EventArgs
     {
-        ICommand _command;
+        int _deviceId;
+        Address _zoneAddress;
+        NuvoEssentiaProtocolEventArgs _innerEventArgs;
 
-        public ICommand Command
+        public ProtocolEventArgs(int deviceId, Address zoneAddress, NuvoEssentiaProtocolEventArgs innerEventArgs)
         {
-            get { return _command; }
+            _deviceId = deviceId;
+            _zoneAddress = zoneAddress;
+            _innerEventArgs = innerEventArgs;
         }
 
-        public ProtocolEventArgs(ICommand command)
+        public int DeviceId
         {
-            _command = command;
+            get { return _deviceId; }
+        }
+
+        public Address ZoneAddress
+        {
+            get { return _zoneAddress; }
         }
 
     }
-
-    public interface ICommand : IComparable
-    {
-        Guid Guid { get; }
-
-        DateTime CreatedDateTime { get; }
-        DateTime SendDateTime { get; }
-        DateTime ReceiveDateTime { get; }
-
-        ENuvoEssentiaZones ZoneId { get; }
-        ENuvoEssentiaSources SourceId { get; }
-        EZonePowerStatus PowerStatus { get; }
-        int VolumeLevel { get; }
-    }
-
 
     public interface IProtocol
     {
         event ProtocolEventHandler onCommandReceived;
+        event ProtocolEventHandler onZoneStatusChanged;
 
-        void SendCommand(ICommand command);
+        void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration);
+        void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol);
+        void Close(int deviceId);
+
+        void ReadZoneStatus(Address zoneAddress);
+        void CommandSwitchZoneON(Address zoneAddress);
+        void CommandSwitchZoneOFF(Address zoneAddress);
+        void CommandSetSource(Address zoneAddress, Address sourceAddress);
+        void CommandSetVolume(Address zoneAddress, int volumeLevel);
+
+        void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command);
+        void SendCommand(Address zoneAddress, INuvoEssentiaCommand command);
     }
 }

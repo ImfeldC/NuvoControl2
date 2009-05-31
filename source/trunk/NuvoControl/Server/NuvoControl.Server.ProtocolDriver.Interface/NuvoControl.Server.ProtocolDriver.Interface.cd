@@ -3,7 +3,7 @@
   <Class Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolEventArgs">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <HashCode>AAAAAAAABAAAAAAAAAAABAAAAAAAAAAAEAAAABAAAAA=</HashCode>
       <FileName>IProtocol.cs</FileName>
       <NewMemberFileName>INuvoEssentiaProtocol.cs</NewMemberFileName>
     </TypeIdentifier>
@@ -36,14 +36,6 @@
       <FileName>ProtocolDriverFactory.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.ICommand">
-    <Position X="8.75" Y="2.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAgAAACAAAAAAAgAAgAAABAAAAIBIAAAAAAAAAAAAA=</HashCode>
-      <FileName>IProtocol.cs</FileName>
-      <NewMemberFileName>INuvoEssentiaProtocol.cs</NewMemberFileName>
-    </TypeIdentifier>
-  </Interface>
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoEssentiaProtocol">
     <Position X="4" Y="2.75" Width="2.5" />
     <TypeIdentifier>
@@ -61,7 +53,7 @@
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.IProtocol">
     <Position X="8.75" Y="1.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAACAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAEAACAAAAAAAAAA=</HashCode>
       <FileName>IProtocol.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -89,7 +81,7 @@
   <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoEssentiaCommands">
     <Position X="7.5" Y="8" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>hWAIAACFCAQQAAAScAAAAQSIIQCAAIDxARABBAQIAAA=</HashCode>
+      <HashCode>hWAIAACFCAQQAAAScAAAAQSIIQCAAIDxABAABAQIAAA=</HashCode>
       <FileName>NuvoEnumerations.cs</FileName>
     </TypeIdentifier>
   </Enum>
