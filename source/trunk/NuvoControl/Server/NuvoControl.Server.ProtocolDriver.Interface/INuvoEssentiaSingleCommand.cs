@@ -24,7 +24,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         ENuvoEssentiaSources SourceId { get; }
         EZonePowerStatus PowerStatus { get; }
         EIRCarrierFrequency IrCarrierFrequencySource(ENuvoEssentiaSources source);
-        int VolumeLevel { get; }
+        int VolumeLevel { get; set; }
         int BassLevel { get; }
         int TrebleLevel { get; }
         EVolumeResetStatus VolumeResetStatus { get; }

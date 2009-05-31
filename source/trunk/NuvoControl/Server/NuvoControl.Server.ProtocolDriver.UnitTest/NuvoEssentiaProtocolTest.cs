@@ -368,12 +368,21 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetInitialZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source4,-50);
             target.SendCommand(command);
             // Three commands => TurnZoneON, SetVolume and SetSource.
-            nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
-            nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
-            nuvoTelegram.passDataToTestClass("ZxxPWRppp,SRCs,GRPq,VOL-yy");
+            nuvoTelegram.passDataToTestClass("Z04PWRON,SRC1,GRP0,VOL-60");
+            Assert.IsTrue(_eventRaisedCount == 1);
+            Assert.AreEqual(ENuvoEssentiaCommands.TurnZoneON, _nuvoProtocolEventArgs.Command.Command);
+            Assert.AreEqual("Z04ON", _nuvoProtocolEventArgs.Command.OutgoingCommand);
 
-            Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
-            Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, _nuvoProtocolEventArgs.Command.Command);   // return same command      
+            nuvoTelegram.passDataToTestClass("Z04PWRON,SRC1,GRP0,VOL-50");
+            Assert.IsTrue(_eventRaisedCount == 2);
+            Assert.AreEqual(ENuvoEssentiaCommands.SetVolume, _nuvoProtocolEventArgs.Command.Command);
+            Assert.AreEqual("Z04VOL50", _nuvoProtocolEventArgs.Command.OutgoingCommand);
+            
+            nuvoTelegram.passDataToTestClass("Z04PWRON,SRC4,GRP0,VOL-50");
+            Assert.IsTrue(_eventRaisedCount == 3);
+            Assert.AreEqual(ENuvoEssentiaCommands.SetSource, _nuvoProtocolEventArgs.Command.Command);
+            Assert.AreEqual("Z04SRC4", _nuvoProtocolEventArgs.Command.OutgoingCommand);
+
         }
 
 

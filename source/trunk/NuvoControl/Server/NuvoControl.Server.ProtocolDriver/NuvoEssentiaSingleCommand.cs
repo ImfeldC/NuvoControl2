@@ -304,6 +304,11 @@ namespace NuvoControl.Server.ProtocolDriver
         public int VolumeLevel
         {
             get { return _volume; }
+            set
+            {
+                _volume = value; 
+                _outgoingCommand = buildOutgoingCommand();
+            }
         }
 
         public int BassLevel
@@ -457,8 +462,6 @@ namespace NuvoControl.Server.ProtocolDriver
 
                     // combined commands -> not handled by the single command class
                     case ENuvoEssentiaCommands.SetInitialZoneStatus:
-                    case ENuvoEssentiaCommands.VolumeDOWN2db:
-                    case ENuvoEssentiaCommands.VolumeUP2db:
                         throw new ProtocolDriverException(string.Format("The command '{0}' is not handled by this single command class. Use the container class instead!", _command));
                         break;
 
@@ -477,7 +480,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
             if (!checkOutgoingCommand(outgoingCommand))
             {
-                string message = string.Format("Not all placeholders have been replaced, for the command {0}", _command );
+                string message = string.Format("Not all placeholders have been replaced, for the command '{0}'", _command );
                 _log.Warn(m => m(message));
                 throw new ProtocolDriverException(message);
             }
