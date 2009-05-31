@@ -266,6 +266,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// </summary>
         ErrorInCommand = 32,
 
+
         ///
         /// COMMON NON-NUVO COMMANDS
         ///
@@ -274,7 +275,13 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// COMMAND: Three commands => TurnZoneON, SetVolume and SetSource.
         /// RESPONSE: see the single command
         /// </summary>
-        SetInitialZoneStatus = 60,
+        SetZoneStatus = 60,
+
+        /// <summary>
+        /// COMMAND: Two commands => ReadStatusCONNECT and ReadStatusZONE.
+        /// RESPONSE: see the single command
+        /// </summary>
+        GetZoneStatus = 61,
 
 
         /// <summary>

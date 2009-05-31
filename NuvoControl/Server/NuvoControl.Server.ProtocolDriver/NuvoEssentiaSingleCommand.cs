@@ -461,7 +461,8 @@ namespace NuvoControl.Server.ProtocolDriver
                         break;
 
                     // combined commands -> not handled by the single command class
-                    case ENuvoEssentiaCommands.SetInitialZoneStatus:
+                    case ENuvoEssentiaCommands.SetZoneStatus:
+                    case ENuvoEssentiaCommands.GetZoneStatus:
                         throw new ProtocolDriverException(string.Format("The command '{0}' is not handled by this single command class. Use the container class instead!", _command));
                         break;
 

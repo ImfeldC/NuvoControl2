@@ -14,20 +14,19 @@ namespace NuvoControl.Server.ProtocolDriver
         private ILog _log = LogManager.GetCurrentClassLogger();
         private Profile _profile;
 
+        private int _deviceId;
         private INuvoTelegram _serialPort;
 
         private Queue<INuvoEssentiaSingleCommand> _runningCommands = new Queue<INuvoEssentiaSingleCommand>();
         private NuvoEssentiaSingleCommand _errorNuvoEssentiaCommand = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ErrorInCommand);
 
-        public NuvoEssentiaProtocol(INuvoTelegram nuvoTelegram)
+        public NuvoEssentiaProtocol(int deviceId, INuvoTelegram nuvoTelegram)
         {
             _profile = new Xml("NuvoEssentiaProfile.xml");
             _log.Debug(m => m("Open profile file: {0}", _profile.Name));
+            _deviceId = deviceId;
 
-            if (nuvoTelegram == null)
-                _serialPort = new NuvoTelegram(null);
-            else
-                _serialPort = nuvoTelegram;
+            _serialPort = ((nuvoTelegram == null)?new NuvoTelegram(null):nuvoTelegram);
             _serialPort.onTelegramReceived += new NuvoTelegramEventHandler(_serialPort_onTelegramReceived);
         }
 
@@ -43,7 +42,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 if (onCommandReceived != null)
                 {
                     onCommandReceived(this,
-                      new NuvoEssentiaProtocolEventArgs(command));
+                      new NuvoEssentiaProtocolEventArgs(_deviceId,command));
                 }
             }
         }

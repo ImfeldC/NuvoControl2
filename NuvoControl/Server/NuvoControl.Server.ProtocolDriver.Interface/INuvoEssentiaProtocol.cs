@@ -10,15 +10,21 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     public class NuvoEssentiaProtocolEventArgs : EventArgs
     {
-        INuvoEssentiaSingleCommand _command;
+        private int _deviceId;
+        private INuvoEssentiaSingleCommand _command;
 
+        public int DeviceId
+        {
+            get { return _deviceId; }
+        }
         public INuvoEssentiaSingleCommand Command
         {
             get { return _command; }
         }
 
-        public NuvoEssentiaProtocolEventArgs(INuvoEssentiaSingleCommand command)
+        public NuvoEssentiaProtocolEventArgs(int deviceId, INuvoEssentiaSingleCommand command)
         {
+            _deviceId = deviceId;
             _command = command;
         }
 

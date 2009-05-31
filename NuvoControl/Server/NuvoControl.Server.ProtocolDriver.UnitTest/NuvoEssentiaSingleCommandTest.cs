@@ -127,7 +127,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             try
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetInitialZoneStatus, ENuvoEssentiaZones.Zone4, ENuvoEssentiaSources.Source4);
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone4, ENuvoEssentiaSources.Source4);
             }
             catch (ProtocolDriverException ex)
             {
