@@ -133,7 +133,8 @@ namespace NuvoControl.Server.ProtocolDriver
             checkZoneDeviceId(zoneAddress.DeviceId);
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                 ENuvoEssentiaCommands.SetVolume,
-                convertAddressZone2EssentiaZone(zoneAddress));
+                convertAddressZone2EssentiaZone(zoneAddress),
+                volumeLevel);
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
@@ -152,8 +153,8 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
         /// <summary>
-        /// Method checks the zone address. If the device id is not available an 
-        /// exception is thrown.
+        /// Method checks the zone address. If the device id is not available 
+        /// an error message is written to the console and an exception is thrown.
         /// </summary>
         /// <param name="zoneAddress">Address to check.</param>
         private void checkZoneDeviceId( int deviceId )
@@ -161,7 +162,7 @@ namespace NuvoControl.Server.ProtocolDriver
             if (!_protocolList.ContainsKey(deviceId))
             {
                 // Device id is not available
-                string message = string.Format("A device with the id {0} is not available. Cannot add a device with the same id!", deviceId);
+                string message = string.Format("A device with the id {0} is not available. Cannot close device with this id!", deviceId);
                 _log.Warn(m => m(message));
                 throw new ProtocolDriverException(message);
             }

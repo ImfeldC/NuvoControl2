@@ -15,6 +15,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
         private bool _openMethodCalled;
         SerialPortConnectInformation _serialPortConnectInformation;
         private string _telegram;
+        private List<string> _telegramList = new List<string>();
 
 
         #region INuvoTelegram Members
@@ -38,6 +39,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
         {
             _log.Debug(m => m("Send called. {0}", telegram));
             _telegram = telegram;
+            _telegramList.Add(telegram);
         }
 
 
@@ -55,6 +57,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
                 onTelegramReceived(this,
                   new NuvoTelegramEventArgs(msg));
             }
+            _telegramList.Add(msg);
         }
 
         public bool CloseMethodCalled
@@ -73,6 +76,11 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
         {
             get { return _telegram; }
         }
+        public List<string> TelegramList
+        {
+            get { return _telegramList; }
+        }
+
 
     }
 }
