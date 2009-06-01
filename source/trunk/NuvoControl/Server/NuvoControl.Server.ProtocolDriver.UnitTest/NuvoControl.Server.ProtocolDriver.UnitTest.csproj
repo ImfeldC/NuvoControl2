@@ -64,12 +64,17 @@
     <Compile Include="NuvoEssentiaProtocolTest.cs" />
     <Compile Include="NuvoTelegramTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolDriverTest.cs" />
     <Compile Include="SerialPortTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
+      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
+      <Name>NuvoControl.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
       <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
       <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
