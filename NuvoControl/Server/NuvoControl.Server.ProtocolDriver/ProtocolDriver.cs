@@ -141,6 +141,14 @@ namespace NuvoControl.Server.ProtocolDriver
         public void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
+
+            if ((command.ZoneId != ENuvoEssentiaZones.NoZone) &&
+                (convertAddressZone2EssentiaZone(zoneAddress) != command.ZoneId))
+            {
+                // The zoneAddress doesn't belong to the same zone as the command
+                new ProtocolDriverException(string.Format("The Zone Address doesn't fit the zone used in the command. Cannot send this command!"));
+            }
+
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 

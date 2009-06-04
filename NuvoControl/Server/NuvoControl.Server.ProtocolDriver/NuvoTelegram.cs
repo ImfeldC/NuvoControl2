@@ -10,25 +10,16 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     class NuvoTelegram : INuvoTelegram
     {
-        private ILog _log = LogManager.GetCurrentClassLogger(); 
+        private ILog _log = LogManager.GetCurrentClassLogger();
 
-        private ISerialPort _serialPort;
+        private ISerialPort _serialPortPassedByCaller = null;
+        private ISerialPort _serialPort = null;
+        private SerialPortConnectInformation _serialPortConnectInformation = null;
         private string _currentTelegramBuffer = "";
 
         public NuvoTelegram( ISerialPort serialPort )
         {
-            if (serialPort != null)
-            {
-                _log.Debug(m => m("Start of NuvoTelegram .... use passed-in serial port object!"));
-                _serialPort = serialPort;
-            }
-            else
-            {
-                _log.Debug(m => m("Start of NuvoTelegram .... create own serial port object!"));
-                _serialPort = new SerialPort();
-            }
-
-            _serialPort.onDataReceived += new SerialPortEventHandler(serialPort_DataReceived);
+            _serialPortPassedByCaller = serialPort;
         }
 
 
@@ -38,12 +29,47 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public void Open(SerialPortConnectInformation serialPortConnectInformation)
         {
-            _serialPort.Open(serialPortConnectInformation);
+            _serialPortConnectInformation = serialPortConnectInformation;
+            CreateSerialPort();
         }
 
         public void Close()
         {
             _serialPort.Close();
+            _serialPort = null;
+        }
+
+        private void CreateSerialPort()
+        {
+            if (_serialPort != null)
+            {
+                // Close already open port
+                Close();
+            }
+
+            if (_serialPortPassedByCaller != null)
+            {
+                _log.Debug(m => m("Start of NuvoTelegram .... use passed-in serial port object!"));
+                _serialPort = _serialPortPassedByCaller;
+            }
+            else
+            {
+                _log.Debug(m => m("Start of NuvoTelegram .... create own serial port object!"));
+                if (_serialPortConnectInformation.PortName.Equals("SIM"))
+                {
+                    // Create serial port simulator
+                    //TOD use Factory and remove reference to simulator assembly from this project !!!!
+                    _serialPort = new NuvoControl.Server.ProtocolDriver.Simulator.ProtocolDriverSimulator();
+                }
+                else
+                {
+                    _serialPort = new SerialPort();
+                }
+            }
+
+            // Register for events and open serial port
+            _serialPort.onDataReceived += new SerialPortEventHandler(serialPort_DataReceived);
+            _serialPort.Open(_serialPortConnectInformation);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////
