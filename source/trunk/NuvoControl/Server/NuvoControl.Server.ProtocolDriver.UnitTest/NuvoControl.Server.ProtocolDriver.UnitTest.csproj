@@ -44,6 +44,10 @@
       <HintPath>..\..\ExternalLibraries\Common.Logging.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="NuvoControl.Server.ProtocolDriver.Simulator, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\NuvoControl.Server.ProtocolDriver.Simulator\bin\Debug\NuvoControl.Server.ProtocolDriver.Simulator.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -64,7 +68,9 @@
     <Compile Include="NuvoEssentiaProtocolTest.cs" />
     <Compile Include="NuvoTelegramTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ProtocolDriverFactoryTest.cs" />
     <Compile Include="ProtocolDriverTest.cs" />
+    <Compile Include="SerialPortFactoryTest.cs" />
     <Compile Include="SerialPortTest.cs" />
   </ItemGroup>
   <ItemGroup>

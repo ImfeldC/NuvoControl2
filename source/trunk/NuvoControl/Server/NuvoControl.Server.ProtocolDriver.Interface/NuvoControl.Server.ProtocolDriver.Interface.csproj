@@ -53,6 +53,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SerialPortFactory.cs" />
     <Compile Include="INuvoEssentiaCommand.cs" />
     <Compile Include="INuvoEssentiaSingleCommand.cs" />
     <Compile Include="INuvoEssentiaProtocol.cs" />

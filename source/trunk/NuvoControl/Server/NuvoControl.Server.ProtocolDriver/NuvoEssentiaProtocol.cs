@@ -9,7 +9,7 @@ using AMS.Profile;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
-    class NuvoEssentiaProtocol : INuvoEssentiaProtocol
+    public class NuvoEssentiaProtocol : INuvoEssentiaProtocol
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
         private Profile _profile;
@@ -146,7 +146,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Command (passed as string)</param>
         /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
-        private ENuvoEssentiaCommands searchNuvoEssentiaCommand(string command)
+        public ENuvoEssentiaCommands searchNuvoEssentiaCommand(string command)
         {
             string[] sectionNames = _profile.GetSectionNames();
             foreach (string section in sectionNames)

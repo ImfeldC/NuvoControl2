@@ -95,7 +95,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
-            target.onTelegramReceived += new NuvoTelegramEventHandler( serialPort_TelegramReceived );
+            target.Open(new SerialPortConnectInformation("COM1"));
+            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("#RET\r");
             Assert.IsTrue(_eventRaised);                                        // event has been raised
@@ -114,6 +115,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#COMAND\r");
@@ -133,6 +135,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#COMANDAAAA\r...#COMANDBB\r");
@@ -151,6 +154,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#COMAND1\r#COM");
@@ -176,6 +180,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#\r...");
@@ -195,6 +200,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram_Accessor target = new NuvoTelegram_Accessor(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
 
             serialPort.passDataToTestClass("...#\r...");
             Assert.IsTrue(target._currentTelegramBuffer.Length == 3);   // telegram buffer contains 3 charachters
@@ -211,6 +217,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...\r..#COMAND\r.");
@@ -229,6 +236,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...\r...#....#COMAND\r.");
@@ -268,6 +276,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
+            target.Open(new SerialPortConnectInformation("COM1"));
 
             target.SendTelegram("SendMessage");
             Assert.AreEqual('*', serialPort.WriteText[0]);

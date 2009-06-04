@@ -25,6 +25,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         private Address _zoneAddress = null;
         private Communication _commConfig = new Communication("COM1", 9600, 8, 1, "None");
 
+        private ProtocolEventArgs _eventArg;
+
         private TestContext testContextInstance;
 
         /// <summary>
@@ -79,90 +81,33 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
 
         /// <summary>
-        ///A test for SendCommand
+        ///A test for SendCommand. Using the combined (non-single) command.
         ///</summary>
         [TestMethod()]
         public void SendCommandTest1()
         {
-            ProtocolDriver target = new ProtocolDriver(); // TODO: Initialize to an appropriate value
-            Address zoneAddress = null; // TODO: Initialize to an appropriate value
-            INuvoEssentiaCommand command = null; // TODO: Initialize to an appropriate value
-            target.SendCommand(zoneAddress, command);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
+            INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source5,22);
+            Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
+            _protDriver.SendCommand(zoneAddress, command);
+            string strMessage = _nuvoTelegramMock.Telegram;
+            Assert.AreEqual("Z04ON", _nuvoTelegramMock.TelegramList[0]);
+            Assert.AreEqual("Z04VOL22", _nuvoTelegramMock.TelegramList[1]);
+            Assert.AreEqual("Z04SRC5", _nuvoTelegramMock.TelegramList[2]);
+            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
         }
 
         /// <summary>
-        ///A test for SendCommand
+        ///A test for SendCommand. Using the Single Command.
         ///</summary>
         [TestMethod()]
         public void SendCommandTest()
         {
-            ProtocolDriver target = new ProtocolDriver(); // TODO: Initialize to an appropriate value
-            Address zoneAddress = null; // TODO: Initialize to an appropriate value
-            INuvoEssentiaSingleCommand command = null; // TODO: Initialize to an appropriate value
-            target.SendCommand(zoneAddress, command);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for Open
-        ///</summary>
-        [TestMethod()]
-        public void OpenTest1()
-        {
-            ProtocolDriver target = new ProtocolDriver(); // TODO: Initialize to an appropriate value
-            ENuvoSystem system = new ENuvoSystem(); // TODO: Initialize to an appropriate value
-            int deviceId = 0; // TODO: Initialize to an appropriate value
-            Communication communicationConfiguration = null; // TODO: Initialize to an appropriate value
-            INuvoEssentiaProtocol essentiaProtocol = null; // TODO: Initialize to an appropriate value
-            target.Open(system, deviceId, communicationConfiguration, essentiaProtocol);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        ///A test for Open
-        ///</summary>
-        [TestMethod()]
-        public void OpenTest()
-        {
-            ProtocolDriver target = new ProtocolDriver(); // TODO: Initialize to an appropriate value
-            ENuvoSystem system = new ENuvoSystem(); // TODO: Initialize to an appropriate value
-            int deviceId = 0; // TODO: Initialize to an appropriate value
-            Communication communicationConfiguration = null; // TODO: Initialize to an appropriate value
-            target.Open(system, deviceId, communicationConfiguration);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
-        /// A test for convertAddressZone2EssentiaZone
-        /// </summary>
-        [TestMethod()]
-        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
-        public void convertAddressZone2EssentiaZoneTest()
-        {
-            ProtocolDriver_Accessor target = new ProtocolDriver_Accessor(); // TODO: Initialize to an appropriate value
-            Address zoneAddress = null; // TODO: Initialize to an appropriate value
-            ENuvoEssentiaZones expected = new ENuvoEssentiaZones(); // TODO: Initialize to an appropriate value
-            ENuvoEssentiaZones actual;
-            actual = target.convertAddressZone2EssentiaZone(zoneAddress);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
-        }
-
-        /// <summary>
-        /// A test for convertAddressSource2EssentiaSource
-        /// </summary>
-        [TestMethod()]
-        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
-        public void convertAddressSource2EssentiaSourceTest()
-        {
-            ProtocolDriver_Accessor target = new ProtocolDriver_Accessor(); // TODO: Initialize to an appropriate value
-            Address sourceAddress = null; // TODO: Initialize to an appropriate value
-            ENuvoEssentiaSources expected = new ENuvoEssentiaSources(); // TODO: Initialize to an appropriate value
-            ENuvoEssentiaSources actual;
-            actual = target.convertAddressSource2EssentiaSource(sourceAddress);
-            Assert.AreEqual(expected, actual);
-            Assert.Inconclusive("Verify the correctness of this test method.");
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.MuteALLZoneOFF);
+            Address zoneAddress = new Address(_deviceId, 0);    // Zone x -> not used
+            _protDriver.SendCommand(zoneAddress, command);
+            string strMessage = _nuvoTelegramMock.Telegram;
+            Assert.AreEqual("ALLMOFF", _nuvoTelegramMock.TelegramList[0]);
+            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
         }
 
         /// <summary>
@@ -258,20 +203,6 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         }
 
         /// <summary>
-        ///A test for _essentiaProtocol_onCommandReceived
-        ///</summary>
-        [TestMethod()]
-        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
-        public void _essentiaProtocol_onCommandReceivedTest()
-        {
-            ProtocolDriver_Accessor target = new ProtocolDriver_Accessor(); // TODO: Initialize to an appropriate value
-            object sender = null; // TODO: Initialize to an appropriate value
-            NuvoEssentiaProtocolEventArgs e = null; // TODO: Initialize to an appropriate value
-            target._essentiaProtocol_onCommandReceived(sender, e);
-            Assert.Inconclusive("A method that does not return a value cannot be verified.");
-        }
-
-        /// <summary>
         /// A test for ProtocolDriver Constructor.
         /// With this test several other methods are also tested.
         /// The Open() and Close() method are used in the unit test
@@ -312,5 +243,40 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             _essentiaProtocol = null;
             _nuvoTelegramMock = null;
         }
+
+        /// <summary>
+        /// A test for Open. Create an instance of the serial port simulator.
+        /// This is done via the COM port name "SIM"
+        /// </summary>
+        [TestMethod()]
+        public void OpenSimulatorTest()
+        {
+            ProtocolDriver target = new ProtocolDriver();
+            Communication communicationConfiguration = new Communication("SIM", 9600, 8, 1, "None"); // Create Simulator
+            target.Open(ENuvoSystem.NuVoEssentia, _deviceId, communicationConfiguration, null);
+        }
+
+        /// <summary>
+        /// A test for CommandSetSource
+        /// </summary>
+        [TestMethod()]
+        public void SimulatorCommandSetSourceTest()
+        {
+            ProtocolDriver target = new ProtocolDriver();
+            Communication communicationConfiguration = new Communication("SIM", 9600, 8, 1, "None"); // Create Simulator
+            target.Open(ENuvoSystem.NuVoEssentia, _deviceId, communicationConfiguration, null);
+            target.onCommandReceived += new ProtocolEventHandler(target_onCommandReceived);
+
+            Address zoneAddress = new Address(_deviceId, 2);                        // Zone 2
+            target.CommandSetSource(zoneAddress, new Address(_deviceId, 5));    // Source 5
+
+
+        }
+
+        void target_onCommandReceived(object sender, ProtocolEventArgs e)
+        {
+            _eventArg = e;
+        }
+
     }
 }
