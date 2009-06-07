@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal.Unit
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal", "Server\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj", "{295025FA-7870-4A53-996F-2CDCE2AFBAFF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.NuvoClient", "Test\NuvoControl.Test.NuvoClient\NuvoControl.Test.NuvoClient.csproj", "{44C817E7-C9E5-4B07-9369-95BE0D0CE82B}"
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -96,6 +98,10 @@ Global
 		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{295025FA-7870-4A53-996F-2CDCE2AFBAFF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44C817E7-C9E5-4B07-9369-95BE0D0CE82B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44C817E7-C9E5-4B07-9369-95BE0D0CE82B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44C817E7-C9E5-4B07-9369-95BE0D0CE82B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44C817E7-C9E5-4B07-9369-95BE0D0CE82B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
