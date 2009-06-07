@@ -68,9 +68,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void LoadDriverTest()
         {
+            //TODO: Implement Unit test for Serial Port Factory
             string assemblyName = "E:\\NuvoControl_Trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver.Simulator\\bin\\Debug\\NuvoControl.Server.ProtocolDriver.Simulator.dll";
             string className = "NuvoControl.Server.ProtocolDriver.Simulator.ProtocolDriverSimulator";
-            ISerialPort expected = null; // TODO: Initialize to an appropriate value
+            ISerialPort expected = null;
             ISerialPort actual;
             actual = SerialPortFactory.LoadDriver(assemblyName, className);
             Assert.AreEqual(expected, actual);
