@@ -12,7 +12,7 @@ using System.IO.Ports;
 using System.Windows.Forms;
 using NuvoControl.Server.ProtocolDriver.Interface;
 
-namespace NuvoControl.Test.COMListener
+namespace NuvoControl.Test.NuvoClient
 {
     class CommunicationManager
     {

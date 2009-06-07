@@ -32,6 +32,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _zoneAddress; }
         }
 
+        public INuvoEssentiaSingleCommand Command
+        {
+            get { return _innerEventArgs.Command; }
+        }
     }
 
     public interface IProtocol
