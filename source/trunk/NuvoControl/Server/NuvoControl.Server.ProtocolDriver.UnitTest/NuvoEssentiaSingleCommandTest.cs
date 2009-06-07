@@ -447,14 +447,14 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 string incomingCommand = "Z02PWROFF,SRC4,GRP0,VOL-50";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                ENuvoEssentiaSources actual = target.parseCommandForSource(incomingCommand);
+                ENuvoEssentiaSources actual = NuvoEssentiaSingleCommand_Accessor.parseCommandForSource(incomingCommand, target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
                 Assert.AreEqual(ENuvoEssentiaSources.Source4, actual);
             }
             {
                 string incomingCommand = "Z02PWRON,SRC2,GRP0,VOL-50";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                ENuvoEssentiaSources actual = target.parseCommandForSource(incomingCommand);
+                ENuvoEssentiaSources actual = NuvoEssentiaSingleCommand_Accessor.parseCommandForSource(incomingCommand, target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
                 Assert.AreEqual(ENuvoEssentiaSources.Source2, actual);
             }
@@ -469,7 +469,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             string incomingCommand = "Z04PWRON,SRC2,GRP0,VOL-50";
             NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-            ENuvoEssentiaZones actual = target.parseCommandForZone(incomingCommand);
+            ENuvoEssentiaZones actual = NuvoEssentiaSingleCommand_Accessor.parseCommandForZone(incomingCommand,target._incomingCommandTemplate);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
             Assert.AreEqual(ENuvoEssentiaZones.Zone4, actual);
         }
@@ -485,21 +485,21 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 string incomingCommand = "Z02PWROFF,SRC4,GRP0,VOL-50";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                EZonePowerStatus actual = target.parseCommandForPowerStatus(incomingCommand);
+                EZonePowerStatus actual = NuvoEssentiaSingleCommand_Accessor.parseCommandForPowerStatus(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
                 Assert.AreEqual(EZonePowerStatus.ZoneStatusOFF, actual);
             }
             {
                 string incomingCommand = "Z02PWRON,SRC2,GRP0,VOL-50";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                EZonePowerStatus actual = target.parseCommandForPowerStatus(incomingCommand);
+                EZonePowerStatus actual = NuvoEssentiaSingleCommand_Accessor.parseCommandForPowerStatus(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
                 Assert.AreEqual(EZonePowerStatus.ZoneStatusON, actual);
             }
             {
                 string incomingCommand = "Z02PWRxxx,SRC2,GRP0,VOL-50";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                EZonePowerStatus actual = target.parseCommandForPowerStatus(incomingCommand);
+                EZonePowerStatus actual = NuvoEssentiaSingleCommand_Accessor.parseCommandForPowerStatus(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
                 Assert.AreEqual(EZonePowerStatus.ZoneStatusUnknown, actual);
             }
@@ -515,8 +515,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 string incomingCommand = "Z03OR0,BASS-10,TREB+10,GRP0,VRST0";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                int actualBassLevel = target.parseCommandForBassLevel(incomingCommand);
-                int actualTrebleLevel = target.parseCommandForTrebleLevel(incomingCommand);
+                int actualBassLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForBassLevel(incomingCommand, target._incomingCommandTemplate);
+                int actualTrebleLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForTrebleLevel(incomingCommand, target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, target._command);
                 Assert.AreEqual(-10, actualBassLevel);
                 Assert.AreEqual(10, actualTrebleLevel);
@@ -524,8 +524,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 string incomingCommand = "Z03OR0,BASS+05,TREB-04,GRP0,VRST0";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                int actualBassLevel = target.parseCommandForBassLevel(incomingCommand);
-                int actualTrebleLevel = target.parseCommandForTrebleLevel(incomingCommand);
+                int actualBassLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForBassLevel(incomingCommand,target._incomingCommandTemplate);
+                int actualTrebleLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForTrebleLevel(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusZONE, target._command);
                 Assert.AreEqual(5, actualBassLevel);
                 Assert.AreEqual(-4, actualTrebleLevel);
@@ -542,14 +542,14 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 string incomingCommand = "Z02PWROFF,SRC4,GRP0,VOL-50";
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                int actualVolumeLevel = target.parseCommandForVolumeLevel(incomingCommand);
+                int actualVolumeLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForVolumeLevel(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, target._command);
                 Assert.AreEqual(-50, actualVolumeLevel);
             }
             {
                 string incomingCommand = "Z02PWROFF,SRC4,GRP0,VOL+50";  // invalid command
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
-                int actualVolumeLevel = target.parseCommandForVolumeLevel(incomingCommand);
+                int actualVolumeLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForVolumeLevel(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.NoCommand, target._command);
                 Assert.AreEqual(-999, actualVolumeLevel);
             }

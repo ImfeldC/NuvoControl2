@@ -108,13 +108,29 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region Incoming Command Constructors
 
-        public NuvoEssentiaSingleCommand(string receivedCommand)
+        public NuvoEssentiaSingleCommand(string commandString)
         {
             constructMembers();
-            ENuvoEssentiaCommands command = searchNuvoEssentiaCommand(receivedCommand);
-            initMembers(command);
-            _incomingCommand = receivedCommand;
-            parseIncomingCommand();
+            ENuvoEssentiaCommands command = searchNuvoEssentiaCommandWithIncomingCommand(commandString);
+            if (command != ENuvoEssentiaCommands.NoCommand)
+            {
+                // Incoming command found
+                _incomingCommand = commandString;
+                initMembers(command);
+                parseIncomingCommand();
+            }
+            else
+            {
+                // Search for outgoing command
+                command = searchNuvoEssentiaCommandWithOutgoingCommand(commandString);
+                if (command != ENuvoEssentiaCommands.NoCommand)
+                {
+                    // Outgoing command found
+                    _outgoingCommand = commandString;
+                    initMembers(command);
+                    parseCommand(_outgoingCommand,_outgoingCommandTemplate);
+                }
+            }
         }
 
         #endregion
@@ -164,21 +180,93 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Command (passed as string)</param>
         /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
-        private ENuvoEssentiaCommands searchNuvoEssentiaCommand(string command)
+        private static ENuvoEssentiaCommands searchNuvoEssentiaCommandWithIncomingCommand(string commandString)
         {
-            string[] sectionNames = _profile.GetSectionNames();
+            Profile profile = new Xml("NuvoEssentiaProfile.xml");
+            string[] sectionNames = profile.GetSectionNames();
             foreach (string section in sectionNames)
             {
-                string incomingCommand = (string)_profile.GetValue(section,"IncomingCommand");
-                if (NuvoEssentiaProtocol.compareCommandString(incomingCommand, command))
+                string incomingCommand = (string)profile.GetValue(section,"IncomingCommand");
+                if (NuvoEssentiaSingleCommand.compareCommandString(incomingCommand, commandString))
                 {
-                    _log.Debug(m => m("Entry found: Command={0}, IncomingCommand={1}, Section={2}", command, incomingCommand, section));
+                    LogManager.GetCurrentClassLogger().Debug(m => m("Entry found: Command={0}, IncomingCommand={1}, Section={2}", commandString, incomingCommand, section));
                     return (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), section, true);
                 }
             }
             // command not found
             return ENuvoEssentiaCommands.NoCommand;
         }
+
+        /// <summary>
+        /// Searches in the profile the command passed as string.
+        /// This can either be an incomming- or outgoing-command.
+        /// </summary>
+        /// <param name="command">Command (passed as string)</param>
+        /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
+        public static ENuvoEssentiaCommands searchNuvoEssentiaCommandWithOutgoingCommand(string command)
+        {
+            Profile profile = new Xml("NuvoEssentiaProfile.xml");
+            string[] sectionNames = profile.GetSectionNames();
+            foreach (string section in sectionNames)
+            {
+                if (compareCommandString((string)profile.GetValue(section, "OutgoingCommand"), command))
+                {
+                    LogManager.GetCurrentClassLogger().Debug(m => m("Entry found: Command={0}, Section={1}", command, section));
+                    return (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), section, true);
+                }
+            }
+            // command not found
+            return ENuvoEssentiaCommands.NoCommand;
+        }
+
+        /// <summary>
+        /// Compares the received command string with a configured command string.
+        /// The comparision takes into account, that ...
+        /// - Placeholders in the configured command string are set with the specific value in the received command string
+        /// - Depending on the zone status the received command string has another length then expected
+        /// </summary>
+        /// <param name="configuredCommand">Configured command string.</param>
+        /// <param name="receivedCommand">Received command string.</param>
+        /// <returns>True of the received command string is equal to the configured command string.</returns>
+        public static bool compareCommandString(string configuredCommand, string receivedCommand)
+        {
+            // The strings are equal, when ...
+            // a) The configured string is equal to the received string OR
+            // b) The received string contains PWRON (=Power ON) and 
+            //    the length of the received string is 1 smaller than the received string
+            //    (This is because the configured string contains 3 placeholders, for either OFF or ON)
+            // c) The format of the received string is equal to the received string
+            //    (don't compare lower characters, because they are placeholders)
+
+            // Check Length first ...
+            if ((configuredCommand.Length == receivedCommand.Length) ||
+                (receivedCommand.Contains("PWRON") && (configuredCommand.Length - 1 == receivedCommand.Length))
+              )
+            {
+                // replace PWRON with PWR_ON, this allows future comparison on character level (both strings have the same size)
+                receivedCommand = receivedCommand.Replace("PWRON", "PWRXON");
+
+                // Compare each character
+                for (int i = 0; i < receivedCommand.Length; i++)
+                {
+                    if ((receivedCommand[i] != configuredCommand[i]) &&
+                        (!Char.IsLetter(configuredCommand[i]) || Char.IsUpper(configuredCommand[i])))
+                    {
+                        // Format missmatch
+                        return false;
+                    }
+                }
+            }
+            else
+            {
+                // Size missmatch
+                return false;
+            }
+
+            // Comparison ok
+            return true;
+        }
+
 
         /// <summary>
         /// Method to check the outgoing command. Are alle placeholders replaced?
@@ -486,7 +574,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
-        static private string replacePlaceholders(string command, ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource)
+        static public string replacePlaceholders(string command, ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource)
         {
             if (command != null)
             {
@@ -787,7 +875,7 @@ namespace NuvoControl.Server.ProtocolDriver
                         case ENuvoEssentiaCommands.RestoreDefaultSOURCEIR:
                         case ENuvoEssentiaCommands.SetSOURCEIR38:
                         case ENuvoEssentiaCommands.SetSOURCEIR56:
-                            parseCommandForALLIRCarrierFrequency(_incomingCommand);
+                            parseCommandForALLIRCarrierFrequency(_incomingCommand,_incomingCommandTemplate);
                             break;
 
                         // commands without parameter
@@ -805,7 +893,7 @@ namespace NuvoControl.Server.ProtocolDriver
                         case ENuvoEssentiaCommands.SetKeypadLockOFF:
                         case ENuvoEssentiaCommands.SetKeypadLockON:
                             // extract zone id
-                            _zoneId = parseCommandForZone(_incomingCommand);
+                            _zoneId = parseCommandForZone(_incomingCommand,_incomingCommandTemplate);
                             break;
 
                         // commands with zone, Power Status, Source, Source Group, Volume Level
@@ -819,15 +907,15 @@ namespace NuvoControl.Server.ProtocolDriver
                         case ENuvoEssentiaCommands.MuteOFF:
                         case ENuvoEssentiaCommands.MuteON:
                             // extract zone id
-                            _zoneId = parseCommandForZone(_incomingCommand);
+                            _zoneId = parseCommandForZone(_incomingCommand,_incomingCommandTemplate);
                             // extract power status
-                            _powerStatus = parseCommandForPowerStatus(_incomingCommand);
+                            _powerStatus = parseCommandForPowerStatus(_incomingCommand,_incomingCommandTemplate);
                             // extract source placeholder
-                            _sourceId = parseCommandForSource(_incomingCommand);
+                            _sourceId = parseCommandForSource(_incomingCommand,_incomingCommandTemplate);
                             // extract source group status
-                            _sourceGroupStatus = parseCommandForSourceGroupStatus(_incomingCommand);
+                            _sourceGroupStatus = parseCommandForSourceGroupStatus(_incomingCommand,_incomingCommandTemplate);
                             // extract volume level
-                            _volume = parseCommandForVolumeLevel(_incomingCommand);
+                            _volume = parseCommandForVolumeLevel(_incomingCommand,_incomingCommandTemplate);
                             break;
 
                         // commands with zone, DIP Switch Override, Bass-, Treble Level, Source Group, Volume Reset
@@ -839,22 +927,22 @@ namespace NuvoControl.Server.ProtocolDriver
                         case ENuvoEssentiaCommands.SetVolumeResetOFF:
                         case ENuvoEssentiaCommands.SetVolumeResetON:
                             // extract zone id
-                            _zoneId = parseCommandForZone(_incomingCommand);
+                            _zoneId = parseCommandForZone(_incomingCommand,_incomingCommandTemplate);
                             // extract DIP Switch Override Status
-                            _dipSwitchOverrideStatus = parseCommandForDIPSwitchOverrideStatus(_incomingCommand);
+                            _dipSwitchOverrideStatus = parseCommandForDIPSwitchOverrideStatus(_incomingCommand,_incomingCommandTemplate);
                             // extract bass level
-                            _basslevel = parseCommandForBassLevel(_incomingCommand);
+                            _basslevel = parseCommandForBassLevel(_incomingCommand,_incomingCommandTemplate);
                             // extract treble level
-                            _treblelevel = parseCommandForTrebleLevel(_incomingCommand);
+                            _treblelevel = parseCommandForTrebleLevel(_incomingCommand,_incomingCommandTemplate);
                             // extract source group status
-                            _sourceGroupStatus = parseCommandForSourceGroupStatus(_incomingCommand);
+                            _sourceGroupStatus = parseCommandForSourceGroupStatus(_incomingCommand,_incomingCommandTemplate);
                             // extract Volume Reset Status
-                            _volumeResetStatus = parseCommandForVolumeResetStatus(_incomingCommand);
+                            _volumeResetStatus = parseCommandForVolumeResetStatus(_incomingCommand,_incomingCommandTemplate);
                             break;
 
                         // read firmware version
                         case ENuvoEssentiaCommands.ReadVersion:
-                            _firmwareVersion = parseCommandForFirmwareVersion(_incomingCommand);
+                            _firmwareVersion = parseCommandForFirmwareVersion(_incomingCommand,_incomingCommandTemplate);
                             break;
 
                         // incoming command ONLY
@@ -871,7 +959,7 @@ namespace NuvoControl.Server.ProtocolDriver
                         // unkown command 
                         default:
                             // replace all knwon replacements so far
-                            parseCommand(_incomingCommand);
+                            parseCommand(_incomingCommand,_incomingCommandTemplate);
                             _log.Warn(m => m("Warning, for this command '{0}' may not all required parsers are implemented!", _command));
                             break;
                     }
@@ -894,19 +982,19 @@ namespace NuvoControl.Server.ProtocolDriver
         /// This method executes all known replacements.
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
-        private void parseCommand(string command)
+        private void parseCommand(string commandString, string commandStringTemplate)
         {
-            _zoneId = parseCommandForZone(command);
-            _sourceId = parseCommandForSource(command);
-            _powerStatus = parseCommandForPowerStatus(command);
-            _volume = parseCommandForVolumeLevel(command);
-            _basslevel = parseCommandForBassLevel(command);
-            _treblelevel = parseCommandForTrebleLevel(command);
-            _firmwareVersion = parseCommandForFirmwareVersion(command);
-            _volumeResetStatus = parseCommandForVolumeResetStatus(command);
-            _sourceGroupStatus = parseCommandForSourceGroupStatus(command);
-            _dipSwitchOverrideStatus = parseCommandForDIPSwitchOverrideStatus(command);
-            parseCommandForALLIRCarrierFrequency(command);
+            _zoneId = parseCommandForZone(commandString, commandStringTemplate);
+            _sourceId = parseCommandForSource(commandString, commandStringTemplate);
+            _powerStatus = parseCommandForPowerStatus(commandString, commandStringTemplate);
+            _volume = parseCommandForVolumeLevel(commandString, commandStringTemplate);
+            _basslevel = parseCommandForBassLevel(commandString, commandStringTemplate);
+            _treblelevel = parseCommandForTrebleLevel(commandString, commandStringTemplate);
+            _firmwareVersion = parseCommandForFirmwareVersion(commandString, commandStringTemplate);
+            _volumeResetStatus = parseCommandForVolumeResetStatus(commandString, commandStringTemplate);
+            _sourceGroupStatus = parseCommandForSourceGroupStatus(commandString, commandStringTemplate);
+            _dipSwitchOverrideStatus = parseCommandForDIPSwitchOverrideStatus(commandString, commandStringTemplate);
+            parseCommandForALLIRCarrierFrequency(commandString, commandStringTemplate);
         }
 
         /// <summary>
@@ -914,14 +1002,14 @@ namespace NuvoControl.Server.ProtocolDriver
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
-        private void parseCommandForALLIRCarrierFrequency(string incomingCommand)
+        private void parseCommandForALLIRCarrierFrequency(string commandString, string commandStringTemplate)
         {
-            _irCarrierFrequencySource[0] = parseCommandForIRCarrierFrequency(incomingCommand, "aa");
-            _irCarrierFrequencySource[1] = parseCommandForIRCarrierFrequency(incomingCommand, "bb");
-            _irCarrierFrequencySource[2] = parseCommandForIRCarrierFrequency(incomingCommand, "cc");
-            _irCarrierFrequencySource[3] = parseCommandForIRCarrierFrequency(incomingCommand, "dd");
-            _irCarrierFrequencySource[4] = parseCommandForIRCarrierFrequency(incomingCommand, "ee");
-            _irCarrierFrequencySource[5] = parseCommandForIRCarrierFrequency(incomingCommand, "ff");
+            _irCarrierFrequencySource[0] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "aa");
+            _irCarrierFrequencySource[1] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "bb");
+            _irCarrierFrequencySource[2] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "cc");
+            _irCarrierFrequencySource[3] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "dd");
+            _irCarrierFrequencySource[4] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "ee");
+            _irCarrierFrequencySource[5] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "ff");
         }
 
         /// <summary>
@@ -932,9 +1020,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <param name="placeholder">Pattern to search for in the command template.</param>
         /// <returns>IR Carrier Frequency, extracted out of the command string.</returns>
-        private EIRCarrierFrequency parseCommandForIRCarrierFrequency(string incomingCommand, string placeholder)
+        static private EIRCarrierFrequency parseCommandForIRCarrierFrequency(string commandString, string commandStringTemplate, string placeholder)
         {
-            string stringIRCarrierFrequency = parseCommand(incomingCommand, _incomingCommandTemplate, placeholder);
+            string stringIRCarrierFrequency = parseCommand(commandString, commandStringTemplate, placeholder);
             EIRCarrierFrequency irCarrierFrequency;
             switch (stringIRCarrierFrequency)
             {
@@ -945,7 +1033,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     irCarrierFrequency = EIRCarrierFrequency.IR56kHz;
                     break;
                 default:
-                    _log.Fatal(m => m("Parse EXCEPTION: Cannot parse IR Carrier Frequency. Wrong command '{0}' received!", stringIRCarrierFrequency));
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse IR Carrier Frequency. Wrong command '{0}' received!", stringIRCarrierFrequency));
                     irCarrierFrequency = EIRCarrierFrequency.IRUnknown;
                     break;
             }
@@ -958,16 +1046,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Zone id, extracted out of the command string.</returns>
-        private ENuvoEssentiaZones parseCommandForZone(string incomingCommand)
+        static private ENuvoEssentiaZones parseCommandForZone(string commandString, string commandStringTemplate)
         {
-            string stringZone = parseCommand(incomingCommand, _incomingCommandTemplate, "xx");
+            string stringZone = parseCommand(commandString, commandStringTemplate, "xx");
             try
             {
                 return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
             }
             catch( System.ArgumentException ex )
             {
-                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Zone. Wrong zone id '{0}' received! Exception={1}", stringZone, ex));
+                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Zone. Wrong zone id '{0}' received! Exception={1}", stringZone, ex));
             }
             return ENuvoEssentiaZones.NoZone;
         }
@@ -978,16 +1066,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Source id, extracted out of the command string.</returns>
-        private ENuvoEssentiaSources parseCommandForSource(string incomingCommand)
+        static private ENuvoEssentiaSources parseCommandForSource(string commandString, string commandStringTemplate)
         {
-            string stringSource = parseCommand(incomingCommand, _incomingCommandTemplate, "s");
+            string stringSource = parseCommand(commandString, commandStringTemplate, "s");
             try
             {
                 return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
             }
             catch (System.ArgumentException ex)
             {
-                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Source. Wrong source id '{0}' received! Exception={1}", stringSource, ex));
+                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Source. Wrong source id '{0}' received! Exception={1}", stringSource, ex));
             }
             return ENuvoEssentiaSources.NoSource;
         }
@@ -998,9 +1086,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Power status, extracted out of the command string.</returns>
-        private EZonePowerStatus parseCommandForPowerStatus(string incomingCommand)
+        static private EZonePowerStatus parseCommandForPowerStatus(string commandString, string commandStringTemplate)
         {
-            string stringPowerStatus = parseCommand(incomingCommand, _incomingCommandTemplate, "ppp");
+            string stringPowerStatus = parseCommand(commandString, commandStringTemplate, "ppp");
             EZonePowerStatus zonePowerStatus;
             switch (stringPowerStatus)
             {
@@ -1012,7 +1100,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     zonePowerStatus = EZonePowerStatus.ZoneStatusON;
                     break;
                 default:
-                    _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Power Status. Wrong status '{0}' received!", stringPowerStatus));
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Power Status. Wrong status '{0}' received!", stringPowerStatus));
                     zonePowerStatus = EZonePowerStatus.ZoneStatusUnknown;
                     break;
             }
@@ -1025,9 +1113,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Volume level, extracted out of the command string.</returns>
-        private int parseCommandForVolumeLevel(string incomingCommand)
+        static private int parseCommandForVolumeLevel(string commandString, string commandStringTemplate)
         {
-            string stringVolumeLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "yy");
+            string stringVolumeLevel = parseCommand(commandString, commandStringTemplate, "yy");
             if (stringVolumeLevel != "")
             {
                 try
@@ -1036,7 +1124,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 catch (System.FormatException ex)
                 {
-                    _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Level. Wrong command '{0}' received! Exception={1}", stringVolumeLevel, ex));
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Level. Wrong command '{0}' received! Exception={1}", stringVolumeLevel, ex));
                 }
             }
             return -999;    //TODO replace with constant
@@ -1048,9 +1136,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Bass level, extracted out of the command string.</returns>
-        private int parseCommandForBassLevel(string incomingCommand)
+        static private int parseCommandForBassLevel(string commandString, string commandStringTemplate)
         {
-            string stringBassLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "uuu");
+            string stringBassLevel = parseCommand(commandString, commandStringTemplate, "uuu");
             if (stringBassLevel != "")
             {
                try
@@ -1059,7 +1147,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                catch (System.FormatException ex)
                {
-                   _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Bass Level. Wrong command '{0}' received! Exception={1}", stringBassLevel, ex));
+                   LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Bass Level. Wrong command '{0}' received! Exception={1}", stringBassLevel, ex));
                }
             }
             return -999;    //TODO replace with constant
@@ -1071,9 +1159,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Treble level, extracted out of the command string.</returns>
-        private int parseCommandForTrebleLevel(string incomingCommand)
+        static private int parseCommandForTrebleLevel(string commandString, string commandStringTemplate)
         {
-            string stringTrebleLevel = parseCommand(incomingCommand, _incomingCommandTemplate, "ttt");
+            string stringTrebleLevel = parseCommand(commandString, commandStringTemplate, "ttt");
             if (stringTrebleLevel != "")
             {
                try
@@ -1082,7 +1170,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                catch (System.FormatException ex)
                {
-                   _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Treble Level. Wrong command '{0}' received! Exception={1}", stringTrebleLevel, ex));
+                   LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Treble Level. Wrong command '{0}' received! Exception={1}", stringTrebleLevel, ex));
                }
             }
             return -999;    //TODO replace with constant
@@ -1094,16 +1182,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Volume Reset Status, extracted out of the command string.</returns>
-        private EVolumeResetStatus parseCommandForVolumeResetStatus(string incomingCommand)
+        static private EVolumeResetStatus parseCommandForVolumeResetStatus(string commandString, string commandStringTemplate)
         {
-            string stringVolumeResetStatus = parseCommand(incomingCommand, _incomingCommandTemplate, "r");
+            string stringVolumeResetStatus = parseCommand(commandString, commandStringTemplate, "r");
             try
             {
                 return (EVolumeResetStatus)Enum.Parse(typeof(EVolumeResetStatus), stringVolumeResetStatus, true);
             }
             catch (System.ArgumentException ex)
             {
-                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Reset Status. Wrong command '{0}' received! Exception={1}", stringVolumeResetStatus, ex));
+                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Reset Status. Wrong command '{0}' received! Exception={1}", stringVolumeResetStatus, ex));
             }
             return EVolumeResetStatus.VolumeResetUnknown;
         }
@@ -1114,16 +1202,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Source Group Status, extracted out of the command string.</returns>
-        private ESourceGroupStatus parseCommandForSourceGroupStatus(string incomingCommand)
+        static private ESourceGroupStatus parseCommandForSourceGroupStatus(string commandString, string commandStringTemplate)
         {
-            string stringSourceGroupStatus = parseCommand(incomingCommand, _incomingCommandTemplate, "q");
+            string stringSourceGroupStatus = parseCommand(commandString, commandStringTemplate, "q");
             try
             {
                 return (ESourceGroupStatus)Enum.Parse(typeof(EVolumeResetStatus), stringSourceGroupStatus, true);
             }
             catch (System.ArgumentException ex)
             {
-                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse Source Group Status. Wrong command '{0}' received! Exception={1}", stringSourceGroupStatus, ex));
+                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Source Group Status. Wrong command '{0}' received! Exception={1}", stringSourceGroupStatus, ex));
             }
             return ESourceGroupStatus.SourceGroupUnknown;
         }
@@ -1134,16 +1222,16 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>DIP Switch Override Status, extracted out of the command string.</returns>
-        private EDIPSwitchOverrideStatus parseCommandForDIPSwitchOverrideStatus(string incomingCommand)
+        static private EDIPSwitchOverrideStatus parseCommandForDIPSwitchOverrideStatus(string commandString, string commandStringTemplate)
         {
-            string stringEDIPSwitchOverrideStatus = parseCommand(incomingCommand, _incomingCommandTemplate, "i");
+            string stringEDIPSwitchOverrideStatus = parseCommand(commandString, commandStringTemplate, "i");
             try
             {
                 return (EDIPSwitchOverrideStatus)Enum.Parse(typeof(EVolumeResetStatus), stringEDIPSwitchOverrideStatus, true);
             }
             catch (System.ArgumentException ex)
             {
-                _log.Fatal(m => m("Parse EXCEPTION: Cannot parse DIP Switch Override Status. Wrong command '{0}' received! Exception={1}", stringEDIPSwitchOverrideStatus, ex));
+                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse DIP Switch Override Status. Wrong command '{0}' received! Exception={1}", stringEDIPSwitchOverrideStatus, ex));
             }
             return EDIPSwitchOverrideStatus.DIPSwitchOverrideUnknown;
         }
@@ -1154,9 +1242,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
         /// <returns>Firmware Version, extracted out of the command string.</returns>
-        private string parseCommandForFirmwareVersion(string incomingCommand)
+        static private string parseCommandForFirmwareVersion(string commandString, string commandStringTemplate)
         {
-            return parseCommand(incomingCommand, _incomingCommandTemplate, "vz.zz");
+            return parseCommand(commandString, commandStringTemplate, "vz.zz");
         }
 
         /// <summary>
@@ -1167,7 +1255,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="commandTemplate">Command Template string.</param>
         /// <param name="placeholder">Placeholder string. Represents the part in the command template, which will be extracted from command string.</param>
         /// <returns>Extracted string out of command string.</returns>
-        private static string parseCommand(string command, string commandTemplate, string placeholder)
+        static private string parseCommand(string command, string commandTemplate, string placeholder)
         {
             string result="";
             if (commandTemplate != null && commandTemplate.Contains(placeholder) && placeholder.Length > 0)

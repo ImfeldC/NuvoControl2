@@ -63,13 +63,15 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 
         public void Write(string text)
         {
-            NuvoEssentiaProtocol _prot = new NuvoEssentiaProtocol(_deviceId,null);
-            ENuvoEssentiaCommands command = _prot.searchNuvoEssentiaCommand(text);
+            char[] charToRemove = { '*', '\r' };
+            string commandString = text.Trim(charToRemove);
+            //ENuvoEssentiaCommands command = NuvoEssentiaProtocol.searchNuvoEssentiaCommand(commandString);
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(commandString);
 
             switch (_mode)
             {
                 case EProtocolDriverSimulationMode.AllOk:
-                    simulateAllOk(new NuvoEssentiaSingleCommand(command));
+                    simulateAllOk(command);
                     break;
 
                 default:
@@ -85,6 +87,9 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         private void simulateAllOk(NuvoEssentiaSingleCommand command)
         {
             //TODO implement simulation mode
+            string commandString = command.IncomingCommandTemplate;
+            EIRCarrierFrequency[] ircf = { command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6) };
+            commandString = NuvoEssentiaSingleCommand.replacePlaceholders(commandString, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf);
 
             passDataBackToUpperLayer(new SerialPortEventArgs("#Z02PWRON,SRC5,GRP0,VOL-33\r"));
         }
