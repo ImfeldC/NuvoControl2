@@ -17,7 +17,7 @@ using Common.Logging;
 /// 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
-namespace NuvoControl.Test.COMListener
+namespace NuvoControl.Test.NuvoClient
 {
     ////////////////////////////////////////////////////////////////////////////////////////////////////
     /// \class	Program
@@ -49,7 +49,7 @@ namespace NuvoControl.Test.COMListener
             
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new COMListener());
+            Application.Run(new NuvoClient());
 
             log.Debug(m => m("End of COMListener! (Version={0})", Application.ProductVersion));
         }

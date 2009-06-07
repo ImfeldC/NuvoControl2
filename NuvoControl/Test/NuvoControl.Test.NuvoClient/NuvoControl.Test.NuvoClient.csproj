@@ -93,7 +93,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <None Include="App.config" />
-    <None Include="ClassDiagram1.cd" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -105,6 +104,14 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj">
+      <Project>{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}</Project>
+      <Name>NuvoControl.Common.Interfaces</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
+      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
+      <Name>NuvoControl.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Server\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
       <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
       <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>

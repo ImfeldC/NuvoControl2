@@ -104,6 +104,18 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume, int basslevel, int treblelevel)
+        {
+            constructMembers();
+            initMembers(command);
+            _zoneId = zone;
+            _sourceId = source;
+            _volume = volume;
+            _basslevel = basslevel;
+            _treblelevel = treblelevel;
+            _outgoingCommand = buildOutgoingCommand();
+        }
+
         public NuvoEssentiaSingleCommand(
             ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, 
             ENuvoEssentiaSources source, int volume, int basslevel, int treblelevel,

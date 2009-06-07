@@ -14,7 +14,7 @@ namespace NuvoControl.Server.ProtocolDriver
     /// This is the main class which combines all protocol layers.
     /// An application should use this class to instantiate a protocol stack.
     /// </summary>
-    class ProtocolDriver : IProtocol
+    public class ProtocolDriver : IProtocol
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
 
