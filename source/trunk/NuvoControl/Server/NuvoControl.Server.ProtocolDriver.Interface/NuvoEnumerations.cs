@@ -745,9 +745,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         IR38kHz = 0,
 
         /// <summary>
-        /// IR carrier frequency is 55kHz
+        /// IR carrier frequency is 56kHz
         /// </summary>
-        IR55kHz = 1,
+        IR56kHz = 1,
 
         /// <summary>
         /// IR carrier frequency is unknown (invalid)

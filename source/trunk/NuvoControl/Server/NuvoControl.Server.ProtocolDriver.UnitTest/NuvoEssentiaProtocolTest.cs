@@ -245,9 +245,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 Assert.AreEqual(EIRCarrierFrequency.IR38kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1));
                 Assert.AreEqual(EIRCarrierFrequency.IR38kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4));
                 Assert.AreEqual(EIRCarrierFrequency.IR38kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5));
-                Assert.AreEqual(EIRCarrierFrequency.IR55kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2));
-                Assert.AreEqual(EIRCarrierFrequency.IR55kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3));
-                Assert.AreEqual(EIRCarrierFrequency.IR55kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6));
+                Assert.AreEqual(EIRCarrierFrequency.IR56kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2));
+                Assert.AreEqual(EIRCarrierFrequency.IR56kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3));
+                Assert.AreEqual(EIRCarrierFrequency.IR56kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6));
             }
 
             // Command: ReadStatusCONNECT
@@ -310,11 +310,11 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 Assert.AreEqual(ENuvoEssentiaCommands.SetSOURCEIR56, command.Command);
                 Assert.AreEqual(ENuvoEssentiaCommands.SetSOURCEIR56, _nuvoProtocolEventArgs.Command.Command);   // return same command      
                 Assert.AreEqual(command.Guid, _nuvoProtocolEventArgs.Command.Guid);                           // return same instance of command
-                Assert.AreEqual(EIRCarrierFrequency.IR55kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1));
+                Assert.AreEqual(EIRCarrierFrequency.IR56kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1));
                 Assert.AreEqual(EIRCarrierFrequency.IR38kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2));
-                Assert.AreEqual(EIRCarrierFrequency.IR55kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3));
+                Assert.AreEqual(EIRCarrierFrequency.IR56kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3));
                 Assert.AreEqual(EIRCarrierFrequency.IR38kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4));
-                Assert.AreEqual(EIRCarrierFrequency.IR55kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5));
+                Assert.AreEqual(EIRCarrierFrequency.IR56kHz, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5));
                 Assert.AreEqual(EIRCarrierFrequency.IRUnknown, _nuvoProtocolEventArgs.Command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6));
             }
 
