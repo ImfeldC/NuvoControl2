@@ -64,9 +64,7 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         public void Write(string text)
         {
             char[] charToRemove = { '*', '\r' };
-            string commandString = text.Trim(charToRemove);
-            //ENuvoEssentiaCommands command = NuvoEssentiaProtocol.searchNuvoEssentiaCommand(commandString);
-            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(commandString);
+            NuvoEssentiaSingleCommand command = createNuvoEssentiaSingleCommand(text.Trim(charToRemove));
 
             switch (_mode)
             {
@@ -83,15 +81,28 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 
         #endregion
 
+        private NuvoEssentiaSingleCommand createNuvoEssentiaSingleCommand(string commandString)
+        {
+            EIRCarrierFrequency[] ircf = { EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz };
+            NuvoEssentiaSingleCommand rawCommand = new NuvoEssentiaSingleCommand(commandString);
+            NuvoEssentiaSingleCommand fullCommand = new NuvoEssentiaSingleCommand(
+                (rawCommand.Command == ENuvoEssentiaCommands.NoCommand ? ENuvoEssentiaCommands.ReadStatusCONNECT : rawCommand.Command),
+                (rawCommand.ZoneId == ENuvoEssentiaZones.NoZone ? ENuvoEssentiaZones.Zone1 : rawCommand.ZoneId),
+                (rawCommand.SourceId == ENuvoEssentiaSources.NoSource ? ENuvoEssentiaSources.Source1 : rawCommand.SourceId),
+                (rawCommand.VolumeLevel == -999 ? 50 : rawCommand.VolumeLevel),
+                (rawCommand.BassLevel == -999 ? 10 : rawCommand.BassLevel),
+                (rawCommand.TrebleLevel == -999 ? 10 : rawCommand.TrebleLevel),
+                EZonePowerStatus.ZoneStatusON, ircf, EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,EVolumeResetStatus.VolumeResetOFF,ESourceGroupStatus.SourceGroupOFF,"1.1");
+
+            return fullCommand;
+        }
 
         private void simulateAllOk(NuvoEssentiaSingleCommand command)
         {
-            //TODO implement simulation mode
-            string commandString = command.IncomingCommandTemplate;
             EIRCarrierFrequency[] ircf = { command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6) };
-            commandString = NuvoEssentiaSingleCommand.replacePlaceholders(commandString, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf);
+            string commandString = NuvoEssentiaSingleCommand.replacePlaceholders(command.IncomingCommandTemplate, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf, command.SourceGrupStatus);
 
-            passDataBackToUpperLayer(new SerialPortEventArgs("#Z02PWRON,SRC5,GRP0,VOL-33\r"));
+            passDataBackToUpperLayer(new SerialPortEventArgs(string.Format("#{0}\r",commandString)));
         }
 
         private void passDataBackToUpperLayer( SerialPortEventArgs arg )

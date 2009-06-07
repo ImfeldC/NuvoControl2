@@ -68,9 +68,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void LoadDriverTest()
         {
-            string assemblyName = string.Empty; // TODO: Initialize to an appropriate value
-            string className = string.Empty; // TODO: Initialize to an appropriate value
-            IProtocol expected = null; // TODO: Initialize to an appropriate value
+            //TODO: Implement Unit test for Protocol Driver Factory
+            string assemblyName = string.Empty;
+            string className = string.Empty;
+            IProtocol expected = null;
             IProtocol actual;
             actual = ProtocolDriverFactory.LoadDriver(assemblyName, className);
             Assert.AreEqual(expected, actual);

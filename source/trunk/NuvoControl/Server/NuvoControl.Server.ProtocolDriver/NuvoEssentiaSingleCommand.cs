@@ -104,6 +104,29 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        public NuvoEssentiaSingleCommand(
+            ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, 
+            ENuvoEssentiaSources source, int volume, int basslevel, int treblelevel,
+            EZonePowerStatus powerStatus, EIRCarrierFrequency[] ircf,
+            EDIPSwitchOverrideStatus dipSwitchOverrideStatus, EVolumeResetStatus volumeResetStatus, 
+            ESourceGroupStatus sourceGroupStatus, string firmwareVersion)
+        {
+            constructMembers();
+            initMembers(command);
+            _zoneId = zone;
+            _sourceId = source;
+            _powerStatus = powerStatus;
+            _irCarrierFrequencySource = ircf;
+            _volume = volume;
+            _basslevel = basslevel;
+            _treblelevel = treblelevel;
+            _dipSwitchOverrideStatus = dipSwitchOverrideStatus;
+            _volumeResetStatus = volumeResetStatus;
+            _sourceGroupStatus = sourceGroupStatus;
+            _firmwareVersion = firmwareVersion;
+            _outgoingCommand = buildOutgoingCommand();
+        }
+
         #endregion
 
         #region Incoming Command Constructors
@@ -590,6 +613,31 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
+        /// Replaces the placeholders in the input command with its corresponding
+        /// values. Returns a string containing the values.
+        /// This method executes all known replacements.
+        /// </summary>
+        /// <param name="command">Command string with placeholders</param>
+        /// <returns>Result string, placeholders replaced with values.</returns>
+        static public string replacePlaceholders(string command, ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource, ESourceGroupStatus sourceGroupStatus)
+        {
+            if (command != null)
+            {
+                command = replacePlaceholderForZone(command, zoneId);
+                command = replacePlaceholderForSource(command, sourceId);
+                command = replacePlaceholderWithVolumeLevel(command, volume);
+                command = replacePlaceholderWithBassLevel(command, bassLevel);
+                command = replacePlaceholderWithTrebleLevel(command, trebleLevel);
+                command = replacePlaceholderForPowerStatus(command, powerStatus);
+                command = replacePlaceholderForIRFrequency(command, irCarrierFrequencySource);
+
+                command = replacePlaceholderForSourceGroupStatus(command, sourceGroupStatus);
+                //TODO: Add all other replacements here (Version, ...)
+            }
+            return command;
+        }
+
+        /// <summary>
         /// Replaces the default volume level placeholder with the volume level in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
@@ -854,6 +902,40 @@ namespace NuvoControl.Server.ProtocolDriver
             return command.Replace(placeholder, (string.Format(format, num)));
         }
 
+        /// <summary>
+        /// Replaces the default source group status placeholder with the source group status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">Source Group Status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForSourceGroupStatus(string command, ESourceGroupStatus sourceGroupStatus)
+        {
+            return replacePlaceholderForSourceGroupStatus(command, sourceGroupStatus, "q");
+        }
+
+        /// <summary>
+        /// Replaces the source group status placeholder with the source group status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">source group status</param>
+        /// <param name="placeholder">Placeholder for the source group status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForSourceGroupStatus(string command, ESourceGroupStatus sourceGroupStatus, string placeholder)
+        {
+            if (command.Contains(placeholder))
+            {
+                if (sourceGroupStatus != ESourceGroupStatus.SourceGroupUnknown)
+                {
+                    command = replacePlaceholderWithNumber(command, (int)sourceGroupStatus, placeholder);
+                }
+                else
+                {
+                    LogManager.GetCurrentClassLogger().Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source Group Member member is not set", placeholder, command));
+                }
+            }
+            return command;
+        }
+
         #endregion
 
         #region Command Parse Section
@@ -861,6 +943,11 @@ namespace NuvoControl.Server.ProtocolDriver
 
         /// <summary>
         /// Parses the incoming command string and extracts its values.
+        /// It uses only the incoming command template, this allows to optimze
+        /// the parse algorithm. We call only the parse methods which are part
+        /// of the command.
+        /// On the other hand the method parseCommand() calls all possible
+        /// parse methods independent of the underlying command.
         /// </summary>
         private void parseIncomingCommand()
         {
