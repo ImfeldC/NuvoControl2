@@ -78,6 +78,7 @@
     </Compile>
     <Compile Include="ProtocolDriver.cs" />
     <Compile Include="ProtocolDriverException.cs" />
+    <Compile Include="ProtocolDriverSimulator.cs" />
     <Compile Include="SerialPort.cs" />
   </ItemGroup>
   <ItemGroup>
