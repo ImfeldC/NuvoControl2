@@ -15,7 +15,6 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         }
 
         private int _deviceId = 1;
-        //private Communication _commConfig = new Communication("COM1", 9600, 8, 1, "None");
         private bool _isOpen = false;
 
         private EProtocolDriverSimulationMode _mode = EProtocolDriverSimulationMode.AllOk;
@@ -81,6 +80,15 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 
         #endregion
 
+        /// <summary>
+        /// Creates a Nuvo Essentia command object, using the command string to retrieve the
+        /// correct command type. The comand string is checked against the incoming- and outgoing
+        /// commands defined in the XML profiles.
+        /// If the correct command type is retrieved, all non-initialized values are set to a useful
+        /// value.
+        /// </summary>
+        /// <param name="commandString">Command string</param>
+        /// <returns>Nuvo Essentia command</returns>
         private NuvoEssentiaSingleCommand createNuvoEssentiaSingleCommand(string commandString)
         {
             EIRCarrierFrequency[] ircf = { EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz };
