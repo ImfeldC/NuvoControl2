@@ -85,7 +85,8 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         private void simulateAllOk(NuvoEssentiaSingleCommand command)
         {
             //TODO implement simulation mode
-            passDataBackToUpperLayer(new SerialPortEventArgs("##Z02PWRON,SRC5,GRP0,VOL-33\r"));
+
+            passDataBackToUpperLayer(new SerialPortEventArgs("#Z02PWRON,SRC5,GRP0,VOL-33\r"));
         }
 
         private void passDataBackToUpperLayer( SerialPortEventArgs arg )

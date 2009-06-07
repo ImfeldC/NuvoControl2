@@ -20,7 +20,7 @@ namespace NuvoControl.Server.ProtocolDriver
     /// </summary>
     public class NuvoEssentiaSingleCommand : INuvoEssentiaSingleCommand
     {
-        private ILog _log;
+        private ILog _log = LogManager.GetCurrentClassLogger();
         private Profile _profile;
 
         Guid _guid;
@@ -125,16 +125,6 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         private void constructMembers()
         {
-            try
-            {
-                _log = LogManager.GetCurrentClassLogger();
-            }
-            catch (Exception ex)
-            {
-                // log is not available
-                _log = null;
-            }
-
             try
             {
                 // If no filename is provided, it searches the defintions
@@ -469,7 +459,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     // unkown command 
                     default:
                         // replace all knwon replacements so far
-                        outgoingCommand = replacePlaceholders(_outgoingCommandTemplate);
+                        outgoingCommand = replacePlaceholders(_outgoingCommandTemplate,_zoneId,_sourceId,_volume,_basslevel,_treblelevel,_powerStatus,_irCarrierFrequencySource);
                         _log.Warn(m => m("Warning, for this command '{0}' may not all required replacements implemented!", _command));
                         break;
                 }
@@ -496,17 +486,17 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
-        private string replacePlaceholders(string command)
+        static private string replacePlaceholders(string command, ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource)
         {
             if (command != null)
             {
-                command = replacePlaceholderForZone(command, _zoneId);
-                command = replacePlaceholderForSource(command, _sourceId);
-                command = replacePlaceholderWithVolumeLevel(command, _volume);
-                command = replacePlaceholderWithBassLevel(command, _basslevel);
-                command = replacePlaceholderWithTrebleLevel(command, _treblelevel);
-                command = replacePlaceholderForPowerStatus(command, _powerStatus);
-                command = replacePlaceholderForIRFrequency(command, _irCarrierFrequencySource);
+                command = replacePlaceholderForZone(command, zoneId);
+                command = replacePlaceholderForSource(command, sourceId);
+                command = replacePlaceholderWithVolumeLevel(command, volume);
+                command = replacePlaceholderWithBassLevel(command, bassLevel);
+                command = replacePlaceholderWithTrebleLevel(command, trebleLevel);
+                command = replacePlaceholderForPowerStatus(command, powerStatus);
+                command = replacePlaceholderForIRFrequency(command, irCarrierFrequencySource);
             }
             return command;
         }
@@ -517,7 +507,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="volume">Volume level</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithVolumeLevel(string command, int volume)
+        static private string replacePlaceholderWithVolumeLevel(string command, int volume)
         {
             return replacePlaceholderWithVolumeLevel(command, volume, "yy");
         }
@@ -529,7 +519,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="volume">Volume level</param>
         /// <param name="placeholder">Placeholder for the volume level</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithVolumeLevel(string command, int volume, string placeholder)
+        static private string replacePlaceholderWithVolumeLevel(string command, int volume, string placeholder)
         {
             // Ignore 'minus' sign.
             volume = Math.Abs(volume);
@@ -542,7 +532,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because volume level '{2}' is not in allowed range.", placeholder, command, volume));
+                    LogManager.GetCurrentClassLogger().Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because volume level '{2}' is not in allowed range.", placeholder, command, volume));
                 }
             }
             return command;
@@ -554,7 +544,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="level">Bass level</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithBassLevel(string command, int level)
+        static private string replacePlaceholderWithBassLevel(string command, int level)
         {
             return replacePlaceholderWithBassTrebleLevel(command, level, "uuu");
         }
@@ -565,7 +555,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="level">Treble level</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithTrebleLevel(string command, int level)
+        static private string replacePlaceholderWithTrebleLevel(string command, int level)
         {
             return replacePlaceholderWithBassTrebleLevel(command, level, "ttt");
         }
@@ -577,7 +567,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="level">Bass or treble level</param>
         /// <param name="placeholder">Placeholder for the bass or treble level</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithBassTrebleLevel(string command, int level, string placeholder)
+        static private string replacePlaceholderWithBassTrebleLevel(string command, int level, string placeholder)
         {
             if (command.Contains(placeholder))
             {
@@ -590,7 +580,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because bass or treble level '{2}' is not in allowed range.", placeholder, command, level));
+                    LogManager.GetCurrentClassLogger().Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because bass or treble level '{2}' is not in allowed range.", placeholder, command, level));
                 }
             }
             return command;
@@ -602,7 +592,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="zonepwrstatus">Zone power status</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForPowerStatus(string command, EZonePowerStatus zonepwrstatus)
+        static private string replacePlaceholderForPowerStatus(string command, EZonePowerStatus zonepwrstatus)
         {
             return replacePlaceholderForPowerStatus(command, zonepwrstatus, "ppp");
         }
@@ -614,7 +604,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="zonepwrstatus">Zone power status</param>
         /// <param name="placeholder">Placeholder for the zone id</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForPowerStatus(string command, EZonePowerStatus zonepwrstatus, string placeholder)
+        static private string replacePlaceholderForPowerStatus(string command, EZonePowerStatus zonepwrstatus, string placeholder)
         {
             if (command.Contains(placeholder))
             {
@@ -624,7 +614,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Zone status member is not set", placeholder, command));
+                    LogManager.GetCurrentClassLogger().Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Zone status member is not set", placeholder, command));
                 }
             }
             return command;
@@ -636,7 +626,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="zone">Zone Id</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForZone(string command, ENuvoEssentiaZones zone)
+        static private string replacePlaceholderForZone(string command, ENuvoEssentiaZones zone)
         {
             return replacePlaceholderForZone(command, zone, "xx");
         }
@@ -648,7 +638,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="zone">Zone Id</param>
         /// <param name="placeholder">Placeholder for the zone id</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForZone(string command, ENuvoEssentiaZones zone, string placeholder)
+        static private string replacePlaceholderForZone(string command, ENuvoEssentiaZones zone, string placeholder)
         {
             if (command.Contains(placeholder))
             {
@@ -658,7 +648,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Zone member is not set", placeholder, command));
+                    LogManager.GetCurrentClassLogger().Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Zone member is not set", placeholder, command));
                 }
             }
             return command;
@@ -670,14 +660,14 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="ircf">IR Carrier Frequency, either 38kHz or 55kHz</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForIRFrequency(string command, EIRCarrierFrequency[] ircf)
+        static private string replacePlaceholderForIRFrequency(string command, EIRCarrierFrequency[] ircf)
         {
-            command = replacePlaceholderForIRFrequency(command, ircf[0], "aa");    // Source 1
-            command = replacePlaceholderForIRFrequency(command, ircf[1], "bb");    // Source 2
-            command = replacePlaceholderForIRFrequency(command, ircf[2], "cc");    // Source 3
-            command = replacePlaceholderForIRFrequency(command, ircf[3], "dd");    // Source 4
-            command = replacePlaceholderForIRFrequency(command, ircf[4], "ee");    // Source 5
-            command = replacePlaceholderForIRFrequency(command, ircf[5], "ff");    // Source 6
+            command = replacePlaceholderForIRFrequency(command, (ircf.Length >= 1 ? ircf[0] : EIRCarrierFrequency.IRUnknown), "aa");    // Source 1
+            command = replacePlaceholderForIRFrequency(command, (ircf.Length >= 2 ? ircf[1] : EIRCarrierFrequency.IRUnknown), "bb");    // Source 2
+            command = replacePlaceholderForIRFrequency(command, (ircf.Length >= 3 ? ircf[2] : EIRCarrierFrequency.IRUnknown), "cc");    // Source 3
+            command = replacePlaceholderForIRFrequency(command, (ircf.Length >= 4 ? ircf[3] : EIRCarrierFrequency.IRUnknown), "dd");    // Source 4
+            command = replacePlaceholderForIRFrequency(command, (ircf.Length >= 5 ? ircf[4] : EIRCarrierFrequency.IRUnknown), "ee");    // Source 5
+            command = replacePlaceholderForIRFrequency(command, (ircf.Length >= 6 ? ircf[5] : EIRCarrierFrequency.IRUnknown), "ff");    // Source 6
             return command;
         }
 
@@ -688,7 +678,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="ircf">IR Carrier Frequency, either 38kHz or 55kHz</param>
         /// <param name="placeholder">Placeholder for the IR carrier frequency</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForIRFrequency(string command, EIRCarrierFrequency ircf, string placeholder)
+        static private string replacePlaceholderForIRFrequency(string command, EIRCarrierFrequency ircf, string placeholder)
         {
             if (command.Contains(placeholder))
             {
@@ -698,7 +688,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because IR Carrier Frequency member is not set", placeholder, command));
+                    LogManager.GetCurrentClassLogger().Warn(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because IR Carrier Frequency member is not set", placeholder, command));
                 }
             }
             return command;
@@ -710,7 +700,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command string</param>
         /// <param name="source">Source Id</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForSource(string command, ENuvoEssentiaSources source)
+        static private string replacePlaceholderForSource(string command, ENuvoEssentiaSources source)
         {
             return replacePlaceholderForSource(command, source, "s");
         }
@@ -722,7 +712,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="source">Source Id</param>
         /// <param name="placeholder">Placeholder for the source id</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderForSource(string command, ENuvoEssentiaSources source, string placeholder)
+        static private string replacePlaceholderForSource(string command, ENuvoEssentiaSources source, string placeholder)
         {
             if (command.Contains(placeholder))
             {
@@ -732,14 +722,14 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source member is not set", placeholder, command));
+                    LogManager.GetCurrentClassLogger().Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source member is not set", placeholder, command));
                 }
             }
             return command;
         }
 
         /// <summary>
-        /// This method replaces in the command string the occurences of the placeholder.
+        /// This static method replaces in the command string the occurences of the placeholder.
         /// It replaces it with the number, passed with num. It fills it up with leading 
         /// zeros if required.
         /// If the number is negative an addtional - (minus) sign is added to the output
@@ -750,7 +740,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="num">Number which will be put into command.</param>
         /// <param name="placeholder">Placeholder string, this pattern is replaced in the command string.</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithNumber(string command, int num, string placeholder)
+        static private string replacePlaceholderWithNumber(string command, int num, string placeholder)
         {
             // build format string
             string format = string.Format("{{0,{0}:D{1}}}",placeholder.Length,placeholder.Length);
@@ -759,7 +749,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
-        /// This method replaces in the command string the occurences of the placeholder.
+        /// This static method replaces in the command string the occurences of the placeholder.
         /// It replaces it with the number, passed with num. It fills it up with leading 
         /// zeros if required. In the first place is places a + (plus) or - (minus) sign,
         /// according to the number.
@@ -768,7 +758,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="num">Number which will be put into command.</param>
         /// <param name="placeholder">Placeholder string, this pattern is replaced in the command string.</param>
         /// <returns>Command string with replaced placeholders.</returns>
-        private string replacePlaceholderWithNumberConsideringPlusMinus(string command, int num, string placeholder)
+        static private string replacePlaceholderWithNumberConsideringPlusMinus(string command, int num, string placeholder)
         {
             // build format string
             string format = string.Format("{0}{{0,{1}:D{2}}}",(num<0?"":"+"), placeholder.Length-1, placeholder.Length-1);
@@ -952,7 +942,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     irCarrierFrequency = EIRCarrierFrequency.IR38kHz;
                     break;
                 case "56":
-                    irCarrierFrequency = EIRCarrierFrequency.IR55kHz;
+                    irCarrierFrequency = EIRCarrierFrequency.IR56kHz;
                     break;
                 default:
                     _log.Fatal(m => m("Parse EXCEPTION: Cannot parse IR Carrier Frequency. Wrong command '{0}' received!", stringIRCarrierFrequency));
