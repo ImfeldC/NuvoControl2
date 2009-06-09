@@ -108,7 +108,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [ExpectedException(typeof(DirectoryNotFoundException), "The directory exists inappropriately.")]
         public void ConfigurationLoaderConstructorTestWrongXmlFilePath()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"..\xx\NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
         }
 
