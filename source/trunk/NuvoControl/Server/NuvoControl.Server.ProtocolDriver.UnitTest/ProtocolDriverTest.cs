@@ -20,7 +20,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         private NuvoTelegramMock _nuvoTelegramMock = null;
         private NuvoEssentiaProtocol _essentiaProtocol = null;
-        private ProtocolDriver _protDriver = null;
+        private NuvoEssentiaProtocolDriver _protDriver = null;
         private int _deviceId = 1;
         private Address _zoneAddress = null;
         private Communication _commConfig = new Communication("COM1", 9600, 8, 1, "None");
@@ -184,7 +184,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void checkZoneDeviceIdTest()
         {
-            ProtocolDriver_Accessor target = new ProtocolDriver_Accessor();
+            NuvoEssentiaProtocolDriver_Accessor target = new NuvoEssentiaProtocolDriver_Accessor();
             target.Open(ENuvoSystem.NuVoEssentia, 1, _commConfig);  // Open device with id=1
 
             // Test existing device id
@@ -225,7 +225,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             _nuvoTelegramMock = new NuvoTelegramMock();
             _essentiaProtocol = new NuvoEssentiaProtocol(deviceId, _nuvoTelegramMock);
-            _protDriver = new ProtocolDriver();
+            _protDriver = new NuvoEssentiaProtocolDriver();
             _protDriver.Open(ENuvoSystem.NuVoEssentia, deviceId, commConfig, _essentiaProtocol);
         }
 
@@ -251,7 +251,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void OpenSimulatorTest()
         {
-            ProtocolDriver target = new ProtocolDriver();
+            NuvoEssentiaProtocolDriver target = new NuvoEssentiaProtocolDriver();
             Communication communicationConfiguration = new Communication("SIM", 9600, 8, 1, "None"); // Create Simulator
             target.Open(ENuvoSystem.NuVoEssentia, _deviceId, communicationConfiguration, null);
         }
@@ -262,7 +262,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void SimulatorCommandSetSourceTest()
         {
-            ProtocolDriver target = new ProtocolDriver();
+            NuvoEssentiaProtocolDriver target = new NuvoEssentiaProtocolDriver();
             Communication communicationConfiguration = new Communication("SIM", 9600, 8, 1, "None"); // Create Simulator
             target.Open(ENuvoSystem.NuVoEssentia, _deviceId, communicationConfiguration, null);
             target.onCommandReceived += new ProtocolEventHandler(target_onCommandReceived);

@@ -67,10 +67,14 @@ namespace NuvoControl.Test.NuvoClient
             //comManager.OpenPort();
             //comManager.WriteData("Hello..");
 
-            nuvoServer = new ProtocolDriver();
+            DisplayData(MessageType.Normal, string.Format("Open connection to Port '{0}'",cmbComSelect.Text));
+            nuvoServer = new NuvoEssentiaProtocolDriver();
             nuvoServer.onCommandReceived += new ProtocolEventHandler(nuvoServer_onCommandReceived);
             nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"));
-            nuvoServer.SendCommand(_address, new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion));
+            DisplayData(MessageType.Normal, "Read version ...");
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
+            DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+            nuvoServer.SendCommand(_address, command);
         }
 
         void nuvoServer_onCommandReceived(object sender, ProtocolEventArgs e)
@@ -80,7 +84,23 @@ namespace NuvoControl.Test.NuvoClient
 
         private void button1_Click(object sender, EventArgs e)
         {
-            nuvoServer.SendCommand(_address,new NuvoEssentiaSingleCommand(txtboxSendText.Text));
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(txtboxSendText.Text);
+            DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+            nuvoServer.SendCommand(_address, command);
+        }
+
+        private void btnCommandSend_Click(object sender, EventArgs e)
+        {
+            if (nuvoServer != null)
+            {
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                    (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), cmbCommandSelect.Text, true),
+                    (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true),
+                    (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true),
+                    (int)numVolume.Value, (int)numBass.Value, (int)numTreble.Value);
+                DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+                nuvoServer.SendCommand(_address, command);
+            }
         }
 
         private void COMListener_Load(object sender, EventArgs e)
@@ -98,6 +118,10 @@ namespace NuvoControl.Test.NuvoClient
         [STAThread]
         private void DisplayData(MessageType type, string msg)
         {
+            if ((msg == null) || (msg.Length==0) || (msg[msg.Length - 1] != '\n'))
+            {
+                msg += '\n';
+            }
             rtbCOM.Invoke(new EventHandler(delegate
             {
                 rtbCOM.SelectedText = string.Empty;
@@ -108,15 +132,6 @@ namespace NuvoControl.Test.NuvoClient
             }));
         }
         #endregion
-
-        private void btnCommandSend_Click(object sender, EventArgs e)
-        {
-            nuvoServer.SendCommand(_address,new NuvoEssentiaSingleCommand(
-                (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), cmbCommandSelect.Text, true),
-                (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones),cmbZoneSelect.Text,true),
-                (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources),cmbSourceSelect.Text,true),
-                50, 10, 10));   //TODO: replace hard-coded parts with text boxes
-        }
 
 
 

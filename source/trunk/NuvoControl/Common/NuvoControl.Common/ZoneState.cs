@@ -31,9 +31,8 @@ namespace NuvoControl.Common
 {
     public enum ZoneQuality
     {
-        Normal = 0,
-        InError = 1,
-        OutDated = 2
+        Online = 0,
+        Offline = 1
     }
 
 
@@ -44,11 +43,13 @@ namespace NuvoControl.Common
 
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
-        private int _volume;
-        private bool _commanded = false;
-        private Address _source;
-        private DateTime _lastUpdate;
         private ZoneQuality _zoneQuality;
+
+        // members only relevant in case of 'online'
+        private int _volume;
+        private bool _powerStatus = false;
+        private Address _source;
+        private DateTime _lastUpdate;   // is set in case a command is received from underlying transport layer
 
         #endregion
 

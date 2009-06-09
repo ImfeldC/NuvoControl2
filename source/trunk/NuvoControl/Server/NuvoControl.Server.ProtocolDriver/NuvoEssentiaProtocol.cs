@@ -121,9 +121,16 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private void Send(INuvoEssentiaSingleCommand command)
         {
-            command.SendDateTime = DateTime.Now;
-            _runningCommands.Enqueue(command);
-            _serialPort.SendTelegram(command.OutgoingCommand);
+            if (command.Command != ENuvoEssentiaCommands.NoCommand)
+            {
+                command.SendDateTime = DateTime.Now;
+                _runningCommands.Enqueue(command);
+                _serialPort.SendTelegram(command.OutgoingCommand);
+            }
+            else
+            {
+                _log.Warn(m => m("Invalid command (NoCommand) received, not sent to the serial port!"));
+            }
         }
 
 

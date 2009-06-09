@@ -47,16 +47,25 @@ namespace NuvoControl.Test.NuvoClient
             this.cmbComSelect = new System.Windows.Forms.ComboBox();
             this.txtboxSendText = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.btnCommandSend = new System.Windows.Forms.Button();
             this.cmbPowerStatusSelect = new System.Windows.Forms.ComboBox();
             this.cmbCommandSelect = new System.Windows.Forms.ComboBox();
             this.cmbSourceSelect = new System.Windows.Forms.ComboBox();
             this.cmbZoneSelect = new System.Windows.Forms.ComboBox();
-            this.btnCommandSend = new System.Windows.Forms.Button();
+            this.numVolume = new System.Windows.Forms.NumericUpDown();
+            this.numBass = new System.Windows.Forms.NumericUpDown();
+            this.numTreble = new System.Windows.Forms.NumericUpDown();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numVolume)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBass)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTreble)).BeginInit();
             this.SuspendLayout();
             // 
             // rtbCOM
             // 
+            this.rtbCOM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.rtbCOM.Location = new System.Drawing.Point(12, 188);
             this.rtbCOM.Name = "rtbCOM";
             this.rtbCOM.Size = new System.Drawing.Size(535, 213);
@@ -102,6 +111,9 @@ namespace NuvoControl.Test.NuvoClient
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.numTreble);
+            this.groupBox1.Controls.Add(this.numBass);
+            this.groupBox1.Controls.Add(this.numVolume);
             this.groupBox1.Controls.Add(this.btnCommandSend);
             this.groupBox1.Controls.Add(this.cmbPowerStatusSelect);
             this.groupBox1.Controls.Add(this.cmbCommandSelect);
@@ -113,6 +125,16 @@ namespace NuvoControl.Test.NuvoClient
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "groupBox1";
+            // 
+            // btnCommandSend
+            // 
+            this.btnCommandSend.Location = new System.Drawing.Point(452, 19);
+            this.btnCommandSend.Name = "btnCommandSend";
+            this.btnCommandSend.Size = new System.Drawing.Size(75, 23);
+            this.btnCommandSend.TabIndex = 17;
+            this.btnCommandSend.Text = "Send";
+            this.btnCommandSend.UseVisualStyleBackColor = true;
+            this.btnCommandSend.Click += new System.EventHandler(this.btnCommandSend_Click);
             // 
             // cmbPowerStatusSelect
             // 
@@ -146,15 +168,63 @@ namespace NuvoControl.Test.NuvoClient
             this.cmbZoneSelect.Size = new System.Drawing.Size(121, 21);
             this.cmbZoneSelect.TabIndex = 13;
             // 
-            // btnCommandSend
+            // numVolume
             // 
-            this.btnCommandSend.Location = new System.Drawing.Point(452, 19);
-            this.btnCommandSend.Name = "btnCommandSend";
-            this.btnCommandSend.Size = new System.Drawing.Size(75, 23);
-            this.btnCommandSend.TabIndex = 17;
-            this.btnCommandSend.Text = "Send";
-            this.btnCommandSend.UseVisualStyleBackColor = true;
-            this.btnCommandSend.Click += new System.EventHandler(this.btnCommandSend_Click);
+            this.numVolume.Location = new System.Drawing.Point(273, 61);
+            this.numVolume.Maximum = new decimal(new int[] {
+            70,
+            0,
+            0,
+            0});
+            this.numVolume.Minimum = new decimal(new int[] {
+            70,
+            0,
+            0,
+            -2147483648});
+            this.numVolume.Name = "numVolume";
+            this.numVolume.Size = new System.Drawing.Size(45, 20);
+            this.numVolume.TabIndex = 18;
+            this.numVolume.Value = new decimal(new int[] {
+            30,
+            0,
+            0,
+            -2147483648});
+            // 
+            // numBass
+            // 
+            this.numBass.AllowDrop = true;
+            this.numBass.Location = new System.Drawing.Point(273, 87);
+            this.numBass.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numBass.Minimum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            -2147483648});
+            this.numBass.Name = "numBass";
+            this.numBass.Size = new System.Drawing.Size(45, 20);
+            this.numBass.TabIndex = 19;
+            this.numBass.Tag = "";
+            // 
+            // numTreble
+            // 
+            this.numTreble.Location = new System.Drawing.Point(324, 87);
+            this.numTreble.Maximum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            0});
+            this.numTreble.Minimum = new decimal(new int[] {
+            20,
+            0,
+            0,
+            -2147483648});
+            this.numTreble.Name = "numTreble";
+            this.numTreble.Size = new System.Drawing.Size(45, 20);
+            this.numTreble.TabIndex = 20;
             // 
             // NuvoClient
             // 
@@ -171,6 +241,9 @@ namespace NuvoControl.Test.NuvoClient
             this.Text = "NuvoControl.Test.COMListener";
             this.Load += new System.EventHandler(this.COMListener_Load);
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numVolume)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numBass)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numTreble)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -189,6 +262,9 @@ namespace NuvoControl.Test.NuvoClient
         private ComboBox cmbSourceSelect;
         private ComboBox cmbZoneSelect;
         private Button btnCommandSend;
+        private NumericUpDown numVolume;
+        private NumericUpDown numTreble;
+        private NumericUpDown numBass;
 
     }
 }

@@ -95,7 +95,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void ConfigurationLoaderConstructorTestWellFormedXml()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             Assert.IsTrue(true, "Testing the successful instntiation of the XML Document.");
         }
@@ -108,7 +108,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [ExpectedException(typeof(DirectoryNotFoundException), "The directory exists inappropriately.")]
         public void ConfigurationLoaderConstructorTestWrongXmlFilePath()
         {
-            string file = @"..\..\..\Confi\NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
         }
 
@@ -120,7 +120,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [ExpectedException(typeof(FileNotFoundException), "The XML Configuration file exists inappropriately.")]
         public void ConfigurationLoaderConstructorTestWrongXmlFileName()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigur.xml";
+            string file = @"NuvoControlKonfigur.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
         }
 
@@ -132,7 +132,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [ExpectedException(typeof(XmlException), "The file exists inappropriately.")]
         public void ConfigurationLoaderConstructorTestNotWellFormedXml()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationNotWellFormed.xml";
+            string file = @"NuvoControlKonfigurationNotWellFormed.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
         }
 
@@ -143,7 +143,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void ValidateTest()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             Assert.AreEqual(true, target.Validate());
         }
@@ -155,7 +155,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void GetConfigurationTest()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
             Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
