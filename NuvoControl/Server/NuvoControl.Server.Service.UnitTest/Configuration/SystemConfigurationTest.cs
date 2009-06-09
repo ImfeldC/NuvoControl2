@@ -95,7 +95,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTest()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfiguration.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(true, target.Validate());
         }
@@ -107,7 +107,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTestNotDistinctZones()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationNotDistinctZones.xml";
+            string file = @"NuvoControlKonfigurationNotDistinctZones.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(false, target.Validate());
         }
@@ -119,7 +119,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTestNotDistinctSources()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationNotDistinctSources.xml";
+            string file = @"NuvoControlKonfigurationNotDistinctSources.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(false, target.Validate());
         }
@@ -131,7 +131,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTestInvalidZoneIdInGraphic()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml";
+            string file = @"NuvoControlKonfigurationInvalidZoneIdInGraphic.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(false, target.Validate());
         }
@@ -143,7 +143,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTestInvalidSourceIdInGraphic()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml";
+            string file = @"NuvoControlKonfigurationInvalidSourceIdInGraphic.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(false, target.Validate());
         }
@@ -155,7 +155,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTestInvalidZoneIdInSleepFunction()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml";
+            string file = @"NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(false, target.Validate());
         }
@@ -167,7 +167,7 @@ namespace NuvoControl.Server.Service.UnitTest.Configuration
         [TestMethod()]
         public void ValidateTestInvalidSourceIdInAlarmFunction()
         {
-            string file = @"..\..\..\Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml";
+            string file = @"NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml";
             NuvoControlConfiguration target = new NuvoControlConfiguration(file);
             Assert.AreEqual(false, target.Validate());
         }
