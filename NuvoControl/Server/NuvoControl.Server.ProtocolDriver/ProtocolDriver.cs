@@ -14,14 +14,14 @@ namespace NuvoControl.Server.ProtocolDriver
     /// This is the main class which combines all protocol layers.
     /// An application should use this class to instantiate a protocol stack.
     /// </summary>
-    public class ProtocolDriver : IProtocol
+    public class NuvoEssentiaProtocolDriver : IProtocol
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
 
         Dictionary<int,INuvoEssentiaProtocol> _protocolList = new Dictionary<int,INuvoEssentiaProtocol>();
 
 
-        public ProtocolDriver()
+        public NuvoEssentiaProtocolDriver()
         {
             _log.Debug(m => m("Protocol Driver instantiated!"));
         }
@@ -34,7 +34,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 //raise the event, and pass data to next layer
                 if (onCommandReceived != null)
                 {
-                     onCommandReceived(this, new ProtocolEventArgs(e.DeviceId,new Address(),e));
+                     onCommandReceived(this, new ProtocolEventArgs(new Address(),e));
                 }
 
                 //TODO add here the zone changed events

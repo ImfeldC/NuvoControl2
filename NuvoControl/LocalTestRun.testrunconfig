@@ -3,6 +3,7 @@
   <Description>This is a default test run configuration for a local test run.</Description>
   <Deployment>
     <DeploymentItem filename="Server\NuvoControl.Server.ProtocolDriver\NuvoEssentiaProfile.xml" />
+    <DeploymentItem filename="Config\" />
     <DeploymentItem filename="ExternalLibraries\Common.Logging.xml" />
   </Deployment>
   <TestTypeSpecific />

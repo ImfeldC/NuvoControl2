@@ -84,16 +84,23 @@ namespace NuvoControl.Server.ProtocolDriver
         ////////////////////////////////////////////////////////////////////////////////////////////////////
         public void SendTelegram(string telegram)
         {
-            string text = telegram;
-            if( text[0] != '*' )
+            if ((telegram != null) && (telegram.Length > 0))
             {
-                text = text.Insert(0, "*");
+                string text = telegram;
+                if (text[0] != '*')
+                {
+                    text = text.Insert(0, "*");
+                }
+                if (text[text.Length - 1] != '\r')
+                {
+                    text += '\r'; // Add 0x0D at the end, to match Nuvo Essentia needs
+                }
+                _serialPort.Write(text);
             }
-            if (text[text.Length - 1] != '\r')
+            else
             {
-                text += '\r'; // Add 0x0D at the end, to match Nuvo Essentia needs
+                _log.Warn(m => m("Empty telegram received, not passed to the serial port!"));
             }
-            _serialPort.Write(text);
         }
 
         #endregion

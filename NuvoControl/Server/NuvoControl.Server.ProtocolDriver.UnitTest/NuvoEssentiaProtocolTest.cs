@@ -387,6 +387,24 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
 
         /// <summary>
+        /// A test for SendCommand
+        /// A NoComamnd command is sent to send() method. This command is not send to the next layer
+        /// and it isn't stored in the running command list.
+        /// </summary>
+        [TestMethod()]
+        [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
+        public void SendCommand8Test()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol_Accessor target = new NuvoEssentiaProtocol_Accessor(1, nuvoTelegram);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.NoCommand);
+
+            target.SendCommand(command);
+
+            Assert.AreEqual(0, target._runningCommands.Count);
+        }
+
+        /// <summary>
         /// A test for SendCommand. Multiple commands are send to the protcol layer
         /// before getting the answer from Nuvo Essentia. 
         /// It's expected that the commands are queued and processed in the correct order.
@@ -667,5 +685,6 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWROFF,SRC4.GRP1,VOL-79"));
 
         }
+
     }
 }

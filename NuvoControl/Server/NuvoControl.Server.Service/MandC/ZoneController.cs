@@ -32,6 +32,12 @@ using NuvoControl.Common.Interfaces;
 
 namespace NuvoControl.Server.Service.MandC
 {
+    public enum OperationMode
+    {
+        Normal = 0,
+        CommandInProgress = 1
+    }
+
     /// <summary>
     /// This is the controller class for a zone. It is responsible to command the 'real' zone via the protocol driver.
     /// Upon receiving new values/states via protocol driver, it notifies subscribed clients.
@@ -45,6 +51,7 @@ namespace NuvoControl.Server.Service.MandC
 
         private Address _zoneId = null;
         private ZoneState _zoneState = new ZoneState();
+        private OperationMode _operationMode = OperationMode.Normal;
         private IProtocol _protocolDriver = null;
         private event ZoneNotification _zoneNotification;
 

@@ -226,6 +226,7 @@ namespace NuvoControl.Server.Service
             foreach (NuvoEssentia device in _configuration.SystemConfiguration.Hardware.Devices)
             {
                 _deviceCommunication[device.Id] = device.Communication;
+                //TODO: Pass communication parameters to IProtocol
             }
         }
 
