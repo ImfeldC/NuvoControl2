@@ -574,5 +574,19 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.AreEqual(true, target.checkOutgoingCommand("EEEE11111_+()"));
             Assert.AreEqual(false, target.checkOutgoingCommand("XXXwWWW1111_+()"));
         }
+
+        /// <summary>
+        ///A test for NuvoEssentiaSingleCommand Constructor
+        ///</summary>
+        [TestMethod()]
+        public void NuvoEssentiaSingleCommandConstructorTest()
+        {
+            NuvoEssentiaSingleCommand target = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.NoCommand);
+            Assert.AreEqual(ENuvoEssentiaCommands.NoCommand, target.Command);
+            //Assert.IsNull(target.OutgoingCommand);
+            Assert.IsNull(target.OutgoingCommandTemplate);
+            Assert.IsNull(target.IncomingCommand);
+            Assert.IsNull(target.IncomingCommandTemplate);
+        }
     }
 }

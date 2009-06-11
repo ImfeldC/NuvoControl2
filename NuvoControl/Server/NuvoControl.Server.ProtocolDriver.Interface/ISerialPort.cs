@@ -10,6 +10,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public delegate void SerialPortEventHandler(
               object sender, SerialPortEventArgs e);
 
+    /// <summary>
+    /// This class is used as parameter for the serial port event.
+    /// It contains the received data, as string.
+    /// </summary>
     public class SerialPortEventArgs : EventArgs
     {
         string _msg;
@@ -26,15 +30,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     }
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// \class	SerialPortConnectInformation
-    ///
-    /// \brief	Information about the serial port connect. 
-    ///
-    /// \author	Administrator
-    /// \date	18.05.2009
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// <summary>
+    /// This class contains all required information, to connet to a serial port.
+    /// </summary>
     public class SerialPortConnectInformation
     {
         private string _portName;

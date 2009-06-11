@@ -10,13 +10,16 @@ using System.IO.Ports;
 using NuvoControl.Server.ProtocolDriver;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Common.Configuration;
+using System.Messaging;
+using NuvoControl.Server.ProtocolDriver.Simulator;
 
 namespace NuvoControl.Test.NuvoClient
 {
     public partial class NuvoClient : Form
     {
         //global manager variables
-        private Color[] MessageColor = { Color.Blue, Color.Green, Color.Black, Color.Orange, Color.Red };
+        private Color[] _MessageColor = { Color.Blue, Color.Green, Color.Black, Color.Orange, Color.Red };
+        private string _MachineName = ".";
 
         /// <summary>
         /// enumeration to hold our message types
@@ -30,15 +33,25 @@ namespace NuvoControl.Test.NuvoClient
         {
             InitializeComponent();
 
+            // Add known default serial port key words
+            cmbComSelect.Items.Add("SIM");
+            cmbComSelect.Items.Add("QUEUE");
+
+            // Get list of available private queues
+            string[] msgQueues = GetAllPrivateQueues();
+            foreach (string queue in msgQueues)
+            {
+                cmbComSelect.Items.Add(queue);
+            }
+
             // Nice methods to browse all available ports:
             string[] ports = System.IO.Ports.SerialPort.GetPortNames();
-
             // Add all port names to the combo box:
             foreach (string port in ports)
             {
                 cmbComSelect.Items.Add(port);
             }
-            cmbComSelect.Items.Add("SIM");
+
 
 
             importEnumeration(typeof(ENuvoEssentiaCommands), cmbCommandSelect);
@@ -63,18 +76,50 @@ namespace NuvoControl.Test.NuvoClient
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            //comManager = new CommunicationManager("9600", "None", "1", "8", cmbComSelect.Text, rtbCOM);
-            //comManager.OpenPort();
-            //comManager.WriteData("Hello..");
+            if (cmbComSelect.Text.Contains("private"))
+            {
+                // Open a MSMQ queue
+                _msgQueue = SerialPortQueue.GetQueue(".\\"+cmbComSelect.Text);
+                if (chkReceive.Checked)
+                {
+                    _msgQueue.ReceiveCompleted += new ReceiveCompletedEventHandler(_msgQueue_ReceiveCompleted);
+                    _msgQueue.BeginReceive();
+                }
+                DisplayData(MessageType.Normal, string.Format("Open connection to Queue '{0}'", cmbComSelect.Text));
+            }
+            else
+            {
+                // Open a protocol stack (using a class implementing IProtocol)
+                DisplayData(MessageType.Normal, string.Format("Open connection to Port '{0}'", cmbComSelect.Text));
+                _nuvoServer = new NuvoEssentiaProtocolDriver();
+                if (chkReceive.Checked)
+                {
+                    _nuvoServer.onCommandReceived += new ProtocolEventHandler(nuvoServer_onCommandReceived);
+                }
+                _nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"));
+                if (chkSend.Checked)
+                {
+                    DisplayData(MessageType.Normal, "Read version ...");
+                    NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
+                    DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+                    _nuvoServer.SendCommand(_address, command);
+                }
+            }
+        }
 
-            DisplayData(MessageType.Normal, string.Format("Open connection to Port '{0}'",cmbComSelect.Text));
-            nuvoServer = new NuvoEssentiaProtocolDriver();
-            nuvoServer.onCommandReceived += new ProtocolEventHandler(nuvoServer_onCommandReceived);
-            nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"));
-            DisplayData(MessageType.Normal, "Read version ...");
-            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
-            DisplayData(MessageType.Outgoing, command.OutgoingCommand);
-            nuvoServer.SendCommand(_address, command);
+        void _msgQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs eventArg)
+        {
+
+            try
+            {
+                string msg = (string)eventArg.Message.Body;
+                DisplayData(MessageType.Incoming, msg);
+            }
+            catch (Exception e)
+            {
+                DisplayData(MessageType.Warning, string.Format("Incoming message was corrupt! Exception = {0}",e.ToString()));
+            }
+            _msgQueue.BeginReceive();   // prepare to receive next message
         }
 
         void nuvoServer_onCommandReceived(object sender, ProtocolEventArgs e)
@@ -82,24 +127,37 @@ namespace NuvoControl.Test.NuvoClient
             DisplayData(MessageType.Incoming, e.Command.IncomingCommand);
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnSend_Click(object sender, EventArgs e)
         {
-            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(txtboxSendText.Text);
-            DisplayData(MessageType.Outgoing, command.OutgoingCommand);
-            nuvoServer.SendCommand(_address, command);
+            if (_nuvoServer != null)
+            {
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(txtboxSendText.Text);
+                DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+                _nuvoServer.SendCommand(_address, command);
+            }
+            if (_msgQueue != null)
+            {
+                DisplayData(MessageType.Outgoing, btnSend.Text);
+                _msgQueue.Send(btnSend.Text);
+            }
         }
 
         private void btnCommandSend_Click(object sender, EventArgs e)
         {
-            if (nuvoServer != null)
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), cmbCommandSelect.Text, true),
+                (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true),
+                (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true),
+                (int)numVolume.Value, (int)numBass.Value, (int)numTreble.Value);
+            DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+            if (_nuvoServer != null)
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                    (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), cmbCommandSelect.Text, true),
-                    (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true),
-                    (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true),
-                    (int)numVolume.Value, (int)numBass.Value, (int)numTreble.Value);
-                DisplayData(MessageType.Outgoing, command.OutgoingCommand);
-                nuvoServer.SendCommand(_address, command);
+                _nuvoServer.SendCommand(_address, command);
+            }
+            if (_msgQueue != null)
+            {
+                string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
+                _msgQueue.Send(incomingCommand);
             }
         }
 
@@ -126,7 +184,7 @@ namespace NuvoControl.Test.NuvoClient
             {
                 rtbCOM.SelectedText = string.Empty;
                 rtbCOM.SelectionFont = new Font(rtbCOM.SelectionFont, FontStyle.Bold);
-                rtbCOM.SelectionColor = MessageColor[(int)type];
+                rtbCOM.SelectionColor = _MessageColor[(int)type];
                 rtbCOM.AppendText(msg);
                 rtbCOM.ScrollToCaret();
             }));
@@ -134,6 +192,33 @@ namespace NuvoControl.Test.NuvoClient
         #endregion
 
 
+        private string[] GetAllPrivateQueues()
+        {
+            // get the list of message queues
+            MessageQueue[] MQList = MessageQueue.GetPrivateQueuesByMachine(_MachineName);
+
+            // check to make sure we found some private queues on that machine
+            if (MQList.Length > 0)
+            {
+                // allocate a string array which holds for each queue the name, path, etc.
+                string[,] MQBigNameList = new string[MQList.Length, 3];
+                string[] MQSimpleNameList = new string[MQList.Length];
+
+                // loop through all message queues and get the name, path, etc.
+                for (int Count = 0; Count < MQList.Length; Count++)
+                {
+                    // Big List
+                    MQBigNameList[Count, 0] = MQList[Count].QueueName;
+                    MQBigNameList[Count, 1] = MQList[Count].Label;
+                    MQBigNameList[Count, 2] = MQList[Count].Transactional.ToString();
+
+                    // Simple List
+                    MQSimpleNameList[Count] = MQList[Count].QueueName;
+                }
+                return MQSimpleNameList;
+            }
+            return null;
+        }
 
     }
 }

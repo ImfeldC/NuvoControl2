@@ -5,6 +5,7 @@ using System.Text;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ProtocolDriver;
 using Common.Logging;
+using NuvoControl.Server.ProtocolDriver.Simulator;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -58,8 +59,12 @@ namespace NuvoControl.Server.ProtocolDriver
                 if (_serialPortConnectInformation.PortName.Equals("SIM"))
                 {
                     // Create serial port simulator
-                    //TOD use Factory and remove reference to simulator assembly from this project !!!!
-                    _serialPort = new NuvoControl.Server.ProtocolDriver.Simulator.ProtocolDriverSimulator();
+                    _serialPort = new ProtocolDriverSimulator();
+                }
+                else if (_serialPortConnectInformation.PortName.Equals("QUEUE"))
+                {
+                    // Create serial port queue
+                    _serialPort = new SerialPortQueue();
                 }
                 else
                 {

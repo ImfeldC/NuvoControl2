@@ -107,10 +107,7 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 
         private void simulateAllOk(NuvoEssentiaSingleCommand command)
         {
-            EIRCarrierFrequency[] ircf = { command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6) };
-            string commandString = NuvoEssentiaSingleCommand.replacePlaceholders(command.IncomingCommandTemplate, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf, command.SourceGrupStatus);
-
-            passDataBackToUpperLayer(new SerialPortEventArgs(string.Format("#{0}\r",commandString)));
+            passDataBackToUpperLayer(new SerialPortEventArgs(createIncomingCommand(command)));
         }
 
         private void passDataBackToUpperLayer( SerialPortEventArgs arg )
@@ -121,5 +118,18 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
             }
         }
 
+        /// <summary>
+        /// Creates for the passed in command string the expected incoming command string.
+        /// It considers values like zone id, volume, etc. to build the expected string.
+        /// It adds also the expected start and stop character.
+        /// </summary>
+        /// <param name="command">Outgoing command string, where all placeholders have been replaced by real values.</param>
+        /// <returns>Returns the expected incoming command string.</returns>
+        public static string createIncomingCommand(NuvoEssentiaSingleCommand command)
+        {
+            EIRCarrierFrequency[] ircf = { command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6) };
+            string msg = NuvoEssentiaSingleCommand.replacePlaceholders(command.IncomingCommandTemplate, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf, command.SourceGrupStatus);
+            return string.Format("#{0}\r", msg);
+        }
     }
 }
