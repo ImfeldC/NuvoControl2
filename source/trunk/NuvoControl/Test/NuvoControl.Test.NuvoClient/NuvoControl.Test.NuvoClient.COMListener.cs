@@ -64,8 +64,8 @@ namespace NuvoControl.Test.NuvoClient
         /// <summary>
         /// Example from http://marioschneider.blogspot.com/2008/01/folgende-methode-ermglicht-es-alle.html
         /// </summary>
-        /// <param name="t"></param>
-        /// <param name="comboBox"></param>
+        /// <param name="t">Enumeration type, to load into combo box.</param>
+        /// <param name="comboBox">Combo box, to fill with enumeration.</param>
         private void importEnumeration(Type t,ComboBox comboBox) 
         { 
             comboBox.Items.Clear(); 
@@ -148,7 +148,12 @@ namespace NuvoControl.Test.NuvoClient
                 (ENuvoEssentiaCommands)Enum.Parse(typeof(ENuvoEssentiaCommands), cmbCommandSelect.Text, true),
                 (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true),
                 (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true),
-                (int)numVolume.Value, (int)numBass.Value, (int)numTreble.Value);
+                (int)numVolume.Value, (int)numBass.Value, (int)numTreble.Value,
+                (EZonePowerStatus)Enum.Parse(typeof(EZonePowerStatus),cmbPowerStatusSelect.Text,true),
+                new EIRCarrierFrequency[6],
+                EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
+                EVolumeResetStatus.VolumeResetOFF,
+                ESourceGroupStatus.SourceGroupOFF,"V1.0");
             DisplayData(MessageType.Outgoing, command.OutgoingCommand);
             if (_nuvoServer != null)
             {
