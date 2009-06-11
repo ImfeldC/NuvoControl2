@@ -51,6 +51,14 @@ namespace NuvoControl.Server.ProtocolDriver
         string _firmwareVersion = "";
         #endregion
 
+        // Is used in case, we need to transfer this class as object
+        // through the MSMQ.
+        //public NuvoEssentiaSingleCommand()
+        //{
+        //    constructMembers();
+        //    initMembers(ENuvoEssentiaCommands.NoCommand);
+        //}
+
         #region Outgoing Command Constructors
 
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command)
