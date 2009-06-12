@@ -29,6 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuvoControl3.vsmdi = NuvoControl3.vsmdi
 		NuvoControl4.vsmdi = NuvoControl4.vsmdi
 		READ-ME.txt = READ-ME.txt
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Dal.UnitTest", "Server\NuvoControl.Server.Dal.UnitTest\NuvoControl.Server.Dal.UnitTest.csproj", "{2EF8B0A0-862C-40FC-B2A1-EB5DF1397E08}"

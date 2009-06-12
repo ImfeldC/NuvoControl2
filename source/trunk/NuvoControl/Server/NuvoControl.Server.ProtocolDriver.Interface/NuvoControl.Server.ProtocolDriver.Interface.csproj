@@ -53,6 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="SerialPortFactory.cs" />
     <Compile Include="INuvoEssentiaCommand.cs" />
     <Compile Include="INuvoEssentiaSingleCommand.cs" />
