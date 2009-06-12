@@ -1,4 +1,23 @@
-﻿using NuvoControl.Server.ProtocolDriver;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2009 by B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.ProtocolDriver.UnitTest
+ *   Author:         Ch.Imfeld
+ *   Creation Date:  6/12/2009 11:02:29 PM
+ * 
+ ***************************************************************************************************
+ * 
+ * Revisions:
+ * 1) 6/12/2009 11:02:29 PM, Ch.Imfeld: Initial implementation.
+ * 
+ **************************************************************************************************/
+
+
+using NuvoControl.Server.ProtocolDriver;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuvoControl.Server.ProtocolDriver.Interface;
 
