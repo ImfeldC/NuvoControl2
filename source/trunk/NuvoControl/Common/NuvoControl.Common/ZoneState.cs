@@ -53,6 +53,46 @@ namespace NuvoControl.Common
 
         #endregion
 
+
+        #region Constructors
+        public ZoneState(Address source, bool powerStatus, int volume)
+        {
+            _source = source;
+            _powerStatus = powerStatus;
+            _volume = volume;
+            _lastUpdate = DateTime.Now;
+            _zoneQuality = ZoneQuality.Online;  // Default Value
+        }
+        #endregion
+
+
+        #region Field Accessors
+        public ZoneQuality ZoneQuality
+        {
+            get { return _zoneQuality; }
+            set { _zoneQuality = value; }
+        }
+
+        public int Volume
+        {
+            get { return _volume; }
+        }
+
+        public bool PowerStatus
+        {
+            get { return _powerStatus; }
+        }
+
+        public Address Source
+        {
+            get { return _source; }
+        }
+
+        public DateTime LastUpdate
+        {
+            get { return _lastUpdate; }
+        }
+        #endregion
     }
 }
 

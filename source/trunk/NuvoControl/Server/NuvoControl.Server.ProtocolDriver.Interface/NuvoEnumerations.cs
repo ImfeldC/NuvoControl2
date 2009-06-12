@@ -73,7 +73,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// -s = SOURCE NUMBER 1 to 6
         /// -q = 0 if SOURCE GROUP is ON / 1 if SOURCE GROUP is OFF
         /// -yy = level below max in dB: -00 to -79 dB (include lead 0 for all single-digit values)
-        /// -yy = "MT" if in MUTE state-yy = "XM" if external MUTE is being held active 
+        /// -yy = "MT" if in MUTE state
+        /// -yy = "XM" if external MUTE is being held active 
         /// This response will also be issued in response to pressing the ON/OFF, VOLUME, or SOURCEkeys on a KEYPAD. NOTE – the response will be issued if a SOURCE key is press`ed on azone that is powered OFF even though the key press has no effect on the system. It will beoutput at every increment during a volume ramp initiated by HOLDING a VOLUME UP orVOLUME DOWN key on a keypad. It will also be issued at every increment of a volumeramp commanded by the *ZxxVOL+<CR> and *ZxxVOL-<CR> commands (see below).
         /// The MUTE value will be asserted if a *ZxMTON<CR> command has been received, OR if thevolume is run all the way to the lowest possible point (volume off). An active EXTERNALMUTE input, however, will always override other volume response values with the "XM" response.
         /// </summary>

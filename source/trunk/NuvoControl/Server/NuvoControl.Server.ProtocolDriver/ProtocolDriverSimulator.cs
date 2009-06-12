@@ -9,9 +9,28 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 {
     public class ProtocolDriverSimulator : ISerialPort
     {
+
+        /// <summary>
+        /// The enumeration EProtocolDriverSimulationMode contains a list of
+        /// all available simulation modes supported by the simulation driver
+        /// and the simulator.
+        /// The following modes are known:
+        /// - NoSimulation: There is no simulation active. No answer is returned, and no 
+        ///                 spontaneous events are generated.
+        /// - AllOk: Simulation is active. Each command is simulated with the correct 
+        ///          expected answer. The requested command is parsed and the state is 
+        ///          stored in the simulator. An answer is generated to indicate NuvoControl
+        ///          that the command has been executed without any problem.
+        /// - AllFail: Simulation is active. Return to each command an error message.
+        /// - WrongAnswer: Simulation is active. On each command is a 'wrong' (but valid)
+        ///                answer returned.
+        /// </summary>
         public enum EProtocolDriverSimulationMode
         {
-            AllOk = 1
+            NoSimulation = 0,   // no (automatic) answer
+            AllOk = 1,          // answer with correct command
+            AllFail = 2,        // no answer, return error
+            WrongAnswer = 3     // Answer with different answer
         }
 
         private int _deviceId = 1;
@@ -29,30 +48,12 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 
         public void Open(SerialPortConnectInformation serialPortConnectInformation)
         {
-            switch (_mode)
-            {
-                case EProtocolDriverSimulationMode.AllOk:
-                    _isOpen = true;
-                    break;
-
-                default:
-                    throw new NotImplementedException();
-                    break;
-            }
+            _isOpen = true;
         }
 
         public void Close()
         {
-            switch (_mode)
-            {
-                case EProtocolDriverSimulationMode.AllOk:
-                    _isOpen = false;
-                    break;
-
-                default:
-                    throw new NotImplementedException();
-                    break;
-            }
+            _isOpen = false;
         }
 
         public bool IsOpen
@@ -62,18 +63,18 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
 
         public void Write(string text)
         {
-            char[] charToRemove = { '*', '\r' };
-            NuvoEssentiaSingleCommand command = createNuvoEssentiaSingleCommand(text.Trim(charToRemove));
-
             switch (_mode)
             {
+                case EProtocolDriverSimulationMode.NoSimulation:
+                    // Do nothing :-)
+                    break;
+
                 case EProtocolDriverSimulationMode.AllOk:
-                    simulateAllOk(command);
+                    simulateAllOk(text);
                     break;
 
                 default:
-                    throw new NotImplementedException();
-                    break;
+                    throw new ProtocolDriverException(string.Format("The specified simulation mode '{0}' is not supported by the internal simulator!", _mode.ToString()));
             }
 
         }
@@ -89,10 +90,11 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         /// </summary>
         /// <param name="commandString">Command string</param>
         /// <returns>Nuvo Essentia command</returns>
-        private NuvoEssentiaSingleCommand createNuvoEssentiaSingleCommand(string commandString)
+        public static NuvoEssentiaSingleCommand createNuvoEssentiaSingleCommand(string commandString)
         {
+            char[] _charToRemove = { '*', '\r' };
             EIRCarrierFrequency[] ircf = { EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz };
-            NuvoEssentiaSingleCommand rawCommand = new NuvoEssentiaSingleCommand(commandString);
+            NuvoEssentiaSingleCommand rawCommand = new NuvoEssentiaSingleCommand(commandString.Trim(_charToRemove));
             NuvoEssentiaSingleCommand fullCommand = new NuvoEssentiaSingleCommand(
                 (rawCommand.Command == ENuvoEssentiaCommands.NoCommand ? ENuvoEssentiaCommands.ReadStatusCONNECT : rawCommand.Command),
                 (rawCommand.ZoneId == ENuvoEssentiaZones.NoZone ? ENuvoEssentiaZones.Zone1 : rawCommand.ZoneId),
@@ -105,9 +107,9 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
             return fullCommand;
         }
 
-        private void simulateAllOk(NuvoEssentiaSingleCommand command)
+        private void simulateAllOk(string text)
         {
-            passDataBackToUpperLayer(new SerialPortEventArgs(createIncomingCommand(command)));
+            passDataBackToUpperLayer(new SerialPortEventArgs(createIncomingCommand(text)));
         }
 
         private void passDataBackToUpperLayer( SerialPortEventArgs arg )
@@ -119,17 +121,32 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         }
 
         /// <summary>
-        /// Creates for the passed in command string the expected incoming command string.
+        /// Creates for the passed command the expected incoming command string.
         /// It considers values like zone id, volume, etc. to build the expected string.
         /// It adds also the expected start and stop character.
         /// </summary>
-        /// <param name="command">Outgoing command string, where all placeholders have been replaced by real values.</param>
+        /// <param name="command">Outgoing command</param>
         /// <returns>Returns the expected incoming command string.</returns>
         public static string createIncomingCommand(NuvoEssentiaSingleCommand command)
         {
             EIRCarrierFrequency[] ircf = { command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6) };
             string msg = NuvoEssentiaSingleCommand.replacePlaceholders(command.IncomingCommandTemplate, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf, command.SourceGrupStatus, command.VolumeResetStatus, command.DIPSwitchOverrideStatus, command.FirmwareVersion);
             return string.Format("#{0}\r", msg);
+        }
+
+
+        /// <summary>
+        /// Creates for the passed command string the expected incoming command string.
+        /// It considers values like zone id, volume, etc. to build the expected string.
+        /// It adds also the expected start and stop character.
+        /// </summary>
+        /// <param name="command">Outgoing command string, where all placeholders have been replaced.</param>
+        /// <returns>Returns the expected incoming command string.</returns>
+        public static string createIncomingCommand(string text)
+        {
+            char[] _charToRemove = { '*', '\r' };
+            NuvoEssentiaSingleCommand command = createNuvoEssentiaSingleCommand(text.Trim(_charToRemove));
+            return createIncomingCommand(command);
         }
     }
 }

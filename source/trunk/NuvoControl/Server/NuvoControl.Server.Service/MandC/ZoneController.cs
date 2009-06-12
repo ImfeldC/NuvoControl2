@@ -50,7 +50,7 @@ namespace NuvoControl.Server.Service.MandC
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
         private Address _zoneId = null;
-        private ZoneState _zoneState = new ZoneState();
+        private ZoneState _zoneState;
         private OperationMode _operationMode = OperationMode.Normal;
         private IProtocol _protocolDriver = null;
         private event ZoneNotification _zoneNotification;

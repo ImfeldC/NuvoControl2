@@ -11,11 +11,15 @@ using Common.Logging;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ProtocolDriver;
 using NuvoControl.Server.ProtocolDriver.Simulator;
+using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.Simulator
 {
     public partial class NuvoControlSimulator : Form
     {
+        private ILog _log = LogManager.GetCurrentClassLogger();
+
         //global manager variables
         private Color[] _MessageColor = { Color.Blue, Color.Green, Color.Black, Color.Orange, Color.Red };
         /// <summary>
@@ -24,8 +28,6 @@ namespace NuvoControl.Server.Simulator
         public enum MessageType { Incoming, Outgoing, Normal, Warning, Error };
 
 
-        private ILog _log = LogManager.GetCurrentClassLogger();
-
         // NOTE: In the simulator the send- and receive-queue are switched.
         // compared to the NuvoControl server.
         private const string _sendQueueName = ".\\private$\\fromNuvoEssentia";
@@ -33,15 +35,48 @@ namespace NuvoControl.Server.Simulator
         private const string _rcvQueueName = ".\\private$\\toNuvoEssentia";
         private MessageQueue _rcvQueue;
 
+        // Simulator members
+        private const int _numOfZones = 12;
+        private int _deviceId = 1;
+        private ZoneState[] _zoneState;
+        private int _selectedZoneForZoneState = -1;
+
+        private Queue<ReceiveCompletedEventArgs> _incommingCommands = new Queue<ReceiveCompletedEventArgs>();
+
+
         public NuvoControlSimulator()
         {
             InitializeComponent();
+            initZoneState();
+
+            importEnumeration(typeof(ProtocolDriverSimulator.EProtocolDriverSimulationMode), cmbSimModeSelect);
+
+            importEnumeration(typeof(ENuvoEssentiaSources), cmbZoneSourceStatusSelect);
+            importEnumeration(typeof(EZonePowerStatus), cmbZonePowerStatusSelect);
+            importEnumeration(typeof(ENuvoEssentiaZones), cmbZoneStatusSelect);     // needs to be done after setting source + power status
 
             importEnumeration(typeof(ENuvoEssentiaZones), cmbZoneSelect);
             importEnumeration(typeof(ENuvoEssentiaSources), cmbSourceSelect);
             importEnumeration(typeof(EZonePowerStatus), cmbPowerStatusSelect);
 
         }
+
+
+        /// <summary>
+        /// Initialize the simulated zones with an initial default value,
+        /// which is Device id '1' and Source '1', zone power status is ON
+        /// and volume is 30dB
+        /// </summary>
+        private void initZoneState()
+        {
+            _zoneState = new ZoneState[_numOfZones];
+            for (int i = 0; i < _numOfZones; i++)
+            {
+                _zoneState[i] = new ZoneState( new Address(_deviceId,1), true, -30);
+            }
+        }
+
+
 
         private void NuvoControlSimulator_Load(object sender, EventArgs e)
         {
@@ -56,13 +91,18 @@ namespace NuvoControl.Server.Simulator
         }
 
 
+        /// <summary>
+        /// Event method to receive messages via the MSMQ queue.
+        /// </summary>
+        /// <param name="sender">MSMQ sender</param>
+        /// <param name="eventArg">Event argument, containing the message</param>
         void _rcvQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs eventArg)
         {
             _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.ToString()));
             try
             {
-                string msg = (string)eventArg.Message.Body;
-                DisplayData(MessageType.Incoming, msg);
+                _incommingCommands.Enqueue(eventArg);
+                DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)eventArg.Message.Body, _incommingCommands.Count));
             }
             catch (Exception e)
             {
@@ -183,7 +223,8 @@ namespace NuvoControl.Server.Simulator
         }
 
 
-        private void sendCommand(ENuvoEssentiaCommands commandType )
+        #region Manual Zone Status Changes
+        private void sendCommandForManualChanges(ENuvoEssentiaCommands commandType )
         {
             if (_sendQueue != null)
             {
@@ -199,7 +240,7 @@ namespace NuvoControl.Server.Simulator
                         new EIRCarrierFrequency[6],
                         EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                         EVolumeResetStatus.VolumeResetOFF,
-                        ESourceGroupStatus.SourceGroupOFF, "V1.0");
+                        ESourceGroupStatus.SourceGroupOFF, "v1.23");
                     string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
                     _sendQueue.Send(incomingCommand);
                     DisplayData(MessageType.Outgoing, incomingCommand);
@@ -217,11 +258,11 @@ namespace NuvoControl.Server.Simulator
             EZonePowerStatus zonePowerStatus = (EZonePowerStatus)Enum.Parse(typeof(EZonePowerStatus), cmbPowerStatusSelect.Text, true);
             if (zonePowerStatus == EZonePowerStatus.ZoneStatusON)
             {
-                sendCommand(ENuvoEssentiaCommands.TurnZoneON);
+                sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneON);
             }
             else if (zonePowerStatus == EZonePowerStatus.ZoneStatusOFF)
             {
-                sendCommand(ENuvoEssentiaCommands.TurnZoneOFF);
+                sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneOFF);
             }
             else
             {
@@ -234,7 +275,7 @@ namespace NuvoControl.Server.Simulator
             ENuvoEssentiaSources source = (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true);
             if (source != ENuvoEssentiaSources.NoSource)
             {
-                sendCommand(ENuvoEssentiaCommands.SetSource);
+                sendCommandForManualChanges(ENuvoEssentiaCommands.SetSource);
             }
             else
             {
@@ -244,19 +285,167 @@ namespace NuvoControl.Server.Simulator
 
         private void trackVolume_Scroll(object sender, EventArgs e)
         {
-            sendCommand(ENuvoEssentiaCommands.SetVolume);
+            sendCommandForManualChanges(ENuvoEssentiaCommands.SetVolume);
         }
 
         private void trackBass_Scroll(object sender, EventArgs e)
         {
-            sendCommand(ENuvoEssentiaCommands.SetBassLevel);
+            sendCommandForManualChanges(ENuvoEssentiaCommands.SetBassLevel);
         }
 
         private void trackTreble_Scroll(object sender, EventArgs e)
         {
-            sendCommand(ENuvoEssentiaCommands.SetTrebleLevel);
+            sendCommandForManualChanges(ENuvoEssentiaCommands.SetTrebleLevel);
+        }
+        #endregion
+
+
+        /// <summary>
+        /// Event method in case the zone has been changed in the zone state section.
+        /// This method stores the current values for the previous selected zone;
+        /// and loads the values for the newly selected zone.
+        /// </summary>
+        /// <param name="sender">Default parameter, specifing the sender of the event.</param>
+        /// <param name="e">Additional event argument.</param>
+        private void cmbZoneStatusSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _log.Debug(m=>m("SelectedIndexChanged: {0}", cmbZoneStatusSelect.Text));
+
+            // Store previous values
+            if (_selectedZoneForZoneState >= 0)
+            {
+                _zoneState[_selectedZoneForZoneState] = new ZoneState( new Address(_deviceId,cmbZoneSourceStatusSelect.SelectedIndex+1),((string)cmbZonePowerStatusSelect.SelectedItem==EZonePowerStatus.ZoneStatusON.ToString()?true:false),trackVolumeStatus.Value);
+            }
+
+            if (cmbZoneStatusSelect.SelectedIndex < _numOfZones)
+            {
+                // Set new Zone State values
+                if (cmbZoneSourceStatusSelect.Items.Count > 0)
+                {
+                    cmbZoneSourceStatusSelect.SelectedIndex = _zoneState[cmbZoneStatusSelect.SelectedIndex].Source.ObjectId - 1;
+                    cmbZonePowerStatusSelect.SelectedItem = (_zoneState[cmbZoneStatusSelect.SelectedIndex].PowerStatus ? EZonePowerStatus.ZoneStatusON.ToString() : EZonePowerStatus.ZoneStatusOFF.ToString());
+                    trackVolumeStatus.Value = _zoneState[cmbZoneStatusSelect.SelectedIndex].Volume;
+                }
+
+                _selectedZoneForZoneState = cmbZoneStatusSelect.SelectedIndex;
+            }
         }
 
-  
+        private void cmbSimModeSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoSimulation.ToString())
+            {
+                // Start simulation
+                timerSimulate.Start();
+            }
+            else
+            {
+                // Stop simulation
+                timerSimulate.Stop();
+            }
+            DisplayData(MessageType.Normal, string.Format("--- Simulation Mode Changed to '{0}' ---", cmbSimModeSelect.Text));
+        }
+
+        private void timerSimulate_Tick(object sender, EventArgs e)
+        {
+            //_log.Debug(m => m("Simulate .."));
+            progressSimulate.Value = (progressSimulate.Value+1 > progressSimulate.Maximum ? 0 : progressSimulate.Value+1);
+
+            if (_incommingCommands.Count > 0)
+            {
+                do
+                {
+                    _log.Debug(m => m("Process incomming command {0}", (string)_incommingCommands.Peek().Message.Body));
+                    simulate(_incommingCommands.Dequeue());
+                }
+                while (_incommingCommands.Count > 0);
+            }
+        }
+
+        private void sendCommandForSimulation(ENuvoEssentiaCommands commandType)
+        {
+            if (_sendQueue != null)
+            {
+                ENuvoEssentiaZones zone = (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneStatusSelect.Text, true);
+                if (zone != ENuvoEssentiaZones.NoZone)
+                {
+                    NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                        commandType,
+                        zone,
+                        (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbZoneSourceStatusSelect.Text, true),
+                        (int)trackVolumeStatus.Value, 0, 0,
+                        (EZonePowerStatus)Enum.Parse(typeof(EZonePowerStatus), cmbZonePowerStatusSelect.Text, true),
+                        new EIRCarrierFrequency[6],
+                        EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
+                        EVolumeResetStatus.VolumeResetOFF,
+                        ESourceGroupStatus.SourceGroupOFF, "v1.23");
+                    string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
+                    _sendQueue.Send(incomingCommand);
+                    DisplayData(MessageType.Outgoing, incomingCommand);
+                }
+            }
+        }
+
+        private void simulate(ReceiveCompletedEventArgs eventArg)
+        {
+            if ((string)cmbSimModeSelect.SelectedItem == 
+                ProtocolDriverSimulator.EProtocolDriverSimulationMode.AllOk.ToString() )
+            {
+                NuvoEssentiaSingleCommand command = ProtocolDriverSimulator.createNuvoEssentiaSingleCommand((string)eventArg.Message.Body);
+                updateZoneState(command);
+                sendCommandForSimulation(command.Command);
+            }
+            else if ((string)cmbSimModeSelect.SelectedItem ==
+                ProtocolDriverSimulator.EProtocolDriverSimulationMode.AllFail.ToString())
+            {
+                sendCommandForSimulation(ENuvoEssentiaCommands.ErrorInCommand);
+            }
+            else if ((string)cmbSimModeSelect.SelectedItem ==
+                ProtocolDriverSimulator.EProtocolDriverSimulationMode.WrongAnswer.ToString())
+            {
+                NuvoEssentiaSingleCommand command = ProtocolDriverSimulator.createNuvoEssentiaSingleCommand((string)eventArg.Message.Body);
+                // Select ONE zone HIGHER than received by command string
+                cmbZoneStatusSelect.SelectedIndex = ((int)command.ZoneId==_numOfZones?0:(int)command.ZoneId);
+                sendCommandForSimulation(command.Command);
+            }
+        }
+
+
+        private void updateZoneState(NuvoEssentiaSingleCommand command)
+        {
+            if (command.ZoneId != ENuvoEssentiaZones.NoZone)
+            {
+                // Select zone received by command string
+                cmbZoneStatusSelect.SelectedIndex = (int)command.ZoneId - 1;
+
+                switch (command.Command)
+                {
+                    case ENuvoEssentiaCommands.SetVolume:
+                        trackVolumeStatus.Value = Math.Abs(command.VolumeLevel) * -1;
+                        break;
+
+                    case ENuvoEssentiaCommands.SetSource:
+                        cmbZoneSourceStatusSelect.SelectedIndex = (int)command.SourceId - 1;
+                        break;
+
+                    case ENuvoEssentiaCommands.TurnZoneON:
+                        cmbZonePowerStatusSelect.SelectedItem = EZonePowerStatus.ZoneStatusON.ToString();
+                        break;
+
+                    case ENuvoEssentiaCommands.TurnZoneOFF:
+                        cmbZonePowerStatusSelect.SelectedItem = EZonePowerStatus.ZoneStatusOFF.ToString();
+                        break;
+
+                    case ENuvoEssentiaCommands.TurnALLZoneOFF:
+                        //TODO: Switch off all zones and send response
+                        break;
+
+                    case ENuvoEssentiaCommands.ReadVersion:
+                        // do nothing
+                        break;
+
+                }
+            }
+        }
     }
 }
