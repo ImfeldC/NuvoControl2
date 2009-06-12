@@ -1,8 +1,21 @@
-﻿////////////////////////////////////////////////////////////////////////////////////////////////////
-/// \file	NuvoControl.Test.COMListener\NuvoControl.Test.COMListener.Program.cs
-///
-/// \brief	Implements the NuvoControl.Test.COMListener.Program class. 
-////////////////////////////////////////////////////////////////////////////////////////////////////
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2009 by B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Test.COMListener
+ *   Author:         Ch.Imfeld
+ *   Creation Date:  6/12/2009 11:02:29 PM
+ * 
+ ***************************************************************************************************
+ * 
+ * Revisions:
+ * 1) 6/12/2009 11:02:29 PM, Ch.Imfeld: Initial implementation.
+ * 
+ **************************************************************************************************/
+
 
 using System;
 using System.Collections.Generic;
