@@ -639,7 +639,10 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
-        static public string replacePlaceholders(string command, ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource, ESourceGroupStatus sourceGroupStatus)
+        static public string replacePlaceholders(string command, 
+            ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, 
+            EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource,
+            ESourceGroupStatus sourceGroupStatus, EVolumeResetStatus volumeResetStatus, EDIPSwitchOverrideStatus dipSwitchOverrideStatus, string version)
         {
             if (command != null)
             {
@@ -652,7 +655,9 @@ namespace NuvoControl.Server.ProtocolDriver
                 command = replacePlaceholderForIRFrequency(command, irCarrierFrequencySource);
 
                 command = replacePlaceholderForSourceGroupStatus(command, sourceGroupStatus);
-                //TODO: Add all other replacements here (Version, ...)
+                command = replacePlaceholderForVolumeResetStatus(command, volumeResetStatus);
+                command = replacePlaceholderForDIPSwitchOverrideStatus(command, dipSwitchOverrideStatus);
+                command = replacePlaceholderForVersion(command, version);
             }
             return command;
         }
@@ -950,11 +955,91 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    LogManager.GetCurrentClassLogger().Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source Group Member member is not set", placeholder, command));
+                    LogManager.GetCurrentClassLogger().Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Source Group Member Status member is not set", placeholder, command));
                 }
             }
             return command;
         }
+
+        /// <summary>
+        /// Replaces the default volume reset status placeholder with the volume reset status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">Volume Reset Status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForVolumeResetStatus(string command, EVolumeResetStatus volumeResetStatus)
+        {
+            return replacePlaceholderForVolumeResetStatus(command, volumeResetStatus, "r");
+        }
+
+        /// <summary>
+        /// Replaces the volume reset status placeholder with the volume reset status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">volume reset status</param>
+        /// <param name="placeholder">Placeholder for the volume reset status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForVolumeResetStatus(string command, EVolumeResetStatus volumeResetStatus, string placeholder)
+        {
+            if (command.Contains(placeholder))
+            {
+                if (volumeResetStatus != EVolumeResetStatus.VolumeResetUnknown)
+                {
+                    command = replacePlaceholderWithNumber(command, (int)volumeResetStatus, placeholder);
+                }
+                else
+                {
+                    LogManager.GetCurrentClassLogger().Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because Volume Reset Status Member member is not set", placeholder, command));
+                }
+            }
+            return command;
+        }
+
+        /// <summary>
+        /// Replaces the default DIP Switch Override Status placeholder with the DIP Switch Override Status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">DIP Switch Override Status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForDIPSwitchOverrideStatus(string command, EDIPSwitchOverrideStatus dipSwitchOverrideStatus)
+        {
+            return replacePlaceholderForDIPSwitchOverrideStatus(command, dipSwitchOverrideStatus, "i");
+        }
+
+        /// <summary>
+        /// Replaces the DIP Switch Override Status placeholder with the DIP Switch Override Status in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="source">DIP Switch Override Status</param>
+        /// <param name="placeholder">Placeholder for the DIP Switch Override Status</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForDIPSwitchOverrideStatus(string command, EDIPSwitchOverrideStatus dipSwitchOverrideStatus, string placeholder)
+        {
+            if (command.Contains(placeholder))
+            {
+                if (dipSwitchOverrideStatus != EDIPSwitchOverrideStatus.DIPSwitchOverrideUnknown)
+                {
+                    command = replacePlaceholderWithNumber(command, (int)dipSwitchOverrideStatus, placeholder);
+                }
+                else
+                {
+                    LogManager.GetCurrentClassLogger().Error(m => m("Replace ERROR: Cannot replace '{0}' in command '{1}', because DIP Switch Override Status Member member is not set", placeholder, command));
+                }
+            }
+            return command;
+        }
+
+        /// <summary>
+        /// Replaces the version in the command string.
+        /// </summary>
+        /// <param name="command">Command string</param>
+        /// <param name="zone">Version string</param>
+        /// <returns>Command string with replaced placeholders.</returns>
+        static private string replacePlaceholderForVersion(string command, string version)
+        {
+            return command.Replace("vz.zz", version );
+        }
+
 
         #endregion
 

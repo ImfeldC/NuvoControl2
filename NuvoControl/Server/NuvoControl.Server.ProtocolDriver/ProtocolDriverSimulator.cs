@@ -128,7 +128,7 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         public static string createIncomingCommand(NuvoEssentiaSingleCommand command)
         {
             EIRCarrierFrequency[] ircf = { command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source1), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source2), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source3), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source4), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source5), command.IrCarrierFrequencySource(ENuvoEssentiaSources.Source6) };
-            string msg = NuvoEssentiaSingleCommand.replacePlaceholders(command.IncomingCommandTemplate, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf, command.SourceGrupStatus);
+            string msg = NuvoEssentiaSingleCommand.replacePlaceholders(command.IncomingCommandTemplate, command.ZoneId, command.SourceId, command.VolumeLevel, command.BassLevel, command.TrebleLevel, command.PowerStatus, ircf, command.SourceGrupStatus, command.VolumeResetStatus, command.DIPSwitchOverrideStatus, command.FirmwareVersion);
             return string.Format("#{0}\r", msg);
         }
     }
