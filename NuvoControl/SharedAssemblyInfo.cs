@@ -8,7 +8,7 @@
  *   SubProject:     Solution Items
  *   Author:         Ch.Imfeld
  *   Creation Date:  10.06.2009
- *   File Name:      ZoneState.cs
+ *   File Name:      SharedAssemblyInfo.cs
  * 
  ***************************************************************************************************
  * 
