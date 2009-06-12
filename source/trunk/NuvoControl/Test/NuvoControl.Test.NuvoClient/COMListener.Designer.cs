@@ -297,7 +297,7 @@ namespace NuvoControl.Test.NuvoClient
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.rtbCOM);
             this.Name = "NuvoClient";
-            this.Text = "NuvoControl.Test.COMListener";
+            this.Text = "NuvoControl.Test.NuvoClient";
             this.Load += new System.EventHandler(this.COMListener_Load);
             this.groupBox1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.numTreble)).EndInit();
