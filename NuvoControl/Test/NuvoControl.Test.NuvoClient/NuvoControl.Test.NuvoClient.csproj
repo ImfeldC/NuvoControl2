@@ -8,14 +8,15 @@
     <ProjectGuid>{44C817E7-C9E5-4B07-9369-95BE0D0CE82B}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuvoControl.Test.COMListener</RootNamespace>
-    <AssemblyName>NuvoControl.Test.COMListener</AssemblyName>
+    <RootNamespace>NuvoControl.Test.NuvoClient</RootNamespace>
+    <AssemblyName>NuvoControl.Test.NuvoClient</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>Svn</SccProjectName>
     <SccLocalPath>Svn</SccLocalPath>
     <SccAuxPath>Svn</SccAuxPath>
     <SccProvider>SubversionScc</SccProvider>
+    <IsWebBootstrapper>true</IsWebBootstrapper>
     <PublishUrl>http://localhost/NuvoControl.Test.COMListener/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -28,7 +29,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>true</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -75,17 +75,17 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="NuvoControl.Test.NuvoClient.COMListener.cs">
+    <Compile Include="COMListener.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NuvoControl.Test.NuvoClient.COMListener.Designer.cs">
-      <DependentUpon>NuvoControl.Test.NuvoClient.COMListener.cs</DependentUpon>
+    <Compile Include="COMListener.Designer.cs">
+      <DependentUpon>COMListener.cs</DependentUpon>
     </Compile>
-    <Compile Include="NuvoControl.Test.NuvoClient.CommunicationManager.cs" />
-    <Compile Include="NuvoControl.Test.NuvoClient.Program.cs" />
+    <Compile Include="CommunicationManager.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="NuvoControl.Test.NuvoClient.COMListener.resx">
-      <DependentUpon>NuvoControl.Test.NuvoClient.COMListener.cs</DependentUpon>
+    <EmbeddedResource Include="COMListener.resx">
+      <DependentUpon>COMListener.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -95,6 +95,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="App.config" />
     <None Include="Properties\Settings.settings">
