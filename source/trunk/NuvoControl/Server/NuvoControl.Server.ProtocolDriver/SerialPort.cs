@@ -23,11 +23,14 @@ using System.Linq;
 using System.Text;
 using System.IO.Ports;
 using NuvoControl.Server.ProtocolDriver.Interface;
+using Common.Logging;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
     public class SerialPort : ISerialPort
     {
+        private static ILog _log = LogManager.GetCurrentClassLogger();
+
         private System.IO.Ports.SerialPort _comPort; 
         private SerialPortConnectInformation _serialPortConnectInformation;
 
@@ -119,6 +122,8 @@ namespace NuvoControl.Server.ProtocolDriver
             }
             catch (Exception ex)
             {
+                _log.Fatal(m=>m("Exception occured opening the serial port {0}! SerialPortInformation='{1}' / Exception='{2}'", 
+                    _serialPortConnectInformation.PortName, _serialPortConnectInformation, ex.ToString()));
                 return false;
             }
         }

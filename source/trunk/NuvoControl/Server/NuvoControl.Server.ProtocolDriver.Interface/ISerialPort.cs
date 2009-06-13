@@ -84,6 +84,14 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _stopBits; }
         }
 
+        public override string ToString()
+        {
+            return string.Format("PortName={0}, BaudRate={1}, Parity={2}, DataBits={3}, StopBits={4}",
+                _portName, _baudRate, _parity, _dataBits, _stopBits);
+        }
+
+
+
         //
         // Summary:
         //     Initializes a new instance of the System.IO.Ports.SerialPort class using

@@ -211,8 +211,9 @@ namespace NuvoControl.Server.ProtocolDriver
             }
             catch (Exception ex)
             {
-                 // log is not available
+                 // profile is not available
                 _profile = null;
+                throw ex;
             }
         }
 
@@ -604,7 +605,6 @@ namespace NuvoControl.Server.ProtocolDriver
                     case ENuvoEssentiaCommands.SetZoneStatus:
                     case ENuvoEssentiaCommands.GetZoneStatus:
                         throw new ProtocolDriverException(string.Format("The command '{0}' is not handled by this single command class. Use the container class instead!", _command));
-                        break;
 
                     // unkown command 
                     default:
@@ -1486,7 +1486,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     {
                         result = command.Substring(startindex, placeholder.Length);
                     }
-                    catch (System.ArgumentOutOfRangeException ex)
+                    catch (System.ArgumentOutOfRangeException)
                     {
                         result = "";
                     }
