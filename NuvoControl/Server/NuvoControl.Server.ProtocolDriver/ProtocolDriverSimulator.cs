@@ -52,7 +52,6 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
             WrongAnswer = 3     // Answer with different answer
         }
 
-        private int _deviceId = 1;
         private bool _isOpen = false;
 
         private EProtocolDriverSimulationMode _mode = EProtocolDriverSimulationMode.AllOk;

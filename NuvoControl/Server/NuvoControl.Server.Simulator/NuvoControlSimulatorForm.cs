@@ -220,7 +220,7 @@ namespace NuvoControl.Server.Simulator
                     rtbCOM.ScrollToCaret();
                 }));
             }
-            catch (Exception e)
+            catch( Exception )
             {
                 // ignore any execption
             }
