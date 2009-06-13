@@ -26,17 +26,21 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
-    public delegate void ProtocolEventHandler(
-              object sender, ProtocolEventArgs e);
-
-    public class ProtocolEventArgs : EventArgs
+    /// <summary>
+    /// Public delegate used in case a command is received.
+    /// </summary>
+    /// <param name="sender">Sender of the event</param>
+    /// <param name="e">Additional information passed by the Sender</param>
+    public delegate void ProtocolCommandReceivedEventHandler(
+              object sender, ProtocolCommandReceivedEventArgs e);
+    public class ProtocolCommandReceivedEventArgs : EventArgs
     {
         private Address _zoneAddress;
         private ZoneState _zoneState;
 
         NuvoEssentiaProtocolEventArgs _innerEventArgs;
 
-        public ProtocolEventArgs(Address zoneAddress, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        public ProtocolCommandReceivedEventArgs(Address zoneAddress, NuvoEssentiaProtocolEventArgs innerEventArgs)
         {
             _zoneAddress = zoneAddress;
             _innerEventArgs = innerEventArgs;
@@ -59,12 +63,50 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     }
 
     /// <summary>
+    /// Public delegate used in case a zone is updated.
+    /// </summary>
+    /// <param name="sender">Sender of the event</param>
+    /// <param name="e">Additional information passed by the Sender</param>
+    public delegate void ProtocolZoneUpdatedEventHandler(
+              object sender, ProtocolZoneUpdatedEventArgs e);
+    public class ProtocolZoneUpdatedEventArgs : EventArgs
+    {
+        private Address _zoneAddress;
+        private ZoneState _zoneState;
+
+        NuvoEssentiaProtocolEventArgs _innerEventArgs;
+
+        public ProtocolZoneUpdatedEventArgs(Address zoneAddress, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        {
+            _zoneAddress = zoneAddress;
+            _innerEventArgs = innerEventArgs;
+        }
+
+        public int DeviceId
+        {
+            get { return _zoneAddress.DeviceId; }
+        }
+
+        public Address ZoneAddress
+        {
+            get { return _zoneAddress; }
+        }
+
+        public INuvoEssentiaSingleCommand Command
+        {
+            get { return _innerEventArgs.Command; }
+        }
+    }
+
+
+
+    /// <summary>
     /// 
     /// </summary>
     public interface IProtocol
     {
-        event ProtocolEventHandler onCommandReceived;
-        event ProtocolEventHandler onZoneStatusChanged; // TODO: Use ZoneState instead of Nuvo Essentia
+        event ProtocolCommandReceivedEventHandler onCommandReceived;
+        event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate; // TODO: Use ZoneState instead of Nuvo Essentia
 
         //TODO: Discuss how to pass communication confugurations correct (IPorotocol should not be aware of Baudrate)
         void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration);

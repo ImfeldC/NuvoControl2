@@ -53,7 +53,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 //raise the event, and pass data to next layer
                 if (onCommandReceived != null)
                 {
-                     onCommandReceived(this, new ProtocolEventArgs(new Address(),e));
+                     onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId),e));
                 }
 
                 //TODO add here the zone changed events
@@ -67,9 +67,9 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region IProtocol Members
 
-        public event ProtocolEventHandler onCommandReceived;
+        public event ProtocolCommandReceivedEventHandler onCommandReceived;
 
-        public event ProtocolEventHandler onZoneStatusChanged;
+        public event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
 
 
         public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration)
