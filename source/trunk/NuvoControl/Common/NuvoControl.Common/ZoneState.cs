@@ -53,7 +53,6 @@ namespace NuvoControl.Common
 
         #endregion
 
-
         #region Constructors
         public ZoneState(Address source, bool powerStatus, int volume)
         {
@@ -64,7 +63,6 @@ namespace NuvoControl.Common
             _zoneQuality = ZoneQuality.Online;  // Default Value
         }
         #endregion
-
 
         #region Field Accessors
         public ZoneQuality ZoneQuality
@@ -93,6 +91,11 @@ namespace NuvoControl.Common
             get { return _lastUpdate; }
         }
         #endregion
+
+        public override string ToString() 
+        {
+            return string.Format("Power={0} Source={1} VolumeLevel={2}", (_powerStatus ? "ON" : "OFF"), _source.ToString(), _volume);
+        }
     }
 }
 

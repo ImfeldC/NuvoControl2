@@ -25,6 +25,7 @@ using System.IO.Ports;
 using Common.Logging;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Common.Configuration;
+using NuvoControl.Common;
 
 
 namespace NuvoControl.Server.ProtocolDriver
@@ -50,13 +51,24 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             if (_protocolList.ContainsKey(e.DeviceId))
             {
-                //raise the event, and pass data to next layer
+                //raise the command received event, and pass data to next layer
                 if (onCommandReceived != null)
                 {
                      onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId),e));
                 }
 
-                //TODO add here the zone changed events
+                //raise the zone status changed event, and pass data to next layer
+                if (e.Command.ZoneId != ENuvoEssentiaZones.NoZone &&
+                    e.Command.PowerStatus != EZonePowerStatus.ZoneStatusUnknown &&
+                    e.Command.VolumeLevel != -999 &&
+                    e.Command.SourceId != ENuvoEssentiaSources.NoSource)
+                {
+                    if (onZoneStatusUpdate != null)
+                    {
+                        ZoneState zoneState = new ZoneState(new Address(e.DeviceId,(int)e.Command.SourceId),(e.Command.PowerStatus==EZonePowerStatus.ZoneStatusON?true:false),e.Command.VolumeLevel);
+                        onZoneStatusUpdate(this,new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId), zoneState,e));
+                    }
+                }
             }
             else
             {

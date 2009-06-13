@@ -114,6 +114,7 @@ namespace NuvoControl.Test.NuvoClient
                 if (chkReceive.Checked)
                 {
                     _nuvoServer.onCommandReceived += new ProtocolCommandReceivedEventHandler(nuvoServer_onCommandReceived);
+                    _nuvoServer.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_nuvoServer_onZoneStatusUpdate);
                 }
                 _nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"));
                 if (chkSend.Checked)
@@ -144,6 +145,11 @@ namespace NuvoControl.Test.NuvoClient
         void nuvoServer_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
             DisplayData(MessageType.Incoming, e.Command.IncomingCommand);
+        }
+
+        void _nuvoServer_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
+        {
+            DisplayData(MessageType.Normal, string.Format("Zone Udpate: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState));
         }
 
         private void btnSend_Click(object sender, EventArgs e)
