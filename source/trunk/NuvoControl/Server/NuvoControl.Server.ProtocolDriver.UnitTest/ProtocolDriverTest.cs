@@ -44,7 +44,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         private Address _zoneAddress = null;
         private Communication _commConfig = new Communication("COM1", 9600, 8, 1, "None");
 
-        private ProtocolEventArgs _eventArg;
+        private ProtocolCommandReceivedEventArgs _eventArg;
 
         private TestContext testContextInstance;
 
@@ -284,7 +284,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             NuvoEssentiaProtocolDriver target = new NuvoEssentiaProtocolDriver();
             Communication communicationConfiguration = new Communication("SIM", 9600, 8, 1, "None"); // Create Simulator
             target.Open(ENuvoSystem.NuVoEssentia, _deviceId, communicationConfiguration, null);
-            target.onCommandReceived += new ProtocolEventHandler(target_onCommandReceived);
+            target.onCommandReceived += new ProtocolCommandReceivedEventHandler(target_onCommandReceived);
 
             Address zoneAddress = new Address(_deviceId, 2);                        // Zone 2
             target.CommandSetSource(zoneAddress, new Address(_deviceId, 5));    // Source 5
@@ -292,7 +292,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         }
 
-        void target_onCommandReceived(object sender, ProtocolEventArgs e)
+        void target_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
             _eventArg = e;
         }

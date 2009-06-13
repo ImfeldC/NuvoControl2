@@ -113,7 +113,7 @@ namespace NuvoControl.Test.NuvoClient
                 _nuvoServer = new NuvoEssentiaProtocolDriver();
                 if (chkReceive.Checked)
                 {
-                    _nuvoServer.onCommandReceived += new ProtocolEventHandler(nuvoServer_onCommandReceived);
+                    _nuvoServer.onCommandReceived += new ProtocolCommandReceivedEventHandler(nuvoServer_onCommandReceived);
                 }
                 _nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"));
                 if (chkSend.Checked)
@@ -141,7 +141,7 @@ namespace NuvoControl.Test.NuvoClient
             _msgQueue.BeginReceive();   // prepare to receive next message
         }
 
-        void nuvoServer_onCommandReceived(object sender, ProtocolEventArgs e)
+        void nuvoServer_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
             DisplayData(MessageType.Incoming, e.Command.IncomingCommand);
         }
