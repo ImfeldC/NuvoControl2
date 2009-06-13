@@ -36,7 +36,6 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public class ProtocolCommandReceivedEventArgs : EventArgs
     {
         private Address _zoneAddress;
-        private ZoneState _zoneState;
 
         NuvoEssentiaProtocolEventArgs _innerEventArgs;
 
@@ -76,9 +75,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         NuvoEssentiaProtocolEventArgs _innerEventArgs;
 
-        public ProtocolZoneUpdatedEventArgs(Address zoneAddress, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        public ProtocolZoneUpdatedEventArgs(Address zoneAddress, ZoneState zoneState, NuvoEssentiaProtocolEventArgs innerEventArgs)
         {
             _zoneAddress = zoneAddress;
+            _zoneState = zoneState;
             _innerEventArgs = innerEventArgs;
         }
 
@@ -87,15 +87,21 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _zoneAddress.DeviceId; }
         }
 
+        public int ObjectId
+        {
+            get { return _zoneAddress.ObjectId; }
+        }
+
         public Address ZoneAddress
         {
             get { return _zoneAddress; }
         }
 
-        public INuvoEssentiaSingleCommand Command
+        public ZoneState ZoneState
         {
-            get { return _innerEventArgs.Command; }
+            get { return _zoneState; }
         }
+
     }
 
 
@@ -106,7 +112,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public interface IProtocol
     {
         event ProtocolCommandReceivedEventHandler onCommandReceived;
-        event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate; // TODO: Use ZoneState instead of Nuvo Essentia
+        event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
 
         //TODO: Discuss how to pass communication confugurations correct (IPorotocol should not be aware of Baudrate)
         void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration);
