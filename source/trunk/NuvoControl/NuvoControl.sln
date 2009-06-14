@@ -40,6 +40,24 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.NuvoClient
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Simulator", "Server\NuvoControl.Server.Simulator\NuvoControl.Server.Simulator.csproj", "{E28FAAE1-87BE-4C98-AD54-E867E6D88DD0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{482B5795-E159-4968-9BB4-85E8CAC6E0C2}"
+	ProjectSection(SolutionItems) = preProject
+		Config\NuvoControlKonfiguration.xml = Config\NuvoControlKonfiguration.xml
+		Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml = Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml
+		Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml = Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml
+		Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml = Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml
+		Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml = Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml
+		Config\NuvoControlKonfigurationNotDistinctSources.xml = Config\NuvoControlKonfigurationNotDistinctSources.xml
+		Config\NuvoControlKonfigurationNotDistinctZones.xml = Config\NuvoControlKonfigurationNotDistinctZones.xml
+		Config\NuvoControlKonfigurationNotWellFormed.xml = Config\NuvoControlKonfigurationNotWellFormed.xml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClassDiagrams", "ClassDiagrams", "{3B6640D6-D2CA-4048-B143-4DA380D5C590}"
+	ProjectSection(SolutionItems) = preProject
+		ClassDiagrams\ProtocolDriverOverview.jpg = ClassDiagrams\ProtocolDriverOverview.jpg
+		READ-ME ClassDiagrams.txt = READ-ME ClassDiagrams.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -112,5 +130,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{482B5795-E159-4968-9BB4-85E8CAC6E0C2} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
+		{3B6640D6-D2CA-4048-B143-4DA380D5C590} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
 	EndGlobalSection
 EndGlobal

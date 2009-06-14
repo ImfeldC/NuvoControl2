@@ -226,5 +226,38 @@ namespace NuvoControl.Server.ProtocolDriver
                 _log.Error(m => m("Start sign missing. {0}", _currentTelegramBuffer));
             }
         }
+
+        public SerialPort SerialPort
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public SerialPortQueue SerialPortQueue
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
+        public NuvoControl.Server.ProtocolDriver.Simulator.ProtocolDriverSimulator ProtocolDriverSimulator
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
     }
 }
