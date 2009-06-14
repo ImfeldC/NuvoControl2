@@ -180,5 +180,16 @@ namespace NuvoControl.Server.ProtocolDriver
             return true;
         }
 
+        internal NuvoTelegram NuvoTelegram
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
+        }
+
     }
 }

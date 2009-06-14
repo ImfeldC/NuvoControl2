@@ -27,12 +27,27 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 
-
 namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
-    /// This is the main class which combines all protocol layers.
+    /// This namespace is used to hold all classes and interfaces related to the protocol driver stack.
+    /// <img src="ProtocolDriverOverview.jpg">
+    /// The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
+    /// </summary>
+    #region Namespace Documentation
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+    class NamespaceDoc
+    {
+    }
+    #endregion
+
+
+    /// <summary>
+    /// This class implements the protocol stack to acces the Nuvo Essentia.
+    /// This is the main class which combins the access to the protocol stack.
+    /// It implements the IProtocol interface.
     /// An application should use this class to instantiate a protocol stack.
+    /// The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
     public class NuvoEssentiaProtocolDriver : IProtocol
     {
@@ -229,6 +244,17 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             //TODO Check this conversion !!!
             return (ENuvoEssentiaSources)sourceAddress.ObjectId;
+        }
+
+        public NuvoEssentiaProtocol NuvoEssentiaProtocol
+        {
+            get
+            {
+                throw new System.NotImplementedException();
+            }
+            set
+            {
+            }
         }
     }
 }

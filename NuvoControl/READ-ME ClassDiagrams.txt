@@ -1,0 +1,48 @@
+
+This folder contains the images generated from the class diagrams.
+They are used as part of the documentation and will be used by by the Sandcastle tool 
+at the time of generate the documentation.
+
+The diagrams are made with several tools ....
+
+
+------------------------------------------------------
+
+(A) Drawbridge
+
+This tool allows to generate picture files (*.jpg) from the class diagrams (*.cs).
+
+--> Installation
+It can be downloaded from http://www.castleapps.com/
+The installation is simple, just use the default values.
+
+--> Create Image(s)
+To export one or more diagrams do the following steps:
+* Open any one of your class diagrams. Right click on the diagram and select “Export Diagram as Image…” 
+* You can export all the class diagrams at this time. 
+  Use the existing folder 'ClassDiagrams' to store the files
+* Set the image format to JPEG Interchange (*.jpg).
+* Click export.
+* Add new files to Subversion, to ensure they are part of the source code repository
+* Now you can use the Drawbridge Sandcastle component to fully integrate the class 
+  diagram images with the help file. 
+(A more detailed help is provided with the Drawbridge tool.
+
+These steps are not possible (yet) to execute as part of the build. Because of that you
+need to execute these steps each time you change the class diagram(s).
+
+--> Include in comment
+To include the images in the comment, use the <a href> property, because the <img> property may not
+fit into the output html style. I had som problems to add the picture directly embedded in the html
+file, because the summary text is placed in a table.
+As example:
+    /// The following class diagram shows the protocol stack.
+    /// <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
+    /// <img src="./ClassDiagrams/ProtocolDriverOverview.jpg"/>
+
+--> Include images in the build
+The files (may) require to be added to the Sandcastle Help File Builder project (NuvoControl.shfbproj).
+Ensure that the new created class diagram is part of the project.
+
+
+------------------------------------------------------
