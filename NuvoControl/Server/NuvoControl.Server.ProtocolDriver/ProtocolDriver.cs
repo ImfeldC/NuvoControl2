@@ -30,11 +30,10 @@ using NuvoControl.Common;
 namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
-    /// This namespace is used to hold all classes and interfaces related to the protocol driver stack.
-    /// <img src="ProtocolDriverOverview.jpg">
+    /// This namespace is used to hold all classes and interfaces related to the protocol driver stack.<br/>
     /// The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
-    #region Namespace Documentation
+    #region Namespace Documentation (required for Sandcastle documentation tool)
     [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     class NamespaceDoc
     {
