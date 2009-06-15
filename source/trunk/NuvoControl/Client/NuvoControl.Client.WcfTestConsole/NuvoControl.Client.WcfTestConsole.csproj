@@ -118,6 +118,8 @@
     <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService1.xsd" />
     <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService11.xsd" />
     <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService12.xsd" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService2.xsd" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService3.xsd" />
     <None Include="Service References\MonitorAndControlServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>

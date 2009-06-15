@@ -3,21 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common", "Common\NuvoControl.Common\NuvoControl.Common.csproj", "{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common.Interfaces", "Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj", "{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.CommunicationDriver", "Server\NuvoControl.Server.CommunicationDriver\NuvoControl.Server.CommunicationDriver.csproj", "{295804DA-0A18-4B2D-A9EE-4B1813A408BC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver", "Server\NuvoControl.Server.ProtocolDriver\NuvoControl.Server.ProtocolDriver.csproj", "{C5C321D7-92B9-4A5B-A278-F89FF09664B2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Service", "Server\NuvoControl.Server.Service\NuvoControl.Server.Service.csproj", "{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.COMListener", "Test\NuvoControl.Test.COMListener\NuvoControl.Test.COMListener.csproj", "{65167131-3AD1-4032-8777-5F5F6D3DAE72}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Test.RS232", "Test\NuvoControl.Test.RS232\NuvoControl.Test.RS232.csproj", "{1BAAB9D4-EBFE-4648-870C-BE17FE90EB9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver.Interface", "Server\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj", "{817F6C4B-65C6-4A90-966E-F76FD8AC4202}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.Service.UnitTest", "Server\NuvoControl.Server.Service.UnitTest\NuvoControl.Server.Service.UnitTest.csproj", "{05289193-1724-4430-9EED-CD1E2D819F4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ProtocolDriver.UnitTest", "Server\NuvoControl.Server.ProtocolDriver.UnitTest\NuvoControl.Server.ProtocolDriver.UnitTest.csproj", "{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}"
 EndProject
@@ -28,6 +22,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuvoControl2.vsmdi = NuvoControl2.vsmdi
 		NuvoControl3.vsmdi = NuvoControl3.vsmdi
 		NuvoControl4.vsmdi = NuvoControl4.vsmdi
+		NuvoControl7.vsmdi = NuvoControl7.vsmdi
 		READ-ME.txt = READ-ME.txt
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
@@ -58,13 +53,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClassDiagrams", "ClassDiagr
 		READ-ME ClassDiagrams.txt = READ-ME ClassDiagrams.txt
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ZoneServer", "Server\NuvoControl.Server.ZoneServer\NuvoControl.Server.ZoneServer.csproj", "{A4C12624-2950-45AC-9A17-B83AD9427331}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ConfigurationService", "Server\NuvoControl.Server.ConfigurationService\NuvoControl.Server.ConfigurationService.csproj", "{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorAndControlService", "Server\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj", "{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.WcfHostConsole", "Server\NuvoControl.Server.WcfHostConsole\NuvoControl.Server.WcfHostConsole.csproj", "{58DCB860-91E2-4A66-8459-1FBE41C64FCC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ConfigurationService.UnitTest", "Server\NuvoControl.Server.ConfigurationService.UnitTest\NuvoControl.Server.ConfigurationService.UnitTest.csproj", "{05289193-1724-4430-9EED-CD1E2D819F4D}"
+EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NuvoControl2.vsmdi
+		CategoryFile = NuvoControl7.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,10 +76,6 @@ Global
 		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{295804DA-0A18-4B2D-A9EE-4B1813A408BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,10 +84,6 @@ Global
 		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5C321D7-92B9-4A5B-A278-F89FF09664B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65167131-3AD1-4032-8777-5F5F6D3DAE72}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -103,10 +96,6 @@ Global
 		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{817F6C4B-65C6-4A90-966E-F76FD8AC4202}.Release|Any CPU.Build.0 = Release|Any CPU
-		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C8A5D1E-9D3B-4B51-96FF-2AB498A026D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -127,6 +116,26 @@ Global
 		{E28FAAE1-87BE-4C98-AD54-E867E6D88DD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E28FAAE1-87BE-4C98-AD54-E867E6D88DD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E28FAAE1-87BE-4C98-AD54-E867E6D88DD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4C12624-2950-45AC-9A17-B83AD9427331}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4C12624-2950-45AC-9A17-B83AD9427331}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4C12624-2950-45AC-9A17-B83AD9427331}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4C12624-2950-45AC-9A17-B83AD9427331}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -134,5 +143,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{482B5795-E159-4968-9BB4-85E8CAC6E0C2} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
 		{3B6640D6-D2CA-4048-B143-4DA380D5C590} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
