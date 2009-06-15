@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="IProtocol is the MAIN interface. It defines the general interface and should be used by any application.">
+    <Position X="1.393" Y="2.014" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="INuvoProtocol extends the general interface IProtocol with specific methods for Nuvo devices.">
+    <Position X="1.5" Y="0.5" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="The interface INuvoEssentiaProtocol defines the interface a Nuvo essentia protocol driver needs to implement.">
+    <Position X="0.625" Y="4" Height="0.594" Width="2.262" />
+  </Comment>
+  <Comment CommentText="The interface INuvoTelegram defines the interface any Nuvo device telegram driver needs to implement.">
+    <Position X="1.51" Y="6.018" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="The interface ISerialPort defines the interface a serial port driver needs to implement.">
+    <Position X="1.5" Y="8" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="The class SerialPortConnectInformation is used in the Open method to pass the required connection information to establish a connection to the device.">
+    <Position X="6.5" Y="1.104" Height="0.521" Width="3.981" />
+  </Comment>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.SerialPortEventArgs" Collapsed="true">
+    <Position X="5.25" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAIAAAAAA=</HashCode>
+      <FileName>ISerialPort.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.SerialPortConnectInformation" Collapsed="true">
+    <Position X="6.5" Y="0.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AIAAACAAACAAACAEAABAAAgAAAACAAAAAAAEAAAUAAA=</HashCode>
+      <FileName>ISerialPort.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoTelegramEventArgs" Collapsed="true">
+    <Position X="5.25" Y="6" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAIAAAAAA=</HashCode>
+      <FileName>INuvoTelegram.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoEssentiaProtocolEventArgs" Collapsed="true">
+    <Position X="5.25" Y="4" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAABAAAAAAAAAAAEAAAABAAAAA=</HashCode>
+      <FileName>INuvoEssentiaProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolCommandReceivedEventArgs" Collapsed="true">
+    <Position X="5.25" Y="2" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAABAAAAAAAAgAAEAQAAAAAAAA=</HashCode>
+      <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolZoneUpdatedEventArgs" Collapsed="true">
+    <Position X="8.5" Y="2" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAAAQEAAAAgAAAAAAAAAAAgAAEAQAAAAAAAA=</HashCode>
+      <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.ISerialPort" Collapsed="true">
+    <Position X="3.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>IAAQAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAGAAAA=</HashCode>
+      <FileName>ISerialPort.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoTelegram" Collapsed="true">
+    <Position X="3.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAACAAAIAAAAAAAAAAAAAAAAAAAAAAAAACAABA=</HashCode>
+      <FileName>INuvoTelegram.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoProtocol" Collapsed="true">
+    <Position X="3.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAACAAAAAAAAAA=</HashCode>
+      <FileName>INuvoProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoEssentiaProtocol" Collapsed="true">
+    <Position X="3" Y="4" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAAAAEAACAAAAACAAAA=</HashCode>
+      <FileName>INuvoEssentiaProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.IProtocol" Collapsed="true">
+    <Position X="3.5" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACABAIQAAAAAIAAAAAAAAAAEAgAAAEAAAAAAAACAAAE=</HashCode>
+      <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.SerialPortEventHandler" Collapsed="true">
+    <Position X="5.25" Y="8.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAEA=</HashCode>
+      <FileName>ISerialPort.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoTelegramEventHandler" Collapsed="true">
+    <Position X="5.25" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INuvoTelegram.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoEssentiaProtocolEventHandler" Collapsed="true">
+    <Position X="5.25" Y="4.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAUAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>INuvoEssentiaProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolCommandReceivedEventHandler" Collapsed="true">
+    <Position X="5.25" Y="2.75" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolZoneUpdatedEventHandler" Collapsed="true">
+    <Position X="8.5" Y="2.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>

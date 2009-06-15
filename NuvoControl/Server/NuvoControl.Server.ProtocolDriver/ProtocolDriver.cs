@@ -35,7 +35,8 @@ namespace NuvoControl.Server.ProtocolDriver
     /// It implements the extended <c>iNuvoProtocol</c> interface, which inherits from 
     /// <c>IProtocol</c> interface.
     /// An application should use this class to instantiate a protocol stack.
-    /// The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
+    /// <br/>The following class diagram shows the interface hirarchy: <a href="../ClassDiagrams/ProtocolDriverInterfaceOverview.jpg">ProtocolDriverInterfaceOverview</a>
+    /// <br/>The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
     public class NuvoEssentiaProtocolDriver : INuvoProtocol
     {
