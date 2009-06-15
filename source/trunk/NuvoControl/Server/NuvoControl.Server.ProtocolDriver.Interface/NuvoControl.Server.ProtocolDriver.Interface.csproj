@@ -58,6 +58,8 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="INuvoProtocol.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="SerialPortFactory.cs" />
     <Compile Include="INuvoEssentiaCommand.cs" />
     <Compile Include="INuvoEssentiaSingleCommand.cs" />

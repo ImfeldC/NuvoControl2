@@ -107,26 +107,25 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
 
     /// <summary>
-    /// 
+    /// This is the main interface used by the NuvoControl Monitor and Control Service.
+    /// All systems - which would like to be monitored and controlled - by NuvoControl
+    /// are required to implement this interface.
+    /// <br/>The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
     public interface IProtocol
     {
         event ProtocolCommandReceivedEventHandler onCommandReceived;
         event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
 
-        //TODO: Discuss how to pass communication confugurations correct (IPorotocol should not be aware of Baudrate)
         void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration);
-        void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol);
         void Close(int deviceId);
 
-        void ReadZoneStatus(Address zoneAddress);
+        void ReadZoneState(Address zoneAddress);
+        void SetZoneState(Address zoneAddress, ZoneState zoneState);
         void CommandSwitchZoneON(Address zoneAddress);
         void CommandSwitchZoneOFF(Address zoneAddress);
         void CommandSetSource(Address zoneAddress, Address sourceAddress);
         void CommandSetVolume(Address zoneAddress, int volumeLevel);
 
-        //TODO: Is this allowed, this method is only available for a specific device
-        void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command);
-        void SendCommand(Address zoneAddress, INuvoEssentiaCommand command);
     }
 }
