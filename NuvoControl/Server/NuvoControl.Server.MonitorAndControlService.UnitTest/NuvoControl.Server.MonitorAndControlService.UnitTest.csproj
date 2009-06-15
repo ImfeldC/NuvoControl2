@@ -59,7 +59,6 @@
   <ItemGroup>
     <Compile Include="MonitorAndControlServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTest1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AuthoringTests.txt" />
@@ -74,7 +73,7 @@
       <Name>NuvoControl.Server.Dal</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj">
-      <Project>{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}</Project>
+      <Project>{96A210B6-CCD8-451A-898F-BE40D09BAA49}</Project>
       <Name>NuvoControl.Server.MonitorAndControlService</Name>
     </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
@@ -85,9 +84,6 @@
       <Project>{A4C12624-2950-45AC-9A17-B83AD9427331}</Project>
       <Name>NuvoControl.Server.ZoneServer</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Shadow Include="Test References\NuvoControl.Server.MonitorAndControlService.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
