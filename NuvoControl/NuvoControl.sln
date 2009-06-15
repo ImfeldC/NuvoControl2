@@ -23,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuvoControl3.vsmdi = NuvoControl3.vsmdi
 		NuvoControl4.vsmdi = NuvoControl4.vsmdi
 		NuvoControl7.vsmdi = NuvoControl7.vsmdi
+		NuvoControl8.vsmdi = NuvoControl8.vsmdi
 		READ-ME.txt = READ-ME.txt
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
@@ -63,9 +64,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.WcfHostC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ConfigurationService.UnitTest", "Server\NuvoControl.Server.ConfigurationService.UnitTest\NuvoControl.Server.ConfigurationService.UnitTest.csproj", "{05289193-1724-4430-9EED-CD1E2D819F4D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorAndControlService.UnitTest", "Server\NuvoControl.Server.MonitorAndControlService.UnitTest\NuvoControl.Server.MonitorAndControlService.UnitTest.csproj", "{383C3809-5A27-4125-BA55-1B53428CE1D1}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NuvoControl7.vsmdi
+		CategoryFile = NuvoControl8.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -136,6 +139,10 @@ Global
 		{05289193-1724-4430-9EED-CD1E2D819F4D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{05289193-1724-4430-9EED-CD1E2D819F4D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
