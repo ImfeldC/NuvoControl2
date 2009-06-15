@@ -317,7 +317,12 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
             throw new System.NotImplementedException();
         }
 
-        public void ReadZoneStatus(Address zoneAddress)
+        public void ReadZoneState(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void SetZoneState(Address zoneAddress, ZoneState zoneState)
         {
             throw new System.NotImplementedException();
         }
@@ -361,19 +366,5 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         #endregion
 
-        #region IProtocol Members
-
-
-        public void ReadZoneState(Address zoneAddress)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public void SetZoneState(Address zoneAddress, ZoneState zoneState)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        #endregion
     }
 }
