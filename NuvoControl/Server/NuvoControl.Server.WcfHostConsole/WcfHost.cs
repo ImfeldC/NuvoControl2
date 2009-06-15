@@ -7,12 +7,10 @@ using System.ServiceModel;
 using Common.Logging;
 
 using NuvoControl.Common.Configuration;
-using NuvoControl.Server.WcfService;
-using NuvoControl.Server.Service;
-using NuvoControl.Server.Service.Configuration;
+using NuvoControl.Server.MonitorAndControlService;
+using NuvoControl.Server.ConfigurationService;
 using NuvoControl.Server.ProtocolDriver.Interface;
-using NuvoControl.Server.Service.MandC;
-using NuvoControl.Server.Service.Zones;
+using NuvoControl.Server.ZoneServer;
 
 
 namespace NuvoControl.Server.WcfService
@@ -26,7 +24,7 @@ namespace NuvoControl.Server.WcfService
         /// <summary>
         /// Holds the loaded system configuration.
         /// </summary>
-        private static ConfigurationService _configurationService = null;
+        private static NuvoControl.Server.ConfigurationService.ConfigurationService _configurationService = null;
 
         /// <summary>
         /// Holds the protocol drivers per NuvoEssentia.
@@ -79,7 +77,8 @@ namespace NuvoControl.Server.WcfService
             Console.WriteLine();
 
             ServiceHost configurationServiceHost = new ServiceHost(_configurationService);
-            ServiceHostMc mCServiceHost = new ServiceHostMc(typeof(MonitorAndControlService), _zoneServer);
+            ServiceHostMc mCServiceHost = new ServiceHostMc(
+                typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer);
 
             try
             {
@@ -135,7 +134,7 @@ namespace NuvoControl.Server.WcfService
             _log.Info("Loading the nuvo control configuration...");
             Console.WriteLine(">>> Loading configuration...");
 
-            _configurationService = new ConfigurationService(configurationFile);
+            _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile);
         }
 
         /// <summary>
@@ -175,7 +174,7 @@ namespace NuvoControl.Server.WcfService
                     zoneControllers.Add(new ZoneController(new Address(device.Id, zoneId), _protocolDrivers[device.Id]));
                 }
             }
-            _zoneServer = new ZoneServer(zoneControllers);
+            _zoneServer = new NuvoControl.Server.ZoneServer.ZoneServer(zoneControllers);
         }
 
 

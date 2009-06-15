@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{58DCB860-91E2-4A66-8459-1FBE41C64FCC}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <ProjectGuid>{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}</ProjectGuid>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NuvoControl.Server.WcfHostConsole</RootNamespace>
-    <AssemblyName>NuvoControl.Server.WcfHostConsole</AssemblyName>
+    <RootNamespace>NuvoControl.Server.ConfigurationService</RootNamespace>
+    <AssemblyName>NuvoControl.Server.ConfigurationService</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -52,7 +52,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="WcfHost.cs" />
+    <Compile Include="ConfigurationService.cs" />
+    <Compile Include="IConfigure.cs" />
+    <Compile Include="IConfigureInternal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -60,32 +62,10 @@
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NuvoControl.Server.ConfigurationService\NuvoControl.Server.ConfigurationService.csproj">
-      <Project>{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}</Project>
-      <Name>NuvoControl.Server.ConfigurationService</Name>
+    <ProjectReference Include="..\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj">
+      <Project>{295025FA-7870-4A53-996F-2CDCE2AFBAFF}</Project>
+      <Name>NuvoControl.Server.Dal</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj">
-      <Project>{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}</Project>
-      <Name>NuvoControl.Server.MonitorAndControlService</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
-      <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
-      <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver\NuvoControl.Server.ProtocolDriver.csproj">
-      <Project>{C5C321D7-92B9-4A5B-A278-F89FF09664B2}</Project>
-      <Name>NuvoControl.Server.ProtocolDriver</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NuvoControl.Server.ZoneServer\NuvoControl.Server.ZoneServer.csproj">
-      <Project>{A4C12624-2950-45AC-9A17-B83AD9427331}</Project>
-      <Name>NuvoControl.Server.ZoneServer</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Service References\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

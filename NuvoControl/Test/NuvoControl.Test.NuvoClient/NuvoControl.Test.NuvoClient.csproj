@@ -88,6 +88,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="COMListener.resx">
       <DependentUpon>COMListener.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -111,10 +112,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Common\NuvoControl.Common.Interfaces\NuvoControl.Common.Interfaces.csproj">
-      <Project>{EDE66754-2D50-4E5D-BCE3-B825414AE4DC}</Project>
-      <Name>NuvoControl.Common.Interfaces</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
