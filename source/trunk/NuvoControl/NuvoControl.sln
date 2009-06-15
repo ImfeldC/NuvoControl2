@@ -58,18 +58,15 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ZoneServ
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ConfigurationService", "Server\NuvoControl.Server.ConfigurationService\NuvoControl.Server.ConfigurationService.csproj", "{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorAndControlService", "Server\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj", "{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.WcfHostConsole", "Server\NuvoControl.Server.WcfHostConsole\NuvoControl.Server.WcfHostConsole.csproj", "{58DCB860-91E2-4A66-8459-1FBE41C64FCC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.ConfigurationService.UnitTest", "Server\NuvoControl.Server.ConfigurationService.UnitTest\NuvoControl.Server.ConfigurationService.UnitTest.csproj", "{05289193-1724-4430-9EED-CD1E2D819F4D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorAndControlService.UnitTest", "Server\NuvoControl.Server.MonitorAndControlService.UnitTest\NuvoControl.Server.MonitorAndControlService.UnitTest.csproj", "{383C3809-5A27-4125-BA55-1B53428CE1D1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorAndControlService", "Server\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj", "{96A210B6-CCD8-451A-898F-BE40D09BAA49}"
+EndProject
 Global
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NuvoControl8.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -127,10 +124,6 @@ Global
 		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58DCB860-91E2-4A66-8459-1FBE41C64FCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -143,6 +136,10 @@ Global
 		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{383C3809-5A27-4125-BA55-1B53428CE1D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
