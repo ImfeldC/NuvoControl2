@@ -21,20 +21,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Graphic
     {
         #region Private Members
 
+        [DataMember]
         private Building _building = null;
+        [DataMember]
         private List<Source> _sources = new List<Source>();
 
         #endregion
 
         #region Constructors
+
+        public Graphic()
+        {
+        }
 
         public Graphic(Building building, List<Source> sources)
         {

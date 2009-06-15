@@ -22,9 +22,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Drawing;
-
 using System.Runtime.Serialization;
-using System.ServiceModel;
 
 namespace NuvoControl.Common.Configuration
 {
@@ -33,10 +31,15 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
+        [DataMember]
         private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        [DataMember]
         private string _name = String.Empty;
-        string _picturePath = String.Empty;
+        [DataMember]
+        private string _picturePath = String.Empty;
+        [DataMember]
         private string _pictureType = String.Empty;
+        [DataMember]
         private List<Point> _floorPlanCoordinates = new List<Point>();
 
         #endregion
@@ -60,39 +63,29 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface Members
 
-        [DataMember]
         public Address Id
         {
             get { return _id; }
-            set { _id = value; }
         }
 
-        [DataMember]
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
-        [DataMember]
         public string PicturePath
         {
             get { return _picturePath; }
-            set { _picturePath = value; }
         }
 
-        [DataMember]
         public string PictureType
         {
             get { return _pictureType; }
-            set { _pictureType = value; }
         }
 
-        [DataMember]
         public List<Point> FloorPlanCoordinates
         {
             get { return _floorPlanCoordinates; }
-            set { _floorPlanCoordinates = value; }
         }
 
         #endregion

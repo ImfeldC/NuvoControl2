@@ -21,23 +21,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Communication
     {
         #region Private Members
 
+        [DataMember]
         private string _port = "COM1";
+        [DataMember]
         private int _baudRate = 9600;
+        [DataMember]
         private int _dataBits = 8;
+        [DataMember]
         private int _parityBit = 1;
+        [DataMember]
         private string _parityMode = "No";
 
         #endregion
 
         #region Constructors
+
+        public Communication()
+        {
+        }
 
         public Communication(string port, int baudRate, int dataBits, int parityBit, string parityMode)
         {

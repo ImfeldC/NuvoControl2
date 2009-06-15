@@ -21,23 +21,33 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class NuvoEssentia
     {
         #region Private Members
 
+        [DataMember]
         private int _id = SystemConfiguration.ID_UNDEFINED;
+        [DataMember]
         Communication _communication = null;
+        [DataMember]
         private Protocol _protocolDriver = null;
+        [DataMember]
         private List<int> _zones = new List<int>();
+        [DataMember]
         private List<int> _sources = new List<int>();
 
         #endregion
 
         #region Constructors
+
+        public NuvoEssentia()
+        {
+        }
 
         public NuvoEssentia(int id, Communication communication, Protocol protocolDriver, List<int> zones, List<int> sources)
         {

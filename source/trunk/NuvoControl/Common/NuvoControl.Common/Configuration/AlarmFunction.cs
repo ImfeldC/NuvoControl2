@@ -21,22 +21,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
-    public class AlarmFunction: Function
+    [DataContract]
+    public class AlarmFunction : Function
     {
         #region Private Members
 
+        [DataMember]
         private TimeSpan _alarmTime = new TimeSpan(7, 0, 0);
+        [DataMember]
         private TimeSpan _alarmDuration = new TimeSpan(0, 10, 0);
+        [DataMember]
         private Address _sourceId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        [DataMember]
         private List<DayOfWeek> _validOnDays = new List<DayOfWeek>();
 
         #endregion
 
         #region Constructors
+
+        public AlarmFunction()
+        {
+        }
 
         public AlarmFunction(Guid id, Address zoneId, Address sourceId, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
             : base(id, zoneId)

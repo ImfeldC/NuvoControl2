@@ -21,22 +21,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Source
     {
         #region Private Members
 
+        [DataMember]
         private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        [DataMember]
         private string _name = String.Empty;
+        [DataMember]
         private string _picturePath = String.Empty;
+        [DataMember]
         private string _pictureType = String.Empty;
 
         #endregion
 
         #region Constructors
+
+        public Source()
+        {
+        }
 
         public Source(Address id, string name, string picturePath, string pictureType)
         {

@@ -35,11 +35,17 @@ namespace NuvoControl.Common.Interfaces
     [ServiceContract]
     public interface IConfigure
     {
-        Graphic GetGraphicConfiguration();
         [OperationContract]
-        Zone GetZoneKonfiguration(int zoneId);
+        Graphic GetGraphicConfiguration();
+
+        [OperationContract]
+        Zone GetZoneKonfiguration(Address zoneId);
+
+        [OperationContract]
         Function GetFunction(Guid id);
+        [OperationContract]
         List<Function> GetFunctions(Address zoneId);
+        [OperationContract]
         bool AddFunction(Function newFunction);
     }
 }
