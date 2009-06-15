@@ -131,10 +131,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         }
 
         /// <summary>
-        /// A test for ReadZoneStatus
+        /// A test for ReadZoneState
         /// </summary>
         [TestMethod()]
-        public void ReadZoneStatusTest()
+        public void ReadZoneStateTest()
         {
             Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
             _protDriver.ReadZoneState(zoneAddress);
