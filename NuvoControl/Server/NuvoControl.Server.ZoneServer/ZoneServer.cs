@@ -55,32 +55,43 @@ namespace NuvoControl.Server.ZoneServer
 
         #endregion
 
-
         #region IZoneServer Members
 
         public ZoneState GetZoneState(Address zoneId)
         {
-            ValidateZone(zoneId);
-            return _zoneControllers[zoneId].ZoneState;
+            lock (this)
+            {
+                ValidateZone(zoneId);
+                return _zoneControllers[zoneId].ZoneState;
+            }
         }
 
 
         public void SetZoneState(Address zoneId, ZoneState zoneState)
         {
-            ValidateZone(zoneId);
-            _zoneControllers[zoneId].SetZoneState(zoneState);
+            lock (this)
+            {
+                ValidateZone(zoneId);
+                _zoneControllers[zoneId].SetZoneState(zoneState);
+            }
         }
 
         public void Monitor(Address zoneId, ZoneNotification subscriber)
         {
-            ValidateZone(zoneId);
-            _zoneControllers[zoneId].Monitor(subscriber);
+            lock (this)
+            {
+                ValidateZone(zoneId);
+                _zoneControllers[zoneId].Monitor(subscriber);
+            }
         }
 
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)
         {
-            ValidateZone(zoneId);
-            _zoneControllers[zoneId].RemoveMonitor(subscriber);
+            lock (this)
+            {
+                ValidateZone(zoneId);
+                _zoneControllers[zoneId].RemoveMonitor(subscriber);
+            }
         }
 
 

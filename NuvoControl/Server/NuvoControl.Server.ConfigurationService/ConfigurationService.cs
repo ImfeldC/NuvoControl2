@@ -32,7 +32,7 @@ using System.ServiceModel;
 
 namespace NuvoControl.Server.ConfigurationService
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
     public class ConfigurationService : IConfigureInternal, IDisposable
     {
         #region Fields
@@ -115,28 +115,31 @@ namespace NuvoControl.Server.ConfigurationService
         /// <returns>True, if the system configuration is valid. Otherwise false.</returns>
         public bool Validate()
         {
-            try
+            lock (this)
             {
-                if (_systemConfiguration == null)
-                    Initialize();
+                try
+                {
+                    if (_systemConfiguration == null)
+                        Initialize();
 
-                if (ValidateDevices() == false)
-                    return false;
-                if (ValidateGraphicFloorZones() == false)
-                    return false;
-                if (ValidateGraphicSources() == false)
-                    return false;
-                if (ValidateFunctionZone() == false)
-                    return false;
-                if (ValidateAlarmFunctionSource() == false)
-                    return false;
+                    if (ValidateDevices() == false)
+                        return false;
+                    if (ValidateGraphicFloorZones() == false)
+                        return false;
+                    if (ValidateGraphicSources() == false)
+                        return false;
+                    if (ValidateFunctionZone() == false)
+                        return false;
+                    if (ValidateAlarmFunctionSource() == false)
+                        return false;
 
-                return true;
-            }
-            catch (Exception exc)
-            {
-                _log.Error("Validation of the xml configuration file failed.", exc);
-                return false;
+                    return true;
+                }
+                catch (Exception exc)
+                {
+                    _log.Error("Validation of the xml configuration file failed.", exc);
+                    return false;
+                }
             }
         }
 
