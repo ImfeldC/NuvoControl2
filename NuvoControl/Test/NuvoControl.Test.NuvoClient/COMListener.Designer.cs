@@ -30,7 +30,7 @@ namespace NuvoControl.Test.NuvoClient
     partial class NuvoClient
     {
         // Private members
-        IProtocol _nuvoServer;
+        INuvoProtocol _nuvoServer;
         MessageQueue _msgQueue;
 
 
