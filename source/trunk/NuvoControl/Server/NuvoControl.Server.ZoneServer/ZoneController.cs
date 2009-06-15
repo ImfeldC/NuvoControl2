@@ -101,9 +101,9 @@ namespace NuvoControl.Server.ZoneServer
         /// <param name="zoneState"></param>
         public void SetZoneState(ZoneState zoneState)
         {
-            lock (_zoneState)
+            lock (this)
             {
-                //_protocolDriver.re
+                _protocolDriver.CommandSwitchZoneON(_zoneId);
                 _zoneState.CommandUnacknowledged = true;
             }
             NotifySubscribedClients();
@@ -115,14 +115,17 @@ namespace NuvoControl.Server.ZoneServer
         /// <param name="subscriber"></param>
         public void Monitor(ZoneNotification subscriber)
         {
-            try
+            lock (this)
             {
-                _zoneNotification += subscriber;
-            }
-            catch (ArgumentException exc)
-            {
-                _log.Error("Failed to subscribe for the zone.", exc);
-                throw exc;
+                try
+                {
+                    _zoneNotification += subscriber;
+                }
+                catch (ArgumentException exc)
+                {
+                    _log.Error("Failed to subscribe for the zone.", exc);
+                    throw exc;
+                }
             }
         }
 
@@ -132,13 +135,16 @@ namespace NuvoControl.Server.ZoneServer
         /// <param name="subscriber"></param>
         public void RemoveMonitor(ZoneNotification subscriber)
         {
-            try
+            lock (this)
             {
-                _zoneNotification -= subscriber;
-            }
-            catch (Exception exc)
-            {
-                _log.Warn("Failed to unsubscribe for the zone.", exc);
+                try
+                {
+                    _zoneNotification -= subscriber;
+                }
+                catch (Exception exc)
+                {
+                    _log.Warn("Failed to unsubscribe for the zone.", exc);
+                }
             }
         }
 
