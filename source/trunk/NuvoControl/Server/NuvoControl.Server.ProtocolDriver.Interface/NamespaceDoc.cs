@@ -11,6 +11,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 {
     /// <summary>
     /// This namespace contains the public interface(s) to access the protocol driver.
+    /// <br/>The following class diagram shows the interface hirarchy: <a href="../ClassDiagrams/ProtocolDriverInterfaceOverview.jpg">ProtocolDriverInterfaceOverview</a>
     /// <br/>The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
     #region Namespace Documentation (required for Sandcastle documentation tool)

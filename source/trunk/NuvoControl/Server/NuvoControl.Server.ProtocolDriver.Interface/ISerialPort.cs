@@ -37,11 +37,19 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         string _msg;
 
+        /// <summary>
+        /// Retunrs the message, received with thîs event.
+        /// </summary>
         public string Message
         {
             get { return _msg; }
         }
 
+        /// <summary>
+        /// Constructor, for this argument class.
+        /// The parameter <c>msg</c> sets the message string.
+        /// </summary>
+        /// <param name="msg"></param>
         public SerialPortEventArgs(string msg)
         {
             _msg = msg;
@@ -55,35 +63,56 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public class SerialPortConnectInformation
     {
         private string _portName;
+        private int _baudRate;
+        private Parity _parity;
+        private int _dataBits;
+        StopBits _stopBits;
+
+        /// <summary>
+        /// Returns the port name, e.g. "COM1"
+        /// </summary>
         public string PortName
         {
             get { return _portName; }
         }
 
-        private int _baudRate;
+        /// <summary>
+        /// Retruns the Baud rate, e.g. 9600
+        /// </summary>
         public int BaudRate
         {
             get { return _baudRate; }
         }
 
-        private Parity _parity;
+        /// <summary>
+        /// Returns the Parit mode, e.g. 'Odd' or 'Even'
+        /// </summary>
         public Parity Parity
         {
             get { return _parity; }
         }
 
-        private int _dataBits;
+        /// <summary>
+        /// Retruns the Data bits, e.g. 1
+        /// </summary>
         public int DataBits
         {
             get { return _dataBits; }
         }
 
-        StopBits _stopBits;
+        /// <summary>
+        /// Returns the Stop bits, e.g. 'None' or 'One'
+        /// </summary>
         public StopBits StopBits
         {
             get { return _stopBits; }
         }
 
+        /// <summary>
+        /// Returns a string representative, for this object.
+        /// The format is like: "PortName={0}, BaudRate={1}, Parity={2}, DataBits={3}, StopBits={4}"
+        /// </summary>
+        /// <returns>String representative for this object.</returns>
         public override string ToString()
         {
             return string.Format("PortName={0}, BaudRate={1}, Parity={2}, DataBits={3}, StopBits={4}",
@@ -92,62 +121,47 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
 
 
-        //
-        // Summary:
-        //     Initializes a new instance of the System.IO.Ports.SerialPort class using
-        //     the specified port name.
-        //
-        // Parameters:
-        //   portName:
-        //     The port to use (for example, COM1).
-        //
-        // Exceptions:
-        //   System.IO.IOException:
-        //     The specified port could not be found or opened.
+        /// <summary>
+        ///     Initializes a new instance of the System.IO.Ports.SerialPort class using
+        ///     the specified port name.
+        ///
+        /// Exceptions:
+        ///   System.IO.IOException:
+        ///     The specified port could not be found or opened.
+        /// </summary>
+        /// <param name="portName">The port to use (for example, COM1).</param>
         public SerialPortConnectInformation(string portName)
         {
             _portName = portName;
         }
 
-        //
-        // Summary:
-        //     Initializes a new instance of the System.IO.Ports.SerialPort class using
-        //     the specified port name and baud rate.
-        //
-        // Parameters:
-        //   portName:
-        //     The port to use (for example, COM1).
-        //
-        //   baudRate:
-        //     The baud rate.
-        //
-        // Exceptions:
-        //   System.IO.IOException:
-        //     The specified port could not be found or opened.
+
+
+        /// <summary>
+        ///    Initializes a new instance of the System.IO.Ports.SerialPort class using
+        ///    the specified port name and baud rate.
+        ///Exceptions:
+        ///  System.IO.IOException:
+        ///    The specified port could not be found or opened.
+        /// </summary>
+        /// <param name="portName">The port to use (for example, COM1).</param>
+        /// <param name="baudRate">The baud rate.</param>
         public SerialPortConnectInformation(string portName, int baudRate)
         {
             _portName = portName;
             _baudRate = baudRate;
         }
 
-        //
-        // Summary:
-        //     Initializes a new instance of the System.IO.Ports.SerialPort class using
-        //     the specified port name, baud rate, and parity bit.
-        //
-        // Parameters:
-        //   portName:
-        //     The port to use (for example, COM1).
-        //
-        //   baudRate:
-        //     The baud rate.
-        //
-        //   parity:
-        //     One of the System.IO.Ports.SerialPort.Parity values.
-        //
-        // Exceptions:
-        //   System.IO.IOException:
-        //     The specified port could not be found or opened.
+        /// <summary>
+        ///     Initializes a new instance of the System.IO.Ports.SerialPort class using
+        ///     the specified port name, baud rate, and parity bit.
+        /// Exceptions:
+        ///   System.IO.IOException:
+        ///     The specified port could not be found or opened.
+        /// </summary>
+        /// <param name="portName">The port to use (for example, COM1).</param>
+        /// <param name="baudRate">The baud rate.</param>
+        /// <param name="parity">One of the System.IO.Ports.SerialPort.Parity values.</param>
         public SerialPortConnectInformation(string portName, int baudRate, Parity parity)
         {
             _portName = portName;
@@ -155,27 +169,18 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _parity = parity;
         }
 
-        //
-        // Summary:
-        //     Initializes a new instance of the System.IO.Ports.SerialPort class using
-        //     the specified port name, baud rate, parity bit, and data bits.
-        //
-        // Parameters:
-        //   portName:
-        //     The port to use (for example, COM1).
-        //
-        //   baudRate:
-        //     The baud rate.
-        //
-        //   parity:
-        //     One of the System.IO.Ports.SerialPort.Parity values.
-        //
-        //   dataBits:
-        //     The data bits value.
-        //
-        // Exceptions:
-        //   System.IO.IOException:
-        //     The specified port could not be found or opened.
+
+        /// <summary>
+        ///     Initializes a new instance of the System.IO.Ports.SerialPort class using
+        ///     the specified port name, baud rate, parity bit, and data bits.
+        /// Exceptions:
+        ///   System.IO.IOException:
+        ///     The specified port could not be found or opened.
+        /// </summary>
+        /// <param name="portName">The port to use (for example, COM1).</param>
+        /// <param name="baudRate">The baud rate.</param>
+        /// <param name="parity">One of the System.IO.Ports.SerialPort.Parity values.</param>
+        /// <param name="dataBits">The data bits value.</param>
         public SerialPortConnectInformation(string portName, int baudRate, Parity parity, int dataBits)
         {
             _portName = portName;
@@ -184,30 +189,19 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _dataBits = dataBits;
         }
 
-        //
-        // Summary:
-        //     Initializes a new instance of the System.IO.Ports.SerialPort class using
-        //     the specified port name, baud rate, parity bit, data bits, and stop bit.
-        //
-        // Parameters:
-        //   portName:
-        //     The port to use (for example, COM1).
-        //
-        //   baudRate:
-        //     The baud rate.
-        //
-        //   parity:
-        //     One of the System.IO.Ports.SerialPort.Parity values.
-        //
-        //   dataBits:
-        //     The data bits value.
-        //
-        //   stopBits:
-        //     One of the System.IO.Ports.SerialPort.StopBits values.
-        //
-        // Exceptions:
-        //   System.IO.IOException:
-        //     The specified port could not be found or opened.
+
+        /// <summary>
+        ///     Initializes a new instance of the System.IO.Ports.SerialPort class using
+        ///     the specified port name, baud rate, parity bit, data bits, and stop bit.
+        /// Exceptions:
+        ///   System.IO.IOException:
+        ///     The specified port could not be found or opened.
+        /// </summary>
+        /// <param name="portName">The port to use (for example, COM1).</param>
+        /// <param name="baudRate">The baud rate.</param>
+        /// <param name="parity">One of the System.IO.Ports.SerialPort.Parity values.</param>
+        /// <param name="dataBits">The data bits value.</param>
+        /// <param name="stopBits">One of the System.IO.Ports.SerialPort.StopBits values.</param>
         public SerialPortConnectInformation(string portName, int baudRate, Parity parity, int dataBits, StopBits stopBits)
         {
             _portName = portName;
@@ -219,6 +213,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     }
 
+    /// <summary>
+    /// Public interface, that defines the interface which needs to be implemented by a serial port
+    /// driver.
+    /// </summary>
     public interface ISerialPort
     {
 

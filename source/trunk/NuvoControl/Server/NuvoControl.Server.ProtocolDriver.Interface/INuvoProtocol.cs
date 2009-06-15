@@ -29,7 +29,18 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <param name="essentiaProtocol">Protocol stack, mainly used for mock test objects.</param>
         void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol);
 
+        /// <summary>
+        /// Sends a single command to the underlying device.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to send the command.</param>
+        /// <param name="command">Nuvo Command, which will be sent to the specified zone.</param>
         void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command);
+
+        /// <summary>
+        /// Sends a singel or combined command to the underlying device.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to send the command.</param>
+        /// <param name="command">Nuvo Command, which will be sent to the specified zone.</param>
         void SendCommand(Address zoneAddress, INuvoEssentiaCommand command);
     }
 }

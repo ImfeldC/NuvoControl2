@@ -51,6 +51,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Config", "Config", "{482B57
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClassDiagrams", "ClassDiagrams", "{3B6640D6-D2CA-4048-B143-4DA380D5C590}"
 	ProjectSection(SolutionItems) = preProject
+		ClassDiagrams\ProtocolDriverInterfaceOverview.jpg = ClassDiagrams\ProtocolDriverInterfaceOverview.jpg
 		ClassDiagrams\ProtocolDriverOverview.jpg = ClassDiagrams\ProtocolDriverOverview.jpg
 		ClassDiagrams\READ-ME ClassDiagrams.txt = ClassDiagrams\READ-ME ClassDiagrams.txt
 	EndProjectSection

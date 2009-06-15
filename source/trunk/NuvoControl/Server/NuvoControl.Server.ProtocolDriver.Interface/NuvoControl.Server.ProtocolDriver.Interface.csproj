@@ -73,6 +73,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="NuvoControl.Server.ProtocolDriver.Interface.cd" />
+    <None Include="ProtocolDriverInterfaceOverview.cd" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
