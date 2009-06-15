@@ -30,31 +30,22 @@ using NuvoControl.Common;
 namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
-    /// This namespace is used to hold all classes and interfaces related to the protocol driver stack.<br/>
-    /// The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
-    /// </summary>
-    #region Namespace Documentation (required for Sandcastle documentation tool)
-    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    class NamespaceDoc
-    {
-    }
-    #endregion
-
-
-    /// <summary>
     /// This class implements the protocol stack to acces the Nuvo Essentia.
     /// This is the main class which combins the access to the protocol stack.
-    /// It implements the IProtocol interface.
+    /// It implements the extended <c>iNuvoProtocol</c> interface, which inherits from 
+    /// <c>IProtocol</c> interface.
     /// An application should use this class to instantiate a protocol stack.
     /// The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
-    public class NuvoEssentiaProtocolDriver : IProtocol
+    public class NuvoEssentiaProtocolDriver : INuvoProtocol
     {
         private ILog _log = LogManager.GetCurrentClassLogger();
 
         Dictionary<int,INuvoEssentiaProtocol> _protocolList = new Dictionary<int,INuvoEssentiaProtocol>();
 
-
+        /// <summary>
+        /// Constructor for <c>NuvoEssentiaProtocolDriver</c>
+        /// </summary>
         public NuvoEssentiaProtocolDriver()
         {
             _log.Debug(m => m("Protocol Driver instantiated!"));
@@ -103,32 +94,6 @@ namespace NuvoControl.Server.ProtocolDriver
             Open(system, deviceId, communicationConfiguration, null);
         }
 
-        public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol)
-        {
-            if (system != ENuvoSystem.NuVoEssentia)
-            {
-                throw new ProtocolDriverException(string.Format("This system type is not supported! Cannot connect! '{0}'", system));
-            }
-            if (_protocolList.ContainsKey(deviceId))
-            {
-                throw new ProtocolDriverException(string.Format("A device with the id {0} is already registered. Cannot add a device with the same id!", deviceId));
-            }
-
-            // if not null, use the protocol object passed by the caller (e.g. as mock object for unit test)
-            _protocolList.Add(deviceId, ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId,null) : essentiaProtocol));
-
-            // register for events from protocol layer
-            _protocolList[deviceId].onCommandReceived += new NuvoEssentiaProtocolEventHandler(_essentiaProtocol_onCommandReceived);
-
-            // open connection to the protocol layer
-            _protocolList[deviceId].Open(new SerialPortConnectInformation(
-                communicationConfiguration.Port,                                            // e.g. "COM1"
-                communicationConfiguration.BaudRate,                                        // e.g. 9600
-                (Parity)Enum.Parse(typeof(Parity), communicationConfiguration.ParityMode),  // e.g. None
-                communicationConfiguration.DataBits,                                        // e.g. 8
-                (StopBits)communicationConfiguration.ParityBit));                           // e.g. 1 = StopBits
-        }
-
         public void Close(int deviceId)
         {
             checkZoneDeviceId(deviceId);
@@ -136,13 +101,33 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList.Remove(deviceId);
         }
 
-        public void ReadZoneStatus(Address zoneAddress)
+        public void ReadZoneState(Address zoneAddress)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
             INuvoEssentiaCommand command = new NuvoEssentiaCommand(
                 ENuvoEssentiaCommands.GetZoneStatus,
                 convertAddressZone2EssentiaZone(zoneAddress));
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
+        }
+
+        public void SetZoneState(Address zoneAddress, ZoneState zoneState)
+        {
+            if (zoneState.PowerStatus)
+            {
+                INuvoEssentiaCommand command = new NuvoEssentiaCommand(
+                    ENuvoEssentiaCommands.SetZoneStatus,
+                    convertAddressZone2EssentiaZone(zoneAddress),
+                    convertAddressSource2EssentiaSource(zoneState.Source), 
+                    zoneState.Volume);
+                _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            }
+            else
+            {
+                INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                    ENuvoEssentiaCommands.TurnZoneOFF,
+                    convertAddressZone2EssentiaZone(zoneAddress));
+                _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            }
         }
 
         public void CommandSwitchZoneON(Address zoneAddress)
@@ -181,6 +166,37 @@ namespace NuvoControl.Server.ProtocolDriver
                 convertAddressZone2EssentiaZone(zoneAddress),
                 volumeLevel);
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
+        }
+
+        #endregion
+
+
+        #region INuvoProtocol Members
+
+        public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol)
+        {
+            if (system != ENuvoSystem.NuVoEssentia)
+            {
+                throw new ProtocolDriverException(string.Format("This system type is not supported! Cannot connect! '{0}'", system));
+            }
+            if (_protocolList.ContainsKey(deviceId))
+            {
+                throw new ProtocolDriverException(string.Format("A device with the id {0} is already registered. Cannot add a device with the same id!", deviceId));
+            }
+
+            // if not null, use the protocol object passed by the caller (e.g. as mock object for unit test)
+            _protocolList.Add(deviceId, ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId, null) : essentiaProtocol));
+
+            // register for events from protocol layer
+            _protocolList[deviceId].onCommandReceived += new NuvoEssentiaProtocolEventHandler(_essentiaProtocol_onCommandReceived);
+
+            // open connection to the protocol layer
+            _protocolList[deviceId].Open(new SerialPortConnectInformation(
+                communicationConfiguration.Port,                                            // e.g. "COM1"
+                communicationConfiguration.BaudRate,                                        // e.g. 9600
+                (Parity)Enum.Parse(typeof(Parity), communicationConfiguration.ParityMode),  // e.g. None
+                communicationConfiguration.DataBits,                                        // e.g. 8
+                (StopBits)communicationConfiguration.ParityBit));                           // e.g. 1 = StopBits
         }
 
         public void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command)
