@@ -1,13 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Comment CommentText="This class is used by all other classes, to throw an exception in case of an error.">
-    <Position X="8.396" Y="0.5" Height="0.75" Width="1.752" />
+    <Position X="8.896" Y="0.5" Height="0.75" Width="1.752" />
   </Comment>
   <Comment CommentText="This two command classes are used to pass the received and sent commands between the different layers.">
-    <Position X="8.388" Y="2.427" Height="0.75" Width="1.7" />
+    <Position X="8.888" Y="2.427" Height="0.75" Width="1.7" />
+  </Comment>
+  <Comment CommentText="INuvoProtocol is an extension of the main interface IProtocol">
+    <Position X="0.645" Y="0.5" Height="0.646" Width="1.377" />
   </Comment>
   <Class Name="NuvoControl.Server.ProtocolDriver.SerialPort" Collapsed="true">
-    <Position X="0.5" Y="4.25" Width="1.75" />
+    <Position X="1" Y="4.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>IAAQAAAAAAAAIEAAEAAgAAAAAgAAAAIAAAAAAAGAAAA=</HashCode>
       <FileName>SerialPort.cs</FileName>
@@ -15,13 +18,17 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoTelegram" Collapsed="true">
-    <Position X="1.75" Y="3" Width="3.25" />
+    <Position X="2.25" Y="3" Width="3.25" />
     <AssociationLine Name="SerialPort" Type="NuvoControl.Server.ProtocolDriver.SerialPort">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-0.848" Y="0.331" />
       </MemberNameLabel>
     </AssociationLine>
-    <AssociationLine Name="SerialPortQueue" Type="NuvoControl.Server.ProtocolDriver.SerialPortQueue">
+    <AssociationLine Name="SerialPortQueue" Type="NuvoControl.Server.ProtocolDriver.SerialPortQueue" FixedToPoint="true">
+      <Path>
+        <Point X="3.875" Y="3.509" />
+        <Point X="3.875" Y="4.25" />
+      </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-1.192" Y="0.372" />
       </MemberNameLabel>
@@ -43,8 +50,12 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocol" Collapsed="true">
-    <Position X="1.75" Y="1.75" Width="3.25" />
-    <AssociationLine Name="NuvoTelegram" Type="NuvoControl.Server.ProtocolDriver.NuvoTelegram">
+    <Position X="2.25" Y="1.75" Width="3.25" />
+    <AssociationLine Name="NuvoTelegram" Type="NuvoControl.Server.ProtocolDriver.NuvoTelegram" FixedToPoint="true">
+      <Path>
+        <Point X="3.875" Y="2.259" />
+        <Point X="3.875" Y="3" />
+      </Path>
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-1.098" Y="0.143" />
       </MemberNameLabel>
@@ -59,14 +70,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" Collapsed="true">
-    <Position X="1.75" Y="0.5" Width="3.25" />
+    <Position X="2.25" Y="0.5" Width="3.25" />
     <AssociationLine Name="NuvoEssentiaProtocol" Type="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocol">
       <MemberNameLabel ManuallyPlaced="true">
         <Position X="-1.463" Y="0.247" />
       </MemberNameLabel>
     </AssociationLine>
     <TypeIdentifier>
-      <HashCode>ACABAIAAAAAAIEAAgAAAAAEEAgIIAEAACAACIACAAAE=</HashCode>
+      <HashCode>ACABAIQAAAAAIEAAgAAAAAEEAgIIAEAACAACAACAAAE=</HashCode>
       <FileName>ProtocolDriver.cs</FileName>
     </TypeIdentifier>
     <ShowAsAssociation>
@@ -75,14 +86,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.ProtocolDriverException" Collapsed="true">
-    <Position X="6" Y="0.5" Width="2.25" />
+    <Position X="6.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>ProtocolDriverException.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.SerialPortQueue" Collapsed="true">
-    <Position X="2.5" Y="4.25" Width="1.75" />
+    <Position X="3" Y="4.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>IAIQAUAAAAAAIEAAAAQAAAAAAAAQASAAAAAAAgGAAAI=</HashCode>
       <FileName>SerialPortQueue.cs</FileName>
@@ -90,7 +101,7 @@
     <Lollipop Position="0.1" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.Simulator.ProtocolDriverSimulator" Collapsed="true">
-    <Position X="4.5" Y="4.25" Width="2" />
+    <Position X="5" Y="4.25" Width="2" />
     <TypeIdentifier>
       <HashCode>IAAQAAAAAAAIIAAAAgAAAAEAAAAAAAAgAAAAAgGIAAA=</HashCode>
       <FileName>ProtocolDriverSimulator.cs</FileName>
@@ -98,7 +109,7 @@
     <Lollipop Position="0.596" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand" Collapsed="true">
-    <Position X="6" Y="3" Width="2.25" />
+    <Position X="6.5" Y="3" Width="2.25" />
     <TypeIdentifier>
       <HashCode>ECxwAARiBIDkCkcoAIhAFBBAhFAYHMy0k0glRNDCigE=</HashCode>
       <FileName>NuvoEssentiaSingleCommand.cs</FileName>
@@ -106,7 +117,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaCommand" Collapsed="true">
-    <Position X="6" Y="2" Width="2.25" />
+    <Position X="6.5" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAgABAAAAAIEAAAAAIAAAAAAAAAAAAQEAAAAAACAABA=</HashCode>
       <FileName>NuvoEssentiaCommand.cs</FileName>
