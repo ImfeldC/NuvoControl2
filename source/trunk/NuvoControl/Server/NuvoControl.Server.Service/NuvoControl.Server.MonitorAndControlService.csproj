@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.21022</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{D8A96EBE-A61E-477D-BD1C-4D0F465950FA}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>NuvoControl.Server.Service</RootNamespace>
+    <AssemblyName>NuvoControl.Server.Service</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>Rational ClearCase</SccProjectName>
+    <SccLocalPath>Rational ClearCase</SccLocalPath>
+    <SccAuxPath>Rational ClearCase</SccAuxPath>
+    <SccProvider>Rational ClearCase</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\NuvoControl.Server.Service.XML</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\NuvoControl.Server.Service.XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ExternalLibraries\Common.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="IMonitorAndControl.cs" />
+    <Compile Include="ServiceHostMc.cs" />
+    <Compile Include="MonitorAndControlService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
+      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
+      <Name>NuvoControl.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Server.Dal\NuvoControl.Server.Dal.csproj">
+      <Project>{295025FA-7870-4A53-996F-2CDCE2AFBAFF}</Project>
+      <Name>NuvoControl.Server.Dal</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
+      <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Server.ZoneServer\NuvoControl.Server.ZoneServer.csproj">
+      <Project>{A4C12624-2950-45AC-9A17-B83AD9427331}</Project>
+      <Name>NuvoControl.Server.ZoneServer</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
