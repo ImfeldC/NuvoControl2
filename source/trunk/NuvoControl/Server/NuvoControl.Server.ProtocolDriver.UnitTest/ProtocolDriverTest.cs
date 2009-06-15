@@ -23,6 +23,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ProtocolDriver.Test.Mock;
 using Common.Logging;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.ProtocolDriver.Test
 {
@@ -136,11 +137,57 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void ReadZoneStatusTest()
         {
             Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
-            _protDriver.ReadZoneStatus(zoneAddress);
+            _protDriver.ReadZoneState(zoneAddress);
             string strMessage = _nuvoTelegramMock.Telegram;
+            Assert.AreEqual(2, _nuvoTelegramMock.TelegramList.Count);
             Assert.AreEqual("Z04CONSR", _nuvoTelegramMock.TelegramList[0]);
             Assert.AreEqual("Z04SETSR", _nuvoTelegramMock.TelegramList[1]);
-            Assert.AreEqual(2, _nuvoTelegramMock.TelegramList.Count);
+        }
+
+        /// <summary>
+        /// A test for SetZoneState.
+        /// Set zone state: Zone 2, Source 5, Power On, Volume=30
+        /// </summary>
+        [TestMethod()]
+        public void SetZoneState1Test()
+        {
+            Address zoneAddress = new Address(_deviceId, 2);                     // Zone 2
+            ZoneState zoneState = new ZoneState(new Address(_deviceId, 5), true, 30);    // Source 5, Power On, Volume=-30
+            _protDriver.SetZoneState(zoneAddress, zoneState);
+            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z02ON", _nuvoTelegramMock.TelegramList[0]);
+            Assert.AreEqual("Z02VOL30", _nuvoTelegramMock.TelegramList[1]);
+            Assert.AreEqual("Z02SRC5", _nuvoTelegramMock.TelegramList[2]);
+        }
+
+        /// <summary>
+        /// A test for SetZoneState.
+        /// Set zone state: Zone 4, Source 3, Power Off, Volume=30
+        /// </summary>
+        [TestMethod()]
+        public void SetZoneState2Test()
+        {
+            Address zoneAddress = new Address(_deviceId, 4);
+            ZoneState zoneState = new ZoneState(new Address(_deviceId, 3), false, 30);
+            _protDriver.SetZoneState(zoneAddress, zoneState);
+            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z04OFF", _nuvoTelegramMock.TelegramList[0]);
+        }
+
+        /// <summary>
+        /// A test for SetZoneState.
+        /// Set zone state: Zone 12, Source 6, Power On, Volume=-20
+        /// </summary>
+        [TestMethod()]
+        public void SetZoneState3Test()
+        {
+            Address zoneAddress = new Address(_deviceId, 12);
+            ZoneState zoneState = new ZoneState(new Address(_deviceId, 6), true, -20);
+            _protDriver.SetZoneState(zoneAddress, zoneState);
+            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z12ON", _nuvoTelegramMock.TelegramList[0]);
+            Assert.AreEqual("Z12VOL20", _nuvoTelegramMock.TelegramList[1]);
+            Assert.AreEqual("Z12SRC6", _nuvoTelegramMock.TelegramList[2]);
         }
 
         /// <summary>
@@ -152,8 +199,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 7);    // Zone 7
             _protDriver.CommandSwitchZoneON(zoneAddress);
             string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("Z07ON", _nuvoTelegramMock.TelegramList[0]);
             Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z07ON", _nuvoTelegramMock.TelegramList[0]);
         }
 
         /// <summary>
@@ -165,8 +212,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 12);    // Zone 12
             _protDriver.CommandSwitchZoneOFF(zoneAddress);
             string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("Z12OFF", _nuvoTelegramMock.TelegramList[0]);
             Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z12OFF", _nuvoTelegramMock.TelegramList[0]);
         }
 
         /// <summary>
@@ -178,8 +225,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 8);    // Zone 8
             _protDriver.CommandSetVolume(zoneAddress,50);
             string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("Z08VOL50", _nuvoTelegramMock.TelegramList[0]);
             Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z08VOL50", _nuvoTelegramMock.TelegramList[0]);
         }
 
         /// <summary>
@@ -191,8 +238,8 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 2);                        // Zone 2
             _protDriver.CommandSetSource(zoneAddress, new Address(_deviceId,5));    // Source 5
             string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("Z02SRC5", _nuvoTelegramMock.TelegramList[0]);
             Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
+            Assert.AreEqual("Z02SRC5", _nuvoTelegramMock.TelegramList[0]);
         }
 
         /// <summary>
