@@ -5,15 +5,14 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Common
+ *   SubProject:     NuvoControl.Server.Service
  *   Author:         Bernhard Limacher
- *   Creation Date:  12.05.2009
- *   File Name:      HardwareConfiguration.cs
+ *   Creation Date:  14.06.2009
+ *   File Name:      ServiceHostMc.cs
  * 
  ***************************************************************************************************
  * 
  * Revisions:
- * 1) 12.05.2009, Bernhard Limacher: First implementation.
  * 
  **************************************************************************************************/
 
@@ -21,41 +20,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Runtime.Serialization;
+using System.ServiceModel;
 
-namespace NuvoControl.Common.Configuration
+using NuvoControl.Server.Service.Zones;
+
+namespace NuvoControl.Server.Service.MandC
 {
-    [DataContract]
-    public class Hardware
+    public class ServiceHostMc: ServiceHost
     {
-        #region Private Members
+        private IZoneServer _zoneServer = null;
 
-        [DataMember]
-        private List<NuvoEssentia> _devices = new List<NuvoEssentia>();
-
-        #endregion
-
-        #region Constructors
-
-        public Hardware()
+        public ServiceHostMc(Type serviceType, IZoneServer zoneServer, params Uri[] baseAddresses)
+            : base(serviceType, baseAddresses)
         {
+            this._zoneServer = zoneServer;
         }
 
-        public Hardware(List<NuvoEssentia> devices)
+        public IZoneServer ZoneServer
         {
-            this._devices = devices;
+            get { return _zoneServer; }
         }
-
-        #endregion
-
-        #region Public Interface
-
-        public List<NuvoEssentia> Devices
-        {
-            get { return _devices; }
-        }
-
-        #endregion
     }
 }
 

@@ -21,21 +21,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Protocol
     {
         #region Private Members
 
+        [DataMember]
         private string _name = String.Empty;
+        [DataMember]
         private string _assemblyName = String.Empty;
+        [DataMember]
         private string _className = String.Empty;
 
         #endregion
 
         #region Constructors
+
+        public Protocol()
+        {
+        }
 
         public Protocol(string name, string assemblyName, string className)
         {

@@ -21,22 +21,31 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Floor
     {
         #region Private Members
 
+        [DataMember]
         private string _name = String.Empty;
+        [DataMember]
         private string _floorPlanPath = String.Empty;
+        [DataMember]
         private string _floorPlanType = String.Empty;
+        [DataMember]
         private List<Zone> _zones = new List<Zone>();
 
         #endregion
 
         #region Constructors
+
+        public Floor()
+        {
+        }
 
         public Floor(string name, string floorPlanPath, string floorPlanType, List<Zone> zones)
         {
@@ -53,7 +62,6 @@ namespace NuvoControl.Common.Configuration
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
         public string FloorPlanPath

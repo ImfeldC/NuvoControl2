@@ -21,10 +21,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class SystemConfiguration
     {
         #region Constants
@@ -38,13 +39,20 @@ namespace NuvoControl.Common.Configuration
 
         #region Private Members
 
+        [DataMember]
         private Hardware _hardware = null;
+        [DataMember]
         private Graphic _graphic = null;
+        [DataMember]
         private List<Function> _functions = new List<Function>();
 
         #endregion
 
         #region SystemConfiguration
+
+        public SystemConfiguration()
+        {
+        }
 
         public SystemConfiguration(Hardware hardware, Graphic graphic, List<Function> functions)
         {

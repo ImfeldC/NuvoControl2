@@ -21,9 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
 using System.Runtime.Serialization;
-using System.ServiceModel;
 
 namespace NuvoControl.Common.Configuration
 {
@@ -32,7 +30,9 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
+        [DataMember]
         private int _objectId = SystemConfiguration.ID_UNDEFINED;
+        [DataMember]
         private int _deviceId = SystemConfiguration.ID_UNDEFINED;
 
         #endregion
@@ -53,18 +53,14 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
-        [DataMember]
         public int ObjectId
         {
             get { return _objectId; }
-            set { _objectId = value; }
         }
 
-        [DataMember]
         public int DeviceId
         {
             get { return _deviceId; }
-            set { _deviceId = value; }
         }
 
 
@@ -89,6 +85,19 @@ namespace NuvoControl.Common.Configuration
             return (_deviceId == id._deviceId) && (_objectId == id._objectId);
         }
 
+
+        public static bool operator ==(Address id1, Address id2)
+        {
+            if ((object)id1 == null)
+                return (object)id2 == null;
+
+            return id1.Equals(id2);
+        }
+
+        public static bool operator !=(Address id1, Address id2)
+        {
+            return !(id1 == id2);
+        }
 
         public override int GetHashCode()
         {

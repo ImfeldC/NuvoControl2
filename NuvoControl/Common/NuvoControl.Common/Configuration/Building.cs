@@ -21,19 +21,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public class Building
     {
         #region Private Members
 
+        [DataMember]
         private List<Floor> _floors = new List<Floor>();
 
         #endregion
 
         #region Constructors
+
+        public Building()
+        {
+        }
 
         public Building(List<Floor> floors)
         {

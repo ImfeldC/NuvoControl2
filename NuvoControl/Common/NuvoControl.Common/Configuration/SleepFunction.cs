@@ -21,21 +21,29 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
-    public class SleepFunction: Function
+    [DataContract]
+    public class SleepFunction : Function
     {
         #region Private Members
 
+        [DataMember]
         private TimeSpan _sleepDuration = new TimeSpan(1, 0, 0);
+        [DataMember]
         private TimeSpan _validFrom = new TimeSpan(11, 0, 0);
+        [DataMember]
         private TimeSpan _validTo = new TimeSpan(04, 0, 0);
 
         #endregion
 
         #region Constructors
+
+        public SleepFunction()
+        {
+        }
 
         public SleepFunction(Guid id, Address zoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
             : base(id, zoneId)

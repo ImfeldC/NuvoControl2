@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 using Common.Logging;
 
@@ -29,6 +30,7 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Common
 {
+
     public enum ZoneQuality
     {
         Online = 0,
@@ -36,24 +38,38 @@ namespace NuvoControl.Common
     }
 
 
-    [Serializable]
+    [DataContract]
     public class ZoneState
     {
         #region Fields
 
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
+        [DataMember]
         private ZoneQuality _zoneQuality;
 
+        [DataMember]
+        private bool _commandUnacknowledged = false;
+
         // members only relevant in case of 'online'
+        [DataMember]
         private int _volume;
+        [DataMember]
         private bool _powerStatus = false;
+        [DataMember]
         private Address _source;
+        [DataMember]
         private DateTime _lastUpdate;   // is set in case a command is received from underlying transport layer
 
         #endregion
 
         #region Constructors
+
+        public ZoneState()
+        {
+        }
+
+
         public ZoneState(Address source, bool powerStatus, int volume)
         {
             _source = source;
@@ -74,22 +90,33 @@ namespace NuvoControl.Common
         public int Volume
         {
             get { return _volume; }
+            set { _volume = value; }
         }
 
         public bool PowerStatus
         {
             get { return _powerStatus; }
+            set { _powerStatus = value; }
         }
 
         public Address Source
         {
             get { return _source; }
+            set { _source = value; }
         }
 
         public DateTime LastUpdate
         {
             get { return _lastUpdate; }
+            set { _lastUpdate = value; }
         }
+
+        public bool CommandUnacknowledged
+        {
+            get { return _commandUnacknowledged; }
+            set { _commandUnacknowledged = value; }
+        }
+
         #endregion
 
         public override string ToString() 

@@ -21,20 +21,27 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    [Serializable]
+    [DataContract]
     public abstract class Function
     {
         #region Private Members
 
+        [DataMember]
         private Guid _id = Guid.NewGuid();
+        [DataMember]
         private Address _zoneId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
         #endregion
 
         #region Constructors
+
+        public Function()
+        {
+        }
 
         public Function(Guid id, Address zoneId)
         {
