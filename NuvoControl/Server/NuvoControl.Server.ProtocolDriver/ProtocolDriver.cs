@@ -60,7 +60,14 @@ namespace NuvoControl.Server.ProtocolDriver
                 //raise the command received event, and pass data to next layer
                 if (onCommandReceived != null)
                 {
-                     onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId),e));
+                    try
+                    {
+                        onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), e));
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Fatal(m=>m("Exception occured at forwarding event 'onCommandReceived' to Device {0} and Zone {1}! Exception={2}", e.DeviceId, e.Command.ZoneId, ex.ToString())); 
+                    }
                 }
 
                 //raise the zone status changed event, and pass data to next layer
@@ -71,8 +78,15 @@ namespace NuvoControl.Server.ProtocolDriver
                 {
                     if (onZoneStatusUpdate != null)
                     {
-                        ZoneState zoneState = new ZoneState(new Address(e.DeviceId,(int)e.Command.SourceId),(e.Command.PowerStatus==EZonePowerStatus.ZoneStatusON?true:false),e.Command.VolumeLevel);
-                        onZoneStatusUpdate(this,new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId), zoneState,e));
+                        try
+                        {
+                            ZoneState zoneState = new ZoneState(new Address(e.DeviceId,(int)e.Command.SourceId),(e.Command.PowerStatus==EZonePowerStatus.ZoneStatusON?true:false),e.Command.VolumeLevel);
+                            onZoneStatusUpdate(this,new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId), zoneState,e));
+                        }
+                        catch (Exception ex)
+                        {
+                            _log.Fatal(m=>m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString())); 
+                        }
                     }
                 }
             }
