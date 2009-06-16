@@ -11,6 +11,7 @@ using NuvoControl.Server.MonitorAndControlService;
 using NuvoControl.Server.ConfigurationService;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ZoneServer;
+using NuvoControl.Server.FunctionService;
 
 
 namespace NuvoControl.Server.WcfService
@@ -35,6 +36,8 @@ namespace NuvoControl.Server.WcfService
         /// Holds a reference to the zone server.
         /// </summary>
         private static IZoneServer _zoneServer = null;
+
+        private static IFunction _functionService = null;
 
         #endregion
 
@@ -79,6 +82,8 @@ namespace NuvoControl.Server.WcfService
             ServiceHost configurationServiceHost = new ServiceHost(_configurationService);
             ServiceHostMc mCServiceHost = new ServiceHostMc(
                 typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer);
+            ServiceHostFunction functionServiceHost = new ServiceHostFunction(
+                typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions);
 
             try
             {
@@ -90,6 +95,11 @@ namespace NuvoControl.Server.WcfService
                 mCServiceHost.Open();
                 Console.WriteLine(">>> Monitor and control service is running.");
                 Console.WriteLine(">>> URI: {0}", mCServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine();
+
+                functionServiceHost.Open();
+                Console.WriteLine(">>> Function service is running.");
+                Console.WriteLine(">>> URI: {0}", functionServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
                 Console.WriteLine(">>> Press <Enter> to stop the services.");
@@ -104,24 +114,7 @@ namespace NuvoControl.Server.WcfService
             {
                 configurationServiceHost.Close();
                 mCServiceHost.Close();
-            }
-           
-
-/*
-            NuvoControlService ncService = new NuvoControlService();
-            ncService.StartUp(@"..\..\..\..\Config\NuvoControlKonfiguration.xml");
-            
-
-            using (ServiceHost serviceHost = new ServiceHost(ncService))
-            {
-                serviceHost.Open();
-                Console.WriteLine("**** WCF Service is running. *******");
-                Console.WriteLine("URI: {0}", serviceHost.BaseAddresses[0].AbsoluteUri);
-
-
-
-            }
- */   
+            }   
         }
 
 

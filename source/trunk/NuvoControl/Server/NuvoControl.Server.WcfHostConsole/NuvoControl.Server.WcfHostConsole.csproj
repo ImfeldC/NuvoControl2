@@ -64,6 +64,10 @@
       <Project>{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}</Project>
       <Name>NuvoControl.Server.ConfigurationService</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Server.FunctionService\NuvoControl.Server.FunctionService.csproj">
+      <Project>{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}</Project>
+      <Name>NuvoControl.Server.FunctionService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj">
       <Project>{96A210B6-CCD8-451A-898F-BE40D09BAA49}</Project>
       <Name>NuvoControl.Server.MonitorAndControlService</Name>
