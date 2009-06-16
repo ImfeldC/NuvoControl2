@@ -23,6 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuvoControl3.vsmdi = NuvoControl3.vsmdi
 		NuvoControl4.vsmdi = NuvoControl4.vsmdi
 		NuvoControl5.vsmdi = NuvoControl5.vsmdi
+		NuvoControl6.vsmdi = NuvoControl6.vsmdi
 		NuvoControl7.vsmdi = NuvoControl7.vsmdi
 		NuvoControl8.vsmdi = NuvoControl8.vsmdi
 		READ-ME.txt = READ-ME.txt
@@ -75,6 +76,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.FunctionService", "Server\NuvoControl.Server.FunctionService\NuvoControl.Server.FunctionService.csproj", "{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NuvoControl6.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -167,9 +175,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{482B5795-E159-4968-9BB4-85E8CAC6E0C2} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
 		{3B6640D6-D2CA-4048-B143-4DA380D5C590} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
