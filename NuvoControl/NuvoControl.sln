@@ -68,14 +68,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.MonitorAndControlService", "Server\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj", "{96A210B6-CCD8-451A-898F-BE40D09BAA49}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Client.WcfTestConsole", "Client\NuvoControl.Client.WcfTestConsole\NuvoControl.Client.WcfTestConsole.csproj", "{09F03602-94BB-4424-B410-77282BA5174D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Client.TestViewer", "Client\NuvoControl.Client.TestViewer\NuvoControl.Client.TestViewer.csproj", "{D6D39153-5330-4D71-8E1B-BFD181A394D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.FunctionService", "Server\NuvoControl.Server.FunctionService\NuvoControl.Server.FunctionService.csproj", "{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}"
+EndProject
 Global
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = NuvoControl5.vsmdi
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -149,6 +148,18 @@ Global
 		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96A210B6-CCD8-451A-898F-BE40D09BAA49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09F03602-94BB-4424-B410-77282BA5174D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6D39153-5330-4D71-8E1B-BFD181A394D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6D39153-5330-4D71-8E1B-BFD181A394D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6D39153-5330-4D71-8E1B-BFD181A394D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6D39153-5330-4D71-8E1B-BFD181A394D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -156,5 +167,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{482B5795-E159-4968-9BB4-85E8CAC6E0C2} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
 		{3B6640D6-D2CA-4048-B143-4DA380D5C590} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
