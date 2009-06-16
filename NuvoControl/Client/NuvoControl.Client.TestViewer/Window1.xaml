@@ -1,0 +1,27 @@
+﻿<Window x:Class="NuvoControl.Client.TestViewer.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Test Viewer" Height="634.746" Width="803.964">
+    <Grid Background="LightGray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="234.192*" />
+            <RowDefinition Height="236.176*" />
+        </Grid.RowDefinitions>
+        <GroupBox Header="Zone 1" Margin="15.708,16.422,14.994,13.566" Name="groupBox1">
+            <Grid Height="254.184" Name="grid1" Width="744.702">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="119.238*" />
+                </Grid.RowDefinitions>
+                <Button HorizontalAlignment="Left" Margin="17.136,15.708,0,0" Name="button1" Width="92.82" Height="22.848" VerticalAlignment="Top" Click="button1_Click">Subscribe</Button>
+                <Label Margin="201.348,53.55,0,0" Name="label1" HorizontalAlignment="Left" Width="57.834" Height="24.99" VerticalAlignment="Top">Volume:</Label>
+                <Slider Margin="45.696,53.55,0,113.526" Name="slider1" HorizontalAlignment="Left" Width="32.844" Orientation="Vertical" Maximum="100" Grid.RowSpan="2" ValueChanged="slider1_ValueChanged" />
+                <RadioButton HorizontalAlignment="Left" Margin="45.696,0,0,59.976" Name="radioButton1" Width="120" Height="16.422" VerticalAlignment="Bottom" GroupName="PowerStatus" Checked="radioButton1_Checked">On</RadioButton>
+                <RadioButton HorizontalAlignment="Left" Margin="45.696,0,0,36.414" Name="radioButton2" Width="120" Height="16.422" VerticalAlignment="Bottom" GroupName="PowerStatus" IsChecked="True" Checked="radioButton2_Checked">Off</RadioButton>
+                <Label Height="28" HorizontalAlignment="Left" Margin="201.348,0,0,59.976" Name="label2" VerticalAlignment="Bottom" Width="120">Power status:</Label>
+                <Label Height="28" Margin="287.742,53.55,337.008,0" Name="lblVolumeState" VerticalAlignment="Top">VolumeState</Label>
+                <Label Height="28" Margin="287.742,0,337.008,59.976" Name="lblPowerState" VerticalAlignment="Bottom">PowerState:</Label>
+            </Grid>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Header="Zone 2" Margin="15.708,12.852,14.994,18.564" Name="groupBox2" />
+    </Grid>
+</Window>
