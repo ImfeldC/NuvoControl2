@@ -46,20 +46,20 @@ namespace NuvoControl.Common
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
         [DataMember]
-        private ZoneQuality _zoneQuality;
+        private ZoneQuality _zoneQuality = ZoneQuality.Offline;
 
         [DataMember]
         private bool _commandUnacknowledged = false;
 
         // members only relevant in case of 'online'
         [DataMember]
-        private int _volume;
+        private int _volume = 0;
         [DataMember]
         private bool _powerStatus = false;
         [DataMember]
-        private Address _source;
+        private Address _source = new Address();
         [DataMember]
-        private DateTime _lastUpdate;   // is set in case a command is received from underlying transport layer
+        private DateTime _lastUpdate = DateTime.Now;   // is set in case a command is received from underlying transport layer
 
         #endregion
 
