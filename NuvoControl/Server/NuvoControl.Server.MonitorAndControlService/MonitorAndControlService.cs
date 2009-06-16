@@ -36,7 +36,7 @@ namespace NuvoControl.Server.MonitorAndControlService
     /// <summary>
     /// Implements the functions for monitoring and controlling NuvoControl zones.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Reentrant)]
     public class MonitorAndControlService: IMonitorAndControl, IDisposable
     {
         #region Fields
@@ -46,7 +46,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <summary>
         /// Stores the client callback.
         /// </summary>
-        private IMonitorAndControlNofification _subscriber = null;
+        private IMonitorAndControlNotification _subscriber = null;
 
         /// <summary>
         /// Stores all zones which are subscribed to.
@@ -75,7 +75,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         /// <param name="callback">Callback to notify the client.</param>
         /// <param name="zoneServer">The zone server.</param>
-        public MonitorAndControlService(IMonitorAndControlNofification callback, IZoneServer zoneServer)
+        public MonitorAndControlService(IMonitorAndControlNotification callback, IZoneServer zoneServer)
         {
             this._subscriber = callback;
             this._zoneServer = zoneServer;
@@ -90,7 +90,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         public void Connect()
         {
-            IMonitorAndControlNofification callback = OperationContext.Current.GetCallbackChannel<IMonitorAndControlNofification>();
+            IMonitorAndControlNotification callback = OperationContext.Current.GetCallbackChannel<IMonitorAndControlNotification>();
             this._subscriber = callback;
             ServiceHostMc host = OperationContext.Current.Host as ServiceHostMc;
             Debug.Assert(host != null);
@@ -216,7 +216,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         private void NotifySubscribers(Address zoneId, ZoneState zoneState)
         {
             if (_zoneSubscriptions.Contains(zoneId) && _subscriber!= null)
-                _subscriber.OnZoneStateChanged(zoneId);
+                _subscriber.OnZoneStateChanged(zoneId, zoneState);
         }
 
 

@@ -28,16 +28,16 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Server.MonitorAndControlService
 {
-    public interface IMonitorAndControlNofification
+    public interface IMonitorAndControlNotification
     {
         [OperationContract(IsOneWay = true)]
-        void OnZoneStateChanged(Address zoneId);
+        void OnZoneStateChanged(Address zoneId, ZoneState zoneState);
     }
 
     /// <summary>
     /// Defines the functions for monitoring and controlling NuvoControl
     /// </summary>
-    [ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IMonitorAndControlNofification))]
+    [ServiceContract(SessionMode = SessionMode.Required, CallbackContract = typeof(IMonitorAndControlNotification))]
     public interface IMonitorAndControl
     {
         /// <summary>
