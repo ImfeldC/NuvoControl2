@@ -17,7 +17,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
     ///to contain all MonitorAndControlServiceTest Unit Tests
     ///</summary>
     [TestClass()]
-    public class MonitorAndControlServiceTest: IMonitorAndControlNofification
+    public class MonitorAndControlServiceTest: IMonitorAndControlNotification
     {
 
 
@@ -83,7 +83,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
             Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
 
-        /*
+/*
         /// <summary>
         ///A test for StoreSubscribedZoneId
         ///</summary>
@@ -94,10 +94,11 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
             MonitorAndControlService_Accessor target = new MonitorAndControlService_Accessor(); // TODO: Initialize to an appropriate value
             Address zoneId = null; // TODO: Initialize to an appropriate value
             target.StoreSubscribedZoneId(zoneId);
+            target.
             Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
 
-
+        
 
         /// <summary>
         ///A test for RemoveSubscribedZoneId
@@ -286,7 +287,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         #region IMonitorAndControlNofification Members
 
-        public void OnZoneStateChanged(Address zoneId)
+        public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
             throw new System.NotImplementedException();
         }
