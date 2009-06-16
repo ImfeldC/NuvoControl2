@@ -44,7 +44,7 @@ namespace NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference {
     public interface IMonitorAndControlCallback {
         
         [System.ServiceModel.OperationContractAttribute(IsOneWay=true, Action="http://tempuri.org/IMonitorAndControl/OnZoneStateChanged")]
-        void OnZoneStateChanged(NuvoControl.Common.Configuration.Address zoneId);
+        void OnZoneStateChanged(NuvoControl.Common.Configuration.Address zoneId, NuvoControl.Common.ZoneState zoneState);
     }
     
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "3.0.0.0")]
