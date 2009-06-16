@@ -66,15 +66,15 @@ namespace NuvoControl.Server.ZoneServer
             this._protocolDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protocolDriver_onZoneStatusUpdate);
             this._protocolDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protocolDriver_onCommandReceived);
 
-            timer = new Timer(OnTimerCallback, this, Timeout.Infinite, Timeout.Infinite);
-            timer.Change(2000, 2000);
+            //timer = new Timer(OnTimerCallback, this, Timeout.Infinite, Timeout.Infinite);
+            //timer.Change(2000, 2000);
         }
 
         #endregion
 
         private void OnTimerCallback(object state)
         {
-            ((IZoneController)state).NotifySubscribedClients();
+            //((IZoneController)state).NotifySubscribedClients();
         }
 
         #region IZoneController Members
@@ -103,10 +103,25 @@ namespace NuvoControl.Server.ZoneServer
         {
             lock (this)
             {
-                _protocolDriver.CommandSwitchZoneON(_zoneId);
+                // TODO remove
+                //_zoneState.ZoneQuality = zoneState.ZoneQuality;
+                //_zoneState.Volume = zoneState.Volume;
+                //_zoneState.Source = zoneState.Source;
+                //_zoneState.PowerStatus = zoneState.PowerStatus;
+                //_zoneState.LastUpdate = zoneState.LastUpdate;
+                // TODO endremove
+
+
+                _protocolDriver.SetZoneState(_zoneId, zoneState);
                 _zoneState.CommandUnacknowledged = true;
             }
-            NotifySubscribedClients();
+
+            //NotifySubscribedClients();
+            //ThreadPool.QueueUserWorkItem(delegate(object obj)
+            //{
+            //    Thread.Sleep(1000);
+            //    NotifySubscribedClients();
+            //}, null);
         }
 
         /// <summary>
@@ -176,7 +191,7 @@ namespace NuvoControl.Server.ZoneServer
         void _protocolDriver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
             // TODO:
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
 
         private void UpdateZoneStateFromDriver(ZoneState newState)
@@ -191,6 +206,7 @@ namespace NuvoControl.Server.ZoneServer
             }
             _zoneState.CommandUnacknowledged = true;
         }
+
 
         #endregion
     }
