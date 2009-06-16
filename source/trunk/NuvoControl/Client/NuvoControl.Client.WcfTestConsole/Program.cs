@@ -9,6 +9,7 @@ using System.Net.Sockets;
 using System.ServiceModel;
 
 using NuvoControl.Common.Configuration;
+using NuvoControl.Common;
 
 using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
 using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
@@ -52,7 +53,7 @@ namespace NuvoControl.Client.WcfTestConsole
         public int _id = 1;
         #region IMonitorAndControlCallback Members
 
-        public void OnZoneStateChanged(Address zoneId)
+        public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
             Console.WriteLine("Notification from server zone: {0}", zoneId.ToString());
         }
