@@ -94,7 +94,7 @@ namespace NuvoControl.Server.Simulator
         /// It is used in the zone id changed event handler, to compare if the 
         /// zone has really changed (see <see cref="cmbZoneSelect_SelectedIndexChanged"/>
         /// </summary>
-        private int _selectedZoneId = -1;
+        private int _selectedZoneIndex = -1;
 
         /// <summary>
         /// Private memeber holding the reference to the zone state controller
@@ -115,7 +115,7 @@ namespace NuvoControl.Server.Simulator
 
         void _zoneStateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
         {
-            if (e.ZoneIndex == _selectedZoneId)
+            if (e.ZoneId == GetSelectedZone())
             {
                 updateZoneState(e.NewZoneState);
             }
@@ -146,14 +146,14 @@ namespace NuvoControl.Server.Simulator
         /// <param name="e">Event argument, passed by the combo box</param>
         private void cmbZoneSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ( (_selectedZoneId != cmbZoneSelect.SelectedIndex + 1) &&
+            if ( (_selectedZoneIndex != cmbZoneSelect.SelectedIndex) &&
                  (cmbZoneSelect.SelectedIndex < 12) )
             {
                 if (onZoneChanged != null)
                 {
-                    onZoneChanged( this, new ZoneUserControlEventArgs(this,cmbZoneSelect.SelectedIndex + 1,_selectedZoneId));
-                    _selectedZoneId = cmbZoneSelect.SelectedIndex + 1;
+                    onZoneChanged( this, new ZoneUserControlEventArgs(this,cmbZoneSelect.SelectedIndex + 1,_selectedZoneIndex + 1));
                 }
+                _selectedZoneIndex = cmbZoneSelect.SelectedIndex;
             }
         }
 
@@ -169,7 +169,8 @@ namespace NuvoControl.Server.Simulator
             comboBox.Items.Clear();
             comboBox.Items.AddRange(Enum.GetNames(t));
             comboBox.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBox.SelectedIndex = 0;
+            if( comboBox.Items.Count >= 0 )
+                comboBox.SelectedIndex = 0;
         }
 
         /// <summary>
@@ -224,7 +225,8 @@ namespace NuvoControl.Server.Simulator
         /// <param name="zoneState">Zone state, which shall be set.</param>
         public void updateZoneState(ZoneState zoneState)
         {
-            _log.Trace(m => m("Update Zone state in control {0}. New State='{1}'", this.Name, zoneState));
+            _log.Trace(m => m("Update Zone state in control {0}, for zone {1} ({2}). New State='{3}'",
+                this.Name, GetSelectedZone().ToString(), _selectedZoneIndex+1, zoneState));
             _zoneState = zoneState; 
             if ((cmbSourceSelect != null) && (cmbSourceSelect.Items.Count>0))
                 cmbSourceSelect.SelectedIndex = zoneState.Source.ObjectId - 1;
@@ -243,7 +245,7 @@ namespace NuvoControl.Server.Simulator
         {
             if ((cmbZoneSelect != null) && (cmbZoneSelect.Items.Count > 0))
             {
-                if (cmbZoneSelect.SelectedIndex != (int)zone - 1)
+                if (GetSelectedZone() != zone)
                 {
                     cmbZoneSelect.SelectedIndex = (int)zone - 1;
                 }
@@ -258,31 +260,6 @@ namespace NuvoControl.Server.Simulator
         public ENuvoEssentiaZones GetSelectedZone()
         {
             return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true);
-        }
-
-        /// <summary>
-        /// Returns the selected zone id.
-        /// Returns -1 in case of an error, or no zone is selected.
-        /// </summary>
-        /// <returns>Selected Zone id. Returns -1 in case of an error, or no zone is selected</returns>
-        public int GetSelectedZoneId()
-        {
-            if (cmbPowerStatusSelect != null)
-            {
-                if (cmbPowerStatusSelect.SelectedIndex < 12)
-                {
-                    return cmbPowerStatusSelect.SelectedIndex + 1;
-                }
-                else
-                {
-                    // NoZone is selected
-                    return -1;
-                }
-            }
-            else
-            {
-                return -1;
-            }
         }
 
         /// <summary>
@@ -335,12 +312,19 @@ namespace NuvoControl.Server.Simulator
         /// <param name="e">Event argumnet, passed by the volume track bar.</param>
         private void trackVolume_Scroll(object sender, EventArgs e)
         {
-            if (_zoneState != null)
+            try
             {
-                ZoneState updatedZoneState = new ZoneState(_zoneState);
-                updatedZoneState.Volume = trackVolume.Value;
-                if (_zoneStateController != null)
-                    _zoneStateController.setZoneState(_selectedZoneId, updatedZoneState);
+                if (_zoneState != null)
+                {
+                    ZoneState updatedZoneState = new ZoneState(_zoneState);
+                    updatedZoneState.Volume = trackVolume.Value;
+                    if (_zoneStateController != null)
+                        _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(m => m("Exception in cmbSourceSelect_SelectedIndexChanged! {0}", ex.ToString()));
             }
         }
 
@@ -351,12 +335,19 @@ namespace NuvoControl.Server.Simulator
         /// <param name="e">Event argument, passed by the power status selection combo box.</param>
         private void cmbPowerStatusSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_zoneState != null)
+            try
             {
-                ZoneState updatedZoneState = new ZoneState(_zoneState);
-                updatedZoneState.PowerStatus = ((string)cmbPowerStatusSelect.SelectedItem == EZonePowerStatus.ZoneStatusON.ToString() ? true : false);
-                if (_zoneStateController != null)
-                    _zoneStateController.setZoneState(_selectedZoneId, updatedZoneState);
+                if (_zoneState != null)
+                {
+                    ZoneState updatedZoneState = new ZoneState(_zoneState);
+                    updatedZoneState.PowerStatus = ((string)cmbPowerStatusSelect.SelectedItem == EZonePowerStatus.ZoneStatusON.ToString() ? true : false);
+                    if (_zoneStateController != null)
+                        _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(m => m("Exception in cmbSourceSelect_SelectedIndexChanged! {0}", ex.ToString()));
             }
         }
 
@@ -367,12 +358,19 @@ namespace NuvoControl.Server.Simulator
         /// <param name="e">Event argrument, passed by the source selection combo box.</param>
         private void cmbSourceSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_zoneState != null)
+            try
             {
-                ZoneState updatedZoneState = new ZoneState(_zoneState);
-                updatedZoneState.Source = new Address(updatedZoneState.Source.DeviceId, cmbSourceSelect.SelectedIndex + 1);
-                if (_zoneStateController != null)
-                    _zoneStateController.setZoneState(_selectedZoneId, updatedZoneState);
+                if (_zoneState != null)
+                {
+                    ZoneState updatedZoneState = new ZoneState(_zoneState);
+                    updatedZoneState.Source = new Address(updatedZoneState.Source.DeviceId, cmbSourceSelect.SelectedIndex + 1);
+                    if (_zoneStateController != null)
+                        _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(m => m("Exception in cmbSourceSelect_SelectedIndexChanged! {0}", ex.ToString())); 
             }
         }
 

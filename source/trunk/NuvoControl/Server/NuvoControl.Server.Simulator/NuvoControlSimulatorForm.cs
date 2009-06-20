@@ -75,17 +75,7 @@ namespace NuvoControl.Server.Simulator
             _zoneSateController = new ZoneStateController(_numOfZones, _deviceId);
             InitializeComponent();
 
-            initZoneUserControl(ucZone1, ENuvoEssentiaZones.Zone1, _zoneSateController[ENuvoEssentiaZones.Zone1]);
-            initZoneUserControl(ucZone2, ENuvoEssentiaZones.Zone2, _zoneSateController[ENuvoEssentiaZones.Zone2]);
-            initZoneUserControl(ucZone3, ENuvoEssentiaZones.Zone3, _zoneSateController[ENuvoEssentiaZones.Zone3]);
-            initZoneUserControl(ucZone4, ENuvoEssentiaZones.Zone4, _zoneSateController[ENuvoEssentiaZones.Zone4]);
-
             importEnumeration(typeof(ProtocolDriverSimulator.EProtocolDriverSimulationMode), cmbSimModeSelect);
-
-            importEnumeration(typeof(ENuvoEssentiaZones), cmbZoneSelect);
-            importEnumeration(typeof(ENuvoEssentiaSources), cmbSourceSelect);
-            importEnumeration(typeof(EZonePowerStatus), cmbPowerStatusSelect);
-
         }
 
         /// <summary>
@@ -102,6 +92,12 @@ namespace NuvoControl.Server.Simulator
         }
 
 
+        /// <summary>
+        /// Private method to initialize a zone use control, with the zone id and zone state.
+        /// </summary>
+        /// <param name="uc">Zone User Control, which will be initialized.</param>
+        /// <param name="zoneId">Zone Id, to set.</param>
+        /// <param name="zoneState">Zone State, to set.</param>
         private void initZoneUserControl(ZoneUserControl uc, ENuvoEssentiaZones zoneId, ZoneState zoneState)
         {
             uc.SetSelectedZone(zoneId);
@@ -110,17 +106,41 @@ namespace NuvoControl.Server.Simulator
             uc.ZoneStateController = _zoneSateController;
         }
 
-        void _zoneSateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
+        private void _zoneSateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
         {
-            if (ucZone1.GetSelectedZone() == e.ZoneId)
+            onZoneUpdated(ucZone1, e);
+            onZoneUpdated(ucZone2, e);
+            onZoneUpdated(ucZone3, e);
+            onZoneUpdated(ucZone4, e);
+            onZoneUpdated(ucZoneManual, e);
+        }
+
+        private void onZoneUpdated(ZoneUserControl uc, ZoneStateEventArgs e)
+        {
+            try
             {
-                ucZone1.updateZoneState(e.NewZoneState);
+                if (uc.GetSelectedZone() == e.ZoneId)
+                {
+                    uc.updateZoneState(e.NewZoneState);
+                }
+            }
+            catch( Exception ex)
+            {
+                _log.Fatal(m=>m("Excpetion on zone state update on control {0}. Exception={1}",uc.Name,ex.ToString()));
             }
         }
 
         private void NuvoControlSimulator_Load(object sender, EventArgs e)
         {
             _log.Debug(m => m("Form loaded: {0}", e.ToString()));
+
+            initZoneUserControl(ucZone1, ENuvoEssentiaZones.Zone1, _zoneSateController[ENuvoEssentiaZones.Zone1]);
+            initZoneUserControl(ucZone2, ENuvoEssentiaZones.Zone2, _zoneSateController[ENuvoEssentiaZones.Zone2]);
+            initZoneUserControl(ucZone3, ENuvoEssentiaZones.Zone3, _zoneSateController[ENuvoEssentiaZones.Zone3]);
+            initZoneUserControl(ucZone4, ENuvoEssentiaZones.Zone4, _zoneSateController[ENuvoEssentiaZones.Zone4]);
+
+            initZoneUserControl(ucZoneManual, ENuvoEssentiaZones.Zone1, _zoneSateController[ENuvoEssentiaZones.Zone1]);
+
             OpenQueues();
         }
 
@@ -270,15 +290,17 @@ namespace NuvoControl.Server.Simulator
         {
             if (_sendQueue != null)
             {
-                ENuvoEssentiaZones zone = (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true);
+                ENuvoEssentiaZones zone = ucZoneManual.GetSelectedZone();
                 if (zone != ENuvoEssentiaZones.NoZone)
                 {
                     NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                         commandType,
                         zone,
-                        (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true),
-                        (int)trackVolume.Value, (int)trackBass.Value, (int)trackTreble.Value,
-                        (EZonePowerStatus)Enum.Parse(typeof(EZonePowerStatus), cmbPowerStatusSelect.Text, true),
+                        ucZoneManual.GetSelectedSource(),
+                        ucZoneManual.GetSelectedVolumeLevel(),
+                        (int)trackBass.Value, 
+                        (int)trackTreble.Value,
+                        ucZoneManual.GetSelectedPowerStatus(),
                         new EIRCarrierFrequency[6],
                         EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                         EVolumeResetStatus.VolumeResetOFF,
@@ -292,12 +314,12 @@ namespace NuvoControl.Server.Simulator
 
         private void cmbZoneSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            DisplayData(MessageType.Normal, string.Format("--- Changed to Zone '{0}' ---", cmbZoneSelect.Text));
+            DisplayData(MessageType.Normal, string.Format("--- Changed to Zone '{0}' ---", ucZoneManual.GetSelectedZone().ToString()));
         }
 
         private void cmbPowerStatusSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            EZonePowerStatus zonePowerStatus = (EZonePowerStatus)Enum.Parse(typeof(EZonePowerStatus), cmbPowerStatusSelect.Text, true);
+            EZonePowerStatus zonePowerStatus = ucZoneManual.GetSelectedPowerStatus();
             if (zonePowerStatus == EZonePowerStatus.ZoneStatusON)
             {
                 sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneON);
@@ -314,7 +336,7 @@ namespace NuvoControl.Server.Simulator
 
         private void cmbSourceSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ENuvoEssentiaSources source = (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), cmbSourceSelect.Text, true);
+            ENuvoEssentiaSources source = ucZoneManual.GetSelectedSource();
             if (source != ENuvoEssentiaSources.NoSource)
             {
                 sendCommandForManualChanges(ENuvoEssentiaCommands.SetSource);

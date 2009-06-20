@@ -131,21 +131,6 @@ namespace NuvoControl.Server.Simulator
         }
 
         /// <summary>
-        /// Sets the Zone State for the corresponding index. Zero-Based!
-        /// </summary>
-        /// <param name="index">Index of Zone. Zero-Based!</param>
-        /// <param name="newZoneState">New zone state.</param>
-        public void setZoneState(int index, ZoneState newZoneState)
-        {
-            if (index >= 0)
-            {
-                ZoneState oldState = new ZoneState(_zoneState[index]);
-                _zoneState[index] = newZoneState;
-                notifyZoneStateSubscribers(index, oldState, newZoneState);
-            }
-        }
-
-        /// <summary>
         /// Sets the Zone State for the corresponding index. One-Based, using the
         /// enumeration <see cref="ENuvoEssentiaZones"/>.!
         /// </summary>
@@ -195,7 +180,7 @@ namespace NuvoControl.Server.Simulator
         /// <param name="newZoneState">New Zone State.</param>
         private void notifyZoneStateSubscribers(int zoneIndex, ZoneState oldZoneState, ZoneState newZoneState)
         {
-            _log.Trace(m=>m("Zone State with zoneIndex='{0}' has changed. oldState='{1}' newState='{2}'.",zoneIndex, oldZoneState.ToString(), newZoneState.ToString() ));
+            _log.Trace(m=>m("Zone State with zoneIndex='{0}' has changed, notify the subscribers. oldState='{1}' newState='{2}'.",zoneIndex, oldZoneState.ToString(), newZoneState.ToString() ));
             if (onZoneUpdated != null)
             {
                 if (oldZoneState != newZoneState)
@@ -220,7 +205,20 @@ namespace NuvoControl.Server.Simulator
         }
 
 
-
+        /// <summary>
+        /// Public override for the <c>ToString</c> method.
+        /// </summary>
+        /// <returns>String representing the content of this object.</returns>
+        public override string ToString()
+        {
+            int i = 0;
+            string strMessage = "";
+            foreach (ZoneState zoneState in _zoneState)
+            {
+                strMessage += string.Format("Zone[{0}]={1} ", i++, zoneState.ToString());
+            }
+            return strMessage;
+        }
     
     }
 }
