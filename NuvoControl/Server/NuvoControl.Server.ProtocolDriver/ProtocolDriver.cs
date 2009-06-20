@@ -49,9 +49,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         public NuvoEssentiaProtocolDriver()
         {
-            _log.Debug(m => m("Protocol Driver instantiated!"));
+            _log.Trace(m=>m("Protocol Driver instantiated!"));
         }
-
 
         void _essentiaProtocol_onCommandReceived(object sender, NuvoEssentiaProtocolEventArgs e)
         {
