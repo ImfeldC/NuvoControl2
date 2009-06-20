@@ -168,6 +168,7 @@ namespace NuvoControl.Server.WcfService
                 }
             }
             _zoneServer = new NuvoControl.Server.ZoneServer.ZoneServer(zoneControllers);
+            _zoneServer.StartUp();
         }
 
 

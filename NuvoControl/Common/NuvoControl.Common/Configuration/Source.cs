@@ -26,7 +26,7 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     [DataContract]
-    public class Source
+    public class Source: IComparable<Source>
     {
         #region Private Members
 
@@ -45,6 +45,11 @@ namespace NuvoControl.Common.Configuration
 
         public Source()
         {
+        }
+
+        public Source(Address id)
+        {
+            this._id = id;
         }
 
         public Source(Address id, string name, string picturePath, string pictureType)
@@ -77,6 +82,75 @@ namespace NuvoControl.Common.Configuration
         public string PictureType
         {
             get { return _pictureType; }
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            Source source = obj as Source;
+            if ((object)source == null)
+                return false;
+
+            return (_id == source._id);
+        }
+
+
+        public bool Equals(Source source)
+        {
+            if ((object)source == null)
+                return false;
+
+            return (_id == source._id);
+        }
+
+
+        public static bool operator ==(Source source1, Source source2)
+        {
+            if ((object)source1 == null)
+                return (object)source2 == null;
+
+            return source1.Equals(source2);
+        }
+
+        public static bool operator !=(Source source1, Source source2)
+        {
+            return !(source1 == source2);
+        }
+
+        public override int GetHashCode()
+        {
+            return _id.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return _name;
+        }
+
+        #endregion
+
+
+        #region IComparable<Source> Members
+
+        public int CompareTo(Source other)
+        {
+            if (_id == other._id)
+                return 0;
+
+            if (_id.DeviceId < other._id.DeviceId)
+                return -1;
+            else if (_id.DeviceId > other._id.DeviceId)
+                return 1;
+            else
+            {
+                if (_id.ObjectId < other._id.ObjectId)
+                    return -1;
+                else
+                    return 1;
+            }
+
         }
 
         #endregion

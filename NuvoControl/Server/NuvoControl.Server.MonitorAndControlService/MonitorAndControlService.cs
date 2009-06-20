@@ -36,7 +36,7 @@ namespace NuvoControl.Server.MonitorAndControlService
     /// <summary>
     /// Implements the functions for monitoring and controlling NuvoControl zones.
     /// </summary>
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Reentrant)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Single)]
     public class MonitorAndControlService: IMonitorAndControl, IDisposable
     {
         #region Fields

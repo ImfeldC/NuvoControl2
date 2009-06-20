@@ -37,6 +37,11 @@ namespace NuvoControl.Server.ZoneServer
     public interface IZoneServer
     {
         /// <summary>
+        /// Initializes the server state by reading the values from NuvoEssentia.
+        /// </summary>
+        void StartUp();
+
+        /// <summary>
         /// Returns the value/state of the specified zone.
         /// </summary>
         /// <param name="zoneId"></param>

@@ -109,9 +109,9 @@ namespace NuvoControl.Common
             if (sourceZoneState == null)
             {
                 _guid = Guid.NewGuid();
-                _lastUpdate = DateTime.Now;
-                _zoneQuality = ZoneQuality.Online;  // Default Value
-            }
+            _lastUpdate = DateTime.Now;
+            _zoneQuality = ZoneQuality.Online;  // Default Value
+        }
             else
             {
                 _guid = sourceZoneState._guid;
@@ -213,7 +213,7 @@ namespace NuvoControl.Common
                    (left._volume == right._volume) && (left._source == right._source) && 
                    (left._powerStatus == right._powerStatus) && (left._zoneQuality == right._zoneQuality) &&
                    (left._commandUnacknowledged == right._commandUnacknowledged) && (left._lastUpdate == right._lastUpdate);
-        }
+    }
 
         /// <summary>
         /// Public overload for the != operator. Is required if operator == has been overwritten.
@@ -232,7 +232,7 @@ namespace NuvoControl.Common
                 return (left._volume != right._volume) || (left._source != right._source) ||
                        (left._powerStatus != right._powerStatus) || (left._zoneQuality != right._zoneQuality) ||
                        (left._commandUnacknowledged != right._commandUnacknowledged) || (left._lastUpdate != right._lastUpdate);
-            }
+}
             else
             {
                 // one or both parameters are null
