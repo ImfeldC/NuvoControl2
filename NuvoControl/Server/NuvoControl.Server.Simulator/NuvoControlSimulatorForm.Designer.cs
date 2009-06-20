@@ -50,23 +50,19 @@ namespace NuvoControl.Server.Simulator
             this.components = new System.ComponentModel.Container();
             this.rtbCOM = new System.Windows.Forms.RichTextBox();
             this.grpZone = new System.Windows.Forms.GroupBox();
-            this.cmbSourceSelect = new System.Windows.Forms.ComboBox();
-            this.cmbPowerStatusSelect = new System.Windows.Forms.ComboBox();
-            this.trackVolume = new System.Windows.Forms.TrackBar();
             this.trackBass = new System.Windows.Forms.TrackBar();
             this.trackTreble = new System.Windows.Forms.TrackBar();
             this.cmbSimModeSelect = new System.Windows.Forms.ComboBox();
             this.numDelay = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.timerSimulate = new System.Windows.Forms.Timer(this.components);
+            this.progressSimulate = new System.Windows.Forms.ProgressBar();
             this.ucZone4 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone3 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone2 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone1 = new NuvoControl.Server.Simulator.ZoneUserControl();
-            this.timerSimulate = new System.Windows.Forms.Timer(this.components);
-            this.progressSimulate = new System.Windows.Forms.ProgressBar();
-            this.cmbZoneSelect = new System.Windows.Forms.ComboBox();
+            this.ucZoneManual = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.grpZone.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackVolume)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackTreble)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
@@ -78,63 +74,28 @@ namespace NuvoControl.Server.Simulator
             this.rtbCOM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
                         | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbCOM.Location = new System.Drawing.Point(405, 4);
+            this.rtbCOM.Location = new System.Drawing.Point(379, 4);
             this.rtbCOM.Name = "rtbCOM";
-            this.rtbCOM.Size = new System.Drawing.Size(307, 430);
+            this.rtbCOM.Size = new System.Drawing.Size(333, 430);
             this.rtbCOM.TabIndex = 1;
             this.rtbCOM.Text = "";
             // 
             // grpZone
             // 
-            this.grpZone.Controls.Add(this.cmbSourceSelect);
-            this.grpZone.Controls.Add(this.cmbPowerStatusSelect);
-            this.grpZone.Controls.Add(this.cmbZoneSelect);
-            this.grpZone.Controls.Add(this.trackVolume);
+            this.grpZone.Controls.Add(this.ucZoneManual);
             this.grpZone.Controls.Add(this.trackBass);
             this.grpZone.Controls.Add(this.trackTreble);
-            this.grpZone.Location = new System.Drawing.Point(12, 318);
+            this.grpZone.Location = new System.Drawing.Point(12, 310);
             this.grpZone.Name = "grpZone";
-            this.grpZone.Size = new System.Drawing.Size(278, 109);
+            this.grpZone.Size = new System.Drawing.Size(278, 117);
             this.grpZone.TabIndex = 2;
             this.grpZone.TabStop = false;
             this.grpZone.Text = "Zone (manual changes)";
             // 
-            // cmbSourceSelect
-            // 
-            this.cmbSourceSelect.FormattingEnabled = true;
-            this.cmbSourceSelect.Location = new System.Drawing.Point(6, 72);
-            this.cmbSourceSelect.Name = "cmbSourceSelect";
-            this.cmbSourceSelect.Size = new System.Drawing.Size(121, 21);
-            this.cmbSourceSelect.TabIndex = 6;
-            this.cmbSourceSelect.SelectedIndexChanged += new System.EventHandler(this.cmbSourceSelect_SelectedIndexChanged);
-            // 
-            // cmbPowerStatusSelect
-            // 
-            this.cmbPowerStatusSelect.FormattingEnabled = true;
-            this.cmbPowerStatusSelect.Location = new System.Drawing.Point(6, 45);
-            this.cmbPowerStatusSelect.Name = "cmbPowerStatusSelect";
-            this.cmbPowerStatusSelect.Size = new System.Drawing.Size(121, 21);
-            this.cmbPowerStatusSelect.TabIndex = 5;
-            this.cmbPowerStatusSelect.SelectedIndexChanged += new System.EventHandler(this.cmbPowerStatusSelect_SelectedIndexChanged);
-            // 
-            // trackVolume
-            // 
-            this.trackVolume.Location = new System.Drawing.Point(134, 10);
-            this.trackVolume.Maximum = 0;
-            this.trackVolume.Minimum = -50;
-            this.trackVolume.Name = "trackVolume";
-            this.trackVolume.Orientation = System.Windows.Forms.Orientation.Vertical;
-            this.trackVolume.Size = new System.Drawing.Size(42, 93);
-            this.trackVolume.SmallChange = 2;
-            this.trackVolume.TabIndex = 2;
-            this.trackVolume.TickFrequency = 5;
-            this.trackVolume.Value = -40;
-            this.trackVolume.Scroll += new System.EventHandler(this.trackVolume_Scroll);
-            // 
             // trackBass
             // 
             this.trackBass.LargeChange = 2;
-            this.trackBass.Location = new System.Drawing.Point(182, 10);
+            this.trackBass.Location = new System.Drawing.Point(182, 14);
             this.trackBass.Minimum = -10;
             this.trackBass.Name = "trackBass";
             this.trackBass.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -146,7 +107,7 @@ namespace NuvoControl.Server.Simulator
             // trackTreble
             // 
             this.trackTreble.LargeChange = 2;
-            this.trackTreble.Location = new System.Drawing.Point(230, 10);
+            this.trackTreble.Location = new System.Drawing.Point(230, 14);
             this.trackTreble.Minimum = -10;
             this.trackTreble.Name = "trackTreble";
             this.trackTreble.Orientation = System.Windows.Forms.Orientation.Vertical;
@@ -189,6 +150,18 @@ namespace NuvoControl.Server.Simulator
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Zone (current status)";
             // 
+            // timerSimulate
+            // 
+            this.timerSimulate.Interval = 300;
+            this.timerSimulate.Tick += new System.EventHandler(this.timerSimulate_Tick);
+            // 
+            // progressSimulate
+            // 
+            this.progressSimulate.Location = new System.Drawing.Point(12, 47);
+            this.progressSimulate.Name = "progressSimulate";
+            this.progressSimulate.Size = new System.Drawing.Size(128, 10);
+            this.progressSimulate.TabIndex = 21;
+            // 
             // ucZone4
             // 
             this.ucZone4.Location = new System.Drawing.Point(182, 111);
@@ -221,26 +194,12 @@ namespace NuvoControl.Server.Simulator
             this.ucZone1.TabIndex = 0;
             this.ucZone1.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZone1_onZoneChanged);
             // 
-            // timerSimulate
+            // ucZoneManual
             // 
-            this.timerSimulate.Interval = 300;
-            this.timerSimulate.Tick += new System.EventHandler(this.timerSimulate_Tick);
-            // 
-            // progressSimulate
-            // 
-            this.progressSimulate.Location = new System.Drawing.Point(12, 47);
-            this.progressSimulate.Name = "progressSimulate";
-            this.progressSimulate.Size = new System.Drawing.Size(128, 10);
-            this.progressSimulate.TabIndex = 21;
-            // 
-            // cmbZoneSelect
-            // 
-            this.cmbZoneSelect.FormattingEnabled = true;
-            this.cmbZoneSelect.Location = new System.Drawing.Point(6, 18);
-            this.cmbZoneSelect.Name = "cmbZoneSelect";
-            this.cmbZoneSelect.Size = new System.Drawing.Size(121, 21);
-            this.cmbZoneSelect.TabIndex = 4;
-            this.cmbZoneSelect.SelectedIndexChanged += new System.EventHandler(this.cmbZoneSelect_SelectedIndexChanged);
+            this.ucZoneManual.Location = new System.Drawing.Point(7, 16);
+            this.ucZoneManual.Name = "ucZoneManual";
+            this.ucZoneManual.Size = new System.Drawing.Size(172, 93);
+            this.ucZoneManual.TabIndex = 2;
             // 
             // NuvoControlSimulator
             // 
@@ -259,7 +218,6 @@ namespace NuvoControl.Server.Simulator
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.NuvoControlSimulator_FormClosed);
             this.grpZone.ResumeLayout(false);
             this.grpZone.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.trackVolume)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackBass)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackTreble)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
@@ -274,9 +232,6 @@ namespace NuvoControl.Server.Simulator
         private System.Windows.Forms.GroupBox grpZone;
         private System.Windows.Forms.TrackBar trackBass;
         private System.Windows.Forms.TrackBar trackTreble;
-        private System.Windows.Forms.TrackBar trackVolume;
-        private System.Windows.Forms.ComboBox cmbSourceSelect;
-        private System.Windows.Forms.ComboBox cmbPowerStatusSelect;
         private System.Windows.Forms.ComboBox cmbSimModeSelect;
         private System.Windows.Forms.NumericUpDown numDelay;
         private System.Windows.Forms.GroupBox groupBox1;
@@ -286,7 +241,7 @@ namespace NuvoControl.Server.Simulator
         private ZoneUserControl ucZone4;
         private ZoneUserControl ucZone3;
         private ZoneUserControl ucZone2;
-        private System.Windows.Forms.ComboBox cmbZoneSelect;
+        private ZoneUserControl ucZoneManual;
     }
 }
 

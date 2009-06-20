@@ -201,13 +201,15 @@ namespace NuvoControl.Common
         /// It compares all members exept the GUID, like the Volume, Source, Power state and 
         /// Zone Quality. If all these fields are equal in both
         /// objects, it returns true to indicate that these objects are equal.
+        /// If one of the parameters is <c>null</c>, <c>flase</c> is returned, which indicates that this
+        /// values are not equal.
         /// </summary>
         /// <param name="left">Left operand</param>
         /// <param name="right">Right operand</param>
         /// <returns>True, if the objects are equal. It compares all fields except the GUID.</returns>
         public static bool operator ==(ZoneState left, ZoneState right)
         {
-            return ((Object)left != null) && ((Object)right != null) &&
+            return ((object)left != null) && ((object)right != null) &&
                    (left._volume == right._volume) && (left._source == right._source) && 
                    (left._powerStatus == right._powerStatus) && (left._zoneQuality == right._zoneQuality) &&
                    (left._commandUnacknowledged == right._commandUnacknowledged) && (left._lastUpdate == right._lastUpdate);
@@ -216,21 +218,25 @@ namespace NuvoControl.Common
         /// <summary>
         /// Public overload for the != operator. Is required if operator == has been overwritten.
         /// See <see cref="operator =="/> for more information.
+        /// If one of the parameters is <c>null</c>, <c>true</c> is returned, which indicates that this
+        /// values are not equal.
         /// </summary>
         /// <param name="left">Left operand</param>
         /// <param name="right">Right operand</param>
         /// <returns>True, if the objects are NOT equal.</returns>
         public static bool operator !=(ZoneState left, ZoneState right)
         {
-            if (((Object)left != null) && ((Object)right != null))
+            if ((object)left != null && (object)right != null)
             {
+                // both parameters are not null
                 return (left._volume != right._volume) || (left._source != right._source) ||
                        (left._powerStatus != right._powerStatus) || (left._zoneQuality != right._zoneQuality) ||
                        (left._commandUnacknowledged != right._commandUnacknowledged) || (left._lastUpdate != right._lastUpdate);
             }
             else
             {
-                return false;
+                // one or both parameters are null
+                return true;
             }
         }
 
