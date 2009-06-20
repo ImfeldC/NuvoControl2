@@ -16,6 +16,7 @@ using System.Threading;
 
 using NuvoControl.Client.TestViewer.ConfigurationServiceReference;
 using NuvoControl.Client.TestViewer.MonitorAndControlServiceReference;
+using NuvoControl.Client.TestViewer.Controls;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 
@@ -24,47 +25,55 @@ namespace NuvoControl.Client.TestViewer
     /// <summary>
     /// Interaction logic for Window1.xaml
     /// </summary>
+    [CallbackBehavior(UseSynchronizationContext = false)]
     public partial class Window1 : Window, IMonitorAndControlCallback
     {
-        private ConfigureClient configurationProxy;
-        private MonitorAndControlClient monitorAndControlProxy;
-        private ZoneState _zone1State = null;
+        private ConfigureClient _configurationProxy = null;
+        private MonitorAndControlClient _monitorAndControlProxy = null;
+        private Graphic _graphicConfiguration = null;
         private SynchronizationContext _synchronizationContext = null;
+        private Dictionary<Address, ZoneControl> _zoneControlByAddress = new Dictionary<Address, ZoneControl>();
+
+        private ZoneState _zone1State = null;
 
         public Window1()
         {
             InitializeComponent();
             _synchronizationContext = SynchronizationContext.Current;
             Loaded += new RoutedEventHandler(Window1_Loaded);
-            Unloaded += new RoutedEventHandler(Window1_Unloaded);
+            Closed += new EventHandler(Window1_Closed);
         }
 
-        void Window1_Unloaded(object sender, RoutedEventArgs e)
+        void Window1_Closed(object sender, EventArgs e)
         {
-            configurationProxy.Close();
-            monitorAndControlProxy.Disconnect();
-            monitorAndControlProxy.Close();
+            _configurationProxy.Close();
+            _monitorAndControlProxy.Disconnect();
+            _monitorAndControlProxy.Close();
         }
 
         void Window1_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeMonitorAndControlProxy();
             InitializeConfigurationProxy();
-            InitializeZone();
-       }
+            ReadConfiguration();
+            InstantiateZoneControls();
+            InitializeZones();
+            SubscribeAllZones();
+        }
+
 
         private void InitializeMonitorAndControlProxy()
         {
             try
             {
                 IMonitorAndControlCallback serverCallback = this;
-                monitorAndControlProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-                monitorAndControlProxy.SetClientBaseAddress();
-                monitorAndControlProxy.Connect();
+                _monitorAndControlProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                _monitorAndControlProxy.SetClientBaseAddress();
+                _monitorAndControlProxy.Connect();
             }
             catch (Exception exc)
             {
-                monitorAndControlProxy.Abort();
+                _monitorAndControlProxy.Abort();
             }
         }
 
@@ -73,70 +82,153 @@ namespace NuvoControl.Client.TestViewer
         {
             try
             {
-                configurationProxy = new ConfigureClient();
-                Zone zone = configurationProxy.GetZoneKonfiguration(new Address(100, 4));
-
-                Console.WriteLine("Zone name: {0}", zone.Name);
-                Console.WriteLine("Picture type: {0}", zone.PictureType);
-
-                Graphic graphic = configurationProxy.GetGraphicConfiguration();
+                _configurationProxy = new ConfigureClient();
             }
             catch (Exception exc)
             {
-                configurationProxy.Abort();
+                _configurationProxy.Abort();
             }
         }
 
-        private void button1_Click(object sender, RoutedEventArgs e)
+
+        private void ReadConfiguration()
         {
-            Button subscribeButton = sender as Button;
-            if ((string)subscribeButton.Content == "Subscribe")
+            try
             {
-                monitorAndControlProxy.Monitor(new Address(100, 1));
-                subscribeButton.Content = "Unsubscribe";
+                _graphicConfiguration = _configurationProxy.GetGraphicConfiguration();
             }
-            else
+            catch (Exception exc)
             {
-                monitorAndControlProxy.RemoveMonitor(new Address(100, 1));
-                subscribeButton.Content = "Subscribe";
+                _configurationProxy.Abort();
             }
         }
 
-        private void InitializeZone()
+        private void InstantiateZoneControls()
         {
-            _zone1State = monitorAndControlProxy.GetZoneState(new Address(100, 1));
+            List<Zone> allZones = GetAllZones(_graphicConfiguration);
+            int columCount;
+            int rowCount;
+            ConfigureMainGrid(allZones.Count, out columCount, out rowCount);
 
-            lblVolumeState.Content = _zone1State.Volume.ToString();
+            int columnIndex = 0;
+            int rowIndex = 0;
+            foreach (Zone zone in allZones)
+            {
+                ZoneControl zoneCtrl = new ZoneControl();
+                zoneCtrl.Zone = zone;
+                zoneCtrl.Sources = _graphicConfiguration.Sources;
+                zoneCtrl._zoneStateChange += new RoutedEventHandler(zoneCtrl__zoneStateChange);
+                _gridMain.Children.Add(zoneCtrl);
+                _zoneControlByAddress.Add(zone.Id, zoneCtrl);
+                Grid.SetColumn(zoneCtrl, columnIndex++);
+                Grid.SetRow(zoneCtrl, rowIndex);
+
+                if (columnIndex == columCount)
+                {
+                    columnIndex = 0;
+                    rowIndex++;
+                }
+            }
         }
 
-        private void radioButton1_Checked(object sender, RoutedEventArgs e)
-        {
 
+        void zoneCtrl__zoneStateChange(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ZoneControl zoneCtrl = sender as ZoneControl;
+                if (zoneCtrl != null)
+                {
+                    _monitorAndControlProxy.SetZoneState(zoneCtrl.Zone.Id, zoneCtrl.ZoneStateCmd);
+                }
+            }
+            catch (Exception exc)
+            {
+                _monitorAndControlProxy.Abort();
+            }
         }
 
-        private void radioButton2_Checked(object sender, RoutedEventArgs e)
-        {
 
+
+        private void InitializeZones()
+        {
+            try
+            {
+                foreach (ZoneControl zoneCtrl in _zoneControlByAddress.Values)
+                {
+                    ZoneState zoneState = _monitorAndControlProxy.GetZoneState(zoneCtrl.Zone.Id);
+                    zoneCtrl.ZoneState = zoneState;
+                }
+            }
+            catch (Exception exc)
+            {
+                _monitorAndControlProxy.Abort();
+            }
         }
 
-        private void slider1_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+
+        private void SubscribeAllZones()
         {
-            _zone1State.Volume = (int)e.NewValue;
-            monitorAndControlProxy.SetZoneState(new Address(100, 1), _zone1State);
+            try
+            {
+                foreach (ZoneControl zoneCtrl in _zoneControlByAddress.Values)
+                {
+                    _monitorAndControlProxy.Monitor(zoneCtrl.Zone.Id);
+                }
+            }
+            catch (Exception exc)
+            {
+                _monitorAndControlProxy.Abort();
+            }
         }
+
+
+        private void ConfigureMainGrid(int zoneCount, out int columCount, out int rowCount)
+        {
+            int noOfGridColumns = 2;
+            int noOfGridRows = zoneCount / noOfGridColumns;
+            if ((zoneCount % noOfGridColumns) != 0)
+                noOfGridRows++;
+
+            for (int i = 0; i < noOfGridColumns; i++)
+            {
+                _gridMain.ColumnDefinitions.Add(new ColumnDefinition());
+            }
+
+            for (int j = 0; j < noOfGridRows; j++)
+            {
+                _gridMain.RowDefinitions.Add(new RowDefinition());
+            }
+
+            columCount = noOfGridColumns;
+            rowCount = noOfGridRows;
+        }
+
+
+        private List<Zone> GetAllZones(Graphic graphic)
+        {
+            List<Zone> allZones = new List<Zone>();
+            foreach (Floor floor in graphic.Building.Floors)
+            {
+                allZones.AddRange(floor.Zones);
+            }
+            return allZones;
+        }
+
 
         #region IMonitorAndControlCallback Members
 
         public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
-            _zone1State = zoneState;
-            Console.Beep(100, 100);
-
-            SendOrPostCallback callback = delegate
+            if (_zoneControlByAddress.ContainsKey(zoneId))
             {
-                lblVolumeState.Content = _zone1State.Volume;
-            };
-            _synchronizationContext.Post(callback, null);
+                SendOrPostCallback callback = delegate
+                {
+                    _zoneControlByAddress[zoneId].ZoneState = zoneState;
+                };
+                _synchronizationContext.Post(callback, null);
+            }
+
         }
 
         #endregion
