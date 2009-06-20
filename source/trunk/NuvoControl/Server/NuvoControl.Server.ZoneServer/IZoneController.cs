@@ -78,6 +78,12 @@ namespace NuvoControl.Server.ZoneServer
         void SetZoneState(ZoneState zoneState);
 
         /// <summary>
+        /// Triggers reading the zone state from the devices.
+        /// </summary>
+        /// <returns></returns>
+        void ReadZoneState();
+
+        /// <summary>
         /// Subscirbes a client for value/state changes of this zone.
         /// </summary>
         /// <param name="subscriber"></param>

@@ -103,25 +103,22 @@ namespace NuvoControl.Server.ZoneServer
         {
             lock (this)
             {
-                // TODO remove
-                //_zoneState.ZoneQuality = zoneState.ZoneQuality;
-                //_zoneState.Volume = zoneState.Volume;
-                //_zoneState.Source = zoneState.Source;
-                //_zoneState.PowerStatus = zoneState.PowerStatus;
-                //_zoneState.LastUpdate = zoneState.LastUpdate;
-                // TODO endremove
-
-
                 _protocolDriver.SetZoneState(_zoneId, zoneState);
                 _zoneState.CommandUnacknowledged = true;
+                NotifySubscribedClients();
             }
+        }
 
-            //NotifySubscribedClients();
-            //ThreadPool.QueueUserWorkItem(delegate(object obj)
-            //{
-            //    Thread.Sleep(1000);
-            //    NotifySubscribedClients();
-            //}, null);
+
+        /// <summary>
+        /// <see cref="IZoneController"/>
+        /// </summary>
+        public void ReadZoneState()
+        {
+            lock (this)
+            {
+                _protocolDriver.ReadZoneState(_zoneId);
+            }
         }
 
         /// <summary>
@@ -204,7 +201,7 @@ namespace NuvoControl.Server.ZoneServer
                 _zoneState.PowerStatus = newState.PowerStatus;
                 _zoneState.LastUpdate = newState.LastUpdate;
             }
-            _zoneState.CommandUnacknowledged = true;
+            _zoneState.CommandUnacknowledged = false;
         }
 
 

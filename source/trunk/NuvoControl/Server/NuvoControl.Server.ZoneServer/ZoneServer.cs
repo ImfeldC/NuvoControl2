@@ -57,6 +57,17 @@ namespace NuvoControl.Server.ZoneServer
 
         #region IZoneServer Members
 
+        public void StartUp()
+        {
+            lock (this)
+            {
+                foreach (IZoneController zoneController in _zoneControllers.Values)
+                {
+                    zoneController.ReadZoneState();
+                }
+            }
+        }
+
         public ZoneState GetZoneState(Address zoneId)
         {
             lock (this)
