@@ -28,7 +28,13 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
 {
     class NuvoTelegramMock : INuvoTelegram
     {
+        #region Common Logger
+        /// <summary>
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
+        /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
+        #endregion
 
         private bool _closeMethodCalled;
         private bool _openMethodCalled;

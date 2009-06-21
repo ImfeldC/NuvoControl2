@@ -23,7 +23,7 @@ namespace NuvoControl.Server.Simulator
         #region Common Logger
         /// <summary>
         /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
-        /// <see cref="Common.Logging"/> for more information.
+        /// <see cref="LogManager"/> for more information.
         /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
@@ -43,28 +43,29 @@ namespace NuvoControl.Server.Simulator
         /// </summary>
         public class ZoneUserControlEventArgs : EventArgs
         {
-            private int _currentSelectedZoneId;
-            private int _prevSelectedZoneId;
-            private ZoneUserControl _senderZoneUserControl;
+            private ENuvoEssentiaZones _currentSelectedZone = ENuvoEssentiaZones.NoZone;
+            private ENuvoEssentiaZones _prevSelectedZone = ENuvoEssentiaZones.NoZone;
+            private ZoneUserControl _senderZoneUserControl = null;
+            private ZoneState _prevZoneState = null;
 
             /// <summary>
-            /// Returns the current selected zone as zone id
+            /// Gets the current selected zone as zone enumeration.
             /// </summary>
-            public int CurrentSelectedZoneId
+            public ENuvoEssentiaZones CurrentSelectedZone
             {
-                get { return _currentSelectedZoneId; }
+                get { return _currentSelectedZone; }
             }
 
             /// <summary>
-            /// Returns the previous selected zone as zone id
+            /// Gets the previous selected zone as zone enumeration.
             /// </summary>
-            public int PrevSelectedZoneId
+            public ENuvoEssentiaZones PrevSelectedZone
             {
-                get { return _prevSelectedZoneId; }
+                get { return _prevSelectedZone; }
             }
 
             /// <summary>
-            /// Returns the sender zone user control.
+            /// Gets the sender zone user control.
             /// </summary>
             public ZoneUserControl SenderZoneUserControl
             {
@@ -72,16 +73,39 @@ namespace NuvoControl.Server.Simulator
             }
 
             /// <summary>
-            /// Constructor to create the zone user control event argument.
+            /// Gets the previous zone state.
             /// </summary>
-            /// <param name="selectedZoneId">Selected Zone, as zone id.</param>
-            public ZoneUserControlEventArgs(ZoneUserControl senderZoneUserControl, int currentSelectedZoneId, int prevSelectedZoneId)
+            public ZoneState PrevZoneState
             {
-                _senderZoneUserControl = senderZoneUserControl;
-                _currentSelectedZoneId = currentSelectedZoneId;
-                _prevSelectedZoneId = prevSelectedZoneId;
+                get { return _prevZoneState; }
             }
 
+            /// <summary>
+            /// Constructor to create the zone user control event argument.
+            /// </summary>
+            /// <param name="senderZoneUserControl">This pointer, to the source zone user control.</param>
+            /// <param name="currentSelectedZone">Selected Zone, as zone enumeration.</param>
+            /// <param name="prevSelectedZone">Previous selected zone, as zone enumeration.</param>
+            public ZoneUserControlEventArgs(ZoneUserControl senderZoneUserControl, ENuvoEssentiaZones currentSelectedZone, ENuvoEssentiaZones prevSelectedZone)
+            {
+                _senderZoneUserControl = senderZoneUserControl;
+                _currentSelectedZone = currentSelectedZone;
+                _prevSelectedZone = prevSelectedZone;
+            }
+
+            /// <summary>
+            /// Constructor to create the zone user control event argument.
+            /// </summary>
+            /// <param name="senderZoneUserControl">This pointer, to the source zone user control.</param>
+            /// <param name="currentSelectedZone">Selected Zone, as zone enumeration.</param>
+            /// <param name="prevZoneState">Previous zone state, before changing the selection.</param>
+            public ZoneUserControlEventArgs(ZoneUserControl senderZoneUserControl, ENuvoEssentiaZones currentSelectedZone, ZoneState prevZoneState)
+            {
+                _senderZoneUserControl = senderZoneUserControl;
+                _currentSelectedZone = currentSelectedZone;
+                _prevSelectedZone = currentSelectedZone;    // set previous selected zone
+                _prevZoneState = prevZoneState;
+            }
         }
 
         /// <summary>
@@ -90,16 +114,28 @@ namespace NuvoControl.Server.Simulator
         public event ZoneUserControlEventHandler onZoneChanged;
 
         /// <summary>
+        /// Public event in case a selection within the zone user control has been changed.
+        /// E.g. in case another source has been selected, or the volume track bar has changed.
+        /// </summary>
+        public event ZoneUserControlEventHandler onSelectionChanged;
+
+        /// <summary>
         /// Private member to store the selected zone id.
         /// It is used in the zone id changed event handler, to compare if the 
         /// zone has really changed (see <see cref="cmbZoneSelect_SelectedIndexChanged"/>
         /// </summary>
-        private int _selectedZoneIndex = -1;
+        private ENuvoEssentiaZones _selectedZone = ENuvoEssentiaZones.NoZone;
 
         /// <summary>
         /// Private memeber holding the reference to the zone state controller
         /// </summary>
         private ZoneStateController _zoneStateController;
+
+        /// <summary>
+        /// Private member to hold the read-only state.
+        /// If true, all controls on the user control are read-only.
+        /// </summary>
+        private bool _readOnly = true;
 
         /// <summary>
         /// Sets the zone state controller.
@@ -110,14 +146,6 @@ namespace NuvoControl.Server.Simulator
             { 
                 _zoneStateController = value;
                 _zoneStateController.onZoneUpdated += new ZoneStateUpdated(_zoneStateController_onZoneUpdated);
-            }
-        }
-
-        void _zoneStateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
-        {
-            if (e.ZoneId == GetSelectedZone())
-            {
-                updateZoneState(e.NewZoneState);
             }
         }
 
@@ -136,26 +164,55 @@ namespace NuvoControl.Server.Simulator
         public ZoneUserControl()
         {
             InitializeComponent();
+            setReadOnly(_readOnly);
         }
 
         /// <summary>
-        /// Private method, which handles the event in case another zone has been 
-        /// selected in the zone combo box.
+        /// Gets or Sets the read-only mode for the user control.
+        /// If true, all controls on the zone user control ar read-only.
         /// </summary>
-        /// <param name="sender">This pointer, to the combo box</param>
-        /// <param name="e">Event argument, passed by the combo box</param>
-        private void cmbZoneSelect_SelectedIndexChanged(object sender, EventArgs e)
+        public bool ReadOnly
         {
-            if ( (_selectedZoneIndex != cmbZoneSelect.SelectedIndex) &&
-                 (cmbZoneSelect.SelectedIndex < 12) )
+            get { return _readOnly; }
+            set { setReadOnly( value ); }
+        }
+
+        /// <summary>
+        /// Private method to handle the read-only accessor. See <see cref="ReadOnly"/> for more details.
+        /// </summary>
+        /// <param name="readOnly"></param>
+        private void setReadOnly(bool readOnly)
+        {
+            _readOnly = readOnly;
+            cmbZoneSelect.Enabled = !_readOnly;
+            cmbSourceSelect.Enabled = !_readOnly;
+            cmbPowerStatusSelect.Enabled = !_readOnly;
+            trackVolume.Enabled = !_readOnly;
+        }
+
+
+        private void _zoneStateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
+        {
+            if (e.ZoneId == GetSelectedZone())
             {
-                if (onZoneChanged != null)
-                {
-                    onZoneChanged( this, new ZoneUserControlEventArgs(this,cmbZoneSelect.SelectedIndex + 1,_selectedZoneIndex + 1));
-                }
-                _selectedZoneIndex = cmbZoneSelect.SelectedIndex;
+                updateZoneState(e.NewZoneState);
             }
         }
+
+        /// <summary>
+        /// Load method, called at user control start.
+        /// Loads the enumerations into the combo boxes.
+        /// See <see cref="importEnumeration"/> for more information.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ZoneUserControl_Load(object sender, EventArgs e)
+        {
+            importEnumeration(typeof(ENuvoEssentiaSources), cmbSourceSelect);
+            importEnumeration(typeof(EZonePowerStatus), cmbPowerStatusSelect);
+            importEnumeration(typeof(ENuvoEssentiaZones), cmbZoneSelect);     // needs to be done after setting source + power status
+        }
+
 
         /// <summary>
         /// Static method, used to load an enumeration and add all values of them 
@@ -225,15 +282,18 @@ namespace NuvoControl.Server.Simulator
         /// <param name="zoneState">Zone state, which shall be set.</param>
         public void updateZoneState(ZoneState zoneState)
         {
-            _log.Trace(m => m("Update Zone state in control {0}, for zone {1} ({2}). New State='{3}'",
-                this.Name, GetSelectedZone().ToString(), _selectedZoneIndex+1, zoneState));
-            _zoneState = zoneState; 
-            if ((cmbSourceSelect != null) && (cmbSourceSelect.Items.Count>0))
-                cmbSourceSelect.SelectedIndex = zoneState.Source.ObjectId - 1;
-            if ((cmbPowerStatusSelect != null) && (cmbPowerStatusSelect.Items.Count > 0))
-                cmbPowerStatusSelect.SelectedItem = (zoneState.PowerStatus ? EZonePowerStatus.ZoneStatusON.ToString() : EZonePowerStatus.ZoneStatusOFF.ToString());
-            if( trackVolume != null )
-                trackVolume.Value = zoneState.Volume;
+            if (_zoneState != zoneState)
+            {
+                _log.Trace(m => m("Update Zone state in control {0}, for zone {1} ({2}). New State='{3}'",
+                    this.Name, GetSelectedZone().ToString(), _selectedZone.ToString(), zoneState));
+                _zoneState = zoneState;
+                if ((cmbSourceSelect != null) && (cmbSourceSelect.Items.Count > 0))
+                    cmbSourceSelect.SelectedIndex = zoneState.Source.ObjectId - 1;
+                if ((cmbPowerStatusSelect != null) && (cmbPowerStatusSelect.Items.Count > 0))
+                    cmbPowerStatusSelect.SelectedItem = (zoneState.PowerStatus ? EZonePowerStatus.ZoneStatusON.ToString() : EZonePowerStatus.ZoneStatusOFF.ToString());
+                if (trackVolume != null)
+                    trackVolume.Value = zoneState.Volume;
+            }
         }
 
         /// <summary>
@@ -252,6 +312,8 @@ namespace NuvoControl.Server.Simulator
             }
         }
 
+
+        #region Get Methods
         /// <summary>
         /// Returns the selected zone.
         /// Returns <c>ENuvoEssentiaZones.NoZone</c> in case of an error, or no zone is selected.
@@ -290,41 +352,25 @@ namespace NuvoControl.Server.Simulator
         {
             return trackVolume.Value;
         }
+        #endregion
 
+        #region SelectIndex Changed Methods
         /// <summary>
-        /// Load method, called at user control start.
-        /// Loads the enumerations into the combo boxes.
-        /// See <see cref="importEnumeration"/> for more information.
+        /// Private method, which handles the event in case another zone has been 
+        /// selected in the zone combo box.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ZoneUserControl_Load(object sender, EventArgs e)
+        /// <param name="sender">This pointer, to the combo box</param>
+        /// <param name="e">Event argument, passed by the combo box</param>
+        private void cmbZoneSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            importEnumeration(typeof(ENuvoEssentiaSources), cmbSourceSelect);
-            importEnumeration(typeof(EZonePowerStatus), cmbPowerStatusSelect);
-            importEnumeration(typeof(ENuvoEssentiaZones), cmbZoneSelect);     // needs to be done after setting source + power status
-        }
-
-        /// <summary>
-        /// Event handler, in case the volume track bar changes.
-        /// </summary>
-        /// <param name="sender">This pointer, to the volume track bar.</param>
-        /// <param name="e">Event argumnet, passed by the volume track bar.</param>
-        private void trackVolume_Scroll(object sender, EventArgs e)
-        {
-            try
+            if ((_selectedZone != GetSelectedZone()) &&
+                 (cmbZoneSelect.SelectedIndex < 12))
             {
-                if (_zoneState != null)
+                if (onZoneChanged != null)
                 {
-                    ZoneState updatedZoneState = new ZoneState(_zoneState);
-                    updatedZoneState.Volume = trackVolume.Value;
-                    if (_zoneStateController != null)
-                        _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+                    onZoneChanged(this, new ZoneUserControlEventArgs(this, GetSelectedZone(), _selectedZone));
                 }
-            }
-            catch (Exception ex)
-            {
-                _log.Fatal(m => m("Exception in cmbSourceSelect_SelectedIndexChanged! {0}", ex.ToString()));
+                _selectedZone = GetSelectedZone();
             }
         }
 
@@ -339,15 +385,23 @@ namespace NuvoControl.Server.Simulator
             {
                 if (_zoneState != null)
                 {
+                    ZoneState prevZoneState = new ZoneState(_zoneState);
+
+                    // Update zone state, store them in this user control, and notify the zone state controller
                     ZoneState updatedZoneState = new ZoneState(_zoneState);
                     updatedZoneState.PowerStatus = ((string)cmbPowerStatusSelect.SelectedItem == EZonePowerStatus.ZoneStatusON.ToString() ? true : false);
                     if (_zoneStateController != null)
                         _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+
+                    if (onSelectionChanged != null)
+                    {
+                        onSelectionChanged(this, new ZoneUserControlEventArgs(this, GetSelectedZone(), prevZoneState));
+                    }
                 }
             }
             catch (Exception ex)
             {
-                _log.Fatal(m => m("Exception in cmbSourceSelect_SelectedIndexChanged! {0}", ex.ToString()));
+                _log.Fatal(m => m("Exception in cmbPowerStatusSelect_SelectedIndexChanged! {0}", ex.ToString()));
             }
         }
 
@@ -362,10 +416,20 @@ namespace NuvoControl.Server.Simulator
             {
                 if (_zoneState != null)
                 {
+                    ZoneState prevZoneState = new ZoneState(_zoneState);
+
+                    // Update zone state, store them in this user control, and notify the zone state controller
                     ZoneState updatedZoneState = new ZoneState(_zoneState);
                     updatedZoneState.Source = new Address(updatedZoneState.Source.DeviceId, cmbSourceSelect.SelectedIndex + 1);
+                    _zoneState = updatedZoneState;
                     if (_zoneStateController != null)
                         _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+
+                    // Notify subscribers about selection change
+                    if (onSelectionChanged != null)
+                    {
+                        onSelectionChanged(this, new ZoneUserControlEventArgs(this, GetSelectedZone(), prevZoneState));
+                    }
                 }
             }
             catch (Exception ex)
@@ -373,6 +437,38 @@ namespace NuvoControl.Server.Simulator
                 _log.Fatal(m => m("Exception in cmbSourceSelect_SelectedIndexChanged! {0}", ex.ToString())); 
             }
         }
+
+        /// <summary>
+        /// Event handler, in case the volume track bar changes.
+        /// </summary>
+        /// <param name="sender">This pointer, to the volume track bar.</param>
+        /// <param name="e">Event argumnet, passed by the volume track bar.</param>
+        private void trackVolume_Scroll(object sender, EventArgs e)
+        {
+            try
+            {
+                if (_zoneState != null)
+                {
+                    ZoneState prevZoneState = new ZoneState(_zoneState);
+
+                    // Update zone state, store them in this user control, and notify the zone state controller
+                    ZoneState updatedZoneState = new ZoneState(_zoneState);
+                    updatedZoneState.Volume = trackVolume.Value;
+                    if (_zoneStateController != null)
+                        _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+
+                    if (onSelectionChanged != null)
+                    {
+                        onSelectionChanged(this, new ZoneUserControlEventArgs(this, GetSelectedZone(), prevZoneState));
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _log.Fatal(m => m("Exception in trackVolume_Scroll! {0}", ex.ToString()));
+            }
+        }
+        #endregion
 
     }
 }

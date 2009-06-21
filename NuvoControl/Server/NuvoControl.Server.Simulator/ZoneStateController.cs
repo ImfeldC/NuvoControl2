@@ -25,18 +25,9 @@ namespace NuvoControl.Server.Simulator
     /// </summary>
     public class ZoneStateEventArgs : EventArgs
     {
-        int _zoneIndex;
         ENuvoEssentiaZones _zoneId;
         ZoneState _prevZoneState;
         ZoneState _newZoneState;
-
-        /// <summary>
-        /// Gets the Zone Index. Zero-Based!
-        /// </summary>
-        public int ZoneIndex
-        {
-            get { return _zoneIndex; }
-        }
 
         /// <summary>
         /// Gets the zone id (as enumeration, <see cref="ENuvoEssentiaZones"/>). One-Based!
@@ -63,20 +54,6 @@ namespace NuvoControl.Server.Simulator
         }
         
         /// <summary>
-        /// Constructor to create a zone event argument. 
-        /// </summary>
-        /// <param name="ZoneIndex">Index of the zone. Zero-based!</param>
-        /// <param name="prevZoneState">Previous Zone State</param>
-        /// <param name="newZoneState">New Zone State</param>
-        public ZoneStateEventArgs(int ZoneIndex, ZoneState prevZoneState, ZoneState newZoneState )
-        {
-            _zoneIndex = ZoneIndex;
-            _prevZoneState = prevZoneState;
-            _newZoneState = newZoneState;
-            _zoneId = (ENuvoEssentiaZones)ZoneIndex+1;  // calculate from index
-        }
-
-        /// <summary>
         /// Constructor to create a zone event argument.
         /// </summary>
         /// <param name="ZoneId">Zone id of the zone. Enumeration!</param>
@@ -84,7 +61,6 @@ namespace NuvoControl.Server.Simulator
         /// <param name="newZoneState">New Zone State</param>
         public ZoneStateEventArgs(ENuvoEssentiaZones ZoneId, ZoneState prevZoneState, ZoneState newZoneState )
         {
-            _zoneIndex = (int)ZoneId-1;     // calculate from enumeration
             _prevZoneState = prevZoneState;
             _newZoneState = newZoneState;
             _zoneId = ZoneId;
@@ -98,7 +74,8 @@ namespace NuvoControl.Server.Simulator
     {
         #region Common Logger
         /// <summary>
-        /// Common logger object.
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
         /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
@@ -142,21 +119,8 @@ namespace NuvoControl.Server.Simulator
             {
                 ZoneState oldState = new ZoneState(_zoneState[(int)zoneId - 1]);
                 _zoneState[(int)zoneId - 1] = newZoneState;
-                notifyZoneStateSubscribers((int)zoneId - 1, oldState, newZoneState);
+                notifyZoneStateSubscribers(zoneId, oldState, newZoneState);
             }
-        }
-
-        /// <summary>
-        /// Gets the Zone State for the corresponding index. Zero-Based!
-        /// NOTE: Do not change the object received by this method, use the method
-        /// <see cref="setZoneState"/> instead.
-        /// Otherwise you won't get update notifications.
-        /// </summary>
-        /// <param name="index">Index of Zone. Zero-Based!</param>
-        /// <returns>Zone State.</returns>
-        public ZoneState this[ int index ]
-        {
-            get { return _zoneState[index]; }
         }
 
         /// <summary>
@@ -175,17 +139,17 @@ namespace NuvoControl.Server.Simulator
         /// <summary>
         /// Private method to notify the subscribers about changes in the zone state.
         /// </summary>
-        /// <param name="zoneIndex">Index of the changed zone. Zero-Based!</param>
+        /// <param name="zoneId">Zone Id, of the changed zone. One-Based enumeration.</param>
         /// <param name="oldZoneState">Old Zone State.</param>
         /// <param name="newZoneState">New Zone State.</param>
-        private void notifyZoneStateSubscribers(int zoneIndex, ZoneState oldZoneState, ZoneState newZoneState)
+        private void notifyZoneStateSubscribers(ENuvoEssentiaZones zoneId, ZoneState oldZoneState, ZoneState newZoneState)
         {
-            _log.Trace(m=>m("Zone State with zoneIndex='{0}' has changed, notify the subscribers. oldState='{1}' newState='{2}'.",zoneIndex, oldZoneState.ToString(), newZoneState.ToString() ));
+            _log.Trace(m => m("Zone State with zoneId='{0}' has changed, notify the subscribers. oldState='{1}' newState='{2}'.", zoneId.ToString(), oldZoneState.ToString(), newZoneState.ToString()));
             if (onZoneUpdated != null)
             {
                 if (oldZoneState != newZoneState)
                 {
-                    onZoneUpdated(this, new ZoneStateEventArgs(zoneIndex, oldZoneState, newZoneState));
+                    onZoneUpdated(this, new ZoneStateEventArgs(zoneId, oldZoneState, newZoneState));
                 }
             }
         }

@@ -29,7 +29,13 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     public class SerialPortQueue : ISerialPort
     {
+        #region Common Logger
+        /// <summary>
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
+        /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
+        #endregion
 
         private const string _sendQueueName = ".\\private$\\toNuvoEssentia";
         private MessageQueue _sendQueue;
@@ -91,7 +97,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         void _rcvQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs eventArg)
         {
-            _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.ToString()));
+            _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.Body.ToString()));
 
             try
             {
