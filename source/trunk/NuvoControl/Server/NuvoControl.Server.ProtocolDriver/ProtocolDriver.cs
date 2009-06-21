@@ -40,7 +40,13 @@ namespace NuvoControl.Server.ProtocolDriver
     /// </summary>
     public class NuvoEssentiaProtocolDriver : INuvoProtocol
     {
+        #region Common Logger
+        /// <summary>
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
+        /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
+        #endregion
 
         Dictionary<int,INuvoEssentiaProtocol> _protocolList = new Dictionary<int,INuvoEssentiaProtocol>();
 

@@ -39,7 +39,13 @@ namespace NuvoControl.Server.ProtocolDriver
     /// </summary>
     public class NuvoEssentiaSingleCommand : INuvoEssentiaSingleCommand
     {
+        #region Common Logger
+        /// <summary>
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
+        /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
+        #endregion
         private Profile _profile;
 
         Guid _guid;
@@ -1243,6 +1249,9 @@ namespace NuvoControl.Server.ProtocolDriver
                 case "56":
                     irCarrierFrequency = EIRCarrierFrequency.IR56kHz;
                     break;
+                case "":
+                    irCarrierFrequency = EIRCarrierFrequency.IRUnknown;
+                    break;
                 default:
                     LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse IR Carrier Frequency. Wrong command '{0}' received!", stringIRCarrierFrequency));
                     irCarrierFrequency = EIRCarrierFrequency.IRUnknown;
@@ -1260,13 +1269,16 @@ namespace NuvoControl.Server.ProtocolDriver
         static private ENuvoEssentiaZones parseCommandForZone(string commandString, string commandStringTemplate)
         {
             string stringZone = parseCommand(commandString, commandStringTemplate, "xx");
-            try
+            if (stringZone != "")
             {
-                return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
-            }
-            catch( System.ArgumentException ex )
-            {
-                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Zone. Wrong zone id '{0}' received! Exception={1}", stringZone, ex));
+                try
+                {
+                    return (ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), stringZone, true);
+                }
+                catch (System.ArgumentException ex)
+                {
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Zone. Wrong zone id '{0}' received! Exception={1}", stringZone, ex));
+                }
             }
             return ENuvoEssentiaZones.NoZone;
         }
@@ -1280,13 +1292,16 @@ namespace NuvoControl.Server.ProtocolDriver
         static private ENuvoEssentiaSources parseCommandForSource(string commandString, string commandStringTemplate)
         {
             string stringSource = parseCommand(commandString, commandStringTemplate, "s");
-            try
+            if (stringSource != "")
             {
-                return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
-            }
-            catch (System.ArgumentException ex)
-            {
-                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Source. Wrong source id '{0}' received! Exception={1}", stringSource, ex));
+                try
+                {
+                    return (ENuvoEssentiaSources)Enum.Parse(typeof(ENuvoEssentiaSources), stringSource, true);
+                }
+                catch (System.ArgumentException ex)
+                {
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Source. Wrong source id '{0}' received! Exception={1}", stringSource, ex));
+                }
             }
             return ENuvoEssentiaSources.NoSource;
         }
@@ -1309,6 +1324,9 @@ namespace NuvoControl.Server.ProtocolDriver
                 case "ON":
                 case " ON":
                     zonePowerStatus = EZonePowerStatus.ZoneStatusON;
+                    break;
+                case "":
+                    zonePowerStatus = EZonePowerStatus.ZoneStatusUnknown;
                     break;
                 default:
                     LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Power Status. Wrong status '{0}' received!", stringPowerStatus));
@@ -1396,13 +1414,16 @@ namespace NuvoControl.Server.ProtocolDriver
         static private EVolumeResetStatus parseCommandForVolumeResetStatus(string commandString, string commandStringTemplate)
         {
             string stringVolumeResetStatus = parseCommand(commandString, commandStringTemplate, "r");
-            try
+            if (stringVolumeResetStatus != "")
             {
-                return (EVolumeResetStatus)Enum.Parse(typeof(EVolumeResetStatus), stringVolumeResetStatus, true);
-            }
-            catch (System.ArgumentException ex)
-            {
-                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Reset Status. Wrong command '{0}' received! Exception={1}", stringVolumeResetStatus, ex));
+                try
+                {
+                    return (EVolumeResetStatus)Enum.Parse(typeof(EVolumeResetStatus), stringVolumeResetStatus, true);
+                }
+                catch (System.ArgumentException ex)
+                {
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Reset Status. Wrong command '{0}' received! Exception={1}", stringVolumeResetStatus, ex));
+                }
             }
             return EVolumeResetStatus.VolumeResetUnknown;
         }
@@ -1416,13 +1437,16 @@ namespace NuvoControl.Server.ProtocolDriver
         static private ESourceGroupStatus parseCommandForSourceGroupStatus(string commandString, string commandStringTemplate)
         {
             string stringSourceGroupStatus = parseCommand(commandString, commandStringTemplate, "q");
-            try
+            if (stringSourceGroupStatus != "")
             {
-                return (ESourceGroupStatus)Enum.Parse(typeof(EVolumeResetStatus), stringSourceGroupStatus, true);
-            }
-            catch (System.ArgumentException ex)
-            {
-                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Source Group Status. Wrong command '{0}' received! Exception={1}", stringSourceGroupStatus, ex));
+                try
+                {
+                    return (ESourceGroupStatus)Enum.Parse(typeof(EVolumeResetStatus), stringSourceGroupStatus, true);
+                }
+                catch (System.ArgumentException ex)
+                {
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Source Group Status. Wrong command '{0}' received! Exception={1}", stringSourceGroupStatus, ex));
+                }
             }
             return ESourceGroupStatus.SourceGroupUnknown;
         }
@@ -1436,13 +1460,16 @@ namespace NuvoControl.Server.ProtocolDriver
         static private EDIPSwitchOverrideStatus parseCommandForDIPSwitchOverrideStatus(string commandString, string commandStringTemplate)
         {
             string stringEDIPSwitchOverrideStatus = parseCommand(commandString, commandStringTemplate, "i");
-            try
+            if (stringEDIPSwitchOverrideStatus != "")
             {
-                return (EDIPSwitchOverrideStatus)Enum.Parse(typeof(EVolumeResetStatus), stringEDIPSwitchOverrideStatus, true);
-            }
-            catch (System.ArgumentException ex)
-            {
-                LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse DIP Switch Override Status. Wrong command '{0}' received! Exception={1}", stringEDIPSwitchOverrideStatus, ex));
+                try
+                {
+                    return (EDIPSwitchOverrideStatus)Enum.Parse(typeof(EVolumeResetStatus), stringEDIPSwitchOverrideStatus, true);
+                }
+                catch (System.ArgumentException ex)
+                {
+                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse DIP Switch Override Status. Wrong command '{0}' received! Exception={1}", stringEDIPSwitchOverrideStatus, ex));
+                }
             }
             return EDIPSwitchOverrideStatus.DIPSwitchOverrideUnknown;
         }

@@ -39,7 +39,8 @@ namespace NuvoControl.Server.Simulator
     {
         #region Common Logger
         /// <summary>
-        /// Common logger object.
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
         /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
@@ -108,6 +109,7 @@ namespace NuvoControl.Server.Simulator
 
         private void _zoneSateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
         {
+            onZoneUpdated(ucZoneInput, e);
             onZoneUpdated(ucZone1, e);
             onZoneUpdated(ucZone2, e);
             onZoneUpdated(ucZone3, e);
@@ -139,7 +141,10 @@ namespace NuvoControl.Server.Simulator
             initZoneUserControl(ucZone3, ENuvoEssentiaZones.Zone3, _zoneSateController[ENuvoEssentiaZones.Zone3]);
             initZoneUserControl(ucZone4, ENuvoEssentiaZones.Zone4, _zoneSateController[ENuvoEssentiaZones.Zone4]);
 
+            initZoneUserControl(ucZoneInput,  ENuvoEssentiaZones.Zone1, _zoneSateController[ENuvoEssentiaZones.Zone1]);
             initZoneUserControl(ucZoneManual, ENuvoEssentiaZones.Zone1, _zoneSateController[ENuvoEssentiaZones.Zone1]);
+
+            ucZoneManual.onSelectionChanged += new ZoneUserControl.ZoneUserControlEventHandler(ucZoneManual_onSelectionChanged);
 
             OpenQueues();
         }
@@ -158,7 +163,7 @@ namespace NuvoControl.Server.Simulator
         /// <param name="eventArg">Event argument, containing the message</param>
         void _rcvQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs eventArg)
         {
-            _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.ToString()));
+            _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.Body.ToString()));
             try
             {
                 _incommingCommands.Enqueue(eventArg);
@@ -285,84 +290,6 @@ namespace NuvoControl.Server.Simulator
         }
 
 
-        #region Manual Zone Status Changes
-        private void sendCommandForManualChanges(ENuvoEssentiaCommands commandType )
-        {
-            if (_sendQueue != null)
-            {
-                ENuvoEssentiaZones zone = ucZoneManual.GetSelectedZone();
-                if (zone != ENuvoEssentiaZones.NoZone)
-                {
-                    NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                        commandType,
-                        zone,
-                        ucZoneManual.GetSelectedSource(),
-                        ucZoneManual.GetSelectedVolumeLevel(),
-                        (int)trackBass.Value, 
-                        (int)trackTreble.Value,
-                        ucZoneManual.GetSelectedPowerStatus(),
-                        new EIRCarrierFrequency[6],
-                        EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
-                        EVolumeResetStatus.VolumeResetOFF,
-                        ESourceGroupStatus.SourceGroupOFF, "v1.23");
-                    string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
-                    _sendQueue.Send(incomingCommand);
-                    DisplayData(MessageType.Outgoing, incomingCommand);
-                }
-            }
-        }
-
-        private void cmbZoneSelect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            DisplayData(MessageType.Normal, string.Format("--- Changed to Zone '{0}' ---", ucZoneManual.GetSelectedZone().ToString()));
-        }
-
-        private void cmbPowerStatusSelect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            EZonePowerStatus zonePowerStatus = ucZoneManual.GetSelectedPowerStatus();
-            if (zonePowerStatus == EZonePowerStatus.ZoneStatusON)
-            {
-                sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneON);
-            }
-            else if (zonePowerStatus == EZonePowerStatus.ZoneStatusOFF)
-            {
-                sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneOFF);
-            }
-            else
-            {
-                DisplayData(MessageType.Warning, "Unknown Power Status, cannot send command!");
-            }
-        }
-
-        private void cmbSourceSelect_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            ENuvoEssentiaSources source = ucZoneManual.GetSelectedSource();
-            if (source != ENuvoEssentiaSources.NoSource)
-            {
-                sendCommandForManualChanges(ENuvoEssentiaCommands.SetSource);
-            }
-            else
-            {
-                DisplayData(MessageType.Warning, "Unknown Source, cannot send command!");
-            }
-        }
-
-        private void trackVolume_Scroll(object sender, EventArgs e)
-        {
-            sendCommandForManualChanges(ENuvoEssentiaCommands.SetVolume);
-        }
-
-        private void trackBass_Scroll(object sender, EventArgs e)
-        {
-            sendCommandForManualChanges(ENuvoEssentiaCommands.SetBassLevel);
-        }
-
-        private void trackTreble_Scroll(object sender, EventArgs e)
-        {
-            sendCommandForManualChanges(ENuvoEssentiaCommands.SetTrebleLevel);
-        }
-        #endregion
-
 
         private void cmbSimModeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -399,11 +326,11 @@ namespace NuvoControl.Server.Simulator
         {
             if (_sendQueue != null)
             {
-                ENuvoEssentiaZones zone = ucZone1.GetSelectedZone();
+                ENuvoEssentiaZones zone = ucZoneInput.GetSelectedZone();
                 if (zone != ENuvoEssentiaZones.NoZone)
                 {
                     NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                        commandType, zone, ucZone1.GetSelectedSource(), ucZone1.GetSelectedVolumeLevel(), 0, 0, ucZone1.GetSelectedPowerStatus(),
+                        commandType, zone, ucZoneInput.GetSelectedSource(), ucZoneInput.GetSelectedVolumeLevel(), 0, 0, ucZoneInput.GetSelectedPowerStatus(),
                         new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                         EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
                     string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
@@ -419,7 +346,7 @@ namespace NuvoControl.Server.Simulator
                 ProtocolDriverSimulator.EProtocolDriverSimulationMode.AllOk.ToString() )
             {
                 NuvoEssentiaSingleCommand command = ProtocolDriverSimulator.createNuvoEssentiaSingleCommand((string)eventArg.Message.Body);
-                ucZone1.updateZoneState(command);
+                ucZoneInput.updateZoneState(command);
                 sendCommandForSimulation(command.Command);
             }
             else if ((string)cmbSimModeSelect.SelectedItem ==
@@ -433,10 +360,123 @@ namespace NuvoControl.Server.Simulator
                 NuvoEssentiaSingleCommand command = ProtocolDriverSimulator.createNuvoEssentiaSingleCommand((string)eventArg.Message.Body);
                 // Select ONE zone HIGHER than received by command string
                 ENuvoEssentiaZones zoneId = (ENuvoEssentiaZones)((int)command.ZoneId>=_numOfZones?0:(int)command.ZoneId)+1;
-                ucZone1.SetSelectedZone(zoneId);
+                ucZoneInput.SetSelectedZone(zoneId);
                 sendCommandForSimulation(command.Command);
             }
         }
+
+
+        #region onSelectionChanged Event Handler
+
+        void ucZoneManual_onSelectionChanged(object sender, ZoneUserControl.ZoneUserControlEventArgs e)
+        {
+            // handle only selection changes for the manual zone user control
+            // --> send commands based on these selections
+            if (e.SenderZoneUserControl == ucZoneManual)
+            {
+                if (e.PrevSelectedZone == e.CurrentSelectedZone)
+                {
+                    // Zone has NOT changed, just a selection within the control
+
+                    if (e.PrevZoneState.PowerStatus != _zoneSateController[e.CurrentSelectedZone].PowerStatus)
+                    {
+                        // Power Status has changed
+                        PowerStatusSelect_sendCommandForManualChanges();
+                    }
+                    else if (e.PrevZoneState.Source != _zoneSateController[e.CurrentSelectedZone].Source)
+                    {
+                        // Source Selection has changed
+                        SourceSelect_sendCommandForManualChanges();
+                    }
+                    else if (e.PrevZoneState.Volume != _zoneSateController[e.CurrentSelectedZone].Volume)
+                    {
+                        // Volume Level has changed
+                        Volume_sendCommandForManualChanges();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Priuvate method to send a command, based on the settings in the zone user control <c>ucZoneManual</c>.
+        /// The command parameters are read from the zone user control, and then put into teh queue.
+        /// </summary>
+        /// <param name="commandType">Command type, which shall be send.</param>
+        private void sendCommandForManualChanges(ENuvoEssentiaCommands commandType)
+        {
+            if (_sendQueue != null)
+            {
+                ENuvoEssentiaZones zone = ucZoneManual.GetSelectedZone();
+                if (zone != ENuvoEssentiaZones.NoZone)
+                {
+                    NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                        commandType,
+                        zone,
+                        ucZoneManual.GetSelectedSource(),
+                        ucZoneManual.GetSelectedVolumeLevel(),
+                        (int)trackBass.Value,
+                        (int)trackTreble.Value,
+                        ucZoneManual.GetSelectedPowerStatus(),
+                        new EIRCarrierFrequency[6],
+                        EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
+                        EVolumeResetStatus.VolumeResetOFF,
+                        ESourceGroupStatus.SourceGroupOFF, "v1.23");
+                    string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
+                    _sendQueue.Send(incomingCommand);
+                    DisplayData(MessageType.Outgoing, incomingCommand);
+                }
+            }
+        }
+
+
+        private void PowerStatusSelect_sendCommandForManualChanges()
+        {
+            EZonePowerStatus zonePowerStatus = ucZoneManual.GetSelectedPowerStatus();
+            if (zonePowerStatus == EZonePowerStatus.ZoneStatusON)
+            {
+                sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneON);
+            }
+            else if (zonePowerStatus == EZonePowerStatus.ZoneStatusOFF)
+            {
+                sendCommandForManualChanges(ENuvoEssentiaCommands.TurnZoneOFF);
+            }
+            else
+            {
+                DisplayData(MessageType.Warning, "Unknown Power Status, cannot send command!");
+            }
+        }
+
+        private void SourceSelect_sendCommandForManualChanges()
+        {
+            ENuvoEssentiaSources source = ucZoneManual.GetSelectedSource();
+            if (source != ENuvoEssentiaSources.NoSource)
+            {
+                sendCommandForManualChanges(ENuvoEssentiaCommands.SetSource);
+            }
+            else
+            {
+                DisplayData(MessageType.Warning, "Unknown Source, cannot send command!");
+            }
+        }
+
+        private void Volume_sendCommandForManualChanges()
+        {
+            sendCommandForManualChanges(ENuvoEssentiaCommands.SetVolume);
+        }
+
+        private void trackBass_Scroll(object sender, EventArgs e)
+        {
+            sendCommandForManualChanges(ENuvoEssentiaCommands.SetBassLevel);
+        }
+
+        private void trackTreble_Scroll(object sender, EventArgs e)
+        {
+            sendCommandForManualChanges(ENuvoEssentiaCommands.SetTrebleLevel);
+        }
+
+
+        #endregion
+
 
         #region onZoneChanged Event Handler
 
@@ -451,8 +491,8 @@ namespace NuvoControl.Server.Simulator
         private void Zonex_onZoneChanged(ZoneUserControl zoneUserControl, ZoneUserControl.ZoneUserControlEventArgs eventArg)
         {
             _log.Trace(m=>m("Zone changed in zone user control {0}. EventArg={1}.", zoneUserControl.Name, eventArg.ToString() ));
-            if (eventArg.CurrentSelectedZoneId > 0)
-                zoneUserControl.updateZoneState(_zoneSateController[eventArg.CurrentSelectedZoneId]);
+            if (eventArg.CurrentSelectedZone != ENuvoEssentiaZones.NoZone)
+                zoneUserControl.updateZoneState(_zoneSateController[zoneUserControl.GetSelectedZone()]);
         }
 
         /// <summary>
@@ -493,6 +533,17 @@ namespace NuvoControl.Server.Simulator
         private void ucZone4_onZoneChanged(object sender, ZoneUserControl.ZoneUserControlEventArgs e)
         {
             Zonex_onZoneChanged(ucZone4, e);
+        }
+
+        /// <summary>
+        /// Private Event handler for Zone User Control, which is used to send commands spontaneous.
+        /// </summary>
+        /// <param name="sender">This pointer, to the zone user control.</param>
+        /// <param name="e">Event argument, send from zone user control.</param>
+        private void ucZoneManual_onZoneChanged(object sender, ZoneUserControl.ZoneUserControlEventArgs e)
+        {
+            Zonex_onZoneChanged(ucZoneManual, e);
+            DisplayData(MessageType.Normal, string.Format("--- Changed to Zone '{0}' ---", ucZoneManual.GetSelectedZone().ToString()));
         }
 
         #endregion

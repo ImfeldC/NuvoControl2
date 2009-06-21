@@ -28,7 +28,13 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
 {
     class SerialPortMock : ISerialPort
     {
+        #region Common Logger
+        /// <summary>
+        /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
+        /// <see cref="LogManager"/> for more information.
+        /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
+        #endregion
         private string _writeText = "";
 
         #region ISerialPort Members
