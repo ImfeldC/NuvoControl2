@@ -19,6 +19,9 @@
 
 namespace NuvoControl.Test.RS232
 {
+    /// <summary>
+    /// (Partial) Form class for the RS232 Tester.
+    /// </summary>
     partial class fclsRS232Tester
     {
         /// <summary>

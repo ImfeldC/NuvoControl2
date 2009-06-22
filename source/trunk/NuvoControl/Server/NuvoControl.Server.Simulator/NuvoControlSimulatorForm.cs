@@ -35,6 +35,9 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.Simulator
 {
+    /// <summary>
+    /// Main form class of the Nuvo Control Simulator.
+    /// </summary>
     public partial class NuvoControlSimulator : Form
     {
         #region Common Logger
@@ -45,13 +48,36 @@ namespace NuvoControl.Server.Simulator
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
 
-        //global manager variables
+        /// <summary>
+        /// Private variable to store the colors used for the message types.
+        /// See <see cref="MessageType"/> for more information.
+        /// </summary>
         private Color[] _MessageColor = { Color.Blue, Color.Green, Color.Black, Color.Orange, Color.Red };
 
         /// <summary>
         /// Enumeration to hold our message types
         /// </summary>
-        public enum MessageType { Incoming, Outgoing, Normal, Warning, Error };
+        public enum MessageType { 
+            /// <summary>
+            /// Specifies incoming messages. The color blue is used to display (<see cref="Color.Blue"/>).
+            /// </summary>
+            Incoming, 
+            /// <summary>
+            /// Specifies outgoing messages. The color green is used to display (<see cref="Color.Green"/>).
+            /// </summary>
+            Outgoing, 
+            /// <summary>
+            /// Specifies normal messages. The color black is used to display (<see cref="Color.Black"/>).
+            /// </summary>
+            Normal, 
+            /// <summary>
+            /// Specifies warnings. The color orange is used to display (<see cref="Color.Orange"/>).
+            /// </summary>
+            Warning, 
+            /// <summary>
+            /// Specifies errors. The color red is used to display (<see cref="Color.Red"/>).
+            /// </summary>
+            Error };
 
 
         // NOTE: In the simulator the send- and receive-queue are switched.
@@ -69,6 +95,9 @@ namespace NuvoControl.Server.Simulator
         private Queue<ReceiveCompletedEventArgs> _incommingCommands = new Queue<ReceiveCompletedEventArgs>();
 
 
+        /// <summary>
+        /// Constructor to create the form class for the Nuvo Control Simulator.
+        /// </summary>
         public NuvoControlSimulator()
         {
             Trace("NuvoControlSimulator created ...");
@@ -242,7 +271,7 @@ namespace NuvoControl.Server.Simulator
 
         #region DisplayData
         /// <summary>
-        /// method to display the data to & from the port
+        /// method to display the data to and from the port
         /// on the screen
         /// </summary>
         /// <param name="type">MessageType of the message</param>
