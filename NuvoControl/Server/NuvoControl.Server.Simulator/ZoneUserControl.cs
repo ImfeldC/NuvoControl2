@@ -248,18 +248,23 @@ namespace NuvoControl.Server.Simulator
                 switch (command.Command)
                 {
                     case ENuvoEssentiaCommands.SetVolume:
+                        // DOESN'T trigger the method trackVolume_Scroll()
                         trackVolume.Value = Math.Abs(command.VolumeLevel) * -1;
+                        VolumeLevel_Changed();
                         break;
 
                     case ENuvoEssentiaCommands.SetSource:
+                        // triggers the method cmbSourceSelect_SelectedIndexChanged()
                         cmbSourceSelect.SelectedIndex = (int)command.SourceId - 1;
                         break;
 
                     case ENuvoEssentiaCommands.TurnZoneON:
+                        // triggers the method cmbPowerStatusSelect_SelectedIndexChanged()
                         cmbPowerStatusSelect.SelectedItem = EZonePowerStatus.ZoneStatusON.ToString();
                         break;
 
                     case ENuvoEssentiaCommands.TurnZoneOFF:
+                        // triggers the method cmbPowerStatusSelect_SelectedIndexChanged()
                         cmbPowerStatusSelect.SelectedItem = EZonePowerStatus.ZoneStatusOFF.ToString();
                         break;
 
@@ -288,11 +293,20 @@ namespace NuvoControl.Server.Simulator
                     this.Name, GetSelectedZone().ToString(), _selectedZone.ToString(), zoneState));
                 _zoneState = zoneState;
                 if ((cmbSourceSelect != null) && (cmbSourceSelect.Items.Count > 0))
+                {
+                    // triggers the method cmbSourceSelect_SelectedIndexChanged()
                     cmbSourceSelect.SelectedIndex = zoneState.Source.ObjectId - 1;
+                }
                 if ((cmbPowerStatusSelect != null) && (cmbPowerStatusSelect.Items.Count > 0))
+                {
+                    // triggers the method cmbPowerStatusSelect_SelectedIndexChanged()
                     cmbPowerStatusSelect.SelectedItem = (zoneState.PowerStatus ? EZonePowerStatus.ZoneStatusON.ToString() : EZonePowerStatus.ZoneStatusOFF.ToString());
+                }
                 if (trackVolume != null)
+                {
                     trackVolume.Value = zoneState.Volume;
+                    VolumeLevel_Changed();
+                }
             }
         }
 
@@ -447,25 +461,31 @@ namespace NuvoControl.Server.Simulator
         {
             try
             {
-                if (_zoneState != null)
-                {
-                    ZoneState prevZoneState = new ZoneState(_zoneState);
-
-                    // Update zone state, store them in this user control, and notify the zone state controller
-                    ZoneState updatedZoneState = new ZoneState(_zoneState);
-                    updatedZoneState.Volume = trackVolume.Value;
-                    if (_zoneStateController != null)
-                        _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
-
-                    if (onSelectionChanged != null)
-                    {
-                        onSelectionChanged(this, new ZoneUserControlEventArgs(this, GetSelectedZone(), prevZoneState));
-                    }
-                }
+                VolumeLevel_Changed();
             }
             catch (Exception ex)
             {
                 _log.Fatal(m => m("Exception in trackVolume_Scroll! {0}", ex.ToString()));
+            }
+        }
+
+        private void VolumeLevel_Changed()
+        {
+            if (_zoneState != null)
+            {
+                _log.Trace(m => m("Update Volume Level to {0}", trackVolume.Value));
+                ZoneState prevZoneState = new ZoneState(_zoneState);
+
+                // Update zone state, store them in this user control, and notify the zone state controller
+                ZoneState updatedZoneState = new ZoneState(_zoneState);
+                updatedZoneState.Volume = trackVolume.Value;
+                if (_zoneStateController != null)
+                    _zoneStateController.setZoneState(GetSelectedZone(), updatedZoneState);
+
+                if (onSelectionChanged != null)
+                {
+                    onSelectionChanged(this, new ZoneUserControlEventArgs(this, GetSelectedZone(), prevZoneState));
+                }
             }
         }
         #endregion
