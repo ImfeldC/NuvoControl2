@@ -5,9 +5,9 @@
     <Grid Height="131">
         <ToggleButton Height="23" HorizontalAlignment="Left" Margin="12,0,0,33" Name="btnPower" VerticalAlignment="Bottom" Width="39" Checked="btnPower_Checked" Unchecked="btnPower_Unchecked">PWR</ToggleButton>
         <ComboBox Margin="65,0,115,33" Name="cbxSource" Height="22" VerticalAlignment="Bottom" SelectionChanged="cbxSource_SelectionChanged" />
-        <RepeatButton Height="23" HorizontalAlignment="Right" Margin="0,0,16,32" Name="btnUp" VerticalAlignment="Bottom" Width="23" Click="btnUp_Click">Up</RepeatButton>
+        <RepeatButton Height="23" HorizontalAlignment="Right" Margin="0,0,16,32" Name="btnUp" VerticalAlignment="Bottom" Width="23" Click="btnUp_Click">+</RepeatButton>
         <ProgressBar Height="23" Margin="0,0,40,32" Name="prgVolume" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Width="38" />
-        <RepeatButton Height="22" HorizontalAlignment="Right" Margin="0,0,78,33" Name="btnDown" VerticalAlignment="Bottom" Width="23" Click="btnDown_Click">Dn</RepeatButton>
+        <RepeatButton Height="22" HorizontalAlignment="Right" Margin="0,0,78,33" Name="btnDown" VerticalAlignment="Bottom" Width="23" Click="btnDown_Click">-</RepeatButton>
         <Label HorizontalAlignment="Right" Margin="0,42,16,64" Name="lblQuality" Width="62" HorizontalContentAlignment="Right">Offline</Label>
         <Label Margin="12,42,0,64" Name="lblAck" HorizontalAlignment="Left" Width="120">Unacknowledged</Label>
         <Label Height="28" Margin="12,12,0,0" Name="lblZone" VerticalAlignment="Top" HorizontalAlignment="Left" Width="120">Zone</Label>
