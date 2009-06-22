@@ -19,7 +19,11 @@
     <FrameworkVersion>3.5</FrameworkVersion>
     <SandcastlePath>C:\Program Files\Sandcastle\</SandcastlePath>
     <DocumentationSources>
-      <DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.dll" />
+      <DocumentationSource sourceFile="Client\NuvoControl.Client.TestViewer\bin\Debug\NuvoControl.Client.TestViewer.exe" />
+<DocumentationSource sourceFile="Client\NuvoControl.Client.TestViewer\bin\Debug\NuvoControl.Client.TestViewer.xml" />
+<DocumentationSource sourceFile="Client\NuvoControl.Client.WcfTestConsole\bin\Debug\NuvoControl.Client.WcfTestConsole.exe" />
+<DocumentationSource sourceFile="Client\NuvoControl.Client.WcfTestConsole\bin\Debug\NuvoControl.Client.WcfTestConsole.xml" />
+<DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.dll" />
 <DocumentationSource sourceFile="Common\NuvoControl.Common.Interfaces\bin\Debug\NuvoControl.Common.Interfaces.dll" />
 <DocumentationSource sourceFile="Common\NuvoControl.Common.Interfaces\bin\Debug\NuvoControl.Common.Interfaces.xml" />
 <DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.xml" />
