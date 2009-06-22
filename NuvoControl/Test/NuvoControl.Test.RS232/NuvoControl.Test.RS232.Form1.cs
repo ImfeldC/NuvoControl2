@@ -37,6 +37,9 @@ namespace NuvoControl.Test.RS232
         // the text property on a TextBox control:
         delegate void SetTextCallback(string text);
  
+        /// <summary>
+        /// Constructor to instantiate the RS232 Form class.
+        /// </summary>
         public fclsRS232Tester()
         {
             InitializeComponent();

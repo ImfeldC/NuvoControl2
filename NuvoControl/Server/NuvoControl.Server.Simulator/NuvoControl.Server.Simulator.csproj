@@ -58,6 +58,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NuvoControlSimulatorForm.cs">
       <SubType>Form</SubType>
     </Compile>
