@@ -32,6 +32,7 @@ using NuvoControl.Server.ProtocolDriver;
 using NuvoControl.Server.ProtocolDriver.Simulator;
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
+using System.Threading;
 
 namespace NuvoControl.Server.Simulator
 {
@@ -80,12 +81,30 @@ namespace NuvoControl.Server.Simulator
             Error };
 
 
-        // NOTE: In the simulator the send- and receive-queue are switched.
-        // compared to the NuvoControl server.
+        #region Message Queues
+        /// <summary>
+        /// Constant with the name of the sender queue.
+        /// NOTE: In the simulator the send- and receive-queue are switched.
+        /// compared to the NuvoControl server.
+        /// </summary>
         private const string _sendQueueName = ".\\private$\\fromNuvoEssentia";
+        /// <summary>
+        /// Private sender message queue.
+        /// </summary>
         private MessageQueue _sendQueue;
+
+        /// <summary>
+        /// Constant with the name of the receiver queue.
+        /// NOTE: In the simulator the send- and receive-queue are switched.
+        /// compared to the NuvoControl server.
+        /// </summary>
         private const string _rcvQueueName = ".\\private$\\toNuvoEssentia";
+        /// <summary>
+        /// Private receiver message queue.
+        /// </summary>
         private MessageQueue _rcvQueue;
+        #endregion
+
 
         // Simulator members
         private ZoneStateController _zoneSateController;
@@ -93,6 +112,7 @@ namespace NuvoControl.Server.Simulator
         private int _deviceId = 1;
 
         private Queue<ReceiveCompletedEventArgs> _incommingCommands = new Queue<ReceiveCompletedEventArgs>();
+        private Queue<string> _outgoingCommands = new Queue<string>();
 
 
         /// <summary>
@@ -136,6 +156,12 @@ namespace NuvoControl.Server.Simulator
             uc.ZoneStateController = _zoneSateController;
         }
 
+        /// <summary>
+        /// Private method to dispatch the 'Zone Updated' event from the Zone State Controller (see <see cref="ZoneStateController"/>).
+        /// The receiving user control needs to check if the update is relevant for them.
+        /// </summary>
+        /// <param name="sender">Sender Zone State Controller of the zone update.</param>
+        /// <param name="e">Event Argument, send by the zone state controller.</param>
         private void _zoneSateController_onZoneUpdated(object sender, ZoneStateEventArgs e)
         {
             onZoneUpdated(ucZoneInput, e);
@@ -146,6 +172,12 @@ namespace NuvoControl.Server.Simulator
             onZoneUpdated(ucZoneManual, e);
         }
 
+        /// <summary>
+        /// Private helper method for the 'Zone Updated' event. See <see cref="_zoneSateController_onZoneUpdated"/>.
+        /// This method passes the update event to the user control passed into as paramter.
+        /// </summary>
+        /// <param name="uc">Zone User Control, where to send the update.</param>
+        /// <param name="e">Event Argument, send by the zone state controller.</param>
         private void onZoneUpdated(ZoneUserControl uc, ZoneStateEventArgs e)
         {
             try
@@ -161,6 +193,12 @@ namespace NuvoControl.Server.Simulator
             }
         }
 
+        /// <summary>
+        /// Private event handler method at 'Form Load'.
+        /// Initialize all user controls and establish a connection to the queues.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Event Argument.</param>
         private void NuvoControlSimulator_Load(object sender, EventArgs e)
         {
             _log.Debug(m => m("Form loaded: {0}", e.ToString()));
@@ -176,11 +214,25 @@ namespace NuvoControl.Server.Simulator
             ucZoneManual.onSelectionChanged += new ZoneUserControl.ZoneUserControlEventHandler(ucZoneManual_onSelectionChanged);
 
             OpenQueues();
+
+            timerSendOut.Start();
+            timerSendOut.Interval = (int)numDelay.Value;
+
         }
 
+        /// <summary>
+        /// Private event handler method at 'Form Closed'.
+        /// Closes the queues and stops all timers.
+        /// </summary>
+        /// <param name="sender">Sender of the event.</param>
+        /// <param name="e">Event Argument.</param>
         private void NuvoControlSimulator_FormClosed(object sender, FormClosedEventArgs e)
         {
             _log.Debug(m => m("Form closed: {0}", e.CloseReason.ToString()));
+
+            timerSendOut.Stop();
+            timerSimulate.Stop();
+
             CloseQueues();
         }
 
@@ -192,9 +244,9 @@ namespace NuvoControl.Server.Simulator
         /// <param name="eventArg">Event argument, containing the message</param>
         void _rcvQueue_ReceiveCompleted(object sender, ReceiveCompletedEventArgs eventArg)
         {
-            _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.Body.ToString()));
             try
             {
+                _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.Body.ToString()));
                 _incommingCommands.Enqueue(eventArg);
                 DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)eventArg.Message.Body, _incommingCommands.Count));
             }
@@ -295,6 +347,7 @@ namespace NuvoControl.Server.Simulator
                         rtbCOM.AppendText(msg);
                         rtbCOM.ScrollToCaret();
                     }));
+                    _log.Trace(m => m(string.Format("Output on UI: {0}", msg)));
                 }
             }
             catch( Exception )
@@ -319,7 +372,12 @@ namespace NuvoControl.Server.Simulator
         }
 
 
-
+        /// <summary>
+        /// Private event handler in case the simualtion mode has been changed.
+        /// It starts the timer for the simulation incase the mode is not <c>NoSimulation</c>.
+        /// </summary>
+        /// <param name="sender">Simulation Mode combo box.</param>
+        /// <param name="e">Event argument, send by the combo box.</param>
         private void cmbSimModeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
             if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoSimulation.ToString())
@@ -335,6 +393,15 @@ namespace NuvoControl.Server.Simulator
             DisplayData(MessageType.Normal, string.Format("--- Simulation Mode Changed to '{0}' ---", cmbSimModeSelect.Text));
         }
 
+        /// <summary>
+        /// Private timer event handler for the simulation.
+        /// This timer method is called every 300 [ms]. See <see cref="System.Windows.Forms.Timer.Interval"/>.
+        /// In case a command is received in the incoming queue (<see cref="_incommingCommands"/>), it 
+        /// calls the private method <see cref="simulate"/>, whichs handles the different simulation
+        /// modes.
+        /// </summary>
+        /// <param name="sender">Timer control, which fires this event.</param>
+        /// <param name="e">Event argument, for this timer event.</param>
         private void timerSimulate_Tick(object sender, EventArgs e)
         {
             //_log.Debug(m => m("Simulate .."));
@@ -351,6 +418,12 @@ namespace NuvoControl.Server.Simulator
             }
         }
 
+        /// <summary>
+        /// Sends a command back to the system. It puts the outgoing commands on the outgoing
+        /// commands queue. In case a delay of more than 500 [ms] is defined a message
+        /// is shown at the UI, to inform the user that the message will be send out delayed.
+        /// </summary>
+        /// <param name="commandType">Command to send back.</param>
         private void sendCommandForSimulation(ENuvoEssentiaCommands commandType)
         {
             if (_sendQueue != null)
@@ -363,12 +436,21 @@ namespace NuvoControl.Server.Simulator
                         new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                         EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
                     string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
-                    _sendQueue.Send(incomingCommand);
-                    DisplayData(MessageType.Outgoing, incomingCommand);
+                    _outgoingCommands.Enqueue(incomingCommand);
+                    if (numDelay.Value > 500)   // announce only delays higher than 500[ms]
+                    {
+                        DisplayData(MessageType.Normal, string.Format("Delay message for {0} milliseconds. Totally {1} commands on queue.", numDelay.Value, _outgoingCommands.Count));
+                    }
                 }
             }
         }
 
+        /// <summary>
+        /// Private method, which handles the different simulation modes.
+        /// It calculates the outgoing command - depending of the selected
+        /// simulation mode - and sends them back (see <see cref="sendCommandForSimulation"/>).
+        /// </summary>
+        /// <param name="eventArg"></param>
         private void simulate(ReceiveCompletedEventArgs eventArg)
         {
             if ((string)cmbSimModeSelect.SelectedItem == 
@@ -392,7 +474,49 @@ namespace NuvoControl.Server.Simulator
                 ucZoneInput.SetSelectedZone(zoneId);
                 sendCommandForSimulation(command.Command);
             }
+            else if ((string)cmbSimModeSelect.SelectedItem ==
+                ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoAnswer.ToString())
+            {
+                // ignore command, don't do anything!
+                DisplayData(MessageType.Normal, string.Format("Ignore incoming command {0}", (string)eventArg.Message.Body));
+                NuvoEssentiaSingleCommand command = ProtocolDriverSimulator.createNuvoEssentiaSingleCommand((string)eventArg.Message.Body);
+                ucZoneInput.updateZoneState(command);
+            }
         }
+
+        /// <summary>
+        /// Private timer event handler to send out the outgoing command queue.
+        /// This method checkes the outgoing queue and sends the command on top of the queue
+        /// to the message queue. A delay is set via the intervall length of the timer.
+        /// As example, if the delay is 5[s], this timer is only called once every 5[s].
+        /// </summary>
+        /// <param name="sender">Timer control, which fires this event.</param>
+        /// <param name="e">Event argument, for this timer event.</param>
+        private void timerSendOut_Tick(object sender, EventArgs e)
+        {
+            if( _outgoingCommands.Count > 0 )
+            {
+                string incomingCommand = _outgoingCommands.Dequeue();
+                if (numDelay.Value > 500)   // announce only delays higher than 500[ms]
+                {
+                    DisplayData(MessageType.Normal, string.Format("Send delayed message. Delays was {0} milliseconds. Totally {1} commands on the queue.", numDelay.Value, _outgoingCommands.Count));
+                }
+                _sendQueue.Send(incomingCommand);
+                DisplayData(MessageType.Outgoing, incomingCommand);
+            }
+        }
+
+        /// <summary>
+        /// Event handler method in case the delay time is adjusted.
+        /// It sets directly the intervall method of the send out timer. See <see cref="System.Windows.Forms.Timer.Interval"/>.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void numDelay_ValueChanged(object sender, EventArgs e)
+        {
+            timerSendOut.Interval = (int)numDelay.Value;
+        }
+
 
 
         #region onSelectionChanged Event Handler
@@ -427,7 +551,7 @@ namespace NuvoControl.Server.Simulator
         }
 
         /// <summary>
-        /// Priuvate method to send a command, based on the settings in the zone user control <c>ucZoneManual</c>.
+        /// Private method to send a command, based on the settings in the zone user control <c>ucZoneManual</c>.
         /// The command parameters are read from the zone user control, and then put into teh queue.
         /// </summary>
         /// <param name="commandType">Command type, which shall be send.</param>

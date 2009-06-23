@@ -25,6 +25,9 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// Alarm Function configuration class. Inherits from Function.
+    /// </summary>
     [DataContract]
     public class AlarmFunction : Function
     {
@@ -43,6 +46,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public AlarmFunction()
         {
         }

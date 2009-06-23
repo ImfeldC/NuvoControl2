@@ -50,19 +50,21 @@ namespace NuvoControl.Server.Simulator
             this.components = new System.ComponentModel.Container();
             this.rtbCOM = new System.Windows.Forms.RichTextBox();
             this.grpZone = new System.Windows.Forms.GroupBox();
-            this.ucZoneManual = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.trackBass = new System.Windows.Forms.TrackBar();
             this.trackTreble = new System.Windows.Forms.TrackBar();
             this.cmbSimModeSelect = new System.Windows.Forms.ComboBox();
             this.numDelay = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.timerSimulate = new System.Windows.Forms.Timer(this.components);
+            this.progressSimulate = new System.Windows.Forms.ProgressBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.timerSendOut = new System.Windows.Forms.Timer(this.components);
+            this.ucZoneInput = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone4 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone3 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone2 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone1 = new NuvoControl.Server.Simulator.ZoneUserControl();
-            this.timerSimulate = new System.Windows.Forms.Timer(this.components);
-            this.progressSimulate = new System.Windows.Forms.ProgressBar();
-            this.ucZoneInput = new NuvoControl.Server.Simulator.ZoneUserControl();
+            this.ucZoneManual = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.grpZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackTreble)).BeginInit();
@@ -93,15 +95,6 @@ namespace NuvoControl.Server.Simulator
             this.grpZone.TabStop = false;
             this.grpZone.Text = "Zone (manual changes)";
             // 
-            // ucZoneManual
-            // 
-            this.ucZoneManual.Location = new System.Drawing.Point(7, 16);
-            this.ucZoneManual.Name = "ucZoneManual";
-            this.ucZoneManual.ReadOnly = false;
-            this.ucZoneManual.Size = new System.Drawing.Size(172, 93);
-            this.ucZoneManual.TabIndex = 2;
-            this.ucZoneManual.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZoneManual_onZoneChanged);
-            // 
             // trackBass
             // 
             this.trackBass.LargeChange = 2;
@@ -131,21 +124,37 @@ namespace NuvoControl.Server.Simulator
             this.cmbSimModeSelect.FormattingEnabled = true;
             this.cmbSimModeSelect.Location = new System.Drawing.Point(12, 10);
             this.cmbSimModeSelect.Name = "cmbSimModeSelect";
-            this.cmbSimModeSelect.Size = new System.Drawing.Size(128, 21);
+            this.cmbSimModeSelect.Size = new System.Drawing.Size(176, 21);
             this.cmbSimModeSelect.TabIndex = 3;
             this.cmbSimModeSelect.SelectedIndexChanged += new System.EventHandler(this.cmbSimModeSelect_SelectedIndexChanged);
             // 
             // numDelay
             // 
-            this.numDelay.Location = new System.Drawing.Point(12, 53);
+            this.numDelay.Increment = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numDelay.Location = new System.Drawing.Point(122, 63);
             this.numDelay.Maximum = new decimal(new int[] {
-            1000,
+            20000,
+            0,
+            0,
+            0});
+            this.numDelay.Minimum = new decimal(new int[] {
+            10,
             0,
             0,
             0});
             this.numDelay.Name = "numDelay";
             this.numDelay.Size = new System.Drawing.Size(66, 20);
             this.numDelay.TabIndex = 19;
+            this.numDelay.Value = new decimal(new int[] {
+            10,
+            0,
+            0,
+            0});
+            this.numDelay.ValueChanged += new System.EventHandler(this.numDelay_ValueChanged);
             // 
             // groupBox1
             // 
@@ -159,6 +168,39 @@ namespace NuvoControl.Server.Simulator
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Zone (current status)";
+            // 
+            // timerSimulate
+            // 
+            this.timerSimulate.Interval = 300;
+            this.timerSimulate.Tick += new System.EventHandler(this.timerSimulate_Tick);
+            // 
+            // progressSimulate
+            // 
+            this.progressSimulate.Location = new System.Drawing.Point(12, 37);
+            this.progressSimulate.Name = "progressSimulate";
+            this.progressSimulate.Size = new System.Drawing.Size(176, 10);
+            this.progressSimulate.TabIndex = 21;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 65);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(97, 13);
+            this.label1.TabIndex = 23;
+            this.label1.Text = "Answer Delay [ms]:";
+            // 
+            // timerSendOut
+            // 
+            this.timerSendOut.Tick += new System.EventHandler(this.timerSendOut_Tick);
+            // 
+            // ucZoneInput
+            // 
+            this.ucZoneInput.Location = new System.Drawing.Point(194, 4);
+            this.ucZoneInput.Name = "ucZoneInput";
+            this.ucZoneInput.ReadOnly = true;
+            this.ucZoneInput.Size = new System.Drawing.Size(172, 93);
+            this.ucZoneInput.TabIndex = 22;
             // 
             // ucZone4
             // 
@@ -196,31 +238,21 @@ namespace NuvoControl.Server.Simulator
             this.ucZone1.TabIndex = 0;
             this.ucZone1.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZone1_onZoneChanged);
             // 
-            // timerSimulate
+            // ucZoneManual
             // 
-            this.timerSimulate.Interval = 300;
-            this.timerSimulate.Tick += new System.EventHandler(this.timerSimulate_Tick);
-            // 
-            // progressSimulate
-            // 
-            this.progressSimulate.Location = new System.Drawing.Point(12, 37);
-            this.progressSimulate.Name = "progressSimulate";
-            this.progressSimulate.Size = new System.Drawing.Size(128, 10);
-            this.progressSimulate.TabIndex = 21;
-            // 
-            // ucZoneInput
-            // 
-            this.ucZoneInput.Location = new System.Drawing.Point(194, 4);
-            this.ucZoneInput.Name = "ucZoneInput";
-            this.ucZoneInput.ReadOnly = true;
-            this.ucZoneInput.Size = new System.Drawing.Size(172, 93);
-            this.ucZoneInput.TabIndex = 22;
+            this.ucZoneManual.Location = new System.Drawing.Point(7, 16);
+            this.ucZoneManual.Name = "ucZoneManual";
+            this.ucZoneManual.ReadOnly = false;
+            this.ucZoneManual.Size = new System.Drawing.Size(172, 93);
+            this.ucZoneManual.TabIndex = 2;
+            this.ucZoneManual.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZoneManual_onZoneChanged);
             // 
             // NuvoControlSimulator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(714, 439);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.ucZoneInput);
             this.Controls.Add(this.progressSimulate);
             this.Controls.Add(this.groupBox1);
@@ -239,6 +271,7 @@ namespace NuvoControl.Server.Simulator
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -259,6 +292,8 @@ namespace NuvoControl.Server.Simulator
         private ZoneUserControl ucZone2;
         private ZoneUserControl ucZoneManual;
         private ZoneUserControl ucZoneInput;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Timer timerSendOut;
     }
 }
 

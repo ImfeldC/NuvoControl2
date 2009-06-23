@@ -25,6 +25,9 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// Hardware Configuration class. 
+    /// </summary>
     [DataContract]
     public class Hardware
     {
@@ -37,6 +40,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public Hardware()
         {
         }

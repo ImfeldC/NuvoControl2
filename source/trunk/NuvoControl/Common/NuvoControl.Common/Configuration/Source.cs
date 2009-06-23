@@ -25,6 +25,9 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// Source Configuration class. Inherits and implements the interface IComparable.
+    /// </summary>
     [DataContract]
     public class Source: IComparable<Source>
     {
@@ -43,6 +46,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public Source()
         {
         }

@@ -25,11 +25,17 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// SystemConfiguration Configuration class.
+    /// </summary>
     [DataContract]
     public class SystemConfiguration
     {
         #region Constants
 
+        /// <summary>
+        /// Public constant defining the system configuration version.
+        /// </summary>
         public const string VERSION = "1.0";
         public const int ID_UNDEFINED = -1;
         public const char ID_SEPARATOR = '.';
@@ -50,6 +56,9 @@ namespace NuvoControl.Common.Configuration
 
         #region SystemConfiguration
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public SystemConfiguration()
         {
         }

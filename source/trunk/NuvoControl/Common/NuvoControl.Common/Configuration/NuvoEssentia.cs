@@ -25,6 +25,9 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// NuvoEssentia Configuration class.
+    /// </summary>
     [DataContract]
     public class NuvoEssentia
     {
@@ -45,6 +48,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public NuvoEssentia()
         {
         }

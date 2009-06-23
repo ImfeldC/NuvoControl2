@@ -25,6 +25,9 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// Function Configuration class. Is used as base class for all other function clases.
+    /// </summary>
     [DataContract]
     public abstract class Function
     {
@@ -39,6 +42,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public Function()
         {
         }
