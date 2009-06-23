@@ -84,7 +84,7 @@ namespace NuvoControl.Common
         [DataMember]
         private Address _source = new Address();
         [DataMember]
-        private DateTime _lastUpdate = DateTime.Now;   // is set in case a command is received from underlying transport layer
+        private DateTime _lastUpdate = new DateTime(1970, 1, 1);    // set to a default time
 
         #endregion
 
