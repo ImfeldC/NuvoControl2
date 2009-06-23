@@ -34,22 +34,61 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         /// all available simulation modes supported by the simulation driver
         /// and the simulator.
         /// The following modes are known:
-        /// - NoSimulation: There is no simulation active. No answer is returned, and no 
-        ///                 spontaneous events are generated.
-        /// - AllOk: Simulation is active. Each command is simulated with the correct 
-        ///          expected answer. The requested command is parsed and the state is 
-        ///          stored in the simulator. An answer is generated to indicate NuvoControl
-        ///          that the command has been executed without any problem.
-        /// - AllFail: Simulation is active. Return to each command an error message.
-        /// - WrongAnswer: Simulation is active. On each command is a 'wrong' (but valid)
-        ///                answer returned.
+        /// <list type="bullet">
+        ///     <item> 
+        ///         <description>
+        ///             NoSimulation: There is no simulation active. No answer is returned, and no spontaneous events are generated.
+        ///         </description>
+        ///     </item>
+        ///     <item>
+        ///         <description>
+        ///             AllOk: Simulation is active. Each command is simulated with the correct 
+        ///                    expected answer. The requested command is parsed and the state is 
+        ///                    stored in the simulator. An answer is generated to indicate NuvoControl
+        ///                    that the command has been executed without any problem.
+        ///         </description>
+        ///     </item>
+        ///     <item>
+        ///         <description>
+        ///             AllFail: Simulation is active. Return to each command an error message.
+        ///         </description>
+        ///     </item>
+        ///     <item>
+        ///         <description>
+        ///             WrongAnswer: Simulation is active. On each command is a 'wrong' (but valid) answer returned.
+        ///         </description>
+        ///     </item>
+        /// </list>
         /// </summary>
         public enum EProtocolDriverSimulationMode
-        {
-            NoSimulation = 0,   // no (automatic) answer
-            AllOk = 1,          // answer with correct command
-            AllFail = 2,        // no answer, return error
-            WrongAnswer = 3     // Answer with different answer
+        {  
+            /// <summary>
+            /// NoSimulation: There is no simulation active. No answer is returned, and no spontaneous events are generated.
+            /// </summary>
+            NoSimulation = 0,
+
+            /// <summary>
+            /// AllOk: Simulation is active. Each command is simulated with the correct 
+            ///        expected answer. The requested command is parsed and the state is 
+            ///        stored in the simulator. An answer is generated to indicate NuvoControl
+            ///        that the command has been executed without any problem.
+            /// </summary>
+            AllOk = 1,
+
+            /// <summary>
+            /// AllFail: Simulation is active. Return to each command an error message.
+            /// </summary>
+            AllFail = 2,       
+
+            /// <summary>
+            /// WrongAnswer: Simulation is active. On each command is a 'wrong' (but valid) answer returned.
+            /// </summary>
+            WrongAnswer = 3,
+
+            /// <summary>
+            /// NoAnswer: Simulation is active. No answer is returned on a acommand.
+            /// </summary>
+            NoAnswer = 4
         }
 
         private bool _isOpen = false;

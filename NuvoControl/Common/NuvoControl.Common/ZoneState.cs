@@ -31,10 +31,19 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Common
 {
-
+    /// <summary>
+    /// Enumeration specifing the zone quality of the data.
+    /// </summary>
     public enum ZoneQuality
     {
+        /// <summary>
+        /// Online, the data is up-to-date and the connection to the device is working.
+        /// </summary>
         Online = 0,
+
+        /// <summary>
+        /// Offline, the data is may out-dated and the connection to the device is not proper working.
+        /// </summary>
         Offline = 1
     }
 
@@ -115,9 +124,9 @@ namespace NuvoControl.Common
             if (sourceZoneState == null)
             {
                 _guid = Guid.NewGuid();
-            _lastUpdate = DateTime.Now;
-            _zoneQuality = ZoneQuality.Online;  // Default Value
-        }
+                _lastUpdate = DateTime.Now;
+                _zoneQuality = ZoneQuality.Online;  // Default Value
+            }
             else
             {
                 _guid = sourceZoneState._guid;
@@ -207,12 +216,13 @@ namespace NuvoControl.Common
         /// It compares all members exept the GUID, like the Volume, Source, Power state and 
         /// Zone Quality. If all these fields are equal in both
         /// objects, it returns true to indicate that these objects are equal.
-        /// If one of the parameters is <c>null</c>, <c>flase</c> is returned, which indicates that this
+        /// If one of the parameters is <c>null</c>, <c>false</c> is returned, which indicates that this
         /// values are not equal.
+        /// Returns: True, if the objects are equal. False, if the obejcts are not equal. False, if one or both are null. It compares all fields except the GUID.
         /// </summary>
         /// <param name="left">Left operand</param>
         /// <param name="right">Right operand</param>
-        /// <returns>True, if the objects are equal. It compares all fields except the GUID.</returns>
+        /// <returns>True, if the objects are equal. False, if the obejcts are not equal. False, if one or both are null. It compares all fields except the GUID.</returns>
         public static bool operator ==(ZoneState left, ZoneState right)
         {
             return ((object)left != null) && ((object)right != null) &&
@@ -224,12 +234,13 @@ namespace NuvoControl.Common
         /// <summary>
         /// Public overload for the != operator. Is required if operator == has been overwritten.
         /// See <see cref="operator =="/> for more information.
-        /// If one of the parameters is <c>null</c>, <c>true</c> is returned, which indicates that this
+        /// If both parameters are <c>null</c>, <c>true</c> is returned, which indicates that this
         /// values are not equal.
+        /// Returns: False, if the objects are equal. True, if the objects are NOT equal. Returns False, if both are null.
         /// </summary>
         /// <param name="left">Left operand</param>
         /// <param name="right">Right operand</param>
-        /// <returns>True, if the objects are NOT equal.</returns>
+        /// <returns>False, if the objects are equal. True, if the objects are NOT equal. Returns False, if both are null.</returns>
         public static bool operator !=(ZoneState left, ZoneState right)
         {
             if ((object)left != null && (object)right != null)
@@ -238,11 +249,13 @@ namespace NuvoControl.Common
                 return (left._volume != right._volume) || (left._source != right._source) ||
                        (left._powerStatus != right._powerStatus) || (left._zoneQuality != right._zoneQuality) ||
                        (left._commandUnacknowledged != right._commandUnacknowledged) || (left._lastUpdate != right._lastUpdate);
-}
+            }
             else
             {
                 // one or both parameters are null
-                return true;
+                // return true, if only one is null.
+                // return false, if both are null.
+                return !((object)left == null && (object)right == null);
             }
         }
 

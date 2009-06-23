@@ -25,6 +25,9 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// Sleep Function Configuration class. Inherits from Function.
+    /// </summary>
     [DataContract]
     public class SleepFunction : Function
     {
@@ -41,6 +44,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Constructors
 
+        /// <summary>
+        /// Default Constructor.
+        /// </summary>
         public SleepFunction()
         {
         }
