@@ -59,6 +59,30 @@ namespace NuvoControl.Common
     [DataContract]
     public class ZoneState
     {
+        #region Constants
+
+        /// <summary>
+        /// Public constant defining the value is not defined.
+        /// Used for the Volume Level, Bass Value and Treble Value.
+        /// </summary>
+        public const int VALUE_UNDEFINED = -999;
+
+        /// <summary>
+        /// Public constant defining the maximum value of the volume level.
+        /// Each value matching the following ruls is ok:
+        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// </summary>
+        public const int VOLUME_MAXVALUE = 100;
+
+        /// <summary>
+        /// Public constant defining the minimum value of the volume level.
+        /// Each value matching the following ruls is ok:
+        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// </summary>
+        public const int VOLUME_MINVALUE = 0;
+
+        #endregion
+
         #region Fields
 
         #region Common Logger
@@ -68,6 +92,8 @@ namespace NuvoControl.Common
         /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
+
+        [DataMember]
         private Guid _guid;
 
         [DataMember]
@@ -78,7 +104,7 @@ namespace NuvoControl.Common
 
         // members only relevant in case of 'online'
         [DataMember]
-        private int _volume = 0;
+        private int _volume = VALUE_UNDEFINED;
         [DataMember]
         private bool _powerStatus = false;
         [DataMember]
@@ -111,7 +137,7 @@ namespace NuvoControl.Common
         {
             _source = source;
             _powerStatus = powerStatus;
-            _volume = volume;
+            Volume = volume;
         }
 
         /// <summary>
@@ -134,7 +160,7 @@ namespace NuvoControl.Common
                 _zoneQuality = sourceZoneState._zoneQuality;
                 _source = sourceZoneState._source;
                 _powerStatus = sourceZoneState._powerStatus;
-                _volume = sourceZoneState._volume;
+                Volume = sourceZoneState._volume;
             }
         }
 
@@ -155,11 +181,13 @@ namespace NuvoControl.Common
 
         /// <summary>
         /// Gets and Sets the Volume.
+        /// If the value is outside of the boundaries VOLUME_MINVALUE and VOLUME_MAXVALUE, it is
+        /// reduced/set to the boundary value.
         /// </summary>
         public int Volume
         {
             get { return _volume; }
-            set { _volume = value; }
+            set { _volume = (value<VOLUME_MINVALUE?VOLUME_MINVALUE:(value>VOLUME_MAXVALUE?VOLUME_MAXVALUE:value)); }
         }
 
         /// <summary>
@@ -229,7 +257,7 @@ namespace NuvoControl.Common
                    (left._volume == right._volume) && (left._source == right._source) && 
                    (left._powerStatus == right._powerStatus) && (left._zoneQuality == right._zoneQuality) &&
                    (left._commandUnacknowledged == right._commandUnacknowledged) && (left._lastUpdate == right._lastUpdate);
-    }
+        }
 
         /// <summary>
         /// Public overload for the != operator. Is required if operator == has been overwritten.

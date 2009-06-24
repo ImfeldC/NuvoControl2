@@ -121,9 +121,9 @@ namespace NuvoControl.Client.TestViewer.Controls
         {
             if (_zoneStateChange != null)
             {
-                _zoneStateCmd.Volume--;
-                if (_zoneStateCmd.Volume < 0)
-                    _zoneStateCmd.Volume = 0;
+                _zoneStateCmd.Volume-=5;
+                if (_zoneStateCmd.Volume < ZoneState.VOLUME_MINVALUE)
+                    _zoneStateCmd.Volume = ZoneState.VOLUME_MINVALUE;
                 _zoneStateChange(this, e);
             }
         }
@@ -132,9 +132,9 @@ namespace NuvoControl.Client.TestViewer.Controls
         {
             if (_zoneStateChange != null)
             {
-                _zoneStateCmd.Volume++;
-                if (_zoneStateCmd.Volume > 100)
-                    _zoneStateCmd.Volume = 100;
+                _zoneStateCmd.Volume+=5;
+                if (_zoneStateCmd.Volume > ZoneState.VOLUME_MAXVALUE)
+                    _zoneStateCmd.Volume = ZoneState.VOLUME_MAXVALUE;
                 _zoneStateChange(this, e);
             }
         }

@@ -66,6 +66,7 @@
     </Compile>
     <Compile Include="Mock\NuvoTelegramMock.cs" />
     <Compile Include="Mock\SerialPortMock.cs" />
+    <Compile Include="NuvoEssentiaCommandTest.cs" />
     <Compile Include="NuvoEssentiaSingleCommandTest.cs" />
     <Compile Include="NuvoEssentiaProtocolTest.cs" />
     <Compile Include="NuvoTelegramTest.cs" />

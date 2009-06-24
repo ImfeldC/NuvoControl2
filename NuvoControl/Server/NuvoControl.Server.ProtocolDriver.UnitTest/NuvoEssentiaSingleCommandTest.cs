@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuvoControl.Server.ProtocolDriver;
 using System;
 using Common.Logging;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.ProtocolDriver.Test
 {
@@ -289,7 +290,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             actual = NuvoEssentiaSingleCommand_Accessor.replacePlaceholderWithVolumeLevel("ZxxVOLyy", -5, "yy");
             Assert.AreEqual("ZxxVOL05", actual);
 
-            actual = NuvoEssentiaSingleCommand_Accessor.replacePlaceholderWithVolumeLevel("ZxxVOLyy", -999, "yy");
+            actual = NuvoEssentiaSingleCommand_Accessor.replacePlaceholderWithVolumeLevel("ZxxVOLyy", ZoneState.VALUE_UNDEFINED, "yy");
             Assert.AreEqual("ZxxVOLyy", actual);
         }
 
@@ -576,6 +577,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
                 int actualVolumeLevel = NuvoEssentiaSingleCommand_Accessor.parseCommandForVolumeLevel(incomingCommand,target._incomingCommandTemplate);
                 Assert.AreEqual(ENuvoEssentiaCommands.NoCommand, target._command);
+                Assert.AreEqual(ZoneState.VALUE_UNDEFINED, actualVolumeLevel);
                 Assert.AreEqual(-999, actualVolumeLevel);
             }
         }
