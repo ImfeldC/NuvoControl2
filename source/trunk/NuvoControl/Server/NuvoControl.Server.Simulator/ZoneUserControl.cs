@@ -249,7 +249,7 @@ namespace NuvoControl.Server.Simulator
                 {
                     case ENuvoEssentiaCommands.SetVolume:
                         // DOESN'T trigger the method trackVolume_Scroll()
-                        trackVolume.Value = Math.Abs(command.VolumeLevel) * -1;
+                        trackVolume.Value = Math.Abs( NuvoEssentiaCommand.calcVolume2NuvoControl(command.VolumeLevel));
                         VolumeLevel_Changed();
                         break;
 

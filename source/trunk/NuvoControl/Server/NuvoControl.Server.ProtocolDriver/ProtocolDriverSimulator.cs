@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Common.Configuration;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.ProtocolDriver.Simulator
 {
@@ -156,9 +157,9 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
                 (rawCommand.Command == ENuvoEssentiaCommands.NoCommand ? ENuvoEssentiaCommands.ReadStatusCONNECT : rawCommand.Command),
                 (rawCommand.ZoneId == ENuvoEssentiaZones.NoZone ? ENuvoEssentiaZones.Zone1 : rawCommand.ZoneId),
                 (rawCommand.SourceId == ENuvoEssentiaSources.NoSource ? ENuvoEssentiaSources.Source1 : rawCommand.SourceId),
-                (rawCommand.VolumeLevel == -999 ? 50 : rawCommand.VolumeLevel),
-                (rawCommand.BassLevel == -999 ? 10 : rawCommand.BassLevel),
-                (rawCommand.TrebleLevel == -999 ? 10 : rawCommand.TrebleLevel),
+                (rawCommand.VolumeLevel == ZoneState.VALUE_UNDEFINED ? 50 : rawCommand.VolumeLevel),
+                (rawCommand.BassLevel == ZoneState.VALUE_UNDEFINED ? 10 : rawCommand.BassLevel),
+                (rawCommand.TrebleLevel == ZoneState.VALUE_UNDEFINED ? 10 : rawCommand.TrebleLevel),
                 EZonePowerStatus.ZoneStatusON, ircf, EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,EVolumeResetStatus.VolumeResetOFF,ESourceGroupStatus.SourceGroupOFF,"1.1");
 
             return fullCommand;

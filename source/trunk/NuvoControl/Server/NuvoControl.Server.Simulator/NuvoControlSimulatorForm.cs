@@ -432,7 +432,9 @@ namespace NuvoControl.Server.Simulator
                 if (zone != ENuvoEssentiaZones.NoZone)
                 {
                     NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                        commandType, zone, ucZoneInput.GetSelectedSource(), ucZoneInput.GetSelectedVolumeLevel(), 0, 0, ucZoneInput.GetSelectedPowerStatus(),
+                        commandType, zone, ucZoneInput.GetSelectedSource(), 
+                        NuvoEssentiaCommand.calcVolume2NuvoEssentia(ucZoneInput.GetSelectedVolumeLevel()), 
+                        0, 0, ucZoneInput.GetSelectedPowerStatus(),
                         new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                         EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
                     string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
@@ -566,7 +568,7 @@ namespace NuvoControl.Server.Simulator
                         commandType,
                         zone,
                         ucZoneManual.GetSelectedSource(),
-                        ucZoneManual.GetSelectedVolumeLevel(),
+                        NuvoEssentiaCommand.calcVolume2NuvoEssentia(ucZoneManual.GetSelectedVolumeLevel()),
                         (int)trackBass.Value,
                         (int)trackTreble.Value,
                         ucZoneManual.GetSelectedPowerStatus(),

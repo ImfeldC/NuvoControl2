@@ -37,7 +37,15 @@ namespace NuvoControl.Common.Configuration
         /// Public constant defining the system configuration version.
         /// </summary>
         public const string VERSION = "1.0";
+
+        /// <summary>
+        /// Public constant defining 'ID Undefined'.
+        /// </summary>
         public const int ID_UNDEFINED = -1;
+
+        /// <summary>
+        /// Public constant defining 'ID Separator'.
+        /// </summary>
         public const char ID_SEPARATOR = '.';
 
 

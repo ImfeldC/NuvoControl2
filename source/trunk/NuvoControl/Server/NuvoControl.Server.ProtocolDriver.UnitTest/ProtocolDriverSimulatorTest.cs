@@ -95,7 +95,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                 EIRCarrierFrequency[] ircf = { EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz, EIRCarrierFrequency.IR38kHz };
                 NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                     ENuvoEssentiaCommands.ReadStatusCONNECT,
-                    ENuvoEssentiaZones.Zone2, ENuvoEssentiaSources.Source3, 50, 5, -3,
+                    ENuvoEssentiaZones.Zone2, ENuvoEssentiaSources.Source3, -50, 5, -3,
                     EZonePowerStatus.ZoneStatusON, ircf,
                     EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                     EVolumeResetStatus.VolumeResetOFF,

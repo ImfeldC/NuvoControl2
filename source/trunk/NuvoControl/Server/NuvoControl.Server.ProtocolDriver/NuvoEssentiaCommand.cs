@@ -22,11 +22,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NuvoControl.Server.ProtocolDriver.Interface;
+using NuvoControl.Common;
+using Common.Logging;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
+    /// <summary>
+    /// Class to handle multiple Nuvo Essentia commands.
+    /// See class <see cref="INuvoEssentiaSingleCommand"/> for more information.
+    /// </summary>
     public class NuvoEssentiaCommand : INuvoEssentiaCommand
     {
+        /// <summary>
+        /// Private member list, which holds the single Nuvo Essentia commands.
+        /// </summary>
         private List<INuvoEssentiaSingleCommand> _commandList = new List<INuvoEssentiaSingleCommand>();
 
         Guid _guid;
@@ -35,16 +44,25 @@ namespace NuvoControl.Server.ProtocolDriver
         #region Nuvo Essentia Values
         ENuvoEssentiaZones _zoneId = ENuvoEssentiaZones.NoZone;
         ENuvoEssentiaSources _sourceId = ENuvoEssentiaSources.NoSource;
-        int _volume = -999;
+        int _volume = ZoneState.VALUE_UNDEFINED;
         #endregion
 
         #region Constructors
+        /// <summary>
+        /// Public constructor, setting the Zone id.
+        /// </summary>
+        /// <param name="zone">Zone id.</param>
         public NuvoEssentiaCommand(ENuvoEssentiaZones zone)
         {
             initMembers();
             _zoneId = zone;
         }
 
+        /// <summary>
+        /// Public constructor, setting the Zone and Source id.
+        /// </summary>
+        /// <param name="zone">Zone id.</param>
+        /// <param name="source">Source id.</param>
         public NuvoEssentiaCommand(ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
         {
             initMembers();
@@ -52,14 +70,25 @@ namespace NuvoControl.Server.ProtocolDriver
             _sourceId = source;
         }
 
+        /// <summary>
+        /// Public constructor, setting the Zone id, Source id and volume level.
+        /// </summary>
+        /// <param name="zone">Zone id.</param>
+        /// <param name="source">Source id.</param>
+        /// <param name="volume">Volume Level.</param>
         public NuvoEssentiaCommand(ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume)
         {
             initMembers();
             _zoneId = zone;
             _sourceId = source;
-            _volume = volume;
+            _volume = limitVolume2NuvoEssentia(volume);
         }
 
+        /// <summary>
+        /// Public constructor, setting the Command and Zone id.
+        /// </summary>
+        /// <param name="command">Nuvo Essentia Command.</param>
+        /// <param name="zone">Zone Id.</param>
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
         {
             initMembers();
@@ -67,12 +96,19 @@ namespace NuvoControl.Server.ProtocolDriver
             addCommand(command);
         }
 
+        /// <summary>
+        /// Public constructor, setting the Command, Zone Id, Source Id and Volume level.
+        /// </summary>
+        /// <param name="command">Nuvo Essentia Command.</param>
+        /// <param name="zone">Zone Id.</param>
+        /// <param name="source">Source Id.</param>
+        /// <param name="volume">Volume Level.</param>
         public NuvoEssentiaCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume)
         {
             initMembers();
             _zoneId = zone;
             _sourceId = source;
-            _volume = volume;
+            _volume = limitVolume2NuvoEssentia(volume);
             addCommand(command);
         }
         #endregion
@@ -88,6 +124,51 @@ namespace NuvoControl.Server.ProtocolDriver
             _guid = Guid.NewGuid();
         }
 
+        /// <summary>
+        /// Public static method to adjust the volume level. It checks the allowed range for the Nuvo Essentia.
+        /// If the value is outside of the range of <c>NUVOESSENTIA_VOLUME_MINVALUE</c>, 
+        /// and <c>NUVOESSENTIA_VOLUME_MAXVALUE</c>, it is set to the corresponding boundary value.
+        /// </summary>
+        /// <param name="volume">Volume Level.</param>
+        /// <returns>Volume Level, adjusted to the allowed range of Nuvo Essentia.</returns>
+        public static int limitVolume2NuvoEssentia(int volume)
+        {
+            return (volume<NuvoEssentiaSingleCommand.NUVOESSENTIA_VOLUME_MINVALUE?NuvoEssentiaSingleCommand.NUVOESSENTIA_VOLUME_MINVALUE:(volume>NuvoEssentiaSingleCommand.NUVOESSENTIA_VOLUME_MAXVALUE?NuvoEssentiaSingleCommand.NUVOESSENTIA_VOLUME_MAXVALUE:volume));
+        }
+
+        /// <summary>
+        /// Public static method to calculate the volume level - based on volume level received from
+        /// NuvoControl Server - for a Nuvo Essentia device.
+        /// L  = Laustärke NuvoControl
+        /// LE = Laustärke Essentia
+        /// L  = ((LE + 79) * 100) / 79
+        /// LE = ((L * 79) / 100) - 79
+        /// </summary>
+        /// <param name="volume">Volume Level, from NuvoControl</param>
+        /// <returns>Volume Level, for NuvoEssentia.</returns>
+        public static int calcVolume2NuvoEssentia(int volume)
+        {
+            //TODO: Use constants for calculation
+            double d = ((volume * 79.0) / 100.0);
+            int i = (int)Math.Round(d); 
+            return i - 79;
+        }
+
+        /// <summary>
+        /// Public static method to calculate the volume level - based on volume level received from
+        /// NuvoControl Server - for a Nuvo Essentia device.
+        /// L  = Laustärke NuvoControl
+        /// LE = Laustärke Essentia
+        /// L  = ((LE + 79) * 100) / 79
+        /// LE = ((L * 79) / 100) - 79
+        /// </summary>
+        /// <param name="volume">Volume Level, from NuvoControl</param>
+        /// <returns>Volume Level, for NuvoEssentia.</returns>
+        public static int calcVolume2NuvoControl(int volume)
+        {
+            //TODO: Use constants for calculation
+            return ((volume + 79) * 100) / 79;
+        }
 
         #region INuvoEssentiaCommand Members
 

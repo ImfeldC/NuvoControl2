@@ -41,8 +41,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public class ProtocolCommandReceivedEventArgs : EventArgs
     {
         private Address _zoneAddress;
-
-        NuvoEssentiaProtocolEventArgs _innerEventArgs;
+        private NuvoEssentiaProtocolEventArgs _innerEventArgs;
 
         /// <summary>
         /// Constructor for the argument class.
@@ -97,9 +96,14 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         private Address _zoneAddress;
         private ZoneState _zoneState;
+        private NuvoEssentiaProtocolEventArgs _innerEventArgs;
 
-        NuvoEssentiaProtocolEventArgs _innerEventArgs;
-
+        /// <summary>
+        /// Public constructor for the protocol zone update event argument.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Address, containing Device Id and Zone Id</param>
+        /// <param name="zoneState">Current Zone State.</param>
+        /// <param name="innerEventArgs">Inner Event Argument.</param>
         public ProtocolZoneUpdatedEventArgs(Address zoneAddress, ZoneState zoneState, NuvoEssentiaProtocolEventArgs innerEventArgs)
         {
             _zoneAddress = zoneAddress;
@@ -107,21 +111,33 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _innerEventArgs = innerEventArgs;
         }
 
+        /// <summary>
+        /// Get Device Id, as part of the Zone address.
+        /// </summary>
         public int DeviceId
         {
             get { return _zoneAddress.DeviceId; }
         }
 
+        /// <summary>
+        /// Get Object Id (=Zone Id), as part of the Zone address.
+        /// </summary>
         public int ObjectId
         {
             get { return _zoneAddress.ObjectId; }
         }
 
+        /// <summary>
+        /// Get the full Zone Address, containing Device Id and Zone Id (=Object Id)
+        /// </summary>
         public Address ZoneAddress
         {
             get { return _zoneAddress; }
         }
 
+        /// <summary>
+        /// Get Zone State for this zone
+        /// </summary>
         public ZoneState ZoneState
         {
             get { return _zoneState; }

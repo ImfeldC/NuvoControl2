@@ -58,6 +58,12 @@ namespace NuvoControl.Server.ProtocolDriver
             _log.Trace(m=>m("Protocol Driver instantiated!"));
         }
 
+        /// <summary>
+        /// Event handler of the Essentia Protocol layer, to receive commands
+        /// from the Nuvo Essentia device.
+        /// </summary>
+        /// <param name="sender">This pointer, to the sender of this event.</param>
+        /// <param name="e">Event argument, containing the Nuvo Essentia command.</param>
         void _essentiaProtocol_onCommandReceived(object sender, NuvoEssentiaProtocolEventArgs e)
         {
             if (_protocolList.ContainsKey(e.DeviceId))
@@ -78,14 +84,15 @@ namespace NuvoControl.Server.ProtocolDriver
                 //raise the zone status changed event, and pass data to next layer
                 if (e.Command.ZoneId != ENuvoEssentiaZones.NoZone &&
                     e.Command.PowerStatus != EZonePowerStatus.ZoneStatusUnknown &&
-                    e.Command.VolumeLevel != -999 &&
+                    e.Command.VolumeLevel != ZoneState.VALUE_UNDEFINED &&
                     e.Command.SourceId != ENuvoEssentiaSources.NoSource)
                 {
                     if (onZoneStatusUpdate != null)
                     {
                         try
                         {
-                            ZoneState zoneState = new ZoneState(new Address(e.DeviceId,(int)e.Command.SourceId),(e.Command.PowerStatus==EZonePowerStatus.ZoneStatusON?true:false),e.Command.VolumeLevel);
+                            ZoneState zoneState = new ZoneState(new Address(e.DeviceId,(int)e.Command.SourceId),(e.Command.PowerStatus==EZonePowerStatus.ZoneStatusON?true:false),
+                                NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel));
                             onZoneStatusUpdate(this,new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId), zoneState,e));
                         }
                         catch (Exception ex)
@@ -104,16 +111,32 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region IProtocol Members
 
+        /// <summary>
+        /// Public event in case a (single) command is received from the device (zone).
+        /// </summary>
         public event ProtocolCommandReceivedEventHandler onCommandReceived;
 
+        /// <summary>
+        /// Public event in case a full zone state is received from the device (zone).
+        /// </summary>
         public event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
 
 
+        /// <summary>
+        /// Public method to open a connection to a device.
+        /// </summary>
+        /// <param name="system">System Type, to connect to.</param>
+        /// <param name="deviceId">Device Id, to connect to</param>
+        /// <param name="communicationConfiguration">Communication Configuration, used to connect to the device.</param>
         public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration)
         {
             Open(system, deviceId, communicationConfiguration, null);
         }
 
+        /// <summary>
+        /// Public method to close a connection.
+        /// </summary>
+        /// <param name="deviceId">Device Id, to close the connection</param>
         public void Close(int deviceId)
         {
             checkZoneDeviceId(deviceId);
@@ -121,6 +144,10 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList.Remove(deviceId);
         }
 
+        /// <summary>
+        /// Public method to read a zone state.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
         public void ReadZoneState(Address zoneAddress)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
@@ -130,6 +157,11 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
+        /// <summary>
+        /// Public method to set a zone state, according to a zone state object passed in.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
+        /// <param name="zoneState">Zone state, which shall be applied.</param>
         public void SetZoneState(Address zoneAddress, ZoneState zoneState)
         {
             if (zoneState.PowerStatus)
@@ -138,7 +170,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     ENuvoEssentiaCommands.SetZoneStatus,
                     convertAddressZone2EssentiaZone(zoneAddress),
                     convertAddressSource2EssentiaSource(zoneState.Source), 
-                    zoneState.Volume);
+                    NuvoEssentiaCommand.calcVolume2NuvoEssentia(zoneState.Volume) );
                 _protocolList[zoneAddress.DeviceId].SendCommand(command);
             }
             else
@@ -150,6 +182,10 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
+        /// <summary>
+        /// Public method to turn a zone on.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
         public void CommandSwitchZoneON(Address zoneAddress)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
@@ -159,6 +195,10 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
+        /// <summary>
+        /// Public method to turn a zone off.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
         public void CommandSwitchZoneOFF(Address zoneAddress)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
@@ -168,6 +208,11 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
+        /// <summary>
+        /// Public method to set the Source of a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
+        /// <param name="sourceAddress">Source Adress, containing device and source id.</param>
         public void CommandSetSource(Address zoneAddress, Address sourceAddress)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
@@ -178,13 +223,18 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
+        /// <summary>
+        /// Public method to set the volume of a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
+        /// <param name="volumeLevel">Volume level.</param>
         public void CommandSetVolume(Address zoneAddress, int volumeLevel)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                 ENuvoEssentiaCommands.SetVolume,
                 convertAddressZone2EssentiaZone(zoneAddress),
-                volumeLevel);
+                NuvoEssentiaCommand.calcVolume2NuvoEssentia(volumeLevel));
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
@@ -193,6 +243,13 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region INuvoProtocol Members
 
+        /// <summary>
+        /// Public method - specific for Nuvo - to connect to.
+        /// </summary>
+        /// <param name="system">System Type, to connect to.</param>
+        /// <param name="deviceId">Device Id, to connect to</param>
+        /// <param name="communicationConfiguration">Communication Configuration, used to connect to the device.</param>
+        /// <param name="essentiaProtocol">Optional protocol layer object, used in case of test environment. Pass <c>null</c> in case of productive system.</param>
         public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol)
         {
             if (system != ENuvoSystem.NuVoEssentia)
@@ -219,6 +276,11 @@ namespace NuvoControl.Server.ProtocolDriver
                 (StopBits)communicationConfiguration.ParityBit));                           // e.g. 1 = StopBits
         }
 
+        /// <summary>
+        /// Public method - sepcific for Nuvo - to send a single command.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
+        /// <param name="command">Command, to send to the device.</param>
         public void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
@@ -233,6 +295,12 @@ namespace NuvoControl.Server.ProtocolDriver
             _protocolList[zoneAddress.DeviceId].SendCommand(command);
         }
 
+        /// <summary>
+        /// Public method - sepcific for Nuvo - to send a command, which contains one or more
+        /// single command.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
+        /// <param name="command">Command, to send to the device.</param>
         public void SendCommand(Address zoneAddress, INuvoEssentiaCommand command)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
@@ -281,15 +349,6 @@ namespace NuvoControl.Server.ProtocolDriver
             return (ENuvoEssentiaSources)sourceAddress.ObjectId;
         }
 
-        public NuvoEssentiaProtocol NuvoEssentiaProtocol
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
-        }
+
     }
 }

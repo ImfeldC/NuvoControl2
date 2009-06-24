@@ -24,6 +24,7 @@ using System.Text;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using AMS.Profile;
 using Common.Logging;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -54,6 +55,22 @@ namespace NuvoControl.Server.ProtocolDriver
         DateTime _receiveDateTime;
         ENuvoEssentiaCommands _command = ENuvoEssentiaCommands.NoCommand;
 
+        /// <summary>
+        /// Public constant defining the maximum value of the Nuvo Essentia volume level.
+        /// Each value matching the following ruls is ok:
+        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// </summary>
+        public const int NUVOESSENTIA_VOLUME_MAXVALUE = 0;
+
+        /// <summary>
+        /// Public constant defining the minimum value of the Nuvo Essentia volume level.
+        /// Each value matching the following ruls is ok:
+        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// </summary>
+        public const int NUVOESSENTIA_VOLUME_MINVALUE = -79;
+
+
+
         #region Profile Values (read from xml file)
         int _id;
         string _outgoingCommand;
@@ -67,9 +84,9 @@ namespace NuvoControl.Server.ProtocolDriver
         ENuvoEssentiaSources _sourceId = ENuvoEssentiaSources.NoSource;
         EZonePowerStatus _powerStatus = EZonePowerStatus.ZoneStatusUnknown;
         EIRCarrierFrequency[] _irCarrierFrequencySource = new EIRCarrierFrequency[6];
-        int _volume = -999;
-        int _basslevel = -999;
-        int _treblelevel = -999;
+        int _volume = ZoneState.VALUE_UNDEFINED;
+        int _basslevel = ZoneState.VALUE_UNDEFINED;
+        int _treblelevel = ZoneState.VALUE_UNDEFINED;
         EDIPSwitchOverrideStatus _dipSwitchOverrideStatus = EDIPSwitchOverrideStatus.DIPSwitchOverrideUnknown;
         EVolumeResetStatus _volumeResetStatus = EVolumeResetStatus.VolumeResetUnknown;
         ESourceGroupStatus _sourceGroupStatus = ESourceGroupStatus.SourceGroupUnknown;
@@ -123,7 +140,7 @@ namespace NuvoControl.Server.ProtocolDriver
             constructMembers();
             initMembers(command);
             _zoneId = zone;
-            _volume = volume;
+            _volume = NuvoEssentiaCommand.limitVolume2NuvoEssentia(volume);
             _outgoingCommand = buildOutgoingCommand();
         }
 
@@ -143,7 +160,7 @@ namespace NuvoControl.Server.ProtocolDriver
             initMembers(command);
             _zoneId = zone;
             _sourceId = source;
-            _volume = volume;
+            _volume = NuvoEssentiaCommand.limitVolume2NuvoEssentia(volume);
             _basslevel = basslevel;
             _treblelevel = treblelevel;
             _outgoingCommand = buildOutgoingCommand();
@@ -162,7 +179,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _sourceId = source;
             _powerStatus = powerStatus;
             _irCarrierFrequencySource = ircf;
-            _volume = volume;
+            _volume = NuvoEssentiaCommand.limitVolume2NuvoEssentia(volume);
             _basslevel = basslevel;
             _treblelevel = treblelevel;
             _dipSwitchOverrideStatus = dipSwitchOverrideStatus;
@@ -453,7 +470,7 @@ namespace NuvoControl.Server.ProtocolDriver
             get { return _volume; }
             set
             {
-                _volume = value; 
+                _volume = NuvoEssentiaCommand.limitVolume2NuvoEssentia(value); 
                 _outgoingCommand = buildOutgoingCommand();
             }
         }
@@ -1356,7 +1373,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Volume Level. Wrong command '{0}' received! Exception={1}", stringVolumeLevel, ex));
                 }
             }
-            return -999;    //TODO replace with constant
+            return ZoneState.VALUE_UNDEFINED;
         }
 
         /// <summary>
@@ -1379,7 +1396,7 @@ namespace NuvoControl.Server.ProtocolDriver
                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Bass Level. Wrong command '{0}' received! Exception={1}", stringBassLevel, ex));
                }
             }
-            return -999;    //TODO replace with constant
+            return ZoneState.VALUE_UNDEFINED;
         }
 
         /// <summary>
@@ -1402,7 +1419,7 @@ namespace NuvoControl.Server.ProtocolDriver
                    LogManager.GetCurrentClassLogger().Fatal(m => m("Parse EXCEPTION: Cannot parse Treble Level. Wrong command '{0}' received! Exception={1}", stringTrebleLevel, ex));
                }
             }
-            return -999;    //TODO replace with constant
+            return ZoneState.VALUE_UNDEFINED;
         }
 
         /// <summary>

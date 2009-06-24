@@ -65,15 +65,14 @@
             // trackVolume
             // 
             this.trackVolume.Location = new System.Drawing.Point(129, 2);
-            this.trackVolume.Maximum = 0;
-            this.trackVolume.Minimum = -50;
+            this.trackVolume.Maximum = 100;
             this.trackVolume.Name = "trackVolume";
             this.trackVolume.Orientation = System.Windows.Forms.Orientation.Vertical;
             this.trackVolume.Size = new System.Drawing.Size(42, 88);
             this.trackVolume.SmallChange = 2;
             this.trackVolume.TabIndex = 7;
             this.trackVolume.TickFrequency = 5;
-            this.trackVolume.Value = -40;
+            this.trackVolume.Value = 10;
             this.trackVolume.Scroll += new System.EventHandler(this.trackVolume_Scroll);
             // 
             // ZoneUserControl
