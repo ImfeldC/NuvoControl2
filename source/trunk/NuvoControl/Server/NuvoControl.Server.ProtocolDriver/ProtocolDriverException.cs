@@ -24,8 +24,16 @@ using System.Text;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
-    class ProtocolDriverException : Exception
+    /// <summary>
+    /// Public exception class. Inherits from Exception.
+    /// </summary>
+    public class ProtocolDriverException : Exception
     {
+        /// <summary>
+        /// Public constructor for the protocol driver excpetion.
+        /// A message is expected to describe the cause of the exception.
+        /// </summary>
+        /// <param name="message">Cause message of the exception.</param>
         public ProtocolDriverException(string message)
             : base(message)
         {

@@ -50,26 +50,30 @@ namespace NuvoControl.Server.Simulator
             this.components = new System.ComponentModel.Container();
             this.rtbCOM = new System.Windows.Forms.RichTextBox();
             this.grpZone = new System.Windows.Forms.GroupBox();
+            this.ucZoneManual = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.trackBass = new System.Windows.Forms.TrackBar();
             this.trackTreble = new System.Windows.Forms.TrackBar();
             this.cmbSimModeSelect = new System.Windows.Forms.ComboBox();
             this.numDelay = new System.Windows.Forms.NumericUpDown();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.timerSimulate = new System.Windows.Forms.Timer(this.components);
-            this.progressSimulate = new System.Windows.Forms.ProgressBar();
-            this.label1 = new System.Windows.Forms.Label();
-            this.timerSendOut = new System.Windows.Forms.Timer(this.components);
-            this.ucZoneInput = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone4 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone3 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone2 = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.ucZone1 = new NuvoControl.Server.Simulator.ZoneUserControl();
-            this.ucZoneManual = new NuvoControl.Server.Simulator.ZoneUserControl();
+            this.timerSimulate = new System.Windows.Forms.Timer(this.components);
+            this.progressSimulate = new System.Windows.Forms.ProgressBar();
+            this.label1 = new System.Windows.Forms.Label();
+            this.timerSendOut = new System.Windows.Forms.Timer(this.components);
+            this.timerPeriodicUpdate = new System.Windows.Forms.Timer(this.components);
+            this.ucZoneInput = new NuvoControl.Server.Simulator.ZoneUserControl();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numPeriodicUpdate = new System.Windows.Forms.NumericUpDown();
             this.grpZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackTreble)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numPeriodicUpdate)).BeginInit();
             this.SuspendLayout();
             // 
             // rtbCOM
@@ -88,12 +92,21 @@ namespace NuvoControl.Server.Simulator
             this.grpZone.Controls.Add(this.ucZoneManual);
             this.grpZone.Controls.Add(this.trackBass);
             this.grpZone.Controls.Add(this.trackTreble);
-            this.grpZone.Location = new System.Drawing.Point(12, 310);
+            this.grpZone.Location = new System.Drawing.Point(12, 317);
             this.grpZone.Name = "grpZone";
             this.grpZone.Size = new System.Drawing.Size(278, 117);
             this.grpZone.TabIndex = 2;
             this.grpZone.TabStop = false;
             this.grpZone.Text = "Zone (manual changes)";
+            // 
+            // ucZoneManual
+            // 
+            this.ucZoneManual.Location = new System.Drawing.Point(7, 16);
+            this.ucZoneManual.Name = "ucZoneManual";
+            this.ucZoneManual.ReadOnly = false;
+            this.ucZoneManual.Size = new System.Drawing.Size(172, 93);
+            this.ucZoneManual.TabIndex = 2;
+            this.ucZoneManual.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZoneManual_onZoneChanged);
             // 
             // trackBass
             // 
@@ -122,7 +135,7 @@ namespace NuvoControl.Server.Simulator
             // cmbSimModeSelect
             // 
             this.cmbSimModeSelect.FormattingEnabled = true;
-            this.cmbSimModeSelect.Location = new System.Drawing.Point(12, 10);
+            this.cmbSimModeSelect.Location = new System.Drawing.Point(12, 8);
             this.cmbSimModeSelect.Name = "cmbSimModeSelect";
             this.cmbSimModeSelect.Size = new System.Drawing.Size(176, 21);
             this.cmbSimModeSelect.TabIndex = 3;
@@ -135,7 +148,7 @@ namespace NuvoControl.Server.Simulator
             0,
             0,
             0});
-            this.numDelay.Location = new System.Drawing.Point(122, 63);
+            this.numDelay.Location = new System.Drawing.Point(122, 49);
             this.numDelay.Maximum = new decimal(new int[] {
             20000,
             0,
@@ -162,45 +175,12 @@ namespace NuvoControl.Server.Simulator
             this.groupBox1.Controls.Add(this.ucZone3);
             this.groupBox1.Controls.Add(this.ucZone2);
             this.groupBox1.Controls.Add(this.ucZone1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 93);
+            this.groupBox1.Location = new System.Drawing.Point(12, 101);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(361, 210);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Zone (current status)";
-            // 
-            // timerSimulate
-            // 
-            this.timerSimulate.Interval = 300;
-            this.timerSimulate.Tick += new System.EventHandler(this.timerSimulate_Tick);
-            // 
-            // progressSimulate
-            // 
-            this.progressSimulate.Location = new System.Drawing.Point(12, 37);
-            this.progressSimulate.Name = "progressSimulate";
-            this.progressSimulate.Size = new System.Drawing.Size(176, 10);
-            this.progressSimulate.TabIndex = 21;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 65);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(97, 13);
-            this.label1.TabIndex = 23;
-            this.label1.Text = "Answer Delay [ms]:";
-            // 
-            // timerSendOut
-            // 
-            this.timerSendOut.Tick += new System.EventHandler(this.timerSendOut_Tick);
-            // 
-            // ucZoneInput
-            // 
-            this.ucZoneInput.Location = new System.Drawing.Point(194, 4);
-            this.ucZoneInput.Name = "ucZoneInput";
-            this.ucZoneInput.ReadOnly = true;
-            this.ucZoneInput.Size = new System.Drawing.Size(172, 93);
-            this.ucZoneInput.TabIndex = 22;
             // 
             // ucZone4
             // 
@@ -238,20 +218,82 @@ namespace NuvoControl.Server.Simulator
             this.ucZone1.TabIndex = 0;
             this.ucZone1.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZone1_onZoneChanged);
             // 
-            // ucZoneManual
+            // timerSimulate
             // 
-            this.ucZoneManual.Location = new System.Drawing.Point(7, 16);
-            this.ucZoneManual.Name = "ucZoneManual";
-            this.ucZoneManual.ReadOnly = false;
-            this.ucZoneManual.Size = new System.Drawing.Size(172, 93);
-            this.ucZoneManual.TabIndex = 2;
-            this.ucZoneManual.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZoneManual_onZoneChanged);
+            this.timerSimulate.Interval = 300;
+            this.timerSimulate.Tick += new System.EventHandler(this.timerSimulate_Tick);
+            // 
+            // progressSimulate
+            // 
+            this.progressSimulate.Location = new System.Drawing.Point(11, 33);
+            this.progressSimulate.Name = "progressSimulate";
+            this.progressSimulate.Size = new System.Drawing.Size(176, 10);
+            this.progressSimulate.TabIndex = 21;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 51);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(97, 13);
+            this.label1.TabIndex = 23;
+            this.label1.Text = "Answer Delay [ms]:";
+            // 
+            // timerSendOut
+            // 
+            this.timerSendOut.Tick += new System.EventHandler(this.timerSendOut_Tick);
+            // 
+            // timerPeriodicUpdate
+            // 
+            this.timerPeriodicUpdate.Tick += new System.EventHandler(this.timerPeriodicUpdate_Tick);
+            // 
+            // ucZoneInput
+            // 
+            this.ucZoneInput.Location = new System.Drawing.Point(196, 3);
+            this.ucZoneInput.Name = "ucZoneInput";
+            this.ucZoneInput.ReadOnly = true;
+            this.ucZoneInput.Size = new System.Drawing.Size(172, 93);
+            this.ucZoneInput.TabIndex = 22;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 77);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(100, 13);
+            this.label2.TabIndex = 25;
+            this.label2.Text = "Periodic Update [s]:";
+            // 
+            // numPeriodicUpdate
+            // 
+            this.numPeriodicUpdate.Location = new System.Drawing.Point(122, 75);
+            this.numPeriodicUpdate.Maximum = new decimal(new int[] {
+            120,
+            0,
+            0,
+            0});
+            this.numPeriodicUpdate.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.numPeriodicUpdate.Name = "numPeriodicUpdate";
+            this.numPeriodicUpdate.Size = new System.Drawing.Size(66, 20);
+            this.numPeriodicUpdate.TabIndex = 24;
+            this.numPeriodicUpdate.Value = new decimal(new int[] {
+            3,
+            0,
+            0,
+            0});
+            this.numPeriodicUpdate.ValueChanged += new System.EventHandler(this.numPeriodicUpdate_ValueChanged);
             // 
             // NuvoControlSimulator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(714, 439);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.numPeriodicUpdate);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ucZoneInput);
             this.Controls.Add(this.progressSimulate);
@@ -270,6 +312,7 @@ namespace NuvoControl.Server.Simulator
             ((System.ComponentModel.ISupportInitialize)(this.trackTreble)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numDelay)).EndInit();
             this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numPeriodicUpdate)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,6 +337,9 @@ namespace NuvoControl.Server.Simulator
         private ZoneUserControl ucZoneInput;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Timer timerSendOut;
+        private System.Windows.Forms.Timer timerPeriodicUpdate;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.NumericUpDown numPeriodicUpdate;
     }
 }
 
