@@ -217,6 +217,7 @@ namespace NuvoControl.Server.Simulator
 
             timerSendOut.Start();
             timerSendOut.Interval = (int)numDelay.Value;
+            timerPeriodicUpdate.Interval = (int)numPeriodicUpdate.Value * 1000;
 
         }
 
@@ -232,6 +233,7 @@ namespace NuvoControl.Server.Simulator
 
             timerSendOut.Stop();
             timerSimulate.Stop();
+            timerPeriodicUpdate.Stop();
 
             CloseQueues();
         }
@@ -380,15 +382,23 @@ namespace NuvoControl.Server.Simulator
         /// <param name="e">Event argument, send by the combo box.</param>
         private void cmbSimModeSelect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoSimulation.ToString())
+            if ((string)cmbSimModeSelect.SelectedItem == ProtocolDriverSimulator.EProtocolDriverSimulationMode.PeriodicUpdate.ToString())
+            {
+                // Start periodic udpate + simulation
+                timerSimulate.Start();
+                timerPeriodicUpdate.Start();
+            }
+            else if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoSimulation.ToString())
             {
                 // Start simulation
                 timerSimulate.Start();
+                timerPeriodicUpdate.Stop();
             }
             else
             {
                 // Stop simulation
                 timerSimulate.Stop();
+                timerPeriodicUpdate.Stop();
             }
             DisplayData(MessageType.Normal, string.Format("--- Simulation Mode Changed to '{0}' ---", cmbSimModeSelect.Text));
         }
@@ -423,25 +433,33 @@ namespace NuvoControl.Server.Simulator
         /// commands queue. In case a delay of more than 500 [ms] is defined a message
         /// is shown at the UI, to inform the user that the message will be send out delayed.
         /// </summary>
-        /// <param name="commandType">Command to send back.</param>
-        private void sendCommandForSimulation(ENuvoEssentiaCommands commandType)
+        /// <param name="uc">Zone User Control, which shall be used as source for the command.</param>
+        /// <param name="commandType">Command type to send back.</param>
+        private void sendCommandForSimulation(ZoneUserControl uc, ENuvoEssentiaCommands commandType)
         {
             if (_sendQueue != null)
             {
-                ENuvoEssentiaZones zone = ucZoneInput.GetSelectedZone();
+                ENuvoEssentiaZones zone = uc.GetSelectedZone();
                 if (zone != ENuvoEssentiaZones.NoZone)
                 {
-                    NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                        commandType, zone, ucZoneInput.GetSelectedSource(), 
-                        NuvoEssentiaCommand.calcVolume2NuvoEssentia(ucZoneInput.GetSelectedVolumeLevel()), 
-                        0, 0, ucZoneInput.GetSelectedPowerStatus(),
-                        new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
-                        EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
-                    string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
-                    _outgoingCommands.Enqueue(incomingCommand);
-                    if (numDelay.Value > 500)   // announce only delays higher than 500[ms]
+                    try
                     {
-                        DisplayData(MessageType.Normal, string.Format("Delay message for {0} milliseconds. Totally {1} commands on queue.", numDelay.Value, _outgoingCommands.Count));
+                        NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                            commandType, zone, uc.GetSelectedSource(),
+                            NuvoEssentiaCommand.calcVolume2NuvoEssentia(uc.GetSelectedVolumeLevel()),
+                            0, 0, uc.GetSelectedPowerStatus(),
+                            new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
+                            EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
+                        string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
+                        _outgoingCommands.Enqueue(incomingCommand);
+                        if (numDelay.Value > 500)   // announce only delays higher than 500[ms]
+                        {
+                            DisplayData(MessageType.Normal, string.Format("Delay message for {0}[ms]. Totally {1} commands on queue.", numDelay.Value, _outgoingCommands.Count));
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        DisplayData(MessageType.Warning, string.Format("Exception: {0}", ex.Message.ToString() ));
                     }
                 }
             }
@@ -455,17 +473,19 @@ namespace NuvoControl.Server.Simulator
         /// <param name="eventArg"></param>
         private void simulate(ReceiveCompletedEventArgs eventArg)
         {
-            if ((string)cmbSimModeSelect.SelectedItem == 
-                ProtocolDriverSimulator.EProtocolDriverSimulationMode.AllOk.ToString() )
+            if ( ((string)cmbSimModeSelect.SelectedItem == 
+                  ProtocolDriverSimulator.EProtocolDriverSimulationMode.AllOk.ToString() ) ||
+                  ((string)cmbSimModeSelect.SelectedItem ==
+                  ProtocolDriverSimulator.EProtocolDriverSimulationMode.PeriodicUpdate.ToString())     )
             {
                 NuvoEssentiaSingleCommand command = ProtocolDriverSimulator.createNuvoEssentiaSingleCommand((string)eventArg.Message.Body);
                 ucZoneInput.updateZoneState(command);
-                sendCommandForSimulation(command.Command);
+                sendCommandForSimulation(ucZoneInput,command.Command);
             }
             else if ((string)cmbSimModeSelect.SelectedItem ==
                 ProtocolDriverSimulator.EProtocolDriverSimulationMode.AllFail.ToString())
             {
-                sendCommandForSimulation(ENuvoEssentiaCommands.ErrorInCommand);
+                sendCommandForSimulation(ucZoneInput, ENuvoEssentiaCommands.ErrorInCommand);
             }
             else if ((string)cmbSimModeSelect.SelectedItem ==
                 ProtocolDriverSimulator.EProtocolDriverSimulationMode.WrongAnswer.ToString())
@@ -474,7 +494,7 @@ namespace NuvoControl.Server.Simulator
                 // Select ONE zone HIGHER than received by command string
                 ENuvoEssentiaZones zoneId = (ENuvoEssentiaZones)((int)command.ZoneId>=_numOfZones?0:(int)command.ZoneId)+1;
                 ucZoneInput.SetSelectedZone(zoneId);
-                sendCommandForSimulation(command.Command);
+                sendCommandForSimulation(ucZoneInput, command.Command);
             }
             else if ((string)cmbSimModeSelect.SelectedItem ==
                 ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoAnswer.ToString())
@@ -501,22 +521,48 @@ namespace NuvoControl.Server.Simulator
                 string incomingCommand = _outgoingCommands.Dequeue();
                 if (numDelay.Value > 500)   // announce only delays higher than 500[ms]
                 {
-                    DisplayData(MessageType.Normal, string.Format("Send delayed message. Delays was {0} milliseconds. Totally {1} commands on the queue.", numDelay.Value, _outgoingCommands.Count));
+                    DisplayData(MessageType.Normal, string.Format("Send delayed message. Delays was {0}[ms]. Totally {1} commands on the queue.", numDelay.Value, _outgoingCommands.Count));
                 }
                 _sendQueue.Send(incomingCommand);
                 DisplayData(MessageType.Outgoing, incomingCommand);
             }
         }
 
+
+        /// <summary>
+        /// Event handler for the periodic timer.
+        /// It sends periodically an update command to the system.
+        /// </summary>
+        /// <param name="sender">This pointer, to the timer periodic update timer.</param>
+        /// <param name="e">Event argument, of the timer event.</param>
+        private void timerPeriodicUpdate_Tick(object sender, EventArgs e)
+        {
+            DisplayData(MessageType.Normal, string.Format("Send periodic udpate for zone {0}, each {1}[s].", ucZone1.GetSelectedZone().ToString(), numPeriodicUpdate.Value));
+            sendCommandForSimulation(ucZone1, ENuvoEssentiaCommands.SetSource);
+        }
+
+
+
         /// <summary>
         /// Event handler method in case the delay time is adjusted.
         /// It sets directly the intervall method of the send out timer. See <see cref="System.Windows.Forms.Timer.Interval"/>.
+        /// It also sets the periodic update timer, to send out automated updates.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="sender">This pointer, to the numeric control.</param>
+        /// <param name="e">Event argument, send by the numeric control in case the value has changed.</param>
         private void numDelay_ValueChanged(object sender, EventArgs e)
         {
             timerSendOut.Interval = (int)numDelay.Value;
+        }
+
+        /// <summary>
+        /// Event handler method in case the periodic update time is adjusted.
+        /// </summary>
+        /// <param name="sender">This pointer, to the numeric control.</param>
+        /// <param name="e">Event argument, send by the numeric control in case the value has changed.</param>
+        private void numPeriodicUpdate_ValueChanged(object sender, EventArgs e)
+        {
+            timerPeriodicUpdate.Interval = (int)numPeriodicUpdate.Value * 1000;
         }
 
 

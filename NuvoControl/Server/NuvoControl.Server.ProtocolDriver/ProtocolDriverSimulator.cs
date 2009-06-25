@@ -89,7 +89,12 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
             /// <summary>
             /// NoAnswer: Simulation is active. No answer is returned on a acommand.
             /// </summary>
-            NoAnswer = 4
+            NoAnswer = 4,
+
+            /// <summary>
+            /// PeriodicUpdate: Simulation is active. A periodic update is send by the simulator.
+            /// </summary>
+            PeriodicUpdate = 5
         }
 
         private bool _isOpen = false;
