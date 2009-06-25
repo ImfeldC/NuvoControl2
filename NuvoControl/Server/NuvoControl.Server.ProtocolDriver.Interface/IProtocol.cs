@@ -26,6 +26,7 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
+    #region ProtocolCommandReceived
     /// <summary>
     /// Public delegate used in case a command is received.
     /// </summary>
@@ -79,7 +80,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _innerEventArgs.Command; }
         }
     }
+    #endregion
 
+    #region ProtocolZoneUpdated
     /// <summary>
     /// Public delegate used in case a zone is updated.
     /// </summary>
@@ -144,7 +147,53 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         }
 
     }
+    #endregion
 
+    #region ProtocolDeviceUpdated
+    public delegate void ProtocolDeviceUpdatedEventHandler(
+              object sender, ProtocolDeviceUpdatedEventArgs e);
+
+    /// <summary>
+    /// Public event argument class. Used in the protocol device
+    /// updated event.
+    /// </summary>
+    public class ProtocolDeviceUpdatedEventArgs : EventArgs
+    {
+        private int _deviceId;
+        private ZoneQuality _deviceQuality;
+        private NuvoEssentiaProtocolEventArgs _innerEventArgs;
+
+        /// <summary>
+        /// Public constructor for the protocol device updates event argument.
+        /// </summary>
+        /// <param name="deviceId">Device Id, where the update belongs to.</param>
+        /// <param name="deviceQuality">Device quality, of the device where the update belongs to.</param>
+        /// <param name="innerEventArgs">Event argument, of the inner event.</param>
+        public ProtocolDeviceUpdatedEventArgs(int deviceId, ZoneQuality deviceQuality, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        {
+            _deviceId = deviceId;
+            _deviceQuality = deviceQuality;
+            _innerEventArgs = innerEventArgs;
+        }
+
+        /// <summary>
+        /// Get Device Id, where this update belongs to.
+        /// </summary>
+        public int DeviceId
+        {
+            get { return _deviceId; }
+        }
+
+        /// <summary>
+        /// Get Quality of the Device.
+        /// </summary>
+        public ZoneQuality DeviceQuality
+        {
+            get { return _deviceQuality; }
+        }
+
+    }
+    #endregion
 
 
     /// <summary>
@@ -166,6 +215,12 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// The receiver needs to check, which zone has changed.
         /// </summary>
         event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
+
+        /// <summary>
+        /// This event is raised in case the state of a whole device has changed.
+        /// It indicates a device quality change, indicated with the type <see cref="ZoneQuality"/>.
+        /// </summary>
+        event ProtocolDeviceUpdatedEventHandler onDeviceStatusUpdate;
 
         /// <summary>
         /// Opens a connection to the device.

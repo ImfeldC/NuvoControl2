@@ -31,10 +31,11 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
     /// This class implements the protocol stack to acces the Nuvo Essentia.
-    /// This is the main class which combins the access to the protocol stack.
-    /// It implements the extended <c>iNuvoProtocol</c> interface, which inherits from 
+    /// This is the main class which combines the access to the protocol stack.
+    /// It implements the extended <c>INuvoProtocol</c> interface, which inherits from 
     /// <c>IProtocol</c> interface.
-    /// An application should use this class to instantiate a protocol stack.
+    /// An application should use this class to instantiate a protocol stack to one or more
+    /// devices.
     /// <br/>The following class diagram shows the interface hirarchy: <a href="../ClassDiagrams/ProtocolDriverInterfaceOverview.jpg">ProtocolDriverInterfaceOverview</a>
     /// <br/>The following class diagram shows the protocol stack: <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// </summary>
@@ -48,7 +49,38 @@ namespace NuvoControl.Server.ProtocolDriver
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
 
-        Dictionary<int,INuvoEssentiaProtocol> _protocolList = new Dictionary<int,INuvoEssentiaProtocol>();
+        /// <summary>
+        /// Dictionary entry class, used as entry in the list of devices.
+        /// </summary>
+        private class DictEntry
+        {
+            private INuvoEssentiaProtocol _protocolStack = null;
+            public DateTime LastTimeCommandReceived = new DateTime(1970, 1, 1);
+
+            /// <summary>
+            /// Public constructor to create a dictionary entry.
+            /// It is required to set the protocol stack at creation time.
+            /// </summary>
+            /// <param name="protocolStack">Protocol Stack</param>
+            public DictEntry(INuvoEssentiaProtocol protocolStack)
+            {
+                _protocolStack = protocolStack;
+            }
+
+            /// <summary>
+            /// Get the protocol stack.
+            /// </summary>
+            public INuvoEssentiaProtocol ProtocolStack
+            {
+                get { return _protocolStack; }
+            }
+        }
+
+        /// <summary>
+        /// Private list holding all protocol driver stacks (for each device).
+        /// </summary>
+        private Dictionary<int, DictEntry> _deviceList = new Dictionary<int, DictEntry>();
+
 
         /// <summary>
         /// Constructor for <c>NuvoEssentiaProtocolDriver</c>
@@ -66,8 +98,11 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="e">Event argument, containing the Nuvo Essentia command.</param>
         void _essentiaProtocol_onCommandReceived(object sender, NuvoEssentiaProtocolEventArgs e)
         {
-            if (_protocolList.ContainsKey(e.DeviceId))
+            if (_deviceList.ContainsKey(e.DeviceId))
             {
+                // Update 'LastUpdated' marker for this device
+                _deviceList[e.DeviceId].LastTimeCommandReceived = DateTime.Now;
+
                 //raise the command received event, and pass data to next layer
                 if (onCommandReceived != null)
                 {
@@ -121,6 +156,11 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         public event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
 
+        /// <summary>
+        /// Public event in case the state of a device has changed.
+        /// </summary>
+        public event ProtocolDeviceUpdatedEventHandler onDeviceStatusUpdate;
+
 
         /// <summary>
         /// Public method to open a connection to a device.
@@ -140,8 +180,8 @@ namespace NuvoControl.Server.ProtocolDriver
         public void Close(int deviceId)
         {
             checkZoneDeviceId(deviceId);
-            _protocolList[deviceId].Close();
-            _protocolList.Remove(deviceId);
+            _deviceList[deviceId].ProtocolStack.Close();
+            _deviceList.Remove(deviceId);
         }
 
         /// <summary>
@@ -154,7 +194,7 @@ namespace NuvoControl.Server.ProtocolDriver
             INuvoEssentiaCommand command = new NuvoEssentiaCommand(
                 ENuvoEssentiaCommands.GetZoneStatus,
                 convertAddressZone2EssentiaZone(zoneAddress));
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         /// <summary>
@@ -171,14 +211,14 @@ namespace NuvoControl.Server.ProtocolDriver
                     convertAddressZone2EssentiaZone(zoneAddress),
                     convertAddressSource2EssentiaSource(zoneState.Source), 
                     NuvoEssentiaCommand.calcVolume2NuvoEssentia(zoneState.Volume) );
-                _protocolList[zoneAddress.DeviceId].SendCommand(command);
+                _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
             }
             else
             {
                 INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                     ENuvoEssentiaCommands.TurnZoneOFF,
                     convertAddressZone2EssentiaZone(zoneAddress));
-                _protocolList[zoneAddress.DeviceId].SendCommand(command);
+                _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
             }
         }
 
@@ -192,7 +232,7 @@ namespace NuvoControl.Server.ProtocolDriver
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                 ENuvoEssentiaCommands.TurnZoneON,
                 convertAddressZone2EssentiaZone(zoneAddress));
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         /// <summary>
@@ -205,7 +245,7 @@ namespace NuvoControl.Server.ProtocolDriver
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                 ENuvoEssentiaCommands.TurnZoneOFF,
                 convertAddressZone2EssentiaZone(zoneAddress));
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         /// <summary>
@@ -220,7 +260,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 ENuvoEssentiaCommands.SetSource,
                 convertAddressZone2EssentiaZone(zoneAddress),
                 convertAddressSource2EssentiaSource(sourceAddress));
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         /// <summary>
@@ -235,7 +275,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 ENuvoEssentiaCommands.SetVolume,
                 convertAddressZone2EssentiaZone(zoneAddress),
                 NuvoEssentiaCommand.calcVolume2NuvoEssentia(volumeLevel));
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         #endregion
@@ -256,19 +296,19 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 throw new ProtocolDriverException(string.Format("This system type is not supported! Cannot connect! '{0}'", system));
             }
-            if (_protocolList.ContainsKey(deviceId))
+            if (_deviceList.ContainsKey(deviceId))
             {
                 throw new ProtocolDriverException(string.Format("A device with the id {0} is already registered. Cannot add a device with the same id!", deviceId));
             }
 
             // if not null, use the protocol object passed by the caller (e.g. as mock object for unit test)
-            _protocolList.Add(deviceId, ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId, null) : essentiaProtocol));
+            _deviceList.Add(deviceId, new DictEntry( ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId, null) : essentiaProtocol)));
 
             // register for events from protocol layer
-            _protocolList[deviceId].onCommandReceived += new NuvoEssentiaProtocolEventHandler(_essentiaProtocol_onCommandReceived);
+            _deviceList[deviceId].ProtocolStack.onCommandReceived += new NuvoEssentiaProtocolEventHandler(_essentiaProtocol_onCommandReceived);
 
             // open connection to the protocol layer
-            _protocolList[deviceId].Open(new SerialPortConnectInformation(
+            _deviceList[deviceId].ProtocolStack.Open(new SerialPortConnectInformation(
                 communicationConfiguration.Port,                                            // e.g. "COM1"
                 communicationConfiguration.BaudRate,                                        // e.g. 9600
                 (Parity)Enum.Parse(typeof(Parity), communicationConfiguration.ParityMode),  // e.g. None
@@ -277,7 +317,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         /// <summary>
-        /// Public method - sepcific for Nuvo - to send a single command.
+        /// Public method - specific for Nuvo - to send a single command.
         /// </summary>
         /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
         /// <param name="command">Command, to send to the device.</param>
@@ -292,11 +332,11 @@ namespace NuvoControl.Server.ProtocolDriver
                 new ProtocolDriverException(string.Format("The Zone Address doesn't fit the zone used in the command. Cannot send this command!"));
             }
 
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         /// <summary>
-        /// Public method - sepcific for Nuvo - to send a command, which contains one or more
+        /// Public method - specific for Nuvo - to send a command, which contains one or more
         /// single command.
         /// </summary>
         /// <param name="zoneAddress">Zone Adress, containing device and zone id.</param>
@@ -304,7 +344,7 @@ namespace NuvoControl.Server.ProtocolDriver
         public void SendCommand(Address zoneAddress, INuvoEssentiaCommand command)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
-            _protocolList[zoneAddress.DeviceId].SendCommand(command);
+            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
         }
 
         #endregion
@@ -313,10 +353,10 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Method checks the zone address. If the device id is not available 
         /// an error message is written to the console and an exception is thrown.
         /// </summary>
-        /// <param name="zoneAddress">Address to check.</param>
+        /// <param name="deviceId">Device id to check.</param>
         private void checkZoneDeviceId( int deviceId )
         {
-            if (!_protocolList.ContainsKey(deviceId))
+            if (!_deviceList.ContainsKey(deviceId))
             {
                 // Device id is not available
                 string message = string.Format("A device with the id {0} is not available. Cannot close device with this id!", deviceId);
@@ -329,7 +369,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Converts the zone id read from address into a Nuvo
         /// Essentia zone id.
         /// </summary>
-        /// <param name="address">Zone address with the object id to convert.</param>
+        /// <param name="zoneAddress">Zone address with the object id to convert.</param>
         /// <returns>Converted zone id.</returns>
         private ENuvoEssentiaZones convertAddressZone2EssentiaZone(Address zoneAddress)
         {
@@ -348,7 +388,6 @@ namespace NuvoControl.Server.ProtocolDriver
             //TODO Check this conversion !!!
             return (ENuvoEssentiaSources)sourceAddress.ObjectId;
         }
-
 
     }
 }
