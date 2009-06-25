@@ -299,9 +299,20 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
     {
         #region IProtocol Members
 
+        /// <summary>
+        /// Public event in case a (single) command is received from the device (zone).
+        /// </summary>
         public event ProtocolCommandReceivedEventHandler onCommandReceived;
 
+        /// <summary>
+        /// Public event in case a full zone state is received from the device (zone).
+        /// </summary>
         public event ProtocolZoneUpdatedEventHandler onZoneStatusUpdate;
+
+        /// <summary>
+        /// Public event in case the state of a device has changed.
+        /// </summary>
+        public event ProtocolDeviceUpdatedEventHandler onDeviceStatusUpdate;
 
         public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration)
         {
