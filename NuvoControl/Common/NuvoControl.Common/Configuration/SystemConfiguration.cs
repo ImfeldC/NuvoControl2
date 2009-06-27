@@ -8,7 +8,7 @@
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
- *   File Name:      SystemKonfiguration.cs
+ *   File Name:      SystemConfiguration.cs
  * 
  ***************************************************************************************************
  * 
@@ -26,9 +26,9 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// SystemConfiguration Configuration class.
+    /// This is a system configuration class. It is a data structurer.
+    /// It is the root of the whole NuvoControl system configuration.
     /// </summary>
-    [DataContract]
     public class SystemConfiguration
     {
         #region Constants
@@ -53,24 +53,32 @@ namespace NuvoControl.Common.Configuration
 
         #region Private Members
 
-        [DataMember]
+        /// <summary>
+        /// The connected hardware (devices)
+        /// </summary>
         private Hardware _hardware = null;
-        [DataMember]
+
+        /// <summary>
+        /// Specifies graphical attributes of the system.
+        /// </summary>
         private Graphic _graphic = null;
-        [DataMember]
+
+        /// <summary>
+        /// Specifies all functions (alarm and sleep) of the system.
+        /// </summary>
         private List<Function> _functions = new List<Function>();
 
         #endregion
 
         #region SystemConfiguration
 
-        /// <summary>
-        /// Default Constructor.
-        /// </summary>
-        public SystemConfiguration()
-        {
-        }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="hardware">The connected hardware (devices)</param>
+        /// <param name="graphic">Specifies graphical attributes of the system.</param>
+        /// <param name="functions">Specifies all functions (alarm and sleep) of the system.</param>
         public SystemConfiguration(Hardware hardware, Graphic graphic, List<Function> functions)
         {
             this._hardware = hardware;
@@ -82,16 +90,25 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
+        /// <summary>
+        /// The connected hardware (devices)
+        /// </summary>
         public Hardware Hardware
         {
             get { return _hardware; }
         }
 
+        /// <summary>
+        /// Specifies graphical attributes of the system.
+        /// </summary>
         public Graphic Graphic
         {
             get { return _graphic; }
         }
 
+        /// <summary>
+        /// Specifies all functions (alarm and sleep) of the system.
+        /// </summary>
         public List<Function> Functions
         {
             get { return _functions; }

@@ -26,19 +26,35 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Alarm Function configuration class. Inherits from Function.
+    /// This is a system configuration class. It is a data structurer.
+    /// It defines attributes, specifying aa alarm function.
     /// </summary>
     [DataContract]
     public class AlarmFunction : Function
     {
         #region Private Members
 
+        /// <summary>
+        /// Alarm time.
+        /// </summary>
         [DataMember]
         private TimeSpan _alarmTime = new TimeSpan(7, 0, 0);
+
+        /// <summary>
+        /// Duration of the alarm.
+        /// </summary>
         [DataMember]
         private TimeSpan _alarmDuration = new TimeSpan(0, 10, 0);
+
+        /// <summary>
+        /// Address of the source to play during the alarm.
+        /// </summary>
         [DataMember]
         private Address _sourceId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        
+        /// <summary>
+        /// The days, on which this alarm is valid.
+        /// </summary>
         [DataMember]
         private List<DayOfWeek> _validOnDays = new List<DayOfWeek>();
 
@@ -53,6 +69,15 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">The function id.</param>
+        /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
+        /// <param name="sourceId">Address of the source to play during the alarm.</param>
+        /// <param name="alarmTime">Alarm time.</param>
+        /// <param name="alarmDuration">Duration of the alarm.</param>
+        /// <param name="validOnDays">The days, on which this alarm is valid.</param>
         public AlarmFunction(Guid id, Address zoneId, Address sourceId, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
             : base(id, zoneId)
         {
@@ -66,21 +91,33 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
+        /// <summary>
+        /// Alarm time.
+        /// </summary>
         public TimeSpan AlarmTime
         {
             get { return _alarmTime; }
         }
 
+        /// <summary>
+        /// Duration of the alarm.
+        /// </summary>
         public TimeSpan AlarmDuration
         {
             get { return _alarmDuration; }
         }
 
+        /// <summary>
+        /// Address of the source to play during the alarm.
+        /// </summary>
         public Address SourceId
         {
             get { return _sourceId; }
         }
 
+        /// <summary>
+        /// The days, on which this alarm is valid.
+        /// </summary>
         public List<DayOfWeek> ValidOnDays
         {
             get { return _validOnDays; }

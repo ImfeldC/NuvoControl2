@@ -8,7 +8,7 @@
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
- *   File Name:      HardwareConfiguration.cs
+ *   File Name:      Hardware.cs
  * 
  ***************************************************************************************************
  * 
@@ -26,28 +26,27 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Hardware Configuration class. 
+    /// This is a system configuration class. It is a data structurer.
+    /// It defines attibutes of the connected devices.
     /// </summary>
-    [DataContract]
     public class Hardware
     {
         #region Private Members
 
-        [DataMember]
-        private List<NuvoEssentia> _devices = new List<NuvoEssentia>();
+        /// <summary>
+        /// All connected devices.
+        /// </summary>
+        private List<Device> _devices = new List<Device>();
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Default Constructor.
+        /// Constructor
         /// </summary>
-        public Hardware()
-        {
-        }
-
-        public Hardware(List<NuvoEssentia> devices)
+        /// <param name="devices">The connected devices.</param>
+        public Hardware(List<Device> devices)
         {
             this._devices = devices;
         }
@@ -56,7 +55,10 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
-        public List<NuvoEssentia> Devices
+        /// <summary>
+        /// The connected devices.
+        /// </summary>
+        public List<Device> Devices
         {
             get { return _devices; }
         }

@@ -26,19 +26,35 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Floor Configuration class.
+    /// This is a system configuration class. It is a data structurer.
+    /// It defines attributes of a floor.
     /// </summary>
     [DataContract]
     public class Floor
     {
         #region Private Members
 
+        /// <summary>
+        /// The name of the floor.
+        /// </summary>
         [DataMember]
         private string _name = String.Empty;
+
+        /// <summary>
+        /// The file name of the floor plan.
+        /// </summary>
         [DataMember]
         private string _floorPlanPath = String.Empty;
+
+        /// <summary>
+        /// The file type of the floor plan.
+        /// </summary>
         [DataMember]
         private string _floorPlanType = String.Empty;
+
+        /// <summary>
+        /// All zones of the floor
+        /// </summary>
         [DataMember]
         private List<Zone> _zones = new List<Zone>();
 
@@ -53,6 +69,14 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="name">The name of the floor.</param>
+        /// <param name="floorPlanPath">The file name of the floor plan.</param>
+        /// <param name="floorPlanType">The file type of the floor plan.</param>
+        /// <param name="zones">All zones of the floor.</param>
         public Floor(string name, string floorPlanPath, string floorPlanType, List<Zone> zones)
         {
             this._name = name;
@@ -65,21 +89,33 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
+        /// <summary>
+        /// The name of the floor.
+        /// </summary>
         public string Name
         {
             get { return _name; }
         }
 
+        /// <summary>
+        /// The file name of the floor plan.
+        /// </summary>
         public string FloorPlanPath
         {
             get { return _floorPlanPath; }
         }
 
+        /// <summary>
+        /// The file type of the floor plan.
+        /// </summary>
         public string FloorPlanType
         {
             get { return _floorPlanType; }
         }
 
+        /// <summary>
+        /// All zones of the floor.
+        /// </summary>
         public List<Zone> Zones
         {
             get { return _zones; }

@@ -8,7 +8,7 @@
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
- *   File Name:      FunctionConfiguration.cs
+ *   File Name:      Function.cs
  * 
  ***************************************************************************************************
  * 
@@ -26,15 +26,23 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Function Configuration class. Is used as base class for all other function clases.
+    /// This is a system configuration class. It is a data structurer.
+    /// Is used as base class for all function classes.
     /// </summary>
     [DataContract]
     public abstract class Function
     {
         #region Private Members
 
+        /// <summary>
+        /// The id of the function.
+        /// </summary>
         [DataMember]
         private Guid _id = Guid.NewGuid();
+
+        /// <summary>
+        /// The address of the zone, which this function is applied for.
+        /// </summary>
         [DataMember]
         private Address _zoneId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
@@ -49,6 +57,11 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">The function id.</param>
+        /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
         public Function(Guid id, Address zoneId)
         {
             this._id = id;
@@ -59,11 +72,19 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
+
+        /// <summary>
+        /// Accessor for the function id.
+        /// </summary>
         public Guid Id
         {
             get { return _id; }
         }
 
+
+        /// <summary>
+        /// Accessor for the zone address which this function is applied for.
+        /// </summary>
         public Address ZoneId
         {
             get { return _zoneId; }

@@ -34,14 +34,33 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
+        /// <summary>
+        /// The address of the zone.
+        /// </summary>
         [DataMember]
         private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+        
+        /// <summary>
+        /// The name of the zone.
+        /// </summary>
         [DataMember]
         private string _name = String.Empty;
+
+        /// <summary>
+        /// The file name of the zone picture.
+        /// </summary>
         [DataMember]
         private string _picturePath = String.Empty;
+
+        /// <summary>
+        /// The file type of the zone picture.
+        /// </summary>
         [DataMember]
         private string _pictureType = String.Empty;
+
+        /// <summary>
+        /// The coordinates of the zone within the floor plan.
+        /// </summary>
         [DataMember]
         private List<Point> _floorPlanCoordinates = new List<Point>();
 
@@ -56,6 +75,14 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">The address of the zone.</param>
+        /// <param name="name">The name of the zone.</param>
+        /// <param name="picturePath">The file name of the zone picture.</param>
+        /// <param name="pictureType">The file type of the zone picture.</param>
+        /// <param name="floorPlanCoordinates">The coordinates of the zone within the floor plan.</param>
         public Zone(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates)
         {
             this._id = id;
@@ -69,26 +96,41 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface Members
 
+        /// <summary>
+        /// The address of the zone.
+        /// </summary>
         public Address Id
         {
             get { return _id; }
         }
 
+        /// <summary>
+        /// The name of the zone.
+        /// </summary>
         public string Name
         {
             get { return _name; }
         }
 
+        /// <summary>
+        /// The file name of the zone picture.
+        /// </summary>
         public string PicturePath
         {
             get { return _picturePath; }
         }
 
+        /// <summary>
+        /// The file type of the zone picture.
+        /// </summary>
         public string PictureType
         {
             get { return _pictureType; }
         }
 
+        /// <summary>
+        /// The coordinates of the zone within the floor plan.
+        /// </summary>
         public List<Point> FloorPlanCoordinates
         {
             get { return _floorPlanCoordinates; }
