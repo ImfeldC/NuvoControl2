@@ -84,6 +84,7 @@
     <Compile Include="ProtocolDriverSimulator.cs" />
     <Compile Include="SerialPort.cs" />
     <Compile Include="SerialPortQueue.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
