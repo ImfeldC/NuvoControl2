@@ -65,6 +65,7 @@ namespace NuvoControl.Server.ZoneServer
             this._protocolDriver = protocolDriver;
             this._protocolDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protocolDriver_onZoneStatusUpdate);
             this._protocolDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protocolDriver_onCommandReceived);
+            this._protocolDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protocolDriver_onDeviceStatusUpdate);
 
             //timer = new Timer(OnTimerCallback, this, Timeout.Infinite, Timeout.Infinite);
             //timer.Change(2000, 2000);
@@ -173,6 +174,11 @@ namespace NuvoControl.Server.ZoneServer
 
         #region Protocol Driver Notifications
 
+        /// <summary>
+        /// Private event handler method, to handle any zone state change.
+        /// </summary>
+        /// <param name="sender">Pointer, to the sender of the event.</param>
+        /// <param name="e">Event Argument, contains the zone state.</param>
         void _protocolDriver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
             lock (_zoneState)
@@ -185,10 +191,35 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
-        void _protocolDriver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
+        /// <summary>
+        /// Private event handler method, to handle any command received from device.
+        /// </summary>
+        /// <param name="sender">Pointer, to the sender of the event.</param>
+        /// <param name="e">Event Argument, contains the command received from device.</param>
+        private void _protocolDriver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
-            // TODO:
-            //throw new NotImplementedException();
+            //_log.Trace(m => m("Zone {0}: Command received: {1}", _zoneId.ToString(), e.Command.ToString()));
+        }
+
+        /// <summary>
+        /// Private event handler method, to handle device state updates.
+        /// This event indicates changes of teh device state, from on-line to off-line
+        /// or vise versa.
+        /// </summary>
+        /// <param name="sender">Pointer, to the sender of the event.</param>
+        /// <param name="e">Event Argument, contains the device (=zone) quality.</param>
+        private void _protocolDriver_onDeviceStatusUpdate(object sender, ProtocolDeviceUpdatedEventArgs e)
+        {
+            _log.Trace(m => m("Zone {0}: Device (with id {1}) state change received: {2}", _zoneId.ToString(), e.DeviceId, e.DeviceQuality.ToString()));
+            lock (_zoneState)
+            {
+                if (e.DeviceId == _zoneId.DeviceId)
+                {
+                    // update the device quality. Which in this case means, update the zone quality
+                    _zoneState.ZoneQuality = e.DeviceQuality;
+                    NotifySubscribedClients();
+                }
+            }
         }
 
         private void UpdateZoneStateFromDriver(ZoneState newState)

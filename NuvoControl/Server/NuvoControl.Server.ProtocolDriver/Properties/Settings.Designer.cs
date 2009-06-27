@@ -22,5 +22,32 @@ namespace NuvoControl.Server.ProtocolDriver.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("3")]
+        public ulong PingIntervall {
+            get {
+                return ((ulong)(this["PingIntervall"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:01:00")]
+        public global::System.TimeSpan SendPingTimeSpan {
+            get {
+                return ((global::System.TimeSpan)(this["SendPingTimeSpan"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:10:00")]
+        public global::System.TimeSpan MarkAsOfflineTimeSpan {
+            get {
+                return ((global::System.TimeSpan)(this["MarkAsOfflineTimeSpan"]));
+            }
+        }
     }
 }
