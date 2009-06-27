@@ -290,7 +290,7 @@ namespace NuvoControl.Server.ConfigurationService
         {
             foreach (Address address in ids)
             {
-                NuvoEssentia device = DoesDeviceExist(address);
+                Device device = DoesDeviceExist(address);
                 if (device == null)
                     return false;
 
@@ -316,7 +316,7 @@ namespace NuvoControl.Server.ConfigurationService
         {
             foreach (Address address in ids)
             {
-                NuvoEssentia device = DoesDeviceExist(address);
+                Device device = DoesDeviceExist(address);
                 if (device == null)
                     return false;
 
@@ -338,10 +338,10 @@ namespace NuvoControl.Server.ConfigurationService
         /// </summary>
         /// <param name="address">The addresses to check.</param>
         /// <returns>True, if the device id exisits. Otherwise false.</returns>
-        private NuvoEssentia DoesDeviceExist(Address address)
+        private Device DoesDeviceExist(Address address)
         {
-            List<NuvoEssentia> devices =
-                (from device in _systemConfiguration.Hardware.Devices where device.Id.Equals(address.DeviceId) select device).ToList<NuvoEssentia>();
+            List<Device> devices =
+                (from device in _systemConfiguration.Hardware.Devices where device.Id.Equals(address.DeviceId) select device).ToList<Device>();
             if (devices.Count == 0)
                 return null;
 

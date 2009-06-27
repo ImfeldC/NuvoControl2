@@ -26,13 +26,17 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Building Configuration class.
+    /// This is a system configuration class. It is a data structurer.
+    /// It defines a building of a NuvoControl system.
     /// </summary>
     [DataContract]
     public class Building
     {
         #region Private Members
 
+        /// <summary>
+        /// All floors of the building.
+        /// </summary>
         [DataMember]
         private List<Floor> _floors = new List<Floor>();
 
@@ -47,6 +51,11 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="floors">All floors of the building.</param>
         public Building(List<Floor> floors)
         {
             this._floors = floors;
@@ -56,6 +65,9 @@ namespace NuvoControl.Common.Configuration
 
         #region Private Members
 
+        /// <summary>
+        /// Accessor for all floors of the building.
+        /// </summary>
         public List<Floor> Floors
         {
             get { return _floors; }

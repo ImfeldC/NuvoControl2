@@ -8,7 +8,7 @@
  *   SubProject:     NuvoControl.Common
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
- *   File Name:      GraphicKonfiguration.cs
+ *   File Name:      Graphic.cs
  * 
  ***************************************************************************************************
  * 
@@ -26,15 +26,23 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Graphic Configuration class.
+    /// This is a system configuration class. It is a data structurer.
+    /// It defines attributes used to create a graphical representation of the whole NuvoControl system.
     /// </summary>
     [DataContract]
     public class Graphic
     {
         #region Private Members
 
+        /// <summary>
+        /// The building containing the NuvoControl system.
+        /// </summary>
         [DataMember]
         private Building _building = null;
+
+        /// <summary>
+        /// All available sources of the NuvoControl system.
+        /// </summary>
         [DataMember]
         private List<Source> _sources = new List<Source>();
 
@@ -49,6 +57,12 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="building">The building containing the NuvoControl system.</param>
+        /// <param name="sources">All available sources of the NuvoControl system.</param>
         public Graphic(Building building, List<Source> sources)
         {
             this._building = building;
@@ -59,11 +73,18 @@ namespace NuvoControl.Common.Configuration
 
         #region Private Members
 
+        /// <summary>
+        /// The building containing the NuvoControl system.
+        /// </summary>
         public Building Building
         {
             get { return _building; }
         }
 
+
+        /// <summary>
+        /// All available sources of the NuvoControl system.
+        /// </summary>
         public List<Source> Sources
         {
             get { return _sources; }

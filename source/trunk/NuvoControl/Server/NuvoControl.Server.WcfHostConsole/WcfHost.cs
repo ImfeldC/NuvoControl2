@@ -138,7 +138,7 @@ namespace NuvoControl.Server.WcfService
             _log.Info("Loading protocol drivers...");
             Console.WriteLine(">>> Loading protocol drivers...");
 
-            foreach (NuvoEssentia device in _configurationService.SystemConfiguration.Hardware.Devices)
+            foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
                 IProtocol driver = ProtocolDriverFactory.LoadDriver(device.ProtocolDriver.AssemblyName, device.ProtocolDriver.ClassName);
                 if (driver != null)
@@ -160,7 +160,7 @@ namespace NuvoControl.Server.WcfService
             Console.WriteLine(">>> Instantiating the zone server...");
 
             List<IZoneController> zoneControllers = new List<IZoneController>();
-            foreach (NuvoEssentia device in _configurationService.SystemConfiguration.Hardware.Devices)
+            foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
                 foreach (int zoneId in device.Zones)
                 {

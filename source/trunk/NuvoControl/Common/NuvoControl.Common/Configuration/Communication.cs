@@ -26,22 +26,36 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Communication Configuration class.
+    /// This is a system configuration class. It is a data structurer.
+    /// It defines communication parameters of a link to a device.
     /// </summary>
-    [DataContract]
     public class Communication
     {
         #region Private Members
 
-        [DataMember]
+        /// <summary>
+        /// The name of the port.
+        /// </summary>
         private string _port = "COM1";
-        [DataMember]
+
+        /// <summary>
+        /// Baud rate.
+        /// </summary>
         private int _baudRate = 9600;
-        [DataMember]
+
+        /// <summary>
+        /// Data bits
+        /// </summary>
         private int _dataBits = 8;
-        [DataMember]
+
+        /// <summary>
+        /// Parity bit
+        /// </summary>
         private int _parityBit = 1;
-        [DataMember]
+
+        /// <summary>
+        /// Parity mode
+        /// </summary>
         private string _parityMode = "No";
 
         #endregion
@@ -49,12 +63,13 @@ namespace NuvoControl.Common.Configuration
         #region Constructors
 
         /// <summary>
-        /// Default Constructor.
+        /// Constructor
         /// </summary>
-        public Communication()
-        {
-        }
-
+        /// <param name="port">The name of the port.</param>
+        /// <param name="baudRate">Baud rate.</param>
+        /// <param name="dataBits">Data bits</param>
+        /// <param name="parityBit">Parity bit</param>
+        /// <param name="parityMode">Parity mode</param>
         public Communication(string port, int baudRate, int dataBits, int parityBit, string parityMode)
         {
             this._port = port;

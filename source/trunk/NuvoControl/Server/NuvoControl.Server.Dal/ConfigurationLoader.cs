@@ -130,11 +130,11 @@ namespace NuvoControl.Server.Dal
         /// Reads and creates the devices based on the XML configuration file.
         /// </summary>
         /// <returns>The created devices.</returns>
-        private List<NuvoEssentia> ReadDevices()
+        private List<Device> ReadDevices()
         {
-            IEnumerable<NuvoEssentia> nuvoDevices =
+            IEnumerable<Device> nuvoDevices =
                 from device in _configuration.Root.Element("Configuration").Element("Hardware").Elements("NuvoEssentia")
-                select new NuvoEssentia(
+                select new Device(
                     (int)device.Attribute("Id"),
                     new Communication((string)device.Element("Communication").Attribute("Port"),
                         (int)device.Element("Communication").Attribute("BaudRate"),
@@ -148,7 +148,7 @@ namespace NuvoControl.Server.Dal
                     (from source in device.Element("Sources").Elements("Source") select (int)source.Attribute("Id")).ToList<int>()
                     );
 
-            return nuvoDevices.ToList<NuvoEssentia>();
+            return nuvoDevices.ToList<Device>();
         }
 
         /// <summary>
