@@ -34,9 +34,8 @@ namespace NuvoControl.Server.Dal
 {
     /// <summary>
     /// This class contains the functionality to load the Nuvo Control XML configuration file into a XDocument object.
-    /// In addition, it contains validation functions for the XDocument object.
-    /// And it contains the functionality to convert the XDocument into serialzable objects (Data Transfer Objects)
-    /// to be used all over the application.
+    /// It checks the version of the XML file and
+    /// it contains the functionality to convert the XDocument into the configuration data objects, which describe the system.
     /// </summary>
     public class ConfigurationLoader
     {
@@ -50,7 +49,7 @@ namespace NuvoControl.Server.Dal
         private XDocument _configuration = null;
 
         /// <summary>
-        /// The converted Nuvo Control system configuration. These is a hierarchy of data transfer objects.
+        /// The converted Nuvo Control system configuration. These is a hierarchy of data structurer objects.
         /// </summary>
         private SystemConfiguration _systemConfiguration = null;
 
@@ -94,6 +93,7 @@ namespace NuvoControl.Server.Dal
             }
         }
 
+
         /// <summary>
         /// Returns the system configuration.
         /// If it is not yet converted from the XML file, it will be done immediate.
@@ -111,6 +111,7 @@ namespace NuvoControl.Server.Dal
 
         #region Non-Public Interface
 
+
         /// <summary>
         /// Creates the system configuration based on the XML configuration file.
         /// </summary>
@@ -125,6 +126,7 @@ namespace NuvoControl.Server.Dal
                 new Graphic(new Building(ReadFloorsOfGraphic()), ReadSourcesOfGraphic()),
                 functions);
         }
+
 
         /// <summary>
         /// Reads and creates the devices based on the XML configuration file.
@@ -150,6 +152,7 @@ namespace NuvoControl.Server.Dal
 
             return nuvoDevices.ToList<Device>();
         }
+
 
         /// <summary>
         /// Reads and creates the floor objects based on the XML configuration file.
@@ -177,6 +180,7 @@ namespace NuvoControl.Server.Dal
             return floors.ToList<Floor>();
         }
 
+
         /// <summary>
         /// Reads and creates the source objects based on the XML configuration file.
         /// </summary>
@@ -195,6 +199,7 @@ namespace NuvoControl.Server.Dal
 
             return sources.ToList<Source>();
         }
+
 
         /// <summary>
         /// Reads and creates the sleep function objects based on the XML configuration file.
@@ -215,6 +220,7 @@ namespace NuvoControl.Server.Dal
 
             return functions.ToList<SleepFunction>();
         }
+
 
         /// <summary>
         /// Reads and creates the alarm function objects based on the XML configuration file.
@@ -241,7 +247,7 @@ namespace NuvoControl.Server.Dal
 
 
         /// <summary>
-        /// Validates the version of the XML file. It msut match the current code base.
+        /// Validates the version of the XML file. It must match the current code base.
         /// </summary>
         /// <returns>True, if version is valid. Otherwise false.</returns>
         private bool ValidateVersion()
