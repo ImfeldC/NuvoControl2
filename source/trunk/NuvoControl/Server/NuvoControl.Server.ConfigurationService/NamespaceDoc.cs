@@ -7,11 +7,12 @@
 // NamespaceDoc can be used to document a namespace.
 // 
 
-namespace NuvoControl.Server.Dal
+namespace NuvoControl.Server.ConfigurationService
 {
     /// <summary>
     /// This namespace contains the WCF configuration service.
     /// Basically it contains functionalty to read the system configuration and add functions via the exposed WCF interface.
+    /// It is specified as singleton.
     /// <br/>The following class diagram shows this layer: <a href="../ClassDiagrams/ConfigurationServiceOverview.jpg">ConfigurationServiceOverview</a>
     /// </summary>
     #region Namespace Documentation (required for Sandcastle documentation tool)

@@ -76,12 +76,7 @@ namespace NuvoControl.Server.ZoneServer
             this._zoneId = zoneId;
             this._protocolDriver = protocolDriver;
             this._protocolDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protocolDriver_onZoneStatusUpdate);
-<<<<<<< .mine=======            this._protocolDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protocolDriver_onCommandReceived);
-            this._protocolDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protocolDriver_onDeviceStatusUpdate);
-
-            //timer = new Timer(OnTimerCallback, this, Timeout.Infinite, Timeout.Infinite);
-            //timer.Change(2000, 2000);
->>>>>>> .theirs        }
+        }
 
         #endregion
 
@@ -198,21 +193,8 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
-<<<<<<< .mine        /// <summary>
-        /// Updates the zone state of this controller with the data sent from the protocol driver.
-        /// </summary>
-        /// <param name="newState">The new state.</param>
-=======        /// <summary>
-        /// Private event handler method, to handle any command received from device.
-        /// </summary>
-        /// <param name="sender">Pointer, to the sender of the event.</param>
-        /// <param name="e">Event Argument, contains the command received from device.</param>
-        private void _protocolDriver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
-        {
-            //_log.Trace(m => m("Zone {0}: Command received: {1}", _zoneId.ToString(), e.Command.ToString()));
-        }
 
->>>>>>> .theirs        /// <summary>
+        /// <summary>
         /// Private event handler method, to handle device state updates.
         /// This event indicates changes of teh device state, from on-line to off-line
         /// or vise versa.
