@@ -5,7 +5,7 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Server.Service
+ *   SubProject:     NuvoControl.Server.ZoneServer
  *   Author:         Bernhard Limacher
  *   Creation Date:  14.06.2009
  *   File Name:      ZoneServer.cs
@@ -13,6 +13,7 @@
  ***************************************************************************************************
  * 
  * Revisions:
+ * 1) 21.05.2009, Bernhard Limacher: Initial implementation.
  * 
  **************************************************************************************************/
 
@@ -29,6 +30,12 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Server.ZoneServer
 {
+    /// <summary>
+    /// Implements the interface of the zone server.
+    /// This server contains an image of state of the connected devices.
+    /// It allows to command the devices and to retrieve state of devices.
+    /// Typically, the zone server is instantiated once per Nuvo Control server.
+    /// </summary>
     public class ZoneServer: IZoneServer
     {
         #region Fields
@@ -45,6 +52,10 @@ namespace NuvoControl.Server.ZoneServer
 
         #region Constructors
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="zoneControllers">All zone controllers.</param>
         public ZoneServer(List<IZoneController> zoneControllers)
         {
             foreach (IZoneController zoneController in zoneControllers)
@@ -57,6 +68,9 @@ namespace NuvoControl.Server.ZoneServer
 
         #region IZoneServer Members
 
+        /// <summary>
+        /// <see cref="IZoneServer"/>
+        /// </summary>
         public void StartUp()
         {
             lock (this)
@@ -68,6 +82,12 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
+
+        /// <summary>
+        /// <see cref="IZoneServer"/>
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
         public ZoneState GetZoneState(Address zoneId)
         {
             lock (this)
@@ -78,6 +98,11 @@ namespace NuvoControl.Server.ZoneServer
         }
 
 
+        /// <summary>
+        /// <see cref="IZoneServer"/>
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <param name="zoneState"></param>
         public void SetZoneState(Address zoneId, ZoneState zoneState)
         {
             lock (this)
@@ -87,6 +112,12 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
+
+        /// <summary>
+        /// <see cref="IZoneServer"/>
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <param name="subscriber"></param>
         public void Monitor(Address zoneId, ZoneNotification subscriber)
         {
             lock (this)
@@ -96,6 +127,12 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
+
+        /// <summary>
+        /// <see cref="IZoneServer"/>
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <param name="subscriber"></param>
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)
         {
             lock (this)
@@ -110,6 +147,11 @@ namespace NuvoControl.Server.ZoneServer
 
         #region Non Public Interface
 
+        /// <summary>
+        /// Validate the zone id.
+        /// </summary>
+        /// <param name="zoneId">The zone id.</param>
+        /// <exception cref="ArgumentException">Throws exception, if the zone id is not valid.</exception>
         private void ValidateZone(Address zoneId)
         {
             if (_zoneControllers.ContainsKey(zoneId) == false)

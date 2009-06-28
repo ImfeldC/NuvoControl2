@@ -13,8 +13,7 @@
  ***************************************************************************************************
  * 
  * Revisions:
- * 1) 21.05.2009, Bernhard Limacher: Initial implementation (creation of the process model).
- * 2) 22.05.2009, Bernhard Limacher: Subscription / Unsubscription.
+ * 1) 21.05.2009, Bernhard Limacher: Initial implementation.
  * 
  **************************************************************************************************/
 
@@ -38,17 +37,29 @@ namespace NuvoControl.Server.ZoneServer
     /// <param name="e"></param>
     public delegate void ZoneNotification(object sender, ZoneStateEventArgs e);
 
-
+    /// <summary>
+    /// Contains the event arguments for zone state change events.
+    /// </summary>
     [Serializable]
     public class ZoneStateEventArgs : EventArgs
     {
+        /// <summary>
+        /// The state of the zone.
+        /// </summary>
         private ZoneState _zoneState;
 
+        /// <summary>
+        /// The state of the zone.
+        /// </summary>
         public ZoneState ZoneState
         {
             get { return _zoneState; }
         }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="zoneState">The state of the zone.</param>
         public ZoneStateEventArgs(ZoneState zoneState)
         {
             _zoneState = zoneState;
@@ -58,11 +69,12 @@ namespace NuvoControl.Server.ZoneServer
 
     /// <summary>
     /// Defines the interface of a zone controller.
+    /// Defines functionality to read and write zones and to monitor (subsciptions) zone state changes.
     /// </summary>
     public interface IZoneController
     {
         /// <summary>
-        /// The uniqueue Id of the zone.
+        /// The unique id of the zone.
         /// </summary>
         Address UniqueZoneId { get; }
 
@@ -72,13 +84,13 @@ namespace NuvoControl.Server.ZoneServer
         ZoneState ZoneState { get; }
 
         /// <summary>
-        /// Sets the zone to a new value/state. This triggers the protocol driver to command the NuvoEssentia accordingly.
+        /// Sets the zone to a new value/state. This triggers the protocol driver to command the device accordingly.
         /// </summary>
-        /// <param name="zoneState"></param>
+        /// <param name="zoneState">The new zone state.</param>
         void SetZoneState(ZoneState zoneState);
 
         /// <summary>
-        /// Triggers reading the zone state from the devices.
+        /// Triggers reading the zone state from the device.
         /// </summary>
         /// <returns></returns>
         void ReadZoneState();

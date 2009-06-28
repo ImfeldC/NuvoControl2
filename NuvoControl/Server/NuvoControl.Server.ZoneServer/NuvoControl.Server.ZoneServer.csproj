@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A4C12624-2950-45AC-9A17-B83AD9427331}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -52,6 +52,7 @@
   <ItemGroup>
     <Compile Include="IZoneController.cs" />
     <Compile Include="IZoneServer.cs" />
+    <Compile Include="NamespaceDoc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZoneController.cs" />
     <Compile Include="ZoneServer.cs" />

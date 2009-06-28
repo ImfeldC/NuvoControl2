@@ -5,7 +5,7 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Server.Service
+ *   SubProject:     NuvoControl.Server.ConfigurationService
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
  *   File Name:      Configuration.cs
@@ -32,6 +32,13 @@ using System.ServiceModel;
 
 namespace NuvoControl.Server.ConfigurationService
 {
+    /// <summary>
+    /// This class implements the interface of the configuration service. <see cref="IConfigure"/> and <see cref="IConfigureInternal"/>
+    /// The configuration service is a WCF-service, hosted as singleton.
+    /// It defines functionality to read the actual configuration of the NuvoControl system.
+    /// It defines functionality to modify the actual configuration of the NuvoControl system.
+    /// It defines functionality to save the actual configuration of the NuvoControl system.
+    /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
     public class ConfigurationService : IConfigureInternal, IDisposable
     {
@@ -39,14 +46,29 @@ namespace NuvoControl.Server.ConfigurationService
 
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// The active system configuration of the Nuvo Control system.
+        /// </summary>
         private SystemConfiguration _systemConfiguration = null;
+
+        /// <summary>
+        /// The file name, containing the persistent system configuration.
+        /// </summary>
         private string _configurationFile = null;
+
+        /// <summary>
+        /// Helper, to read the configuration.
+        /// </summary>
         private ConfigurationLoader _configurationLoader = null;
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="configurationFile">The file name, containing the persistent system configuration.</param>
         public ConfigurationService(string configurationFile)
         {
             this._configurationFile = configurationFile;
@@ -57,11 +79,20 @@ namespace NuvoControl.Server.ConfigurationService
 
         #region IConfigure Members
 
+        /// <summary>
+        /// <see cref="IConfigure"/>
+        /// </summary>
+        /// <returns></returns>
         public Graphic GetGraphicConfiguration()
         {
             return _systemConfiguration.Graphic;
         }
 
+        /// <summary>
+        /// <see cref="IConfigure"/>
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
         public Zone GetZoneKonfiguration(Address zoneId)
         {
             List<Zone> zones = new List<Zone>();
@@ -84,16 +115,31 @@ namespace NuvoControl.Server.ConfigurationService
             return zones[0];
         }
 
+        /// <summary>
+        /// <see cref="IConfigure"/>
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Function GetFunction(Guid id)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// <see cref="IConfigure"/>
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <returns></returns>
         public List<Function> GetFunctions(Address zoneId)
         {
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// <see cref="IConfigure"/>
+        /// </summary>
+        /// <param name="newFunction"></param>
+        /// <returns></returns>
         public bool AddFunction(Function newFunction)
         {
             throw new NotImplementedException();
@@ -104,13 +150,16 @@ namespace NuvoControl.Server.ConfigurationService
 
         #region IConfigureInternal Members
 
+        /// <summary>
+        /// <see cref="IConfigureInternal"/>
+        /// </summary>
         public SystemConfiguration SystemConfiguration
         {
             get { return _systemConfiguration; }
         }
 
         /// <summary>
-        /// Validates the loaded system configuration.
+        /// Validates the loaded system configuration. <see cref="IConfigureInternal"/>
         /// </summary>
         /// <returns>True, if the system configuration is valid. Otherwise false.</returns>
         public bool Validate()
@@ -147,6 +196,9 @@ namespace NuvoControl.Server.ConfigurationService
 
         #region IDisposable Members
 
+        /// <summary>
+        /// Called, before the GC removes the object.
+        /// </summary>
         public void Dispose()
         {
             Cleanup();
@@ -156,6 +208,9 @@ namespace NuvoControl.Server.ConfigurationService
 
         #region Non-Public Interface
 
+        /// <summary>
+        /// Initialization, reads the configuration from the DAL
+        /// </summary>
         private void Initialize()
         {
             _configurationLoader = new ConfigurationLoader(_configurationFile);
@@ -354,6 +409,9 @@ namespace NuvoControl.Server.ConfigurationService
         }
 
 
+        /// <summary>
+        /// Removes all state.
+        /// </summary>
         private void Cleanup()
         {
         }
