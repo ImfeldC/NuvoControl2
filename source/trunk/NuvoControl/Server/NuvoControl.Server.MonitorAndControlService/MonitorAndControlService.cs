@@ -5,7 +5,7 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Server.Service
+ *   SubProject:     NuvoControl.Server.MonitorAndControlService
  *   Author:         Bernhard Limacher
  *   Creation Date:  21.05.2009
  *   File Name:      MonitorAndControl.cs
@@ -14,7 +14,6 @@
  * 
  * Revisions:
  * 1) 21.05.2009, Bernhard Limacher: Initial implementation.
- * 2) 22.05.2009, Bernhard Limacher: StartSession / EndSession / Subscription / Unsubscription.
  * 
  **************************************************************************************************/
 
@@ -35,6 +34,9 @@ namespace NuvoControl.Server.MonitorAndControlService
 {
     /// <summary>
     /// Implements the functions for monitoring and controlling NuvoControl zones.
+    /// A monitor and control service is WCF service, hosted as sessionful service. Thus an object of this class is
+    /// instantiated per client proxy. This allows to keep state per client proxy.
+    /// The monitor and control service keeps following state, related to a client: Callback interface and all subscribed zones.
     /// </summary>
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.PerSession, ConcurrencyMode = ConcurrencyMode.Single)]
     public class MonitorAndControlService: IMonitorAndControl, IDisposable
@@ -191,7 +193,10 @@ namespace NuvoControl.Server.MonitorAndControlService
 
         #region Non-Public Interface
 
-
+        /// <summary>
+        /// Stores the address of the specified zone.
+        /// </summary>
+        /// <param name="zoneId"></param>
         private void StoreSubscribedZoneId(Address zoneId)
         {
             if (_zoneSubscriptions.Contains(zoneId) == false)
@@ -199,12 +204,21 @@ namespace NuvoControl.Server.MonitorAndControlService
         }
 
 
+        /// <summary>
+        /// Deletes the address of the specified zone.
+        /// </summary>
+        /// <param name="zoneId"></param>
         private void RemoveSubscribedZoneId(Address zoneId)
         {
             _zoneSubscriptions.Remove(zoneId);
         }
 
 
+        /// <summary>
+        /// Notifcation handler, called from the zone server, which delivers zone state changes
+        /// </summary>
+        /// <param name="sender">The zone controller, for which the state change appened.</param>
+        /// <param name="e">State change event arguments.</param>
         private void OnZoneNotification(object sender, ZoneStateEventArgs e)
         {
             ZoneController zoneController = sender as ZoneController;
@@ -213,6 +227,11 @@ namespace NuvoControl.Server.MonitorAndControlService
         }
 
 
+        /// <summary>
+        /// Notifies all subscribed clients for zone state changes.
+        /// </summary>
+        /// <param name="zoneId">The associated zone id.</param>
+        /// <param name="zoneState">The zone state.</param>
         private void NotifySubscribers(Address zoneId, ZoneState zoneState)
         {
             if (_zoneSubscriptions.Contains(zoneId) && _subscriber!= null)
@@ -220,6 +239,9 @@ namespace NuvoControl.Server.MonitorAndControlService
         }
 
 
+        /// <summary>
+        /// Removes all subscriptions done on the zone server.
+        /// </summary>
         private void Cleanup()
         {
             RemoveMonitorMultiple(_zoneSubscriptions.ToArray());

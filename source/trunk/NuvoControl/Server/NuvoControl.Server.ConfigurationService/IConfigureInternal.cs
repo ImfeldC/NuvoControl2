@@ -5,7 +5,7 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Server.Service
+ *   SubProject:     NuvoControl.Server.ConfigurationService
  *   Author:         Bernhard Limacher
  *   Creation Date:  12.05.2009
  *   File Name:      IConfigureInternal.cs
