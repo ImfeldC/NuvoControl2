@@ -76,6 +76,7 @@ namespace NuvoControl.Server.ZoneServer
             this._zoneId = zoneId;
             this._protocolDriver = protocolDriver;
             this._protocolDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protocolDriver_onZoneStatusUpdate);
+            this._protocolDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protocolDriver_onDeviceStatusUpdate);
         }
 
         #endregion
