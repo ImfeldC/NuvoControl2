@@ -5,10 +5,10 @@
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
- *   SubProject:     NuvoControl.Server.Service
+ *   SubProject:     NuvoControl.Server.Dal.UnitTest
  *   Author:         Bernhard Limacher
  *   Creation Date:  14.05.2009
- *   File Name:      ConfigurationLoader.cs
+ *   File Name:      ConfigurationLoaderTest.cs
  * 
  ***************************************************************************************************
  * 
@@ -31,8 +31,6 @@ using NuvoControl.Server.Dal;
 
 namespace NuvoControl.Server.Dal.UnitTest
 {
-    
-    
     /// <summary>
     ///This is a test class for ConfigurationLoaderTest and is intended
     ///to contain all ConfigurationLoaderTest Unit Tests
@@ -90,19 +88,19 @@ namespace NuvoControl.Server.Dal.UnitTest
 
 
         /// <summary>
-        ///A test for ConfigurationLoader Constructor with wellformed XML file
+        ///A test for ConfigurationLoader Constructor with wellformed XML file.
         ///</summary>
         [TestMethod()]
         public void ConfigurationLoaderConstructorTestWellFormedXml()
         {
             string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
-            Assert.IsTrue(true, "Testing the successful instntiation of the XML Document.");
+            Assert.IsTrue(true, "Testing the successful instantiation of the XML Document.");
         }
 
 
         /// <summary>
-        ///A test for ConfigurationLoader Constructor with wrong XML file path
+        ///A test for ConfigurationLoader Constructor with wrong XML file path.
         ///</summary>
         [TestMethod()]
         [ExpectedException(typeof(DirectoryNotFoundException), "The directory exists inappropriately.")]
@@ -114,7 +112,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
 
         /// <summary>
-        ///A test for ConfigurationLoader Constructor with wrong XML file name
+        ///A test for ConfigurationLoader Constructor with wrong XML file name.
         ///</summary>
         [TestMethod()]
         [ExpectedException(typeof(FileNotFoundException), "The XML Configuration file exists inappropriately.")]
@@ -126,10 +124,10 @@ namespace NuvoControl.Server.Dal.UnitTest
 
 
         /// <summary>
-        ///A test for ConfigurationLoader Constructor with not well formed XML file
+        ///A test for ConfigurationLoader Constructor with not well formed XML file.
         ///</summary>
         [TestMethod()]
-        [ExpectedException(typeof(XmlException), "The file exists inappropriately.")]
+        [ExpectedException(typeof(XmlException), "The XML Configuration file is well formed inappropriately.")]
         public void ConfigurationLoaderConstructorTestNotWellFormedXml()
         {
             string file = @"NuvoControlKonfigurationNotWellFormed.xml";
@@ -145,7 +143,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         {
             string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
-            Assert.AreEqual(true, target.Validate());
+            Assert.AreEqual(true, target.Validate(), "Testing the successful validation of the XML configuration version.");
         }
 
 
