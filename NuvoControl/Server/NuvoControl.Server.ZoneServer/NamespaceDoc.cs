@@ -7,7 +7,7 @@
 // NamespaceDoc can be used to document a namespace.
 // 
 
-namespace NuvoControl.Server.Dal
+namespace NuvoControl.Server.ZoneServer
 {
     /// <summary>
     /// This namespace contains the zone server.

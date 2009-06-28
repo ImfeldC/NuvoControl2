@@ -7,7 +7,7 @@
 // NamespaceDoc can be used to document a namespace.
 // 
 
-namespace NuvoControl.Server.Dal
+namespace NuvoControl.Server.MonitorAndControlService
 {
     /// <summary>
     /// This namespace contains the WCF monitor and control service.
