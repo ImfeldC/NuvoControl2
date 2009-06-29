@@ -1,4 +1,23 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.MonitorAndControlService
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  21.05.2009
+ *   File Name:      WcfHost.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * Revisions:
+ * 1) 21.05.2009, Bernhard Limacher: Initial implementation.
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,7 +33,7 @@ using NuvoControl.Server.ZoneServer;
 using NuvoControl.Server.FunctionService;
 
 
-namespace NuvoControl.Server.WcfService
+namespace NuvoControl.Server.WcfHostConsole
 {
     class WcfHost
     {
@@ -37,12 +56,19 @@ namespace NuvoControl.Server.WcfService
         /// </summary>
         private static IZoneServer _zoneServer = null;
 
+        /// <summary>
+        /// Holds a reference to the function service.
+        /// </summary>
         private static IFunction _functionService = null;
 
         #endregion
 
         #region Non-Public Interface
 
+        /// <summary>
+        /// Main function
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             Console.WriteLine(">>> Starting WCF services...");
@@ -79,6 +105,12 @@ namespace NuvoControl.Server.WcfService
             }
             Console.WriteLine();
 
+            HostAllServices();
+        }
+
+
+        private static void HostAllServices()
+        {
             ServiceHost configurationServiceHost = new ServiceHost(_configurationService);
             ServiceHostMc mCServiceHost = new ServiceHostMc(
                 typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer);
@@ -108,7 +140,9 @@ namespace NuvoControl.Server.WcfService
             catch (Exception exc)
             {
                 _log.ErrorFormat("Failed to start services.", exc);
-                Console.WriteLine("Failed to start services. Exception message: {0}", exc.Message); 
+                Console.WriteLine("Failed to start services. Exception message: {0}", exc.Message);
+                Console.WriteLine(">>> Press <Enter> to close the console.");
+                Console.ReadLine();
             }
             finally
             {
@@ -116,7 +150,6 @@ namespace NuvoControl.Server.WcfService
                 mCServiceHost.Close();
             }   
         }
-
 
         /// <summary>
         /// Reads the XML configuration file and instantiates accordingly the system configuration objects of NuvoControl.
@@ -129,6 +162,7 @@ namespace NuvoControl.Server.WcfService
 
             _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile);
         }
+
 
         /// <summary>
         /// Loads the protocol drivers according to the NuvoControl system configuration.
@@ -148,7 +182,6 @@ namespace NuvoControl.Server.WcfService
                 }
             }
         }
-
 
         
         /// <summary>
