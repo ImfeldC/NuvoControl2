@@ -20,46 +20,47 @@
     <SandcastlePath>C:\Program Files\Sandcastle\</SandcastlePath>
     <DocumentationSources>
       <DocumentationSource sourceFile="Client\NuvoControl.Client.TestViewer\bin\Debug\NuvoControl.Client.TestViewer.exe" />
-<DocumentationSource sourceFile="Client\NuvoControl.Client.TestViewer\bin\Debug\NuvoControl.Client.TestViewer.xml" />
-<DocumentationSource sourceFile="Client\NuvoControl.Client.WcfTestConsole\bin\Debug\NuvoControl.Client.WcfTestConsole.exe" />
-<DocumentationSource sourceFile="Client\NuvoControl.Client.WcfTestConsole\bin\Debug\NuvoControl.Client.WcfTestConsole.xml" />
-<DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.dll" />
-<DocumentationSource sourceFile="Common\NuvoControl.Common.Interfaces\bin\Debug\NuvoControl.Common.Interfaces.dll" />
-<DocumentationSource sourceFile="Common\NuvoControl.Common.Interfaces\bin\Debug\NuvoControl.Common.Interfaces.xml" />
-<DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.CommunicationDriver\bin\Debug\NuvoControl.Server.CommunicationDriver.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.CommunicationDriver\bin\Debug\NuvoControl.Server.CommunicationDriver.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService\bin\Debug\NuvoControl.Server.ConfigurationService.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService.UnitTest\bin\Debug\NuvoControl.Server.ConfigurationService.UnitTest.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService.UnitTest\bin\Debug\NuvoControl.Server.ConfigurationService.UnitTest.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService\bin\Debug\NuvoControl.Server.ConfigurationService.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Dal\bin\Debug\NuvoControl.Server.Dal.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Dal.UnitTest\bin\Debug\NuvoControl.Server.Dal.UnitTest.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Dal.UnitTest\bin\Debug\NuvoControl.Server.Dal.UnitTest.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Dal\bin\Debug\NuvoControl.Server.Dal.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.FunctionService\bin\Debug\NuvoControl.Server.FunctionService.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.FunctionService\bin\Debug\NuvoControl.Server.FunctionService.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService\bin\Debug\NuvoControl.Server.MonitorAndControlService.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService.UnitTest\bin\Debug\NuvoControl.Server.MonitorAndControlService.UnitTest.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService.UnitTest\bin\Debug\NuvoControl.Server.MonitorAndControlService.UnitTest.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService\bin\Debug\NuvoControl.Server.MonitorAndControlService.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver\bin\Debug\NuvoControl.Server.ProtocolDriver.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.Interface\bin\Debug\NuvoControl.Server.ProtocolDriver.Interface.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.Interface\bin\Debug\NuvoControl.Server.ProtocolDriver.Interface.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.UnitTest\bin\Debug\NuvoControl.Server.ProtocolDriver.Test.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.UnitTest\bin\Debug\NuvoControl.Server.ProtocolDriver.Test.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver\bin\Debug\NuvoControl.Server.ProtocolDriver.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Service\bin\Debug\NuvoControl.Server.Service.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Service.UnitTest\bin\Debug\NuvoControl.Server.Service.UnitTest.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Service.UnitTest\bin\Debug\NuvoControl.Server.Service.UnitTest.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Service\bin\Debug\NuvoControl.Server.Service.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Simulator\bin\Debug\NuvoControl.Server.Simulator.exe" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Simulator\bin\Debug\NuvoControl.Server.Simulator.vshost.exe" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.Simulator\bin\Debug\NuvoControl.Server.Simulator.XML" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.WcfHostConsole\bin\Debug\NuvoControl.Server.WcfHostConsole.exe" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.WcfHostConsole\bin\Debug\NuvoControl.Server.WcfHostConsole.xml" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ZoneServer\bin\Debug\NuvoControl.Server.ZoneServer.dll" />
-<DocumentationSource sourceFile="Server\NuvoControl.Server.ZoneServer\bin\Debug\NuvoControl.Server.ZoneServer.xml" /></DocumentationSources>
+      <DocumentationSource sourceFile="Client\NuvoControl.Client.TestViewer\bin\Debug\NuvoControl.Client.TestViewer.xml" />
+      <DocumentationSource sourceFile="Client\NuvoControl.Client.WcfTestConsole\bin\Debug\NuvoControl.Client.WcfTestConsole.exe" />
+      <DocumentationSource sourceFile="Client\NuvoControl.Client.WcfTestConsole\bin\Debug\NuvoControl.Client.WcfTestConsole.xml" />
+      <DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.dll" />
+      <DocumentationSource sourceFile="Common\NuvoControl.Common.Interfaces\bin\Debug\NuvoControl.Common.Interfaces.dll" />
+      <DocumentationSource sourceFile="Common\NuvoControl.Common.Interfaces\bin\Debug\NuvoControl.Common.Interfaces.xml" />
+      <DocumentationSource sourceFile="Common\NuvoControl.Common\bin\Debug\NuvoControl.Common.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.CommunicationDriver\bin\Debug\NuvoControl.Server.CommunicationDriver.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.CommunicationDriver\bin\Debug\NuvoControl.Server.CommunicationDriver.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService\bin\Debug\NuvoControl.Server.ConfigurationService.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService.UnitTest\bin\Debug\NuvoControl.Server.ConfigurationService.UnitTest.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService.UnitTest\bin\Debug\NuvoControl.Server.ConfigurationService.UnitTest.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ConfigurationService\bin\Debug\NuvoControl.Server.ConfigurationService.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Dal\bin\Debug\NuvoControl.Server.Dal.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Dal.UnitTest\bin\Debug\NuvoControl.Server.Dal.UnitTest.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Dal.UnitTest\bin\Debug\NuvoControl.Server.Dal.UnitTest.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Dal\bin\Debug\NuvoControl.Server.Dal.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.FunctionService\bin\Debug\NuvoControl.Server.FunctionService.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.FunctionService\bin\Debug\NuvoControl.Server.FunctionService.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService\bin\Debug\NuvoControl.Server.MonitorAndControlService.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService.UnitTest\bin\Debug\NuvoControl.Server.MonitorAndControlService.UnitTest.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService.UnitTest\bin\Debug\NuvoControl.Server.MonitorAndControlService.UnitTest.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.MonitorAndControlService\bin\Debug\NuvoControl.Server.MonitorAndControlService.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver\bin\Debug\NuvoControl.Server.ProtocolDriver.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.Interface\bin\Debug\NuvoControl.Server.ProtocolDriver.Interface.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.Interface\bin\Debug\NuvoControl.Server.ProtocolDriver.Interface.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.UnitTest\bin\Debug\NuvoControl.Server.ProtocolDriver.Test.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver.UnitTest\bin\Debug\NuvoControl.Server.ProtocolDriver.Test.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ProtocolDriver\bin\Debug\NuvoControl.Server.ProtocolDriver.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Service\bin\Debug\NuvoControl.Server.Service.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Service.UnitTest\bin\Debug\NuvoControl.Server.Service.UnitTest.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Service.UnitTest\bin\Debug\NuvoControl.Server.Service.UnitTest.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Service\bin\Debug\NuvoControl.Server.Service.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Simulator\bin\Debug\NuvoControl.Server.Simulator.exe" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Simulator\bin\Debug\NuvoControl.Server.Simulator.vshost.exe" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.Simulator\bin\Debug\NuvoControl.Server.Simulator.XML" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.WcfHostConsole\bin\Debug\NuvoControl.Server.WcfHostConsole.exe" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.WcfHostConsole\bin\Debug\NuvoControl.Server.WcfHostConsole.xml" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ZoneServer\bin\Debug\NuvoControl.Server.ZoneServer.dll" />
+      <DocumentationSource sourceFile="Server\NuvoControl.Server.ZoneServer\bin\Debug\NuvoControl.Server.ZoneServer.xml" />
+    </DocumentationSources>
     <VisibleItems>InheritedMembers, InheritedFrameworkMembers, Internals, Privates, Protected, ProtectedInternalAsProtected, SealedProtected, PrivateFields</VisibleItems>
     <CleanIntermediates>True</CleanIntermediates>
     <HelpFileFormat>Help1xAndWebsite</HelpFileFormat>
@@ -95,6 +96,11 @@
   <ItemGroup>
     <Content Include="ClassDiagrams\ProtocolDriverOverview.jpg" />
     <Content Include="ClassDiagrams\ProtocolDriverInterfaceOverview.jpg" />
+    <Content Include="ClassDiagrams\ZoneServerOverview.JPG" />
+    <Content Include="ClassDiagrams\ConfigurationOverview.jpg" />
+    <Content Include="ClassDiagrams\ConfigurationServiceOverview.jpg" />
+    <Content Include="ClassDiagrams\DalOverview.JPG" />
+    <Content Include="ClassDiagrams\MonitorAndControlServiceOverview.JPG" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagrams\.svn\entries" />
