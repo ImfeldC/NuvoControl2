@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="NuvoControl.Client.Viewer.Controls.ZoneCommander"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    MinHeight="80" MinWidth="200">
+    <Grid>
+        <StackPanel Name="_stackPanel">
+            <Grid Name="_gridZone">
+                <Button Name="_btn_Close" Tag="ClosePopupButton" HorizontalAlignment="Left" Margin="1">-</Button>
+                <Label Name="_lblZone" Margin="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center">Zonename</Label>
+            </Grid>
+            <Grid Name="_gridControl">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <ToggleButton Name="_btnPower" Grid.Column="0" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center">PWR</ToggleButton>
+                <ComboBox Name="_cbxSource" Grid.Column="1" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" MinWidth="80">
+                    <ComboBoxItem>Test</ComboBoxItem>
+                </ComboBox>
+                <RepeatButton Name="_btnUp" Grid.Column="2" Margin="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="23">+</RepeatButton>
+                <ProgressBar Name="_prgVolume" Grid.Column="3" Margin="1"  VerticalAlignment="Stretch" Orientation="Horizontal" HorizontalAlignment="Center" Width="80" />
+                <RepeatButton Name="_btnDown" Grid.Column="4" Margin="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="23">-</RepeatButton>
+            </Grid>
+            <Grid Name="_gridState">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Label Name="lblQuality" Margin="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">Offline</Label>
+                <Label Name="lblAck" Margin="1" Grid.Column="1" HorizontalAlignment="Right" VerticalContentAlignment="Center">Unacknowledged</Label>
+            </Grid>
+        </StackPanel>
+    </Grid>
+</UserControl>

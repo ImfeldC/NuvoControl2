@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="NuvoControl.Client.Viewer.Controls.ZoneInfo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    MinHeight="10" MinWidth="10">
+    <UserControl.Resources>
+        <Style x:Key="ZoneInfoFontLabelStyle">
+            <Setter Property="Control.FontFamily" Value="Tahoma"></Setter>
+            <Setter Property="Control.FontSize" Value="10"></Setter>
+            <Setter Property="Control.FontWeight" Value="Bold"></Setter>
+            <Setter Property="Control.Foreground" Value="Blue"></Setter>
+        </Style>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Label Name="_lblZone" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Wohnen</Label>
+        <Label Name="_lblPower" Grid.Row="1" Grid.Column="1"  Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Off</Label>
+        <Label Name="_lblAudio" Grid.Row="2"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">CD Player</Label>
+        <Label Name="_lblVolume" Grid.Row="3"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">100 %</Label>
+        <Label Name="_lblAck" Grid.Row="4"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Ack</Label>
+        <Label Name="_lblConnection" Grid.Row="5"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Online</Label>
+    </Grid>
+</UserControl>
