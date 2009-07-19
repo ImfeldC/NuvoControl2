@@ -33,9 +33,19 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ExternalLibraries\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -147,10 +157,20 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ServiceAccess\ServiceConfigurator.cs" />
+    <Compile Include="ViewModel\CreateCommandBindingCollection.cs" />
+    <Compile Include="ViewModel\CreateCommandBinding.cs" />
+    <Compile Include="ViewModel\FloorContext.cs" />
+    <Compile Include="ViewModel\IHierarchyContext.cs" />
+    <Compile Include="ViewModel\MainContext.cs" />
+    <Compile Include="ViewModel\Navigator.cs" />
+    <Compile Include="ViewModel\ZoneContext.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -159,6 +179,28 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\BackImage.PNG" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
+      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
+      <Name>NuvoControl.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Client.ServiceAccess\NuvoControl.Client.ServiceAccess.csproj">
+      <Project>{A98EC60A-AD98-4D73-8B4F-BB6496120E06}</Project>
+      <Name>NuvoControl.Client.ServiceAccess</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Client.ServiceMock\NuvoControl.Client.ServiceMock.csproj">
+      <Project>{3BE5E7EF-2946-4989-96A3-D70B3338236E}</Project>
+      <Name>NuvoControl.Client.ServiceMock</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Function.datasource" />
+    <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Graphic.datasource" />
+    <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Zone.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -13,12 +13,16 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using NuvoControl.Client.Viewer.ViewModel;
+using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
+
 namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
     /// Interaction logic for FloorView.xaml
     /// </summary>
-    public partial class FloorView : UserControl
+    public partial class FloorView : UserControl, IFloorViewNotification
     {
         //Popup popup;
         public FloorView()
@@ -38,40 +42,58 @@ namespace NuvoControl.Client.Viewer.Controls
             set { this._imageBuilding.Source = value; }
         }
 
-        public void CreateZone()
+        private void CalculateOffset(List<Point> coordinates, out int xOffset, out int yOffset)
         {
-            //ZoneInfo zoneInfo = new ZoneInfo();
-            //Canvas.SetTop(zoneInfo, 250);
-            //Canvas.SetLeft(zoneInfo, 70);
-            //_canvasFloor.Children.Add(zoneInfo);
+            xOffset = int.MaxValue;
+            yOffset = int.MaxValue;
+            foreach (Point point in coordinates)
+            {
+                if (point.X < xOffset)
+                    xOffset = (int)point.X;
+                if (point.Y < yOffset)
+                    yOffset = (int)point.Y;
+            }
+        }
 
-            //ZoneCommander zoneCommander = new ZoneCommander();
-            //Canvas.SetTop(zoneCommander, 250);
-            //Canvas.SetLeft(zoneCommander, 200);
-            //_canvasFloor.Children.Add(zoneCommander);
+        private List<Point> CalculateRelativeCoordinates(List<Point> coordinates, int xOffset, int yOffset)
+        {
+            List<Point> newCoordinates = new List<Point>();
+            foreach (Point point in coordinates)
+            {
+                newCoordinates.Add(new Point(point.X - xOffset, point.Y - yOffset));
+            }
+            return newCoordinates;
+        }
 
-            //Button btnCommand = new Button();
-            //btnCommand.Content = "Edit";
-            //btnCommand.Click += new RoutedEventHandler(btnCommand_Click);
-            //Canvas.SetTop(btnCommand, 200);
-            //Canvas.SetLeft(btnCommand, 200);
-            //_canvasFloor.Children.Add(btnCommand);
 
+        public void CreateZone(Zone zone, List<Source> sources)
+        {
+            int xOffset;
+            int yOffset;
+            CalculateOffset(zone.FloorPlanCoordinates, out xOffset, out yOffset);
+            List<Point> relativeCoordinates = CalculateRelativeCoordinates(zone.FloorPlanCoordinates, xOffset, yOffset);
+            Zone zoneMod = new Zone(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates);
             ZoneControl zoneControl = new ZoneControl();
-            Point[] points = new Point[8];
-            points[0] = new Point(0,0);
-            points[1] = new Point(100,0);
-            points[2] = new Point(200,70);
-            points[3] = new Point(130,70);
-            points[4] = new Point(130,130);
-            points[5] = new Point(200,130);
-            points[6] = new Point(200,300);
-            points[7] = new Point(0,300);
-            zoneControl.SetArea(points);
-
-            Canvas.SetTop(zoneControl, 200);
-            Canvas.SetLeft(zoneControl, 300);
+            ZoneState state = new ZoneState();
+            ZoneContext zoneContext = new ZoneContext(zoneMod, state, sources);
+            zoneControl.DataContext = zoneContext;
+            Canvas.SetLeft(zoneControl, xOffset);
+            Canvas.SetTop(zoneControl, yOffset);
             _canvasFloor.Children.Add(zoneControl);
+        }
+
+        public void UnloadZones()
+        {
+            List<ZoneControl> zoneControls = new List<ZoneControl>();
+            foreach (UIElement uiElement in _canvasFloor.Children)
+            {
+                if (uiElement is ZoneControl)
+                    zoneControls.Add(uiElement as ZoneControl);
+            }
+            foreach (ZoneControl zoneControl in zoneControls)
+            {
+                _canvasFloor.Children.Remove(zoneControl);
+            }
         }
 
         void btnCommand_Click(object sender, RoutedEventArgs e)
@@ -79,5 +101,19 @@ namespace NuvoControl.Client.Viewer.Controls
            //_popupCommander.IsOpen = true;
         }
 
+
+        #region IFloorViewNotification Members
+
+        public void UpdateZones(Floor activeFloor, List<Source> sources)
+        {
+            UnloadZones();
+
+            foreach (Zone zone in activeFloor.Zones)
+            {
+                CreateZone(zone, sources);
+            }
+        }
+
+        #endregion
     }
 }

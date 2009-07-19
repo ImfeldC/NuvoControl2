@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="NuvoControl.Client.Viewer.Controls.MainView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" MinWidth="300" MinHeight="300">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" MinWidth="300" MinHeight="300" Visibility="{Binding Path=Visibility1}">
     <Grid>
-        <Image Margin="5" Name="imageBuilding" Stretch="Uniform" />
+        <Image Margin="5" Name="imageBuilding" Stretch="Uniform" Source="{Binding Path=MainImage}"/>
     </Grid>
 </UserControl>

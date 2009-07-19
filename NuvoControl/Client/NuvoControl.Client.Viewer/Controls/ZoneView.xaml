@@ -1,20 +1,8 @@
 ﻿<UserControl x:Class="NuvoControl.Client.Viewer.Controls.ZoneView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" MinWidth="100" MinHeight="100">
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+MinWidth="100" MinHeight="100" Visibility="{Binding Path=Visibility1}">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <Viewbox Grid.Row="0" Grid.Column="0"  Name="viewbox1" Margin="5">
-            <Canvas Name="canvas1" Width="100" Height="100">
-                <Ellipse Fill="Yellow" Stroke="Blue" Canvas.Left="10" Canvas.Top="20" Width="80" Height="60" HorizontalAlignment="Left">
-                    
-                </Ellipse>
-                <Polyline Canvas.Left="10" Canvas.Top="20" Stroke="Blue" Points="10,10 20,10 20, 20"></Polyline>
-            </Canvas>
-        </Viewbox>
+        <Image Name="_imageZone" Margin="5"  Stretch="Uniform" />
     </Grid>
 </UserControl>
