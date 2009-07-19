@@ -22,9 +22,12 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Label Name="_lblZone" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Wohnen</Label>
-        <Label Name="_lblPower" Grid.Row="1" Grid.Column="1"  Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Off</Label>
-        <Label Name="_lblAudio" Grid.Row="2"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">CD Player</Label>
+        <Label Name="_lblZone" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+               Content="{Binding Path=ZoneName}"  Style="{StaticResource ZoneInfoFontLabelStyle}"></Label>
+        <Label Name="_lblPower" Grid.Row="1" Grid.Column="1"  Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+               Style="{StaticResource ZoneInfoFontLabelStyle}">Off</Label>
+        <Label Name="_lblAudio" Grid.Row="2"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
+               Content="{Binding Path=ZoneStateSource}" Style="{StaticResource ZoneInfoFontLabelStyle}"></Label>
         <Label Name="_lblVolume" Grid.Row="3"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">100 %</Label>
         <Label Name="_lblAck" Grid.Row="4"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Ack</Label>
         <Label Name="_lblConnection" Grid.Row="5"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Style="{StaticResource ZoneInfoFontLabelStyle}">Online</Label>
