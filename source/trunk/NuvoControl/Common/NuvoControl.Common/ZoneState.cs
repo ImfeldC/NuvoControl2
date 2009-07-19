@@ -124,8 +124,9 @@ namespace NuvoControl.Common
         {
             _guid = Guid.NewGuid();
             _lastUpdate = DateTime.Now;
-            _zoneQuality = ZoneQuality.Online;  // Default Value
+            _zoneQuality = ZoneQuality.Offline;  // Default Value
         }
+
 
         /// <summary>
         /// Constructor to set the memebers.
