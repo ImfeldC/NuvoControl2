@@ -89,6 +89,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\ZoneControlSimple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ZoneInfo.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -132,6 +136,9 @@
     <Compile Include="Controls\ZoneControl.xaml.cs">
       <DependentUpon>ZoneControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\ZoneControlSimple.xaml.cs">
+      <DependentUpon>ZoneControlSimple.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ZoneInfo.xaml.cs">
       <DependentUpon>ZoneInfo.xaml</DependentUpon>
     </Compile>
@@ -161,6 +168,7 @@
     <Compile Include="ViewModel\CreateCommandBindingCollection.cs" />
     <Compile Include="ViewModel\CreateCommandBinding.cs" />
     <Compile Include="ViewModel\FloorContext.cs" />
+    <Compile Include="ViewModel\HistoryList.cs" />
     <Compile Include="ViewModel\IHierarchyContext.cs" />
     <Compile Include="ViewModel\MainContext.cs" />
     <Compile Include="ViewModel\Navigator.cs" />
@@ -176,9 +184,6 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\BackImage.PNG" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
@@ -201,6 +206,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\BackImage.png" />
+    <Resource Include="Images\DownImage.png" />
+    <Resource Include="Images\ForwardImage.png" />
+    <Resource Include="Images\NextImage.png" />
+    <Resource Include="Images\PreviousImage.png" />
+    <Resource Include="Images\UpImage.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

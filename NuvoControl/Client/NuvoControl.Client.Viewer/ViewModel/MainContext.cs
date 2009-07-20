@@ -7,30 +7,42 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.IO;
 
+using NuvoControl.Common.Configuration;
+
 namespace NuvoControl.Client.Viewer.ViewModel
 {
     public class MainContext : INotifyPropertyChanged, IHierarchyContext
     {
-        private string _imagePath;
+        private Building _building;
         private IHierarchyContext _parent = null;
         private IHierarchyContext _child = null;
         private Visibility _visibility = Visibility.Visible;
 
-        public MainContext(string imagePath)
+        public MainContext(Building building)
         {
-            this._imagePath = imagePath;
+            this._building = building;
         }
 
         public BitmapImage MainImage
         {
             get
             {
-                string path = Path.Combine(Directory.GetCurrentDirectory(), _imagePath);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), _building.PicturePath);
                 return new BitmapImage(new Uri(path));
             }
         }
 
         #region IHierarchyContext Members
+
+        public string Name
+        {
+            get { return _building.Name; }
+        }
+
+        public Address Id
+        {
+            get { return _building.Id; }
+        }
 
         public IHierarchyContext Parent
         {
@@ -49,6 +61,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return false; }
         }
 
+        public string NextName
+        {
+            get { return String.Empty; }
+        }
+
         public void Next()
         {
         }
@@ -56,6 +73,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
         public bool HasPrevious
         {
             get { return false; }
+        }
+
+        public string PreviousName
+        {
+            get { return String.Empty; }
         }
 
         public void Previous()
@@ -70,7 +92,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
                 _visibility = value;
                 NotifyPropertyChanged(new PropertyChangedEventArgs("Visibility1"));
             }
-       }
+        }
+
+        public void OnHierarchyChanged()
+        {
+            // noting to do
+        }
 
         #endregion
 

@@ -66,7 +66,7 @@ namespace NuvoControl.Client.Viewer.Controls
         }
 
 
-        public void CreateZone(Zone zone, List<Source> sources)
+        public void CreateFloorZone(Zone zone, List<Source> sources)
         {
             int xOffset;
             int yOffset;
@@ -75,14 +75,14 @@ namespace NuvoControl.Client.Viewer.Controls
             Zone zoneMod = new Zone(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates);
             ZoneControl zoneControl = new ZoneControl();
             ZoneState state = new ZoneState();
-            ZoneContext zoneContext = new ZoneContext(zoneMod, state, sources);
+            ZoneContext zoneContext = new ZoneContext(zoneMod, sources);
             zoneControl.DataContext = zoneContext;
             Canvas.SetLeft(zoneControl, xOffset);
             Canvas.SetTop(zoneControl, yOffset);
             _canvasFloor.Children.Add(zoneControl);
         }
 
-        public void UnloadZones()
+        public void UnloadFloorZones()
         {
             List<ZoneControl> zoneControls = new List<ZoneControl>();
             foreach (UIElement uiElement in _canvasFloor.Children)
@@ -104,16 +104,27 @@ namespace NuvoControl.Client.Viewer.Controls
 
         #region IFloorViewNotification Members
 
-        public void UpdateZones(Floor activeFloor, List<Source> sources)
+        public void UpdateFloorZones(Floor activeFloor, List<Source> sources)
         {
-            UnloadZones();
+            UnloadFloorZones();
 
             foreach (Zone zone in activeFloor.Zones)
             {
-                CreateZone(zone, sources);
+                CreateFloorZone(zone, sources);
             }
         }
 
         #endregion
+
+        protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
+        {
+            base.OnPropertyChanged(e);
+        }
+
+
+        protected override void OnContentChanged(object oldContent, object newContent)
+        {
+            base.OnContentChanged(oldContent, newContent);
+        }
     }
 }
