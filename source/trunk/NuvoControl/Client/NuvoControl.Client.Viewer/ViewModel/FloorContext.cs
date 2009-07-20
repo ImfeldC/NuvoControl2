@@ -62,6 +62,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
         #region IHierarchyContext Members
 
 
+        public string Name
+        {
+            get { return _activeFloor.Name; }
+        }
+
+        public Address Id
+        {
+            get { return _activeFloor.Id; }
+        }
+
         public IHierarchyContext Parent
         {
             get { return _parent; }
@@ -76,28 +86,60 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public bool HasNext
         {
-            get { return false; }
+            get { return true; }
+        }
+
+        public string NextName
+        {
+            get { return GetNextFloor().Name; }
         }
 
         public void Next()
         {
-            _activeFloor = _floors[1];
+            _activeFloor = GetNextFloor();
+
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
             // TODO unsubscribe
-            _floorView.UpdateZones(_activeFloor, _sources);
+            _floorView.UpdateFloorZones(_activeFloor, _sources);
+        }
+
+        private Floor GetNextFloor()
+        {
+            int index = _floors.IndexOf(_activeFloor);
+            if (index >= _floors.Count - 1)
+                return _floors[0];
+            else
+                return _floors[index + 1];
         }
 
         public bool HasPrevious
         {
-            get { return false; }
+            get { return true; }
+        }
+
+        public string PreviousName
+        {
+            get { return GetPreviousFloor().Name; }
         }
 
         public void Previous()
         {
-            _activeFloor = _floors[0];
+            _activeFloor = GetPreviousFloor();
+
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
             // TODO unsubscribe
-            _floorView.UpdateZones(_activeFloor, _sources);
+            _floorView.UpdateFloorZones(_activeFloor, _sources);
+        }
+
+        private Floor GetPreviousFloor()
+        {
+            int index = _floors.IndexOf(_activeFloor);
+            if (index <= 0)
+                return _floors[_floors.Count - 1];
+            else
+                return _floors[index - 1];
         }
 
         public Visibility Visibility1
@@ -110,12 +152,18 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+        public void OnHierarchyChanged()
+        {
+            // noting to do
+            _floorView.UpdateFloorZones(_activeFloor, _sources);
+        }
+
         #endregion
 
     }
 
     public interface IFloorViewNotification
     {
-        void UpdateZones(Floor activeFloor, List<Source> sources);
+        void UpdateFloorZones(Floor activeFloor, List<Source> sources);
     }
 }

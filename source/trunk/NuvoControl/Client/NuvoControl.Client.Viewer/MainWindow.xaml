@@ -2,26 +2,85 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
-    Title="Window1" Height="600" Width="600" commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}">
+    Title="Window1" Height="600" Width="800" commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}">
     <DockPanel Name="dockPanel1" LastChildFill="True">
-        <Menu Height="22" Name="menu1" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Top" />
+        <Menu Height="22" Name="menu1" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+            <MenuItem Header="_File">
+                <MenuItem Command="commands:CustomCommands.AppExit"/>
+            </MenuItem>
+            <MenuItem Header="_Edit"></MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Command="BrowseBack"/>
+                <MenuItem Command="BrowseForward"/>
+                <MenuItem Command="commands:CustomCommands.BrowseUp"/>
+                <MenuItem Command="commands:CustomCommands.BrowseDown"/>
+                <MenuItem Command="commands:CustomCommands.BrowsePrevious"/>
+                <MenuItem Command="commands:CustomCommands.BrowseNext"/>
+            </MenuItem>
+            <MenuItem Header="_Skins"></MenuItem>
+            <MenuItem Header="_Help"></MenuItem>
+        </Menu>
         <ToolBar Height="48" Name="toolBar1" HorizontalAlignment="Stretch" VerticalAlignment="Top" DockPanel.Dock="Top">
-            <Button Name="_btnBack" Padding="0" Command="NavigationCommands.BrowseBack">
+            <Button Name="_btnBack" Padding="0" Command="NavigationCommands.BrowseBack" ToolTip="{Binding Path=BackToolTip}">
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Image Source="/NuvoControl.Client.Viewer;component/Images/BackImage.PNG" Margin="2">
-                        
-                    </Image>
-                    <Label Grid.Column="1" VerticalContentAlignment="Center">Back</Label>
+                    <Image Source="/NuvoControl.Client.Viewer;component/Images/BackImage.PNG" Margin="2"></Image>
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" Content="{Binding ElementName=_btnBack, Path=Command.Text}"></Label>
                 </Grid></Button>
-            <Button Name="_btnFwd" Command="NavigationCommands.BrowseForward">Fwd</Button>
-            <Button Name="_btnUp" Command="commands:CustomCommands.BrowseUp">Up</Button>
-            <Button Name="_btnDown" Command="commands:CustomCommands.BrowseDown">Down</Button>
-            <Button Name="_btnPrev" Command="NavigationCommands.PreviousPage">Prev</Button>
-            <Button Name="_btnNext" Command="NavigationCommands.NextPage">Next</Button>
+            <Button Name="_btnFwd" Padding="0" Command="NavigationCommands.BrowseForward" ToolTip="{Binding Path=ForwardToolTip}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/NuvoControl.Client.Viewer;component/Images/ForwardImage.png" Margin="2"></Image>
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" Content="{Binding ElementName=_btnFwd, Path=Command.Text}"></Label>
+                </Grid>
+            </Button>
+            <Separator Width="3"></Separator>
+            <Button Name="_btnUp" Padding="0" Command="commands:CustomCommands.BrowseUp" ToolTip="{Binding Path=UpToolTip}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/NuvoControl.Client.Viewer;component/Images/UpImage.png" Margin="2"></Image>
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" Content="{Binding ElementName=_btnUp, Path=Command.Text}"></Label>
+                </Grid>
+            </Button>
+            <Button Name="_btnDown" Padding="0" Command="commands:CustomCommands.BrowseDown" ToolTip="{Binding Path=DownToolTip}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/NuvoControl.Client.Viewer;component/Images/DownImage.png" Margin="2"></Image>
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" Content="{Binding ElementName=_btnDown, Path=Command.Text}"></Label>
+                </Grid>
+            </Button>
+            <Button Name="_btnPrev" Padding="0" Command="commands:CustomCommands.BrowsePrevious" ToolTip="{Binding Path=PreviousToolTip}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/NuvoControl.Client.Viewer;component/Images/PreviousImage.png" Margin="2"></Image>
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" Content="{Binding ElementName=_btnPrev, Path=Command.Text}"></Label>
+                </Grid>
+            </Button>
+            <Button Name="_btnNext" Padding="0" Command="commands:CustomCommands.BrowseNext" ToolTip="{Binding Path=NextToolTip}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Image Source="/NuvoControl.Client.Viewer;component/Images/NextImage.png" Margin="2"></Image>
+                    <Label Grid.Column="1" VerticalContentAlignment="Center" Content="{Binding ElementName=_btnNext, Path=Command.Text}"></Label>
+                </Grid>
+            </Button>
         </ToolBar>
         <StatusBar Height="23" Name="statusBar1" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Top" />
             <Grid Name="_mainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFF8F8F4" MinWidth="100" MinHeight="100">

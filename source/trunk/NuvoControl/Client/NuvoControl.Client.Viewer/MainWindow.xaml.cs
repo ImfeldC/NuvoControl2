@@ -68,7 +68,7 @@ namespace NuvoControl.Client.Viewer
 
         private void InitializeViewModel()
         {
-            MainContext mainContext = new MainContext(@".\Images\Building.jpg");
+            MainContext mainContext = new MainContext(_graphic.Building);
             _mainView.DataContext = mainContext;
 
             FloorContext floorContext = new FloorContext(_graphic.Building.Floors, _graphic.Sources, _floorView);
@@ -76,7 +76,7 @@ namespace NuvoControl.Client.Viewer
             mainContext.Child = floorContext;
             _floorView.DataContext = floorContext;
 
-            ZoneContext zoneContext = new ZoneContext(_graphic.Building.Floors[0].Zones[0], new ZoneState(), _graphic.Sources);
+            ZoneContext zoneContext = new ZoneContext(_graphic.Building.Floors[0].Zones, _graphic.Sources);
             zoneContext.Parent = floorContext;
             floorContext.Child = zoneContext;
             _zoneView.DataContext = zoneContext;
