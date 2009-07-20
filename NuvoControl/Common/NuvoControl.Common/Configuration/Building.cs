@@ -40,6 +40,31 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private List<Floor> _floors = new List<Floor>();
 
+        /// <summary>
+        /// Address of the building.
+        /// </summary>
+        [DataMember]
+        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+
+        /// <summary>
+        /// The name of the building.
+        /// </summary>
+        [DataMember]
+        private string _name = String.Empty;
+
+        /// <summary>
+        /// The file name of the building picture.
+        /// </summary>
+        [DataMember]
+        private string _picturePath = String.Empty;
+
+        /// <summary>
+        /// The file type of the building picture.
+        /// </summary>
+        [DataMember]
+        private string _pictureType = String.Empty;
+
+
         #endregion
 
         #region Constructors
@@ -55,15 +80,55 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Constructor.
         /// </summary>
+        /// <param name="id">Address of the building.</param>
+        /// <param name="name">Name of the building.</param>
         /// <param name="floors">All floors of the building.</param>
-        public Building(List<Floor> floors)
+        /// <param name="picturePath">The file name of the building picture.</param>
+        /// <param name="pictureType">The file type of the building picture.</param>
+        public Building(Address id, string name, List<Floor> floors, string picturePath, string pictureType)
         {
+            this._id = id;
+            this._name = name;
             this._floors = floors;
+            this._picturePath = picturePath;
+            this._pictureType = pictureType;
         }
 
         #endregion
 
         #region Private Members
+
+        /// <summary>
+        /// The address of the buidling.
+        /// </summary>
+        public Address Id
+        {
+            get { return _id; }
+        }
+
+        /// <summary>
+        /// The name of the buidling.
+        /// </summary>
+        public string Name
+        {
+            get { return _name; }
+        }
+
+        /// <summary>
+        /// The file name of the buidling picture.
+        /// </summary>
+        public string PicturePath
+        {
+            get { return _picturePath; }
+        }
+
+        /// <summary>
+        /// The file type of the buidling picture.
+        /// </summary>
+        public string PictureType
+        {
+            get { return _pictureType; }
+        }
 
         /// <summary>
         /// Accessor for all floors of the building.

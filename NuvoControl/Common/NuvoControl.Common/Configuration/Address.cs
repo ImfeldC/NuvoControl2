@@ -69,6 +69,17 @@ namespace NuvoControl.Common.Configuration
             this._objectId = objectId;
         }
 
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="id"></param>
+        public Address(Address id)
+        {
+            this._deviceId = id._deviceId;
+            this._objectId = id._objectId;
+        }
+
         #endregion
 
         #region Public Interface

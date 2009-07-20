@@ -41,6 +41,12 @@ namespace NuvoControl.Common.Configuration
         private string _name = String.Empty;
 
         /// <summary>
+        /// Address of the floor.
+        /// </summary>
+        [DataMember]
+        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+
+        /// <summary>
         /// The file name of the floor plan.
         /// </summary>
         [DataMember]
@@ -73,12 +79,14 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="id">Address of the building.</param>
         /// <param name="name">The name of the floor.</param>
         /// <param name="floorPlanPath">The file name of the floor plan.</param>
         /// <param name="floorPlanType">The file type of the floor plan.</param>
         /// <param name="zones">All zones of the floor.</param>
-        public Floor(string name, string floorPlanPath, string floorPlanType, List<Zone> zones)
+        public Floor(Address id, string name, string floorPlanPath, string floorPlanType, List<Zone> zones)
         {
+            this._id = id;
             this._name = name;
             this._floorPlanPath = floorPlanPath;
             this._floorPlanType = floorPlanType;
@@ -88,6 +96,14 @@ namespace NuvoControl.Common.Configuration
         #endregion
 
         #region Public Interface
+
+        /// <summary>
+        /// The name of the floor.
+        /// </summary>
+        public Address Id
+        {
+            get { return _id; }
+        }
 
         /// <summary>
         /// The name of the floor.
