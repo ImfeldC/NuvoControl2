@@ -32,8 +32,9 @@
       </NuvoEssentia>
     </Hardware>
     <Graphic>
-      <Building>
-        <Floor Name="Wohnbereich">
+      <Building Name="Anita &amp; Christian's Heim" Id="10000.1">
+        <Picture RelativePath=".\Images\Building.jpg" PictureType="jpg"></Picture>
+        <Floor Name="Wohnbereich" Id="1000.1">
           <FloorPlan RelativePath=".\Images\Wohnbereich.bmp" PictureType="bmp" />
           <Zones>
             <Zone Id="100.1" Name="Esszimmer">
@@ -119,7 +120,7 @@
             </Zone>
           </Zones>
         </Floor>
-        <Floor Name="Galerie">
+        <Floor Name="Galerie" Id="1000.2">
           <FloorPlan RelativePath=".\Images\Galerie.bmp" PictureType="bmp" />
           <Zones>
             <Zone Id="100.9" Name="Büro Anita">
