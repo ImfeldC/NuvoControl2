@@ -2,12 +2,12 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" MinWidth="100" MinHeight="100"
     xmlns:ctrls="clr-namespace:NuvoControl.Client.Viewer.Controls"
-    xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands" Visibility="{Binding Path=Visibility1}">
+    xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands" Visibility="{Binding Path=Visibility1}" Focusable="True">
     <Grid>
         <Viewbox Grid.Row="0" Grid.Column="0"  Name="_viewboxFloor" Margin="5" Stretch="Uniform">
             <Grid>
             <Image Name="_imageBuilding" Margin="5" Stretch="Uniform" Source="{Binding Path=FloorPlan}"/>
-            <Canvas Name="_canvasFloor" MinWidth="300" MinHeight="300" ></Canvas>
+            <Canvas Name="_canvasFloor" MinWidth="300" MinHeight="300"></Canvas>
             </Grid>
         </Viewbox>
     </Grid>

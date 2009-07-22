@@ -3,19 +3,29 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrls="clr-namespace:NuvoControl.Client.Viewer.Controls"
     xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
-    MinHeight="30" MinWidth="30">
-    <Canvas MinHeight="10" MinWidth="10" commands:CreateCommandBinding.Command="{Binding Path=CommandBinding}">
+    MinHeight="30" MinWidth="30" Focusable="True" Name="_zoneControl">
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="commands:CustomCommands.BrowseUp"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseDown" CommandParameter="{Binding Path=Id}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowsePrevious"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseNext"></MenuItem>
+        </ContextMenu>
+    </UserControl.ContextMenu>
+    <Canvas Tag="Zone" MinHeight="10" MinWidth="10" commands:CreateCommandBinding.Command="{Binding Path=CommandBinding}" MouseLeftButtonUp="_polygonArea_OnMouseLeftButtonUp">
         <!--<Polygon Name="_polygonArea"  Canvas.Left="0" Canvas.Top="0" Stroke="#FFACAC8C" Points="{Binding Path=FloorPlanCoordinates}" StrokeThickness="5" Fill="#FFFFFFE0" Opacity="0.2"></Polygon>-->
-        <Polygon Name="_polygonArea"  Canvas.Left="0" Canvas.Top="0" Stroke="Red" Points="{Binding Path=FloorPlanCoordinates}" StrokeThickness="5" Fill="#FFFFFFE0" Opacity="0.2"></Polygon>
+        <Polygon Name="_polygonArea" Tag="Zone" Canvas.Left="0" Canvas.Top="0" Stroke="Red" Points="{Binding Path=FloorPlanCoordinates}" StrokeThickness="5" Fill="#FFFFFFE0"
+                 Opacity="0.2" Focusable="True">        
+        </Polygon>
         <Grid Canvas.Left="10" Canvas.Top="10">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
             </Grid.RowDefinitions>
             <Button Name="_btnOpenCommander" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1" Click="_btnOpenCommander_Click">+</Button>
-            <ctrls:ZoneInfo Grid.Row="1"></ctrls:ZoneInfo>
+            <ctrls:ZoneInfo Grid.Row="1" Tag="Zone"></ctrls:ZoneInfo>
         </Grid>
-        <Popup Name="_popupCommander" StaysOpen="False" Canvas.Left="0" Canvas.Top="0" Placement="Relative" MinWidth="100" MinHeight="100" PopupAnimation="Slide" AllowsTransparency="True">
+        <Popup Name="_popupCommander" StaysOpen="False" Canvas.Left="0" Canvas.Top="0" Placement="Relative" MinWidth="100" MinHeight="50" PopupAnimation="Slide" AllowsTransparency="True">
             <Border Background="#FFF8F8F4" BorderBrush="#FFACAC8C" BorderThickness="2" Button.Click="_btnCloseCommander_Click">
                 <ctrls:ZoneCommander></ctrls:ZoneCommander>
             </Border>

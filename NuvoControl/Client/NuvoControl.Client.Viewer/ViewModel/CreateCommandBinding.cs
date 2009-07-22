@@ -36,7 +36,7 @@ namespace NuvoControl.Client.Viewer.Commands
         {
             // Clear the exisiting bindings on the element we are attached to.
             UIElement element = (UIElement)dependencyObject;
-            element.CommandBindings.Clear();
+            //element.CommandBindings.Clear();
 
             // If we're given a command model, set up a binding
             CommandBinding commandBinding = e.NewValue as CommandBinding;

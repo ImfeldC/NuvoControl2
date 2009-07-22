@@ -2,7 +2,16 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrls="clr-namespace:NuvoControl.Client.Viewer.Controls"
-    MinWidth="300" MinHeight="300" Visibility="{Binding Path=Visibility1}">
+    xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
+    MinWidth="300" MinHeight="300" Visibility="{Binding Path=Visibility1}" Focusable="True">
+    <UserControl.ContextMenu>
+        <ContextMenu>
+            <MenuItem Command="commands:CustomCommands.BrowseUp"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseDown"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowsePrevious"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseNext"></MenuItem>
+        </ContextMenu>
+    </UserControl.ContextMenu>
     <Grid>
         <Image Name="_imageZone" Margin="5"  Stretch="Uniform" Source="{Binding Path=ZoneImage}"/>
         <ctrls:ZoneControlSimple HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" MaxWidth="Infinity" MinHeight="30" MinWidth="30"></ctrls:ZoneControlSimple>

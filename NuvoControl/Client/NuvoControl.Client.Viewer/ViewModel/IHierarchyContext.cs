@@ -12,6 +12,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
     {
         string Name { get; }
         Address Id { get; }
+        List<NavigationItem> NavigationItems { get; }
         IHierarchyContext Parent { get; set; }
         IHierarchyContext Child { get; set; }
         bool HasNext { get; }
@@ -20,8 +21,10 @@ namespace NuvoControl.Client.Viewer.ViewModel
         bool HasPrevious { get; }
         string PreviousName { get; }
         void Previous();
+        void Navigate(Address id);
         Visibility Visibility1 { get; set; }
         void OnHierarchyChanged();
+        void UpdateContext(IHierarchyContext context);
 
 
     }

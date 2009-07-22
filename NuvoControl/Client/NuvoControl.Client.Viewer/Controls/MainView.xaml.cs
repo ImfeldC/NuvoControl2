@@ -12,6 +12,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using NuvoControl.Client.Viewer.Commands;
+
 namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
@@ -24,9 +26,19 @@ namespace NuvoControl.Client.Viewer.Controls
             InitializeComponent();
         }
 
-        public ImageSource Source
+
+        /// <summary>
+        /// TODO remove:
+        /// </summary>
+        public ImageSource Source2
         {
-            set { this.imageBuilding.Source = value; }
+            set { this._imageBuilding.Source = value; }
+        }
+
+        public void _imageBuilding_OnMouseLeftButtonUp(object sender, RoutedEventArgs e)
+        {
+            if (CustomCommands.BrowseDown.CanExecute(null, null))
+                CustomCommands.BrowseDown.Execute(null, null);
         }
     }
 }
