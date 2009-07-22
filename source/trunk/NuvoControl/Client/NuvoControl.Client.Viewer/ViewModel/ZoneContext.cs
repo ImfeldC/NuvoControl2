@@ -148,6 +148,19 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _activeZone.Id; }
         }
 
+        public List<NavigationItem> NavigationItems
+        {
+            get
+            {
+                List<NavigationItem> items = new List<NavigationItem>();
+                foreach (Zone zone in _zones)
+                {
+                    items.Add(new NavigationItem(this, zone.Id, zone.Name));
+                }
+                return items;
+            }
+        }
+
         public IHierarchyContext Parent
         {
             get { return _parent; }
@@ -201,6 +214,18 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _activeZone = GetPreviousZone();
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            // TODO unsubscribe
+        }
+
+        public void Navigate(Address id)
+        {
+            Zone tempZone = FindZone(id);
+            if (tempZone == null)
+                return;
+
+            _activeZone = tempZone;
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            // TODO unsubscribe
         }
 
         private Zone GetPreviousZone()
@@ -211,6 +236,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
             else
                 return _zones[index - 1];
 
+        }
+
+        private Zone FindZone(Address id)
+        {
+            foreach (Zone zone in _zones)
+            {
+                if (zone.Id.Equals(id))
+                    return zone;
+            }
+            return null;
         }
 
         public Visibility Visibility1
@@ -225,6 +260,20 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public void OnHierarchyChanged()
         {
+        }
+
+
+        public void UpdateContext(IHierarchyContext context)
+        {
+            if ((context is ZoneContext) == false)
+                return;
+
+            ZoneContext newContext = context as ZoneContext;
+            _zones = newContext._zones;
+            _activeZone = _zones[0];
+            _sources = newContext._sources;
+
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
         }
 
         #endregion

@@ -47,6 +47,19 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+        public List<NavigationItem> NavigationItems
+        {
+            get
+            {
+                List<NavigationItem> items = new List<NavigationItem>();
+                foreach (Floor floor in _floors)
+                {
+                    items.Add(new NavigationItem(this, floor.Id, floor.Name));
+                }
+                return items;
+            }
+        }
+
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -97,6 +110,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         public void Next()
         {
             _activeFloor = GetNextFloor();
+            _child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
 
@@ -126,12 +140,27 @@ namespace NuvoControl.Client.Viewer.ViewModel
         public void Previous()
         {
             _activeFloor = GetPreviousFloor();
+            _child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-
             // TODO unsubscribe
             _floorView.UpdateFloorZones(_activeFloor, _sources);
         }
+
+        public void Navigate(Address id)
+        {
+            Floor tempFloor = FindFloor(id);
+            if (tempFloor == null)
+                return;
+
+            _activeFloor = tempFloor;
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            // TODO unsubscribe
+            _floorView.UpdateFloorZones(_activeFloor, _sources);
+        }
+
+
+
 
         private Floor GetPreviousFloor()
         {
@@ -140,6 +169,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
                 return _floors[_floors.Count - 1];
             else
                 return _floors[index - 1];
+        }
+
+        private Floor FindFloor(Address id)
+        {
+            foreach (Floor floor in _floors)
+            {
+                if (floor.Id.Equals(id))
+                    return floor;
+            }
+            return null;
         }
 
         public Visibility Visibility1
@@ -156,6 +195,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
         {
             // noting to do
             _floorView.UpdateFloorZones(_activeFloor, _sources);
+        }
+
+
+        public void UpdateContext(IHierarchyContext context)
+        {
+            // not used
         }
 
         #endregion

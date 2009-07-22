@@ -12,6 +12,9 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
+using NuvoControl.Client.Viewer.Commands;
+using NuvoControl.Client.Viewer.ViewModel;
+
 namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
@@ -39,5 +42,16 @@ namespace NuvoControl.Client.Viewer.Controls
         {
             _polygonArea.Points = new PointCollection(coordinates);
         }
+
+        public void _polygonArea_OnMouseLeftButtonUp(object sender, RoutedEventArgs e)
+        {
+            ZoneContext zoneContext = this.DataContext as ZoneContext;
+            if ((zoneContext != null) && ((string)(e.Source as FrameworkElement).Tag == "Zone"))
+            {
+                if (CustomCommands.BrowseDown.CanExecute(zoneContext.Id, null))
+                    CustomCommands.BrowseDown.Execute(zoneContext.Id, null);
+            }
+        }
+
     }
 }

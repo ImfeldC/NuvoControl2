@@ -9,30 +9,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
 {
     public class HistoryList
     {
-        public class HistoryListItem
-        {
-            private IHierarchyContext _context;
-            private Address _id;
-
-            public HistoryListItem(IHierarchyContext context, Address id)
-            {
-                this._context = context;
-                this._id = id;
-            }
-
-            public IHierarchyContext Context
-            {
-                get { return _context; }
-            }
-
-            public Address Id
-            {
-                get { return _id; }
-            }
-        }
-
-        private List<HistoryListItem> _history = new List<HistoryListItem>();
-        private int _currentIndex = 0;
+        private List<NavigationItem> _history = new List<NavigationItem>();
+        private int _currentIndex = -1;
         private const int MAX_ITEMS = 10;
 
         public int CurrentIndex
@@ -40,12 +18,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _currentIndex; }
         }
 
-        public void Append(HistoryListItem item)
+        public void Append(NavigationItem item)
         {
             if (_history.Count >= MAX_ITEMS)
+            {
                 _history.RemoveAt(0);
+                _currentIndex--;
+            }
             else if (_history.Count > _currentIndex + 1)
-                _history.RemoveRange(_currentIndex + 1, _history.Count - _currentIndex);
+                _history.RemoveRange(_currentIndex + 1, _history.Count - (_currentIndex + 1));
 
             _history.Add(item);
             _currentIndex++;
@@ -56,31 +37,55 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return (_currentIndex <= 0)? false: true; }
         }
 
-        public HistoryListItem BrowseBack()
+        public NavigationItem BrowseBack()
         {
             if (_currentIndex > 0)
             {
                 _currentIndex--;
-                return _history[_currentIndex + 1];
+                return _history[_currentIndex];
             }
             else
                 return null;
         }
 
-        public bool CanBrowseForward
+        public string BrowseBackName
         {
-            get { return (_currentIndex >= MAX_ITEMS-1) ? false : true; }
+            get
+            {
+                if (_currentIndex > 0)
+                    return _history[_currentIndex - 1].Name;
+                else
+                    return null;
+            }
         }
 
-        public HistoryListItem BrowseForward()
+
+        public bool CanBrowseForward
+        {
+            get { return (_currentIndex < _history.Count - 1) ? true : false; }
+        }
+
+        public NavigationItem BrowseForward()
         {
             if (_currentIndex < MAX_ITEMS - 1)
             {
                 _currentIndex++;
-                return _history[_currentIndex - 1];
+                return _history[_currentIndex];
             }
             else
                 return null;
+        }
+
+
+        public string BrowseForwardName
+        {
+            get
+            {
+                if (_currentIndex < MAX_ITEMS - 1)
+                    return _history[_currentIndex + 1].Name;
+                else
+                    return null;
+            }
         }
     }
 }

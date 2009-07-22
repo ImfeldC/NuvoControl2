@@ -44,6 +44,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _building.Id; }
         }
 
+        public List<NavigationItem> NavigationItems
+        {
+            get
+            {
+                List<NavigationItem> items = new List<NavigationItem>();
+                items.Add(new NavigationItem(this, _building.Id, _building.Name));
+                return items;
+            }
+        }
+
         public IHierarchyContext Parent
         {
             get { return _parent; }
@@ -84,6 +94,10 @@ namespace NuvoControl.Client.Viewer.ViewModel
         {
         }
 
+        public void Navigate(Address id)
+        {
+        }
+
         public Visibility Visibility1
         {
             get { return _visibility; }
@@ -97,6 +111,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
         public void OnHierarchyChanged()
         {
             // noting to do
+        }
+
+
+        public void UpdateContext(IHierarchyContext context)
+        {
         }
 
         #endregion

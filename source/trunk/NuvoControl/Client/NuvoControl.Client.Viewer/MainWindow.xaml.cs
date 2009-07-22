@@ -84,6 +84,9 @@ namespace NuvoControl.Client.Viewer
             _navigator = new Navigator(mainContext);
             this.DataContext = _navigator;
 
+            _mainView.Focus();
+            _zoneView.Focus();
+
         }
 
 
@@ -144,6 +147,21 @@ namespace NuvoControl.Client.Viewer
 
                 }
         */
+
+        private void MouseUp_Event(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void NewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+
+        }
+
+        private void NewCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
 
 
     }
