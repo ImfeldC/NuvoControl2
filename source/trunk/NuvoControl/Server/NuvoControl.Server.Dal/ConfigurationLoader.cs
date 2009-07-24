@@ -23,7 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Xml.Linq;
 using System.IO;
-using System.Drawing;
+using System.Windows;
 
 using Common.Logging;
 
@@ -123,7 +123,15 @@ namespace NuvoControl.Server.Dal
 
             _systemConfiguration = new SystemConfiguration(
                 new Hardware(ReadDevices()),
-                new Graphic(new Building(ReadFloorsOfGraphic()), ReadSourcesOfGraphic()),
+                new Graphic(
+                    new Building(
+                        new Address(int.Parse(((string)_configuration.Root.Element("Configuration").Element("Graphic").Element("Building").Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                          int.Parse(((string)_configuration.Root.Element("Configuration").Element("Graphic").Element("Building").Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                         (string)_configuration.Root.Element("Configuration").Element("Graphic").Element("Building").Attribute("Name"),
+                          ReadFloorsOfGraphic(),
+                         (string)_configuration.Root.Element("Configuration").Element("Graphic").Element("Building").Element("Picture").Attribute("RelativePath"),
+                         (string)_configuration.Root.Element("Configuration").Element("Graphic").Element("Building").Element("Picture").Attribute("PictureType")),
+                    ReadSourcesOfGraphic()),
                 functions);
         }
 
@@ -163,6 +171,8 @@ namespace NuvoControl.Server.Dal
             IEnumerable<Floor> floors =
                 from floor in _configuration.Root.Element("Configuration").Element("Graphic").Element("Building").Elements("Floor")
                 select new Floor(
+                    new Address(int.Parse(((string)floor.Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                      int.Parse(((string)floor.Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     (string)floor.Attribute("Name"),
                     (string)floor.Element("FloorPlan").Attribute("RelativePath"),
                     (string)floor.Element("FloorPlan").Attribute("PictureType"),

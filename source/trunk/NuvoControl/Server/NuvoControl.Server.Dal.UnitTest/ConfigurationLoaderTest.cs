@@ -25,7 +25,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
 using System.Xml;
-using System.Drawing;
+using System.Windows;
 
 using NuvoControl.Server.Dal;
 
