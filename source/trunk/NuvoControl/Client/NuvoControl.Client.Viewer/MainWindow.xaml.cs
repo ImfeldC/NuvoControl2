@@ -12,7 +12,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-using NuvoControl.Client.Viewer.Pages;
 using NuvoControl.Client.Viewer.Controls;
 using NuvoControl.Client.Viewer.ViewModel;
 using NuvoControl.Common.Configuration;
