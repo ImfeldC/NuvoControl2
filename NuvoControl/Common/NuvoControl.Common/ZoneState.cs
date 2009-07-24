@@ -162,6 +162,7 @@ namespace NuvoControl.Common
                 _source = sourceZoneState._source;
                 _powerStatus = sourceZoneState._powerStatus;
                 Volume = sourceZoneState._volume;
+                _commandUnacknowledged = sourceZoneState._commandUnacknowledged;
             }
         }
 
