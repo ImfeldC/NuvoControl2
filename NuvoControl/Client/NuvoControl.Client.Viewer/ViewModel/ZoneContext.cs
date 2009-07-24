@@ -13,6 +13,7 @@ using System.IO;
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Client.Viewer.Commands;
+using NuvoControl.Client.ServiceAccess;
 
 namespace NuvoControl.Client.Viewer.ViewModel
 {
@@ -27,20 +28,20 @@ namespace NuvoControl.Client.Viewer.ViewModel
         private IHierarchyContext _child = null;
         private Visibility _visibility = Visibility.Collapsed;
 
-        CommandBinding _binding;
+        private CommandBindingCollection _bindings = new CommandBindingCollection();
 
-        public ZoneContext(Zone zone, List<Source> sources)
-        {
-            this._zones = null;
-            this._activeZone = zone;
-            this._zoneState = new ZoneState();
-            this._sources = sources;
-            _viewSources = (ListCollectionView)CollectionViewSource.GetDefaultView(this._sources);
-            _viewSources.CurrentChanged += new EventHandler(_viewSources_CurrentChanged);
+        //public ZoneContext(Zone zone, List<Source> sources)
+        //{
+        //    this._zones = null;
+        //    this._activeZone = zone;
+        //    this._zoneState = new ZoneState();
+        //    this._sources = sources;
+        //    _viewSources = (ListCollectionView)CollectionViewSource.GetDefaultView(this._sources);
+        //    _viewSources.CurrentChanged += new EventHandler(_viewSources_CurrentChanged);
 
-            _binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
-            //_bindings.Add(binding);
-        }
+        //    _binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
+        //    //_bindings.Add(binding);
+        //}
 
         public ZoneContext(List<Zone> zones, List<Source> sources)
         {
@@ -51,8 +52,13 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _viewSources = (ListCollectionView)CollectionViewSource.GetDefaultView(this._sources);
             _viewSources.CurrentChanged += new EventHandler(_viewSources_CurrentChanged);
 
-            _binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
-            //_bindings.Add(binding);
+            CommandBinding binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
+            _bindings.Add(binding);
+            binding = new CommandBinding(CustomCommands.VolumeDown, VolumeDownCommand_Executed, VolumeDownCommand_CanExecute);
+            _bindings.Add(binding);
+            binding = new CommandBinding(CustomCommands.Power, PowerCommand_Executed, PowerCommand_CanExecute);
+            _bindings.Add(binding);
+
         }
 
 
@@ -60,8 +66,25 @@ namespace NuvoControl.Client.Viewer.ViewModel
         {
         }
 
-
         private void VolumeUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void VolumeDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        private void VolumeDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = true;
+        }
+
+        private void PowerCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+        }
+
+        private void PowerCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
@@ -79,9 +102,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
-        public CommandBinding CommandBinding
+        public CommandBindingCollection CommandBindingsDynamic
         {
-            get { return _binding; }
+            get { return _bindings; }
         }
 
         public string ZoneName
@@ -94,10 +117,33 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _zoneState; }
         }
 
-        public string ZoneStateSource
+        public Address SourceZoneState
         {
-            get { return _zoneState.Source.ToString(); }
+            get { return _zoneState.Source; }
 
+        }
+
+        public bool PowerZoneState
+        {
+            get { return _zoneState.PowerStatus; }
+            set 
+            {
+            }        }
+
+        public ZoneQuality QualityZoneState
+        {
+            get { return _zoneState.ZoneQuality; }
+
+        }
+
+        public bool UnackZoneState
+        {
+            get { return _zoneState.CommandUnacknowledged; }
+        }
+
+        public string VolumeZoneState
+        {
+            get { return _zoneState.Volume.ToString(); }
         }
 
         public BitmapImage ZoneImage
@@ -223,7 +269,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
             if (tempZone == null)
                 return;
 
+            Unsubscribe(_activeZone.Id);
             _activeZone = tempZone;
+            Subscribe(_activeZone.Id);
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             // TODO unsubscribe
         }
@@ -258,8 +306,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
-        public void OnHierarchyChanged()
+        public void OnHierarchyActivated()
         {
+            Subscribe(_activeZone.Id);
+        }
+
+
+        public void OnHierarchyDeactivated()
+        {
+            Unsubscribe(_activeZone.Id);
         }
 
 
@@ -277,6 +332,39 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
         #endregion
+
+
+        /// <summary>
+        /// Subscribe for notifications for all zones of this context
+        /// </summary>
+        public void Subscribe(Address id)
+        {
+            ServiceProxy.MonitorAndControlProxy.Monitor(id, ZoneUpdateNotification);
+        }
+
+
+        /// <summary>
+        /// Unsubscribes for notifications for all zones of this context
+        /// </summary>
+        public void Unsubscribe(Address id)
+        {
+            ServiceProxy.MonitorAndControlProxy.RemoveMonitor(id, ZoneUpdateNotification);
+        }
+
+        public void UnsubscribeAll()
+        {
+            foreach (Zone zone in _zones)
+            {
+                Unsubscribe(zone.Id);
+            }
+        }
+
+        public void ZoneUpdateNotification(object sender, ZoneStateEventArgs e)
+        {
+            _zoneState = new ZoneState(e.ZoneState);
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
+        }
 
     }
 }

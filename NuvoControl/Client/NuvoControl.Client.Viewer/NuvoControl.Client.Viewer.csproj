@@ -145,6 +145,10 @@
     <Compile Include="Controls\ZoneView.xaml.cs">
       <DependentUpon>ZoneView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\AcknowledgedConverter.cs" />
+    <Compile Include="Converters\QualityConverter.cs" />
+    <Compile Include="Converters\PowerConverter.cs" />
+    <Compile Include="Converters\SourceConverter.cs" />
     <Compile Include="Pages\PageMain.xaml.cs">
       <DependentUpon>PageMain.xaml</DependentUpon>
     </Compile>

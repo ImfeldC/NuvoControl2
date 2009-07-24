@@ -2,12 +2,17 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
+    xmlns:converters="clr-namespace:NuvoControl.Client.Viewer.Converters"
     MinHeight="30" MinWidth="200">
+    <UserControl.Resources>
+        <converters:QualityConverter x:Key="QualityConverter"></converters:QualityConverter>
+        <converters:AcknowledgedConverter x:Key="AcknowledgedConverter"></converters:AcknowledgedConverter>
+    </UserControl.Resources>
     <Grid>
         <StackPanel Name="_stackPanel">
             <Grid Name="_gridZone">
-                <Button Name="_btn_Close" Tag="ClosePopupButton" HorizontalAlignment="Left" Margin="1">-</Button>
-                <Label Name="_lblZone" Margin="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center">Zonename</Label>
+                <Button Name="_btn_Close" Tag="ClosePopupButton" HorizontalAlignment="Left" Margin="1" MinWidth="20">-</Button>
+                <Label Name="_lblZone" Content="{Binding Path=ZoneName}" Margin="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center"></Label>
             </Grid>
             <Grid Name="_gridControl">
                 <Grid.ColumnDefinitions>
@@ -17,8 +22,8 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Name="_btnPower" Grid.Column="0" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center"
-                              Command="commands:CustomCommands.BrowseUp">PWR</ToggleButton>
+                <ToggleButton Name="_btnPower" Grid.Column="0" IsChecked="{Binding Path=PowerZoneState}" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center"
+                              Command="commands:CustomCommands.Power" Content="{Binding ElementName=_btnPower, Path=Command.Text}"></ToggleButton>
                 <ComboBox Name="_cbxSource" Grid.Column="1" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" MinWidth="100"
                           ItemsSource="{Binding Path=ViewSources}" IsSynchronizedWithCurrentItem="True">
                 </ComboBox>
@@ -33,8 +38,10 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <Label Name="lblQuality" Margin="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center">Offline</Label>
-                <Label Name="lblAck" Margin="1" Grid.Column="1" HorizontalAlignment="Right" VerticalContentAlignment="Center">Unacknowledged</Label>
+                <Label Name="lblQuality" Margin="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
+                       Content="{Binding Path=QualityZoneState, Converter={StaticResource QualityConverter}}"></Label>
+                <Label Name="lblAck" Margin="1" Grid.Column="1" HorizontalAlignment="Right" VerticalContentAlignment="Center"
+                       Content="{Binding Path=UnackZoneState, Converter={StaticResource AcknowledgedConverter}}"></Label>
             </Grid>
         </StackPanel>
     </Grid>

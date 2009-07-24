@@ -75,11 +75,45 @@ namespace NuvoControl.Client.Viewer.Controls
             Zone zoneMod = new Zone(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates);
             ZoneControl zoneControl = new ZoneControl();
             ZoneState state = new ZoneState();
-            ZoneContext zoneContext = new ZoneContext(zoneMod, sources);
+            List<Zone> zones = new List<Zone>();
+            zones.Add(zoneMod);
+            ZoneContext zoneContext = new ZoneContext(zones, sources);
+            zoneContext.Subscribe(zoneMod.Id);
             zoneControl.DataContext = zoneContext;
             Canvas.SetLeft(zoneControl, xOffset);
             Canvas.SetTop(zoneControl, yOffset);
             _canvasFloor.Children.Add(zoneControl);
+        }
+
+        //public void UnloadFloorZones()
+        //{
+        //    List<ZoneControl> zoneControls = new List<ZoneControl>();
+        //    foreach (UIElement uiElement in _canvasFloor.Children)
+        //    {
+        //        if (uiElement is ZoneControl)
+        //            zoneControls.Add(uiElement as ZoneControl);
+        //    }
+        //    foreach (ZoneControl zoneControl in zoneControls)
+        //    {
+        //        (zoneControl.DataContext as ZoneContext).Unsubscribe();
+        //        _canvasFloor.Children.Remove(zoneControl);
+        //    }
+        //}
+
+        void btnCommand_Click(object sender, RoutedEventArgs e)
+        {
+           //_popupCommander.IsOpen = true;
+        }
+
+
+        #region IFloorViewNotification Members
+
+        public void LoadFloorZones(Floor activeFloor, List<Source> sources)
+        {
+            foreach (Zone zone in activeFloor.Zones)
+            {
+                CreateFloorZone(zone, sources);
+            }
         }
 
         public void UnloadFloorZones()
@@ -92,25 +126,8 @@ namespace NuvoControl.Client.Viewer.Controls
             }
             foreach (ZoneControl zoneControl in zoneControls)
             {
+                (zoneControl.DataContext as ZoneContext).UnsubscribeAll();
                 _canvasFloor.Children.Remove(zoneControl);
-            }
-        }
-
-        void btnCommand_Click(object sender, RoutedEventArgs e)
-        {
-           //_popupCommander.IsOpen = true;
-        }
-
-
-        #region IFloorViewNotification Members
-
-        public void UpdateFloorZones(Floor activeFloor, List<Source> sources)
-        {
-            UnloadFloorZones();
-
-            foreach (Zone zone in activeFloor.Zones)
-            {
-                CreateFloorZone(zone, sources);
             }
         }
 

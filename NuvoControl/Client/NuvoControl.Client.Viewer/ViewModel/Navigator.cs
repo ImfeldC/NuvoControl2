@@ -40,6 +40,74 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _name; }
         }
 
+        /// <summary>
+        /// Determines wether the specified object equals the current object.
+        /// </summary>
+        /// <param name="obj">The object to compare with.</param>
+        /// <returns>True if the specified object is equal to the current object; otherwise, false.</returns>
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+
+            NavigationItem item = obj as NavigationItem;
+            if ((object)item == null)
+                return false;
+
+            return (_id == item._id);
+        }
+
+        /// <summary>
+        /// Determines wether the specified address equals the current address.
+        /// </summary>
+        /// <param name="id">The navigation item to compare with.</param>
+        /// <returns>True if the specified navigation item is equal to the current navigation item; otherwise, false.</returns>
+        public bool Equals(NavigationItem item)
+        {
+            if ((object)item == null)
+                return false;
+
+            return (_id == item._id);
+        }
+
+
+        /// <summary>
+        /// Equality operator
+        /// </summary>
+        /// <param name="id1">Left hand side parameter.</param>
+        /// <param name="id2">Reight hand side parameter</param>
+        /// <returns>True, if the specified items are equal; otherwise false.</returns>
+        public static bool operator ==(NavigationItem item1, NavigationItem item2)
+        {
+            if ((object)item1 == null)
+                return (object)item2 == null;
+
+            return item1.Equals(item2);
+        }
+
+
+        /// <summary>
+        /// Unequality operator
+        /// </summary>
+        /// <param name="id1">Left hand side parameter.</param>
+        /// <param name="id2">Reight hand side parameter</param>
+        /// <returns>True, if the specified items are unequal; otherwise false.</returns>
+        public static bool operator !=(NavigationItem item1, NavigationItem item2)
+        {
+            return !(item1 == item2);
+        }
+
+
+        /// <summary>
+        /// Hash function for the address type.
+        /// </summary>
+        /// <returns>Hash code</returns>
+        public override int GetHashCode()
+        {
+            return _id.GetHashCode();
+        }
+
+
         public override string ToString()
         {
             return _name;
@@ -53,12 +121,14 @@ namespace NuvoControl.Client.Viewer.ViewModel
         private HistoryList _historsList = new HistoryList();
         private CommandBindingCollection _bindings = new CommandBindingCollection();
         private ListCollectionView _views;
+        private bool _ignoreViewSelectionChange = false;
 
 
 
         public Navigator(IHierarchyContext context)
         {
             this._context = context;
+            UpdateViews();
             _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
             CommandBinding binding = new CommandBinding(CustomCommands.BrowseNext, NextViewCommand_Executed, NextViewCommand_CanExecute);
@@ -73,6 +143,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _bindings.Add(binding);
             binding = new CommandBinding(CustomCommands.BrowseUp, BrowseUpCommand_Executed, BrowseUpCommand_CanExecute);
             _bindings.Add(binding);
+
 
         }
 
@@ -97,11 +168,38 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+        public NavigationItem SelectedNavigationItem
+        {
+            get { return new NavigationItem(_context, new Address(_context.Id), _context.Name); }
+            set
+            {
+                if (_ignoreViewSelectionChange == false)
+                {
+                    //_context.Navigate((value as NavigationItem).Id);
+                }
+            }
+        }
+
+
+        private void UpdateViews()
+        {
+        }
+
+
+        //public List<NavigationItem> NavigationItems
+        //{
+        //    get
+        //    {
+        //        return _context.NavigationItems;
+        //    }
+        //}
+
         void _views_CurrentChanged(object sender, EventArgs e)
         {
             ListCollectionView view = sender as ListCollectionView;
-            if (view != null)
+            if ((view != null) && (_ignoreViewSelectionChange == false))
             {
+                _historsList.Append(view.CurrentItem as NavigationItem);
                 _context.Navigate((view.CurrentItem as NavigationItem).Id);
             }
         }
@@ -161,13 +259,17 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void BrowseForwardCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            _ignoreViewSelectionChange = true;
             NavigationItem targetItem = _historsList.BrowseForward();
             _context.Visibility1 = Visibility.Collapsed;
             targetItem.Context.Visibility1 = Visibility.Visible;
+            _context.OnHierarchyDeactivated();
             _context = targetItem.Context;
+            _context.OnHierarchyActivated();
             _context.Navigate(targetItem.Id);
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
         }
 
         private void BrowseForwardCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -177,13 +279,17 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void BrowseBackCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            _ignoreViewSelectionChange = true;
             NavigationItem targetItem = _historsList.BrowseBack();
             _context.Visibility1 = Visibility.Collapsed;
             targetItem.Context.Visibility1 = Visibility.Visible;
+            _context.OnHierarchyDeactivated();
             _context = targetItem.Context;
             _context.Navigate(targetItem.Id);
+            _context.OnHierarchyActivated();
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
         }
 
         private void BrowseBackCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -193,14 +299,18 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void BrowseUpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            _ignoreViewSelectionChange = true;
             _context.Visibility1 = Visibility.Collapsed;
             _context.Parent.Visibility1 = Visibility.Visible;
+            _context.OnHierarchyDeactivated();
             _context = _context.Parent;
-            _context.OnHierarchyChanged();
+            _context.OnHierarchyActivated();
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
+            UpdateViews();
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
         }
 
         private void BrowseUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -210,16 +320,22 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void BrowseDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            _ignoreViewSelectionChange = true;
             _context.Visibility1 = Visibility.Collapsed;
             _context.Child.Visibility1 = Visibility.Visible;
+            _context.OnHierarchyDeactivated();
             _context = _context.Child;
-            _context.OnHierarchyChanged();
+            _context.OnHierarchyActivated();
             if ((e.Parameter != null) && (e.Parameter is Address))
                 _context.Navigate(e.Parameter as Address);
+            else
+                _context.Navigate(null);
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
+            UpdateViews();
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
         }
 
         private void BrowseDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -229,11 +345,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void NextViewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            _ignoreViewSelectionChange = true;
             _context.Next();
+            //_views.MoveCurrentTo(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
+            UpdateViews();
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
         }
 
         private void NextViewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -243,11 +363,14 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void PreviousViewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            _ignoreViewSelectionChange = true;
             _context.Previous();
+            //_views.MoveCurrentTo(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
         }
 
         private void PreviousViewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
