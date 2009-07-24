@@ -23,8 +23,21 @@ namespace NuvoControl.Client.Viewer.ViewModel
         void Previous();
         void Navigate(Address id);
         Visibility Visibility1 { get; set; }
-        void OnHierarchyChanged();
+
+        /// <summary>
+        /// Called, when this context got activated. i.e. the corresponding view is visible.
+        /// </summary>
+        void OnHierarchyActivated();
+
+        /// <summary>
+        /// Called, when this context is deactivated. i.e. this corresponding view is not visible.
+        /// </summary>
+        void OnHierarchyDeactivated();
+
+
         void UpdateContext(IHierarchyContext context);
+
+        //void Restore(Address id);
 
 
     }

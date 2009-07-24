@@ -7,7 +7,7 @@
         <Viewbox Grid.Row="0" Grid.Column="0"  Name="_viewboxFloor" Margin="5" Stretch="Uniform">
             <Grid>
             <Image Name="_imageBuilding" Margin="5" Stretch="Uniform" Source="{Binding Path=FloorPlan}"/>
-            <Canvas Name="_canvasFloor" MinWidth="300" MinHeight="300"></Canvas>
+            <Canvas Name="_canvasFloor" MinWidth="300" MinHeight="300" ToolTip="{Binding Path=ToolTip}"></Canvas>
             </Grid>
         </Viewbox>
     </Grid>

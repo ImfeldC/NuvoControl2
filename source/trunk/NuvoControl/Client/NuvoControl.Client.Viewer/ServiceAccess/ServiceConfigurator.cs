@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 
 using NuvoControl.Client.ServiceMock;
+using NuvoControl.Client.ServiceAccess;
 
 namespace NuvoControl.Client.Viewer.ServiceAccess
 {
@@ -13,8 +14,10 @@ namespace NuvoControl.Client.Viewer.ServiceAccess
         {
             if (test == true)
             {
-                NuvoControl.Client.ServiceAccess.ServiceProxy.Inject(
-                    new ConfigurationProxyMock(@"..\..\..\..\Config\NuvoControlKonfiguration.xml"));
+                ServiceProxy.Inject(new ConfigurationProxyMock(@"..\..\..\..\Config\NuvoControlKonfiguration.xml"));
+                MonitorAndControlProxyMock mcMock = new MonitorAndControlProxyMock();
+                ServiceProxy.Inject(mcMock);
+                mcMock.SetCallback(ServiceProxy.MonitorAndControlProxy);
             }
         }
     }

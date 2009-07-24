@@ -47,6 +47,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+        public string ToolTip
+        {
+            get { return ("Click to browse down"); }
+        }
+
         public List<NavigationItem> NavigationItems
         {
             get
@@ -109,13 +114,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public void Next()
         {
-            _activeFloor = GetNextFloor();
-            _child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
+            Navigate(GetNextFloor().Id);
 
-            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            //_activeFloor = GetNextFloor();
+            //_child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
 
-            // TODO unsubscribe
-            _floorView.UpdateFloorZones(_activeFloor, _sources);
+            //NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
+            //_floorView.UnloadFloorZones();
+            //_floorView.LoadFloorZones(_activeFloor, _sources);
         }
 
         private Floor GetNextFloor()
@@ -139,24 +146,35 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public void Previous()
         {
-            _activeFloor = GetPreviousFloor();
-            _child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
+            Navigate(GetPreviousFloor().Id);
 
-            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-            // TODO unsubscribe
-            _floorView.UpdateFloorZones(_activeFloor, _sources);
+            //_activeFloor = GetPreviousFloor();
+            //_child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
+
+            //NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
+            //_floorView.UnloadFloorZones();
+            //_floorView.LoadFloorZones(_activeFloor, _sources);
         }
 
         public void Navigate(Address id)
         {
-            Floor tempFloor = FindFloor(id);
-            if (tempFloor == null)
-                return;
+            if (id != null)
+            {
+                Floor tempFloor = FindFloor(id);
+                if (tempFloor == null)
+                    _activeFloor = _floors[0];
+                else
+                    _activeFloor = tempFloor;
+            }
+            else
+                _activeFloor = _floors[0];
 
-            _activeFloor = tempFloor;
+            _child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-            // TODO unsubscribe
-            _floorView.UpdateFloorZones(_activeFloor, _sources);
+
+            _floorView.UnloadFloorZones();
+            _floorView.LoadFloorZones(_activeFloor, _sources);
         }
 
 
@@ -191,10 +209,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
-        public void OnHierarchyChanged()
+        public void OnHierarchyActivated()
         {
-            // noting to do
-            _floorView.UpdateFloorZones(_activeFloor, _sources);
+            //_floorView.LoadFloorZones(_activeFloor, _sources);
+            //_child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
+        }
+
+        public void OnHierarchyDeactivated()
+        {
+            _floorView.UnloadFloorZones();
         }
 
 
@@ -203,12 +226,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
             // not used
         }
 
+
+
         #endregion
 
     }
 
     public interface IFloorViewNotification
     {
-        void UpdateFloorZones(Floor activeFloor, List<Source> sources);
+        void LoadFloorZones(Floor activeFloor, List<Source> sources);
+        void UnloadFloorZones();
     }
 }

@@ -108,9 +108,18 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
-        public void OnHierarchyChanged()
+        public string ToolTip
+        {
+            get { return ("Click to browse down to " + _child.Name); }
+        }
+
+        public void OnHierarchyActivated()
         {
             // noting to do
+        }
+
+        public void OnHierarchyDeactivated()
+        {
         }
 
 

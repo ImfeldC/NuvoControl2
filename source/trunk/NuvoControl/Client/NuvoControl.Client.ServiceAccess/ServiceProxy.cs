@@ -40,5 +40,10 @@ namespace NuvoControl.Client.ServiceAccess
             _configurationProxy = new ConfigurationProxy(configurationProxy);
         }
 
+        public static void Inject(IMonitorAndControl mAndCProxy)
+        {
+            _monitorAndControlProxy = new MonitorAndControlProxy(mAndCProxy);
+        }
+
     }
 }

@@ -12,6 +12,10 @@
   <xs:complexType name="Building">
     <xs:sequence>
       <xs:element minOccurs="0" name="_floors" nillable="true" type="tns:ArrayOfFloor" />
+      <xs:element minOccurs="0" name="_id" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_picturePath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_pictureType" nillable="true" type="xs:string" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Building" nillable="true" type="tns:Building" />
@@ -25,11 +29,19 @@
     <xs:sequence>
       <xs:element minOccurs="0" name="_floorPlanPath" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="_floorPlanType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_id" nillable="true" type="tns:Address" />
       <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="_zones" nillable="true" type="tns:ArrayOfZone" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Floor" nillable="true" type="tns:Floor" />
+  <xs:complexType name="Address">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_deviceId" type="xs:int" />
+      <xs:element minOccurs="0" name="_objectId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Address" nillable="true" type="tns:Address" />
   <xs:complexType name="ArrayOfZone">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Zone" nillable="true" type="tns:Zone" />
@@ -46,13 +58,6 @@
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Zone" nillable="true" type="tns:Zone" />
-  <xs:complexType name="Address">
-    <xs:sequence>
-      <xs:element minOccurs="0" name="_deviceId" type="xs:int" />
-      <xs:element minOccurs="0" name="_objectId" type="xs:int" />
-    </xs:sequence>
-  </xs:complexType>
-  <xs:element name="Address" nillable="true" type="tns:Address" />
   <xs:complexType name="ArrayOfSource">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="unbounded" name="Source" nillable="true" type="tns:Source" />

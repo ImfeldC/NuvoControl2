@@ -19,11 +19,13 @@ namespace NuvoControl.Client.ServiceAccess
              /// <summary>
             /// Event, on which clients can subscribe for zone state changes.
             /// </summary>
-            public event ZoneNotification _zoneNotification;
+            private event ZoneNotification _zoneNotification;
             /// <summary>
             /// The zone, for which a client wants to subscribe.
             /// </summary>
             Address _zoneId;
+
+            Dictionary<ZoneNotification, ZoneNotification> subscribers = new Dictionary<ZoneNotification, ZoneNotification>();
 
             public ZoneProxy(Address zoneId)
             {
@@ -33,6 +35,26 @@ namespace NuvoControl.Client.ServiceAccess
             public Address ZoneId
             {
                 get { return _zoneId; }
+            }
+
+            public void AddSubscriber(ZoneNotification zoneNotification)
+            {
+                if (subscribers.ContainsKey(zoneNotification))
+                    return;
+
+                subscribers.Add(zoneNotification, zoneNotification);
+                _zoneNotification += zoneNotification;
+                return;
+            }
+
+            public int RemoveSubscriber(ZoneNotification zoneNotification)
+            {
+                if (subscribers.ContainsKey(zoneNotification) == false)
+                    return subscribers.Count;
+
+                subscribers.Remove(zoneNotification);
+                _zoneNotification -= zoneNotification;
+                return subscribers.Count;
             }
 
             public void NotifyClients(ZoneState zoneState)
@@ -78,9 +100,12 @@ namespace NuvoControl.Client.ServiceAccess
         {
             try
             {
-                _mcServiceProxy.Monitor(zoneId);
-                if (_zoneProxies.ContainsKey(zoneId))
-                    _zoneProxies[zoneId]._zoneNotification += subscriber;
+                if (_zoneProxies.ContainsKey(zoneId) == false)
+                {
+                    _zoneProxies.Add(zoneId, new ZoneProxy(zoneId));
+                    _mcServiceProxy.Monitor(zoneId);
+                }
+                _zoneProxies[zoneId].AddSubscriber(subscriber);
             }
             catch (ArgumentException exc)
             {
@@ -93,44 +118,13 @@ namespace NuvoControl.Client.ServiceAccess
         {
             try
             {
-                _mcServiceProxy.RemoveMonitor(zoneId);
-                if (_zoneProxies.ContainsKey(zoneId))
-                    _zoneProxies[zoneId]._zoneNotification -= subscriber;
-            }
-            catch (Exception exc)
-            {
-                _log.Warn("Failed to unsubscribe for the zone.", exc);
-            }
-        }
+                if (_zoneProxies.ContainsKey(zoneId) == false)
+                    return;
 
-        public void MonitorMultiple(Address[] zoneIds, ZoneNotification subscriber)
-        {
-            try
-            {
-                _mcServiceProxy.MonitorMultiple(zoneIds);
-                foreach (Address zoneId in zoneIds)
+                if (_zoneProxies[zoneId].RemoveSubscriber(subscriber) == 0)
                 {
-                    if (_zoneProxies.ContainsKey(zoneId))
-                        _zoneProxies[zoneId]._zoneNotification += subscriber;
-                }
-            }
-            catch (ArgumentException exc)
-            {
-                _log.Error("Failed to subscribe for the zone.", exc);
-                throw exc;
-            }
-
-        }
-
-        public void RemoveMonitorMultiple(Address[] zoneIds, ZoneNotification subscriber)
-        {
-            try
-            {
-                _mcServiceProxy.RemoveMonitorMultiple(zoneIds);
-                foreach (Address zoneId in zoneIds)
-                {
-                    if (_zoneProxies.ContainsKey(zoneId))
-                        _zoneProxies[zoneId]._zoneNotification -= subscriber;
+                    _mcServiceProxy.RemoveMonitor(zoneId);
+                    _zoneProxies.Remove(zoneId);
                 }
             }
             catch (Exception exc)
@@ -138,6 +132,7 @@ namespace NuvoControl.Client.ServiceAccess
                 _log.Warn("Failed to unsubscribe for the zone.", exc);
             }
         }
+
 
         private void Initialize()
         {
@@ -156,9 +151,10 @@ namespace NuvoControl.Client.ServiceAccess
 
         #region IMonitorAndControlCallback Members
 
-        public void OnZoneStateChanged(NuvoControl.Common.Configuration.Address zoneId, NuvoControl.Common.ZoneState zoneState)
+        public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
-            throw new NotImplementedException();
+            if (_zoneProxies.ContainsKey(zoneId))
+                _zoneProxies[zoneId].NotifyClients(zoneState);
         }
 
         #endregion

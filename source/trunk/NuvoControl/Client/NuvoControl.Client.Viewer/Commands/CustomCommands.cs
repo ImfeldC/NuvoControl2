@@ -13,8 +13,11 @@ namespace NuvoControl.Client.Viewer.Commands
         private static RoutedUICommand _browseUp;
         private static RoutedUICommand _browsePrevious;
         private static RoutedUICommand _browseNext;
+
         private static RoutedUICommand _volumeDown;
         private static RoutedUICommand _volumeUp;
+        private static RoutedUICommand _power;
+
         private static RoutedUICommand _appExit;
 
 
@@ -43,6 +46,10 @@ namespace NuvoControl.Client.Viewer.Commands
             inputs = new InputGestureCollection();
             inputs.Add(new KeyGesture(Key.U, ModifierKeys.Control, "Ctrl+U"));
             _volumeUp = new RoutedUICommand("Volunme Up", "VolumeUp", typeof(CustomCommands), inputs);
+
+            inputs = new InputGestureCollection();
+            inputs.Add(new KeyGesture(Key.M, ModifierKeys.Control, "Ctrl+M"));
+            _power = new RoutedUICommand("Power", "Power", typeof(CustomCommands), inputs);
 
             _appExit = new RoutedUICommand("Exit", "Exit", typeof(CustomCommands), null);
 
@@ -77,6 +84,11 @@ namespace NuvoControl.Client.Viewer.Commands
         public static RoutedUICommand VolumeUp
         {
             get { return _volumeUp; }
+        }
+
+        public static RoutedUICommand Power
+        {
+            get { return _power; }
         }
 
         public static RoutedUICommand AppExit

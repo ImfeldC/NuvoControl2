@@ -84,7 +84,7 @@
             </Button>
             <Separator Width="3"></Separator>
             <Label VerticalAlignment="Center" Margin="5">View:</Label>
-            <ComboBox Name="_viewName" MinWidth="100" ItemsSource="{Binding Path=NavigationItems}" IsSynchronizedWithCurrentItem="True"></ComboBox>
+            <ComboBox Name="_viewName" MinWidth="100" ItemsSource="{Binding Path=NavigationItems}" SelectedItem="{Binding Path=SelectedNavigationItem}"  IsSynchronizedWithCurrentItem="True"></ComboBox>
         </ToolBar>
         <StatusBar Height="23" Name="statusBar1" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Top" />
         <Grid Name="_mainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFF8F8F4" MinWidth="100" MinHeight="100">
