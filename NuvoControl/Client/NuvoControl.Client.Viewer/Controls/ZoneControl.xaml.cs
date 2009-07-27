@@ -35,7 +35,9 @@ namespace NuvoControl.Client.Viewer.Controls
         private void _btnCloseCommander_Click(object sender, RoutedEventArgs e)
         {
             if ((string)((FrameworkElement)e.OriginalSource).Tag == "ClosePopupButton")
+            {
                 _popupCommander.IsOpen = false;
+            }
         }
 
         public void SetArea(Point[] coordinates)

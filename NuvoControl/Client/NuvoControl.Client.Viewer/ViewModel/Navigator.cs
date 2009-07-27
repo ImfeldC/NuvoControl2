@@ -127,9 +127,10 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public Navigator(IHierarchyContext context)
         {
+
             this._context = context;
             UpdateViews();
-            _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
+            //_historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
             CommandBinding binding = new CommandBinding(CustomCommands.BrowseNext, NextViewCommand_Executed, NextViewCommand_CanExecute);
             _bindings.Add(binding);
@@ -143,6 +144,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _bindings.Add(binding);
             binding = new CommandBinding(CustomCommands.BrowseUp, BrowseUpCommand_Executed, BrowseUpCommand_CanExecute);
             _bindings.Add(binding);
+
+
 
 
         }
@@ -211,12 +214,24 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public string BackToolTip
         {
-            get { return NavigationCommands.BrowseBack.Text + " to " + _historsList.BrowseBackName; }
+            get
+            {
+                if (_historsList.BrowseBackName != String.Empty)
+                    return NavigationCommands.BrowseBack.Text + " to " + _historsList.BrowseBackName;
+                else
+                    return NavigationCommands.BrowseBack.Text;
+            }
         }
 
         public string ForwardToolTip
         {
-            get { return NavigationCommands.BrowseForward.Text + " to " + _historsList.BrowseForwardName; }
+            get
+            {
+                if (_historsList.BrowseForwardName != String.Empty)
+                    return NavigationCommands.BrowseForward.Text + " to " + _historsList.BrowseForwardName;
+                else
+                    return NavigationCommands.BrowseForward.Text;
+            }
         }
 
         public string UpToolTip
@@ -305,6 +320,10 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _context.OnHierarchyDeactivated();
             _context = _context.Parent;
             _context.OnHierarchyActivated();
+            if ((e.Parameter != null) && (e.Parameter is Address))
+                _context.Navigate(e.Parameter as Address);
+            else
+                _context.Navigate(null);
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 

@@ -26,7 +26,7 @@
             <Button Name="_btnOpenCommander" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1" Click="_btnOpenCommander_Click">+</Button>
             <ctrls:ZoneInfo Grid.Row="1" Tag="Zone"></ctrls:ZoneInfo>
         </Grid>
-        <Popup Name="_popupCommander" StaysOpen="False" Canvas.Left="0" Canvas.Top="0" Placement="Relative" MinWidth="100" MinHeight="50" PopupAnimation="Slide" AllowsTransparency="True">
+        <Popup Name="_popupCommander" StaysOpen="False" Canvas.Left="0" Canvas.Top="0" Placement="Relative" MinWidth="100" MinHeight="50" PopupAnimation="Slide" AllowsTransparency="True" Focusable="True">
             <Border Background="#FFF8F8F4" BorderBrush="#FFACAC8C" BorderThickness="2" Button.Click="_btnCloseCommander_Click">
                 <ctrls:ZoneCommander></ctrls:ZoneCommander>
             </Border>

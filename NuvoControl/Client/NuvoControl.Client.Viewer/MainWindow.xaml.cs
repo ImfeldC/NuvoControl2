@@ -37,7 +37,7 @@ namespace NuvoControl.Client.Viewer
         {
             InitializeComponent();
 
-            ServiceConfigurator.Configure(true);
+            ServiceConfigurator.Configure(false);
             ReadConfiguration();
             InitializeViews();
             InitializeViewModel();
