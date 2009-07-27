@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.ComponentModel;
 using System.Windows;
 using System.IO;
+using System.Threading;
 
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
@@ -29,6 +30,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         private Visibility _visibility = Visibility.Collapsed;
 
         private CommandBindingCollection _bindings = new CommandBindingCollection();
+        private SynchronizationContext _synchronizationContext = null;
 
         //public ZoneContext(Zone zone, List<Source> sources)
         //{
@@ -45,6 +47,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public ZoneContext(List<Zone> zones, List<Source> sources)
         {
+            _synchronizationContext = SynchronizationContext.Current;
+
             this._zones = zones;
             this._activeZone = zones[0];
             this._zoneState = new ZoneState();
@@ -64,24 +68,64 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void VolumeUpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            lock (this)
+            {
+                _zoneState.CommandUnacknowledged = true;
+                ZoneState cmdState = new ZoneState(_zoneState);
+                cmdState.Volume += 5;
+                if (cmdState.Volume > ZoneState.VOLUME_MAXVALUE)
+                    cmdState.Volume = ZoneState.VOLUME_MAXVALUE;
+
+                ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, _zoneState);
+            }
         }
 
         private void VolumeUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            lock (this)
+            {
+                if (_zoneState.Volume < ZoneState.VOLUME_MAXVALUE)
+                    e.CanExecute = true;
+                else
+                    e.CanExecute = false;
+            }
         }
 
         private void VolumeDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            lock (this)
+            {
+                _zoneState.CommandUnacknowledged = true;
+                ZoneState cmdState = new ZoneState(_zoneState);
+                cmdState.Volume -= 5;
+                if (cmdState.Volume < ZoneState.VOLUME_MINVALUE)
+                    cmdState.Volume = ZoneState.VOLUME_MINVALUE;
+
+                ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, _zoneState);
+            }
         }
 
         private void VolumeDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = true;
+            lock (this)
+            {
+                if (_zoneState.Volume > ZoneState.VOLUME_MINVALUE)
+                    e.CanExecute = true;
+                else
+                    e.CanExecute = false;
+            }
         }
 
         private void PowerCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            lock (this)
+            {
+                _zoneState.CommandUnacknowledged = true;
+                ZoneState cmdState = new ZoneState(_zoneState);
+                cmdState.PowerStatus = !cmdState.PowerStatus;
+
+                ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, _zoneState);
+            }
         }
 
         private void PowerCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
@@ -92,13 +136,20 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         void _viewSources_CurrentChanged(object sender, EventArgs e)
         {
-            ListCollectionView view = sender as ListCollectionView;
-            if (view != null)
+            lock (this)
             {
-                // Command the service
-                // set the property !!!
-                this._zoneState.Source = (view.CurrentItem as Source).Id;
-                NotifyPropertyChanged(new PropertyChangedEventArgs("ZoneStateSource"));
+                ListCollectionView view = sender as ListCollectionView;
+                if (view != null)
+                {
+                    _zoneState.CommandUnacknowledged = true;
+                    ZoneState cmdState = new ZoneState(_zoneState);
+                    cmdState.Source = (view.CurrentItem as Source).Id;
+
+                    ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, _zoneState);
+
+                    //this._zoneState.Source = (view.CurrentItem as Source).Id;
+                    //NotifyPropertyChanged(new PropertyChangedEventArgs("ZoneStateSource"));
+                }
             }
         }
 
@@ -128,7 +179,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _zoneState.PowerStatus; }
             set 
             {
-            }        }
+            }        
+        }
 
         public ZoneQuality QualityZoneState
         {
@@ -144,6 +196,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
         public string VolumeZoneState
         {
             get { return _zoneState.Volume.ToString(); }
+        }
+
+        public int Volume
+        {
+            get { return _zoneState.Volume; }
         }
 
         public BitmapImage ZoneImage
@@ -361,8 +418,13 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         public void ZoneUpdateNotification(object sender, ZoneStateEventArgs e)
         {
-            _zoneState = new ZoneState(e.ZoneState);
-            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            SendOrPostCallback callback = delegate
+            {
+                _zoneState = new ZoneState(e.ZoneState);
+                NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            };
+            _synchronizationContext.Post(callback, null);
+
 
         }
 

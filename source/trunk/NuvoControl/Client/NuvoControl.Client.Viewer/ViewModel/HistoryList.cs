@@ -55,7 +55,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
                 if (_currentIndex > 0)
                     return _history[_currentIndex - 1].Name;
                 else
-                    return null;
+                    return String.Empty;
             }
         }
 
@@ -81,10 +81,10 @@ namespace NuvoControl.Client.Viewer.ViewModel
         {
             get
             {
-                if (_currentIndex < MAX_ITEMS - 1)
+                if (_currentIndex < _history.Count - 1)
                     return _history[_currentIndex + 1].Name;
                 else
-                    return null;
+                    return String.Empty;
             }
         }
     }

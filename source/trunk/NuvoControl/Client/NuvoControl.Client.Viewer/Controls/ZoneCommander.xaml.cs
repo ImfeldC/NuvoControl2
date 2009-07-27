@@ -23,5 +23,13 @@ namespace NuvoControl.Client.Viewer.Controls
         {
             InitializeComponent();
         }
+
+        //private void _btnCloseCommander_Click(object sender, RoutedEventArgs e)
+        //{
+        //    if ((string)((FrameworkElement)e.OriginalSource).Tag == "ClosePopupButton")
+        //    {
+        //        this.MoveFocus(new TraversalRequest(FocusNavigationDirection.Up)); ;
+        //    }
+        //}
     }
 }
