@@ -222,6 +222,14 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return _viewSources; }
         }
 
+        public Address SelectedSource
+        {
+            get { return _zoneState.Source; }
+            set
+            {
+            }
+        }
+
         public PointCollection FloorPlanCoordinates
         {
             get { return new PointCollection(_activeZone.FloorPlanCoordinates); }
@@ -396,6 +404,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         public void Subscribe(Address id)
         {
+            _zoneState = ServiceProxy.MonitorAndControlProxy.GetZoneState(id);
             ServiceProxy.MonitorAndControlProxy.Monitor(id, ZoneUpdateNotification);
         }
 

@@ -25,7 +25,7 @@
                 <ToggleButton Name="_btnPower" Grid.Column="0" IsChecked="{Binding Path=PowerZoneState}" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center"
                               Command="commands:CustomCommands.Power" Content="{Binding ElementName=_btnPower, Path=Command.Text}"></ToggleButton>
                 <ComboBox Name="_cbxSource" Grid.Column="1" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" MinWidth="100"
-                          ItemsSource="{Binding Path=ViewSources}" IsSynchronizedWithCurrentItem="True">
+                          ItemsSource="{Binding Path=ViewSources}" SelectedItem="{Binding Path=SelectedSource}" IsSynchronizedWithCurrentItem="True">
                 </ComboBox>
                 <RepeatButton Name="_btnDown" Grid.Column="2" Margin="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="23"
                               Command="commands:CustomCommands.VolumeDown">-</RepeatButton>
