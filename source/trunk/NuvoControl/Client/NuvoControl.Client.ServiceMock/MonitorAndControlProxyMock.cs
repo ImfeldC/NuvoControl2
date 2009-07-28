@@ -115,7 +115,7 @@ namespace NuvoControl.Client.ServiceMock
             _acknowledged = !_acknowledged;
             _quality = (_quality == ZoneQuality.Offline) ? ZoneQuality.Online : ZoneQuality.Offline;
 
-            ZoneState zoneState = new ZoneState(new Address(_source.DeviceId, (_sourceCounter % 6) + 1), _power, _volume % 100);
+            ZoneState zoneState = new ZoneState(new Address(_source.DeviceId, (_sourceCounter % 6) + 1), _power, _volume % 100, ZoneQuality.Online);
             zoneState.ZoneQuality = _quality;
             zoneState.CommandUnacknowledged = _acknowledged;
             return zoneState;

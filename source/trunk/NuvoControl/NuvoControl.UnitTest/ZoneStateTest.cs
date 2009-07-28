@@ -203,8 +203,8 @@ namespace NuvoControl.UnitTest
         [TestMethod()]
         public void op_Equality6Test()
         {
-            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50);
-            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50);
+            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50, ZoneQuality.Online);
+            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50, ZoneQuality.Online);
             bool actual;
             actual = (left == right);
             Assert.AreEqual(true, actual);
@@ -218,8 +218,8 @@ namespace NuvoControl.UnitTest
         [TestMethod()]
         public void op_Equality7Test()
         {
-            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50);
-            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 2), true, 50);
+            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50, ZoneQuality.Online);
+            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 2), true, 50, ZoneQuality.Online);
             bool actual;
             actual = (left == right);
             Assert.AreEqual(false, actual);
@@ -233,8 +233,8 @@ namespace NuvoControl.UnitTest
         [TestMethod()]
         public void op_Equality8Test()
         {
-            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50);
-            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), false, 50);
+            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50, ZoneQuality.Online);
+            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), false, 50, ZoneQuality.Online);
             bool actual;
             actual = (left == right);
             Assert.AreEqual(false, actual);
@@ -248,8 +248,8 @@ namespace NuvoControl.UnitTest
         [TestMethod()]
         public void op_Equality9Test()
         {
-            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50);
-            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 51);
+            ZoneState left = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 50, ZoneQuality.Online);
+            ZoneState right = new ZoneState(new NuvoControl.Common.Configuration.Address(1, 1), true, 51, ZoneQuality.Online);
             bool actual;
             actual = (left == right);
             Assert.AreEqual(false, actual);

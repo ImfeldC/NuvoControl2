@@ -134,11 +134,12 @@ namespace NuvoControl.Common
         /// <param name="source">Source, selected in this zone.</param>
         /// <param name="powerStatus">Power Status, of this zone.</param>
         /// <param name="volume">Volume, of this zone.</param>
-        public ZoneState(Address source, bool powerStatus, int volume) : this()
+        public ZoneState(Address source, bool powerStatus, int volume, ZoneQuality zoneQuality) : this()
         {
             _source = source;
             _powerStatus = powerStatus;
             Volume = volume;
+            ZoneQuality = zoneQuality;
         }
 
         /// <summary>

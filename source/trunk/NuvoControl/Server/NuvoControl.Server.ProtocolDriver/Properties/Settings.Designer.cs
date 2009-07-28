@@ -43,7 +43,7 @@ namespace NuvoControl.Server.ProtocolDriver.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("00:10:00")]
+        [global::System.Configuration.DefaultSettingValueAttribute("00:02:00")]
         public global::System.TimeSpan MarkAsOfflineTimeSpan {
             get {
                 return ((global::System.TimeSpan)(this["MarkAsOfflineTimeSpan"]));
