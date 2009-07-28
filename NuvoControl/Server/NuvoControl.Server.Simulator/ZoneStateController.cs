@@ -164,7 +164,7 @@ namespace NuvoControl.Server.Simulator
             _zoneState = new ZoneState[_numOfZones];
             for (int i = 0; i < _numOfZones; i++)
             {
-                _zoneState[i] = new ZoneState(new Address(_deviceId, 1), true, -30);
+                _zoneState[i] = new ZoneState(new Address(_deviceId, 1), true, -30, ZoneQuality.Online);
             }
         }
 
