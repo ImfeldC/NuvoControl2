@@ -204,7 +204,7 @@ namespace NuvoControl.Server.ProtocolDriver
                         _oldestUpdate = entry.LastTimeCommandReceived;
                     }
                 }
-                _log.Trace(m => m("Update(s) are between {0} and {1}", _oldestUpdate.ToString(), _newestUpdate.ToString()));
+                //_log.Trace(m => m("Update(s) are between {0} and {1}", _oldestUpdate.ToString(), _newestUpdate.ToString()));
             }
         }
 

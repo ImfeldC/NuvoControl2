@@ -159,7 +159,7 @@
   <section name="ReadVersion">
     <entry name="Id">29</entry>
     <entry name="OutgoingCommand">VER</entry>
-    <entry name="IncomingCommand">NUVO_E6D_vz.zz</entry>
+    <entry name="IncomingCommand">MPU_E6Dvz.zz</entry>
   </section>
 
   <section name="ExternalMuteActivated">

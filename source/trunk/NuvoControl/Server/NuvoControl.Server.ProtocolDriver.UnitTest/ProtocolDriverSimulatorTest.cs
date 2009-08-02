@@ -172,7 +172,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
                     ESourceGroupStatus.SourceGroupOFF, "v1.23");
                 string actual;
                 actual = ProtocolDriverSimulator.createIncomingCommand(command);
-                Assert.AreEqual("#NUVO_E6D_v1.23\r", actual);
+                Assert.AreEqual("#MPU_E6Dv1.23\r", actual);
             }
         }
     }

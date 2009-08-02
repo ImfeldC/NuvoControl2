@@ -1200,7 +1200,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
                 else
                 {
-                    _log.Warn(m => m("Cannot parse incoming command, because the underlying command is unkown!"));
+                    _log.Warn(m => m("Cannot parse incoming command, because the underlying command is unkown! (_incomingCommand={0})", _incomingCommand));
                 }
             }
             else

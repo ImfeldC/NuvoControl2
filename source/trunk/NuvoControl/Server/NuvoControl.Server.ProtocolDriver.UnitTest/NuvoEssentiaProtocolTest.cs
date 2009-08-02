@@ -130,7 +130,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
             target.SendCommand(command);
-            nuvoTelegram.passDataToTestClass("NUVO_E6D_vx.yy");
+            nuvoTelegram.passDataToTestClass("MPU_E6Dvx.yy");
 
             Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
             Assert.AreEqual(command.Command,_nuvoProtocolEventArgs.Command.Command);                     // return same command      
@@ -149,7 +149,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             target.SendCommand("VER");
-            nuvoTelegram.passDataToTestClass("NUVO_E6D_vx.yy");
+            nuvoTelegram.passDataToTestClass("MPU_E6Dvx.yy");
 
             Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
             Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, _nuvoProtocolEventArgs.Command.Command);   // return same command      
@@ -168,7 +168,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
 
             target.SendCommand("VER");
-            nuvoTelegram.passDataToTestClass("NUVO_E6D_v1.23");
+            nuvoTelegram.passDataToTestClass("MPU_E6Dv1.23");
 
             Assert.IsTrue(_eventRaisedCount == 1);                                                       // event has been raised 1 times
             Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, _nuvoProtocolEventArgs.Command.Command);   // return same command      
@@ -190,7 +190,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
                 target.SendCommand(command);
-                nuvoTelegram.passDataToTestClass("NUVO_E6D_v1.23");
+                nuvoTelegram.passDataToTestClass("MPU_E6Dv1.23");
 
                 Assert.IsTrue(_eventRaisedCount == 1);                                                        // event has been raised 1 times
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, command.Command);
@@ -242,7 +242,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             {
                 NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
                 target.SendCommand(command);
-                nuvoTelegram.passDataToTestClass("NUVO_E6D_v1.23");
+                nuvoTelegram.passDataToTestClass("MPU_E6Dv1.23");
 
                 Assert.IsTrue(_eventRaisedCount == 1);                                                        // event has been raised 1 times
                 Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, command.Command);
@@ -681,9 +681,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// The following tests will be done:
         /// - "VER" to "VER" --> true
         /// - "VER" to "VERX" --> false
-        /// - "NUVO_E6D_vx.yy" to "NUVO_E6D_v1.23" --> true
-        /// - "NUVO_E6D_vx.yy" to "NUVO_E6D_v1,23" --> false
-        /// - "NUVO_E6D_vx.yy" to "NUVO-E6D_v1.23" --> false
+        /// - "MPU_E6Dvx.yy" to "MPU_E6Dv1.23" --> true
+        /// - "MPU_E6Dvx.yy" to "MPU_E6Dv1,23" --> false
+        /// - "MPU_E6Dvx.yy" to "NUVO-E6D_v1.23" --> false
         /// - "ZxxPWRppp,SRCs,GRPq,VOL-yy" to "Z02PWRON,SRC2,GRP0,VOL-00" --> true
         /// - "ZxxPWRppp,SRCs,GRPq,VOL-yy" to "Z02PWROFF,SRC4,GRP1,VOL-79" --> true
         /// - "ZxxPWRppp,SRCs,GRPq,VOL-yy" to "Z02PWRON,SRC2.GRP0,VOL-00" --> false
@@ -695,9 +695,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             Assert.AreEqual(true, NuvoEssentiaSingleCommand.compareCommandString("VER", "VER"));
             Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("VER", "VERX"));
-            Assert.AreEqual(true, NuvoEssentiaSingleCommand.compareCommandString("NUVO_E6D_vx.yy", "NUVO_E6D_v1.23"));
-            Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("NUVO_E6D_vx.yy", "NUVO_E6D_v1,23"));
-            Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("NUVO_E6D_vx.yy", "NUVO-E6D_v1.23"));
+            Assert.AreEqual(true, NuvoEssentiaSingleCommand.compareCommandString("MPU_E6Dvx.yy", "MPU_E6Dv1.23"));
+            Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("MPU_E6Dvx.yy", "MPU_E6Dv1,23"));
+            Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("MPU_E6Dvx.yy", "NUVO-E6D_v1.23"));
             Assert.AreEqual(true, NuvoEssentiaSingleCommand.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWRON,SRC2,GRP0,VOL-00"));
             Assert.AreEqual(true, NuvoEssentiaSingleCommand.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWROFF,SRC4,GRP1,VOL-79"));
             Assert.AreEqual(false, NuvoEssentiaSingleCommand.compareCommandString("ZxxPWRppp,SRCs,GRPq,VOL-yy", "Z02PWRON,SRC2.GRP0,VOL-00"));
