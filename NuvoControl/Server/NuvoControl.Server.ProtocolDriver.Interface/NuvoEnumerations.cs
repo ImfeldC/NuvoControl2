@@ -264,7 +264,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         /// <summary>
         /// COMMAND:*VER<CR> – Firmware version query.
-        /// RESPONSE: #NUVO_E6D_vx.yy<CR> where x is the major version number and yyis the minor version number.
+        /// RESPONSE: #MPU_E6Dvx.yy<CR> where x is the major version number and yyis the minor version number.
         /// </summary>
         ReadVersion = 29,
 

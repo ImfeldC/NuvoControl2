@@ -132,20 +132,20 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         /// A test for NuvoEssentiaCommand Constructor, ensure that a spontaneous answer of the
-        /// format "NUVO_E6D_vz.zz" is treated as 'Read Version'.
+        /// format "MPU_E6Dvz.zz" is treated as 'Read Version'.
         /// Note: The same answer is also returned for other commands.
         /// </summary>
         [TestMethod()]
         public void NuvoEssentiaCommandConstructor4Test()
         {
-            string incomingCommand = "NUVO_E6D_v1.23";
+            string incomingCommand = "MPU_E6Dv1.23";
             NuvoEssentiaSingleCommand_Accessor target = new NuvoEssentiaSingleCommand_Accessor(incomingCommand);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadVersion, target._command);
         }
 
         /// <summary>
         /// A test for NuvoEssentiaCommand Constructor, ensure that a spontaneous answer of the
-        /// format "NUVO_E6D_vz.zz" is treated as 'Read Version'.
+        /// format "MPU_E6Dvz.zz" is treated as 'Read Version'.
         /// Note: The same answer is also returned for other commands.
         /// </summary>
         [TestMethod()]
