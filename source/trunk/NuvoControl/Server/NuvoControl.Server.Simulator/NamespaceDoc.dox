@@ -1,0 +1,21 @@
+﻿//
+// This file contains only namepsace documentation.
+// 
+// The <summary> tag is not supported in Visual Studio
+// for namespaces, because of that we use a feature of
+// Sandcastle to document namespaces. A class with the name
+// NamespaceDoc can be used to document a namespace.
+// 
+
+/*! 
+    \namespace NuvoControl.Server.Simulator
+
+    \brief This namespace is used to hold all classes related to the protocol simulator.
+*/
+
+/*! 
+    \namespace NuvoControl.Server.Simulator.Properties
+
+    \brief This namespace is used to hold all classes related to the properties of the protocol simulator.
+
+*/
