@@ -97,7 +97,7 @@ namespace NuvoControl.Common
         private Guid _guid;
 
         [DataMember]
-        private ZoneQuality _zoneQuality = ZoneQuality.Offline;
+        private ZoneQuality _zoneQuality = ZoneQuality.Online;
 
         [DataMember]
         private bool _commandUnacknowledged = false;
@@ -124,7 +124,7 @@ namespace NuvoControl.Common
         {
             _guid = Guid.NewGuid();
             _lastUpdate = DateTime.Now;
-            _zoneQuality = ZoneQuality.Offline;  // Default Value
+            _zoneQuality = ZoneQuality.Online;  // Default Value
         }
 
 
@@ -239,7 +239,8 @@ namespace NuvoControl.Common
         /// <returns>String representing the content of this object.</returns>
         public override string ToString() 
         {
-            return string.Format("Power={0} Source={1} VolumeLevel={2} LastUpdated={3} Guid={4}", (_powerStatus ? "ON" : "OFF"), _source.ToString(), _volume, _lastUpdate.ToString(), _guid.ToString());
+            return string.Format("Power={0} Source={1} Volume={2} Quality={3} Unack={4} LastUpdated={5}",
+                (_powerStatus ? "ON" : "OFF"), _source.ToString(), _volume, _zoneQuality, _commandUnacknowledged, _lastUpdate.ToString());
         }
 
         /// <summary>
