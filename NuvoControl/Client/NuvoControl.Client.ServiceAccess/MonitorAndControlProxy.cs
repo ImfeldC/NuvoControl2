@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
+using System.Diagnostics;
 
 using Common.Logging;
 using NuvoControl.Common;
@@ -88,16 +89,22 @@ namespace NuvoControl.Client.ServiceAccess
 
         public ZoneState GetZoneState(Address zoneId)
         {
+            Debug.WriteLine(String.Format("M&C Proxy; GetZoneState(); Address: {0}", zoneId));
+
             return _mcServiceProxy.GetZoneState(zoneId);
         }
 
         public void SetZoneState(Address zoneId, ZoneState command)
         {
+            Debug.WriteLine(String.Format("M&C Proxy; SetZoneState(); Address: {0}, Command: {1}", zoneId, command));
+
             _mcServiceProxy.SetZoneState(zoneId, command);
         }
 
         public void Monitor(Address zoneId, ZoneNotification subscriber)
         {
+            Debug.WriteLine(String.Format("M&C Proxy; Monitor(); Address: {0}", zoneId));
+
             try
             {
                 if (_zoneProxies.ContainsKey(zoneId) == false)
@@ -116,6 +123,8 @@ namespace NuvoControl.Client.ServiceAccess
 
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)
         {
+            Debug.WriteLine(String.Format("M&C Proxy; RemoveMonitor(); Address: {0}", zoneId));
+
             try
             {
                 if (_zoneProxies.ContainsKey(zoneId) == false)
@@ -136,12 +145,17 @@ namespace NuvoControl.Client.ServiceAccess
 
         private void Initialize()
         {
+
             try
             {
+                Debug.WriteLine("M&C Proxy; Initialize()");
+
                 IMonitorAndControlCallback serverCallback = this;
                 _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
                 (_mcServiceProxy as MonitorAndControlClient).SetClientBaseAddress();
                 _mcServiceProxy.Connect();
+
+                Debug.WriteLine("M&C Proxy; Initialize() done.");
             }
             catch (Exception exc)
             {
@@ -153,6 +167,8 @@ namespace NuvoControl.Client.ServiceAccess
 
         public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
+            Debug.WriteLine(String.Format("M&C Proxy; OnZoneStateChanged(); Address: {0}, State: {1}", zoneId, zoneState));
+
             if (_zoneProxies.ContainsKey(zoneId))
                 _zoneProxies[zoneId].NotifyClients(zoneState);
         }
