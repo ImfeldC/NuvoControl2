@@ -155,12 +155,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="ServiceAccess\ServiceConfigurator.cs" />
-    <Compile Include="ViewModel\CreateCommandBindingCollection.cs" />
-    <Compile Include="ViewModel\CreateCommandBinding.cs" />
+    <Compile Include="Commands\CreateCommandBindingCollection.cs" />
     <Compile Include="ViewModel\FloorContext.cs" />
     <Compile Include="ViewModel\HistoryList.cs" />
     <Compile Include="ViewModel\IHierarchyContext.cs" />
     <Compile Include="ViewModel\MainContext.cs" />
+    <Compile Include="ViewModel\NavigationItem.cs" />
     <Compile Include="ViewModel\Navigator.cs" />
     <Compile Include="ViewModel\ZoneContext.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

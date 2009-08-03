@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      PowerConverter.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +26,9 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Client.Viewer.Converters
 {
+    /// <summary>
+    /// Converts zone quality to string representation and back.
+    /// </summary>
     [ValueConversion(typeof(ZoneQuality), typeof(string))]
     public class QualityConverter : IValueConverter
     {
@@ -16,6 +36,7 @@ namespace NuvoControl.Client.Viewer.Converters
 
         public const string OFFLINE = "Offline";
         public const string ONLINE = "Online";
+
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -36,3 +57,9 @@ namespace NuvoControl.Client.Viewer.Converters
         #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

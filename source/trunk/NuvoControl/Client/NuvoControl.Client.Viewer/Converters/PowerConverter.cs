@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      PowerConverter.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +23,9 @@ using System.Windows.Data;
 
 namespace NuvoControl.Client.Viewer.Converters
 {
+    /// <summary>
+    /// Converts the zone power state between boolean and string representation.
+    /// </summary>
     [ValueConversion(typeof(bool), typeof(string))]
     public class PowerConverter: IValueConverter
     {
@@ -13,6 +33,7 @@ namespace NuvoControl.Client.Viewer.Converters
 
         public const string POWER_ON = "On";
         public const string POWER_OFF = "Off";
+
 
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
@@ -33,3 +54,9 @@ namespace NuvoControl.Client.Viewer.Converters
         #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

@@ -14,7 +14,6 @@
         </ContextMenu>
     </UserControl.ContextMenu>
     <Canvas Tag="Zone" MinHeight="10" MinWidth="10" MouseLeftButtonUp="_polygonArea_OnMouseLeftButtonUp">
-        <!--<Polygon Name="_polygonArea"  Canvas.Left="0" Canvas.Top="0" Stroke="#FFACAC8C" Points="{Binding Path=FloorPlanCoordinates}" StrokeThickness="5" Fill="#FFFFFFE0" Opacity="0.2"></Polygon>-->
         <Polygon Name="_polygonArea" Tag="Zone" Canvas.Left="0" Canvas.Top="0" Stroke="Red" Points="{Binding Path=FloorPlanCoordinates}" StrokeThickness="5" Fill="#FFFFFFE0"
                  Opacity="0.2" Focusable="True">        
         </Polygon>

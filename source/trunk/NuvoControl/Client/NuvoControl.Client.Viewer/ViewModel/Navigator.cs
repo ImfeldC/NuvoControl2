@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      Navigator.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,125 +29,51 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Client.Viewer.ViewModel
 {
-    public class NavigationItem
-    {
-        private IHierarchyContext _context;
-        private Address _id;
-        private string _name;
-
-        public NavigationItem(IHierarchyContext context, Address id, string name)
-        {
-            this._context = context;
-            this._id = id;
-            this._name = name;
-        }
-
-        public IHierarchyContext Context
-        {
-            get { return _context; }
-        }
-
-        public Address Id
-        {
-            get { return _id; }
-        }
-
-        public string Name
-        {
-            get { return _name; }
-        }
-
-        /// <summary>
-        /// Determines wether the specified object equals the current object.
-        /// </summary>
-        /// <param name="obj">The object to compare with.</param>
-        /// <returns>True if the specified object is equal to the current object; otherwise, false.</returns>
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-                return false;
-
-            NavigationItem item = obj as NavigationItem;
-            if ((object)item == null)
-                return false;
-
-            return (_id == item._id);
-        }
-
-        /// <summary>
-        /// Determines wether the specified address equals the current address.
-        /// </summary>
-        /// <param name="id">The navigation item to compare with.</param>
-        /// <returns>True if the specified navigation item is equal to the current navigation item; otherwise, false.</returns>
-        public bool Equals(NavigationItem item)
-        {
-            if ((object)item == null)
-                return false;
-
-            return (_id == item._id);
-        }
-
-
-        /// <summary>
-        /// Equality operator
-        /// </summary>
-        /// <param name="id1">Left hand side parameter.</param>
-        /// <param name="id2">Reight hand side parameter</param>
-        /// <returns>True, if the specified items are equal; otherwise false.</returns>
-        public static bool operator ==(NavigationItem item1, NavigationItem item2)
-        {
-            if ((object)item1 == null)
-                return (object)item2 == null;
-
-            return item1.Equals(item2);
-        }
-
-
-        /// <summary>
-        /// Unequality operator
-        /// </summary>
-        /// <param name="id1">Left hand side parameter.</param>
-        /// <param name="id2">Reight hand side parameter</param>
-        /// <returns>True, if the specified items are unequal; otherwise false.</returns>
-        public static bool operator !=(NavigationItem item1, NavigationItem item2)
-        {
-            return !(item1 == item2);
-        }
-
-
-        /// <summary>
-        /// Hash function for the address type.
-        /// </summary>
-        /// <returns>Hash code</returns>
-        public override int GetHashCode()
-        {
-            return _id.GetHashCode();
-        }
-
-
-        public override string ToString()
-        {
-            return _name;
-        }
-    }
-
-
+    /// <summary>
+    /// Handles navigation within the application views.
+    /// </summary>
     internal class Navigator: INotifyPropertyChanged
     {
+        #region Fields
+
+        /// <summary>
+        /// The current context of the view.
+        /// </summary>
         private IHierarchyContext _context;
+
+        /// <summary>
+        /// The history list. Stores navigation items which have been visited lately.
+        /// </summary>
         private HistoryList _historsList = new HistoryList();
+
+        /// <summary>
+        /// The command bindings of all navigation commands.
+        /// </summary>
         private CommandBindingCollection _bindings = new CommandBindingCollection();
+
+        /// <summary>
+        /// A ListCollectionView on all views of the current hierarchy.
+        /// E.g. For the floor hierarchy, there are two views: The one for the main floor and the one for the gallery.
+        /// (Of course, there can be more views (floors) configured.)
+        /// </summary>
         private ListCollectionView _views;
+
+        /// <summary>
+        /// Helper variable to suppress view selection  changes
+        /// </summary>
         private bool _ignoreViewSelectionChange = false;
 
+        #endregion
 
+        #region Constructors
 
+        /// <summary>
+        /// The navigation object.
+        /// </summary>
+        /// <param name="context"></param>
         public Navigator(IHierarchyContext context)
         {
-
             this._context = context;
-            UpdateViews();
-            //_historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
             CommandBinding binding = new CommandBinding(CustomCommands.BrowseNext, NextViewCommand_Executed, NextViewCommand_CanExecute);
             _bindings.Add(binding);
@@ -144,36 +87,33 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _bindings.Add(binding);
             binding = new CommandBinding(CustomCommands.BrowseUp, BrowseUpCommand_Executed, BrowseUpCommand_CanExecute);
             _bindings.Add(binding);
-
-
-
-
         }
 
-        //public List<NavigationItem> NavigationItems
-        //{
-        //    get
-        //    {
-        //        _views = (ListCollectionView)CollectionViewSource.GetDefaultView(_context.NavigationItems);
-        //        _views.CurrentChanged += new EventHandler(_views_CurrentChanged);
+        #endregion
 
-        //        return _context.NavigationItems;
-        //    }
-        //}
+        #region Public Interface
 
+
+        /// <summary>
+        /// The list collection view to the slectable views (navigation items) of the current hierarchy.
+        /// </summary>
         public ListCollectionView NavigationItems
         {
             get
             {
-                _views = (ListCollectionView)CollectionViewSource.GetDefaultView(_context.NavigationItems);
+                _views = (ListCollectionView)CollectionViewSource.GetDefaultView(_context.NavigationObjects);
                 _views.CurrentChanged += new EventHandler(_views_CurrentChanged);
                 return _views;
             }
         }
 
+
+        /// <summary>
+        /// The active view (specified by a navigation item).
+        /// </summary>
         public NavigationItem SelectedNavigationItem
         {
-            get { return new NavigationItem(_context, new Address(_context.Id), _context.Name); }
+            get { return new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName); }
             set
             {
                 if (_ignoreViewSelectionChange == false)
@@ -183,19 +123,6 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
-
-        private void UpdateViews()
-        {
-        }
-
-
-        //public List<NavigationItem> NavigationItems
-        //{
-        //    get
-        //    {
-        //        return _context.NavigationItems;
-        //    }
-        //}
 
         void _views_CurrentChanged(object sender, EventArgs e)
         {
@@ -207,11 +134,19 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// The command bindings of the naviagtion commands
+        /// </summary>
         public CommandBindingCollection CommandBindingsDynamic
         {
             get { return _bindings; }
         }
 
+
+        /// <summary>
+        /// Tooltip for the browse back navigation command.
+        /// </summary>
         public string BackToolTip
         {
             get
@@ -223,6 +158,10 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Tooltip for the browse forward navigation command.
+        /// </summary>
         public string ForwardToolTip
         {
             get
@@ -234,89 +173,156 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Tooltip for the browse up navigation command.
+        /// </summary>
         public string UpToolTip
         {
             get
             {
                 if (_context.Parent != null)
-                    return CustomCommands.BrowseUp.Text + " to " + _context.Parent.Name;
+                    return CustomCommands.BrowseUp.Text + " to " + _context.Parent.ObjectName;
                 else
                     return CustomCommands.BrowseUp.Text;
             }
         }
 
+
+        /// <summary>
+        /// Tooltip for the browse down navigation command.
+        /// </summary>
         public string DownToolTip
         {
             get
             {
                 if (_context.Child != null)
-                    return CustomCommands.BrowseDown.Text + " to " + _context.Child.Name;
+                    return CustomCommands.BrowseDown.Text + " to " + _context.Child.ObjectName;
                 else
                     return CustomCommands.BrowseDown.Text;
             }
         }
 
+
+        /// <summary>
+        /// Tooltip for the browse previous navigation command.
+        /// </summary>
         public string PreviousToolTip
         {
             get
             {
-                return CustomCommands.BrowsePrevious.Text + " to " + _context.PreviousName;
+                return CustomCommands.BrowsePrevious.Text + " to " + _context.PreviousObjectName;
             }
         }
 
+
+        /// <summary>
+        /// Tooltip for the browse next navigation command.
+        /// </summary>
         public string NextToolTip
         {
             get
             {
-                return CustomCommands.BrowseNext.Text + " to " + _context.NextName;
+                return CustomCommands.BrowseNext.Text + " to " + _context.NextObjectName;
             }
         }
 
-        private void BrowseForwardCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            _ignoreViewSelectionChange = true;
-            NavigationItem targetItem = _historsList.BrowseForward();
-            _context.Visibility1 = Visibility.Collapsed;
-            targetItem.Context.Visibility1 = Visibility.Visible;
-            _context.OnHierarchyDeactivated();
-            _context = targetItem.Context;
-            _context.OnHierarchyActivated();
-            _context.Navigate(targetItem.Id);
+        #endregion
 
-            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-            _ignoreViewSelectionChange = false;
-        }
+        #region Navigation Command Handlers
 
+
+        /// <summary>
+        /// CanExecute handler for the browse forward command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseForwardCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _historsList.CanBrowseForward;
         }
 
-        private void BrowseBackCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        /// <summary>
+        /// Execute handler for the browse forward command.
+        /// Retrieves the next navigation item from the history list and navigates to it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowseForwardCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             _ignoreViewSelectionChange = true;
-            NavigationItem targetItem = _historsList.BrowseBack();
-            _context.Visibility1 = Visibility.Collapsed;
-            targetItem.Context.Visibility1 = Visibility.Visible;
+
+            NavigationItem targetItem = _historsList.BrowseForward();
+            _context.ContextVisibility = Visibility.Collapsed;
+            targetItem.Context.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = targetItem.Context;
-            _context.Navigate(targetItem.Id);
             _context.OnHierarchyActivated();
+            _context.Navigate(targetItem.Id);
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
         }
 
+
+
+        /// <summary>
+        /// CanExecute handler for the browse back command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseBackCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = _historsList.CanBrowseBack;
         }
 
+        /// <summary>
+        /// Execute handler for the browse back command.
+        /// Retrieves the previous navigation item from the history list and navigates to it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowseBackCommand_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            _ignoreViewSelectionChange = true;
+
+            NavigationItem targetItem = _historsList.BrowseBack();
+            _context.ContextVisibility = Visibility.Collapsed;
+            targetItem.Context.ContextVisibility = Visibility.Visible;
+            _context.OnHierarchyDeactivated();
+            _context = targetItem.Context;
+            _context.OnHierarchyActivated();
+            _context.Navigate(targetItem.Id);
+
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            _ignoreViewSelectionChange = false;
+        }
+
+
+
+        /// <summary>
+        /// CanExecute handler for the browse up command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowseUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (_context.Parent != null);
+        }
+
+        /// <summary>
+        /// Execute handler for the browse up command.
+        /// Navigates to the upper hiearchy.
+        /// E.g. from zone view to floor view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseUpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             _ignoreViewSelectionChange = true;
-            _context.Visibility1 = Visibility.Collapsed;
-            _context.Parent.Visibility1 = Visibility.Visible;
+
+            _context.ContextVisibility = Visibility.Collapsed;
+            _context.Parent.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = _context.Parent;
             _context.OnHierarchyActivated();
@@ -325,23 +331,35 @@ namespace NuvoControl.Client.Viewer.ViewModel
             else
                 _context.Navigate(null);
 
-            _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
-
-            UpdateViews();
+            _historsList.Append(new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
         }
 
-        private void BrowseUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+
+
+        /// <summary>
+        /// CanExecute handler for the browse down command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BrowseDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (_context.Parent != null);
+            e.CanExecute = (_context.Child != null);
         }
 
+        /// <summary>
+        /// Execute handler for the browse down command.
+        /// Navigates to the lower hiearchy.
+        /// E.g. from floor view to zone view.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BrowseDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             _ignoreViewSelectionChange = true;
-            _context.Visibility1 = Visibility.Collapsed;
-            _context.Child.Visibility1 = Visibility.Visible;
+            _context.ContextVisibility = Visibility.Collapsed;
+            _context.Child.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = _context.Child;
             _context.OnHierarchyActivated();
@@ -350,52 +368,73 @@ namespace NuvoControl.Client.Viewer.ViewModel
             else
                 _context.Navigate(null);
 
-            _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
-
-            UpdateViews();
+            _historsList.Append(new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
         }
 
-        private void BrowseDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+
+
+        /// <summary>
+        /// CanExecute handler for the browse next command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NextViewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = (_context.Child != null);
+            e.CanExecute = _context.HasNextObject;
         }
 
+        /// <summary>
+        /// Execute handler for the browse next command.
+        /// Navigates to the next view within the same hierarchy.
+        /// E.g. from main floor to second floor (depending on the configuration).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NextViewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             _ignoreViewSelectionChange = true;
-            _context.Next();
-            //_views.MoveCurrentTo(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
-            _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
-            UpdateViews();
+            _context.NextObject();
 
+            _historsList.Append(new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
         }
 
-        private void NextViewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = _context.HasNext;
-        }
 
+
+        /// <summary>
+        /// CanExecute handler for the browse previous command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PreviousViewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = _context.HasPreviousObject;
+        }        
+        
+        /// <summary>
+        /// Execute handler for the browse previous command.
+        /// Navigates to the previous view within the same hierarchy.
+        /// E.g. from second floor to main floor (depending on the configuration).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PreviousViewCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             _ignoreViewSelectionChange = true;
-            _context.Previous();
-            //_views.MoveCurrentTo(new NavigationItem(_context, new Address(_context.Id), _context.Name));
 
-            _historsList.Append(new NavigationItem(_context, new Address(_context.Id), _context.Name));
+            _context.PreviousObject();
 
+            _historsList.Append(new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
         }
 
-        private void PreviousViewCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = _context.HasPrevious;
-        }
+
+        #endregion
 
         #region INotifyPropertyChanged Members
 
@@ -410,3 +449,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
         #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/
