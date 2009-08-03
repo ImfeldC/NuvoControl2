@@ -1,0 +1,5 @@
+/** \file Template.CSharp.cs
+  C# template file for NuvoControl project.
+  This file is the template used in Visual Studio to generate a new C# source file.
+  It replaces several placeholders with the corresponding value, like date/time, author, etc.
+ */
