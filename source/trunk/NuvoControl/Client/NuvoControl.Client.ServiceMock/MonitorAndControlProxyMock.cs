@@ -13,21 +13,16 @@ namespace NuvoControl.Client.ServiceMock
     public class MonitorAndControlProxyMock: IMonitorAndControl
     {
         private Dictionary<Address, Address> _zonesSubscribed = new Dictionary<Address, Address>();
+        private Dictionary<Address, ZoneState> _zonesStates = new Dictionary<Address, ZoneState>();
         private Timer _timer;
         private IMonitorAndControlCallback _callback;
-        private int _volume = 0;
-        private bool _power = false;
-        private bool _acknowledged = false;
-        private ZoneQuality _quality = ZoneQuality.Offline;
         private int _sourceCounter = 0;
-        private Address _source = new Address(100, 0);
-
 
 
         public MonitorAndControlProxyMock()
         {
             _timer = new Timer(OnTimerCallback);
-            _timer.Change(5000, Timeout.Infinite);
+            _timer.Change(10000, Timeout.Infinite);
         }
 
         public void SetCallback(IMonitorAndControlCallback callback)
@@ -37,14 +32,14 @@ namespace NuvoControl.Client.ServiceMock
 
         public void OnTimerCallback(object obj)
         {
-            lock (_zonesSubscribed)
-            {
-                foreach (Address zone in _zonesSubscribed.Keys)
-                {
-                    _callback.OnZoneStateChanged(zone, GetSimulatedZoneState());
-                }
-            }
-            _timer.Change(5000, Timeout.Infinite);
+            //lock (_zonesSubscribed)
+            //{
+            //    foreach (Address zone in _zonesSubscribed.Keys)
+            //    {
+            //        _callback.OnZoneStateChanged(zone, GetSimulatedZoneState(zone));
+            //    }
+            //}
+            _timer.Change(10000, Timeout.Infinite);
         }
 
         #region IMonitorAndControl Members
@@ -59,25 +54,38 @@ namespace NuvoControl.Client.ServiceMock
            return;
         }
 
+
         public void SetZoneState(Address zoneId, ZoneState stateCommand)
         {
-            lock (_zonesSubscribed)
+            lock (_zonesStates)
             {
-                if (_zonesSubscribed.ContainsKey(zoneId))
+                if (_zonesStates.ContainsKey(zoneId) == false)
+                    _zonesStates.Add(zoneId, stateCommand);
+                    
+                _zonesStates[zoneId] = stateCommand;
+                _zonesStates[zoneId].CommandUnacknowledged = false;
+                ZoneState stateCommandRet = _zonesStates[zoneId];
+                ThreadPool.QueueUserWorkItem(delegate(object obj)
                 {
-                    _volume = stateCommand.Volume;
-                    _power = stateCommand.PowerStatus;
-                    _quality = stateCommand.ZoneQuality;
-                    _source = new Address(stateCommand.Source);
-                    _timer.Change(0, Timeout.Infinite);
-                }
+                    Thread.Sleep(1000);
+                    if (_callback != null)
+                        _callback.OnZoneStateChanged(zoneId, stateCommandRet);
+                }, null);
             }
         }
 
+
         public ZoneState GetZoneState(Address zoneId)
         {
-            throw new NotImplementedException();
+            lock (_zonesStates)
+            {
+                if (_zonesStates.ContainsKey(zoneId) == false)
+                    _zonesStates.Add(zoneId, new ZoneState());
+
+                return new ZoneState(_zonesStates[zoneId]);
+            }
         }
+
 
         public void Monitor(Address zoneId)
         {
@@ -87,38 +95,46 @@ namespace NuvoControl.Client.ServiceMock
             }
         }
 
+
         public void MonitorMultiple(Address[] zoneIds)
         {
             throw new NotImplementedException();
         }
 
+
         public void RemoveMonitor(Address zoneId)
         {
             lock (_zonesSubscribed)
             {
-
                 if (_zonesSubscribed.ContainsKey(zoneId))
                     _zonesSubscribed.Remove(zoneId);
             }
         }
+
 
         public void RemoveMonitorMultiple(Address[] zoneIds)
         {
             throw new NotImplementedException();
         }
 
-        private ZoneState GetSimulatedZoneState()
-        {
-            _sourceCounter++;
-            _volume++;
-            _power = !_power;
-            _acknowledged = !_acknowledged;
-            _quality = (_quality == ZoneQuality.Offline) ? ZoneQuality.Online : ZoneQuality.Offline;
 
-            ZoneState zoneState = new ZoneState(new Address(_source.DeviceId, (_sourceCounter % 6) + 1), _power, _volume % 100, ZoneQuality.Online);
-            zoneState.ZoneQuality = _quality;
-            zoneState.CommandUnacknowledged = _acknowledged;
-            return zoneState;
+        private ZoneState GetSimulatedZoneState(Address zoneId)
+        {
+            lock (_zonesStates)
+            {
+                if (_zonesStates.ContainsKey(zoneId) == false)
+                    return null;
+
+                return new ZoneState(_zonesStates[zoneId]);
+
+                _zonesStates[zoneId].Volume++;
+                _zonesStates[zoneId].Volume = _zonesStates[zoneId].Volume % 100;
+                _zonesStates[zoneId].PowerStatus = !_zonesStates[zoneId].PowerStatus;
+                _zonesStates[zoneId].CommandUnacknowledged = !_zonesStates[zoneId].CommandUnacknowledged;
+                _zonesStates[zoneId].ZoneQuality = (_zonesStates[zoneId].ZoneQuality == ZoneQuality.Offline) ? ZoneQuality.Online : ZoneQuality.Offline;
+                _zonesStates[zoneId].Source = new Address(100, ((_sourceCounter++) % 6) + 1);
+                return new ZoneState(_zonesStates[zoneId]);
+            }
         }
 
         #endregion
