@@ -3,3 +3,13 @@
   This file is the template used in Visual Studio to generate a new C# source file.
   It replaces several placeholders with the corresponding value, like date/time, author, etc.
  */
+
+/*! 
+    \namespace $rootnamespace$
+
+    \brief Template namespace placeholder
+
+    This namespace placeholder, will be replaced by the concrete namespace at creation time
+    of a new source file.
+
+*/
