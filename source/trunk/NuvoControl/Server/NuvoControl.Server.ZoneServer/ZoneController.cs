@@ -108,6 +108,7 @@ namespace NuvoControl.Server.ZoneServer
             lock (this)
             {
                 _protocolDriver.SetZoneState(_zoneId, zoneState);
+                _zoneState = new ZoneState(zoneState);
                 _zoneState.CommandUnacknowledged = true;
                 NotifySubscribedClients();
             }
