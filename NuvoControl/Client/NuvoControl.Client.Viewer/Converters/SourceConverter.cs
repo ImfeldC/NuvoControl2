@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      PowerConverter.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +25,9 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Client.Viewer.Converters
 {
-    //[ValueConversion(typeof(Address), typeof(string))]
+    /// <summary>
+    /// Converts source objects addresses to source object names.
+    /// </summary>
     public class SourceConverter : IMultiValueConverter
     {
         #region IMultiValueConverter Members
@@ -36,3 +55,9 @@ namespace NuvoControl.Client.Viewer.Converters
         #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

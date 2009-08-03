@@ -37,7 +37,7 @@ namespace NuvoControl.Client.Viewer
         {
             InitializeComponent();
 
-            ServiceConfigurator.Configure(false);
+            ServiceConfigurator.Configure(true);
             ReadConfiguration();
             InitializeViews();
             InitializeViewModel();
@@ -84,6 +84,7 @@ namespace NuvoControl.Client.Viewer
             this.DataContext = _navigator;
 
             _mainView.Focus();
+            _floorView.Focus();
             _zoneView.Focus();
 
         }

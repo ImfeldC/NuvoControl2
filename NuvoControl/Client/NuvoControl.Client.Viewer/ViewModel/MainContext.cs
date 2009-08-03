@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      MainContext.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,18 +28,54 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Client.Viewer.ViewModel
 {
+    /// <summary>
+    /// This is the logical context of the main view (top/main hierarchy) of the viewer.
+    /// It contains the logical context of the building/house.
+    /// </summary>
     public class MainContext : INotifyPropertyChanged, IHierarchyContext
     {
+        #region Fields
+
+        /// <summary>
+        /// Configuration data of the building.
+        /// </summary>
         private Building _building;
+
+        /// <summary>
+        /// The parent hierarchy.
+        /// </summary>
         private IHierarchyContext _parent = null;
+
+        /// <summary>
+        /// The child hierarchy. This is the floor context.
+        /// </summary>
         private IHierarchyContext _child = null;
+
+        /// <summary>
+        /// If this hierarchy is visible or not.
+        /// </summary>
         private Visibility _visibility = Visibility.Visible;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="building">Configuration data of the building.</param>
         public MainContext(Building building)
         {
             this._building = building;
         }
 
+        #endregion
+
+        #region Public Interface
+
+        /// <summary>
+        /// The image shown if this hierarchy is visible.
+        /// </summary>
         public BitmapImage MainImage
         {
             get
@@ -32,19 +85,67 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+        #endregion
+
         #region IHierarchyContext Members
 
-        public string Name
+        /// <summary>
+        /// The name of the object, shown in this hierarchy. Here it is the name of the building.
+        /// </summary>
+        public string ObjectName
         {
             get { return _building.Name; }
         }
 
-        public Address Id
+
+        /// <summary>
+        /// The address of the object, shown in the current hierarchy.
+        /// Here it is the address of the building.
+        /// </summary>
+        public Address ObjectId
         {
             get { return _building.Id; }
         }
 
-        public List<NavigationItem> NavigationItems
+
+        /// <summary>
+        /// The parent hierarchy context.
+        /// </summary>
+        public IHierarchyContext Parent
+        {
+            get { return _parent; }
+            set { _parent = value; }
+        }
+
+
+        /// <summary>
+        /// The child hierarchy context.
+        /// Here it is the floor context.
+        /// </summary>
+        public IHierarchyContext Child
+        {
+            get { return _child; }
+            set { _child = value; }
+        }
+
+
+        /// <summary>
+        /// The visibility of the hierarchy context. 
+        /// Only one can be visible at a time.
+        /// </summary>
+        public Visibility ContextVisibility
+        {
+            get { return _visibility; }
+            set
+            {
+                _visibility = value;
+                NotifyPropertyChanged(new PropertyChangedEventArgs("ContextVisibility"));
+            }
+        }
+
+
+
+        public List<NavigationItem> NavigationObjects
         {
             get
             {
@@ -54,63 +155,76 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
-        public IHierarchyContext Parent
-        {
-            get { return _parent; }
-            set { _parent = value; }
-        }
 
-        public IHierarchyContext Child
-        {
-            get { return _child; }
-            set { _child = value; }
-        }
-
-        public bool HasNext
+        /// <summary>
+        /// True, if the context has a next object to show.
+        /// Here, there is nothing more to show.
+        /// </summary>
+        public bool HasNextObject
         {
             get { return false; }
         }
 
-        public string NextName
+
+        /// <summary>
+        /// The name of the next object.
+        /// Here, there is nothing more to show.
+        /// </summary>
+        public string NextObjectName
         {
             get { return String.Empty; }
         }
 
-        public void Next()
+
+        /// <summary>
+        /// Go to next object of this context.
+        /// Here, there is nothing more to show.
+        /// </summary>
+        public void NextObject()
         {
+            // nothing to implement
         }
 
-        public bool HasPrevious
+
+        /// <summary>
+        /// True, if the context has a next object to show.
+        /// Here, there is nothing more to show.
+        /// </summary>
+        public bool HasPreviousObject
         {
             get { return false; }
         }
 
-        public string PreviousName
+
+        /// <summary>
+        /// The name of the previous object.
+        /// Here, there is nothing more to show.
+        /// </summary>
+        public string PreviousObjectName
         {
             get { return String.Empty; }
         }
 
-        public void Previous()
+
+        /// <summary>
+        /// Go to previous object of this context.
+        /// Here, there is nothing more to show.
+        /// </summary>
+        public void PreviousObject()
         {
+            // nothing to implement
         }
+
 
         public void Navigate(Address id)
         {
         }
 
-        public Visibility Visibility1
-        {
-            get { return _visibility; }
-            set
-            {
-                _visibility = value;
-                NotifyPropertyChanged(new PropertyChangedEventArgs("Visibility1"));
-            }
-        }
+
 
         public string ToolTip
         {
-            get { return ("Click to browse down to " + _child.Name); }
+            get { return ("Click to browse down to " + _child.ObjectName); }
         }
 
         public void OnHierarchyActivated()
@@ -145,3 +259,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
         #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

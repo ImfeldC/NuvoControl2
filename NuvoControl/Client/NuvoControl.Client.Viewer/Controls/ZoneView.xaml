@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrls="clr-namespace:NuvoControl.Client.Viewer.Controls"
     xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
-    MinWidth="300" MinHeight="300" Visibility="{Binding Path=Visibility1}" Focusable="True">
+    MinWidth="300" MinHeight="300" Visibility="{Binding Path=ContextVisibility}" Focusable="True" FocusManager.IsFocusScope="True">
     <UserControl.ContextMenu>
         <ContextMenu>
             <MenuItem Command="commands:CustomCommands.BrowseUp"></MenuItem>

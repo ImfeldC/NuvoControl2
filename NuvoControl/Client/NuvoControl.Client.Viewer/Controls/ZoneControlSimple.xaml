@@ -2,7 +2,9 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:ctrls="clr-namespace:NuvoControl.Client.Viewer.Controls"
-    MinHeight="30" MaxWidth="30" Focusable="True">
+    xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
+    MinHeight="30" MaxWidth="30" Focusable="True"
+    commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

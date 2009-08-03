@@ -1,21 +1,33 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      ZoneCommander.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
     /// Interaction logic for ZoneCommander.xaml
+    /// This is the control, which offers commanding a zone.
     /// </summary>
     public partial class ZoneCommander : UserControl
     {
@@ -23,13 +35,11 @@ namespace NuvoControl.Client.Viewer.Controls
         {
             InitializeComponent();
         }
-
-        //private void _btnCloseCommander_Click(object sender, RoutedEventArgs e)
-        //{
-        //    if ((string)((FrameworkElement)e.OriginalSource).Tag == "ClosePopupButton")
-        //    {
-        //        this.MoveFocus(new TraversalRequest(FocusNavigationDirection.Up)); ;
-        //    }
-        //}
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

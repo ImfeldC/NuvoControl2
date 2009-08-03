@@ -52,7 +52,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get { return ("Click to browse down"); }
         }
 
-        public List<NavigationItem> NavigationItems
+        public List<NavigationItem> NavigationObjects
         {
             get
             {
@@ -80,82 +80,122 @@ namespace NuvoControl.Client.Viewer.ViewModel
         #region IHierarchyContext Members
 
 
-        public string Name
+        /// <summary>
+        /// The name of the object, shown in the current hierarchy.
+        /// Here this is the name of the active floor.
+        /// </summary>
+        public string ObjectName
         {
             get { return _activeFloor.Name; }
         }
 
-        public Address Id
+
+        /// <summary>
+        /// The address of the object, shown in the current hierarchy.
+        /// Here it is the address of the active floor.
+        /// </summary>
+        public Address ObjectId
         {
             get { return _activeFloor.Id; }
         }
 
+
+        /// <summary>
+        /// The parent hierarchy context.
+        /// Here this is the building context.
+        /// </summary>
         public IHierarchyContext Parent
         {
             get { return _parent; }
             set { _parent = value; }
         }
 
+
+        /// <summary>
+        /// The child hierarchy context.
+        /// Here, this is the zone context.
+        /// </summary>
         public IHierarchyContext Child
         {
             get { return _child; }
             set { _child = value; }
         }
 
-        public bool HasNext
+
+        /// <summary>
+        /// The visibility of the hierarchy context. 
+        /// Only one can be visible at a time.
+        /// </summary>
+        public Visibility ContextVisibility
+        {
+            get { return _visibility; }
+            set
+            {
+                _visibility = value;
+                NotifyPropertyChanged(new PropertyChangedEventArgs("ContextVisibility"));
+            }
+        }
+
+
+        /// <summary>
+        /// True, if the context has a next object to show.
+        /// Here, this is the next floor to show.
+        /// </summary>
+        public bool HasNextObject
         {
             get { return true; }
         }
 
-        public string NextName
+
+        /// <summary>
+        /// The name of the next object.
+        /// Here, this is the name of the next floor.
+        /// </summary>
+        public string NextObjectName
         {
             get { return GetNextFloor().Name; }
         }
 
-        public void Next()
+
+        /// <summary>
+        /// Go to next object of this context.
+        /// Here, this is the next floor.
+        /// </summary>
+        public void NextObject()
         {
             Navigate(GetNextFloor().Id);
-
-            //_activeFloor = GetNextFloor();
-            //_child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
-
-            //NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-
-            //_floorView.UnloadFloorZones();
-            //_floorView.LoadFloorZones(_activeFloor, _sources);
         }
 
-        private Floor GetNextFloor()
-        {
-            int index = _floors.IndexOf(_activeFloor);
-            if (index >= _floors.Count - 1)
-                return _floors[0];
-            else
-                return _floors[index + 1];
-        }
 
-        public bool HasPrevious
+        /// <summary>
+        /// True, if the context has a previous object to show.
+        /// Here, this is the previous floor to show.
+        /// </summary>
+        public bool HasPreviousObject
         {
             get { return true; }
         }
 
-        public string PreviousName
+
+        /// <summary>
+        /// The name of the previous object.
+        /// Here, this is the name of the previous floor.
+        /// </summary>
+        public string PreviousObjectName
         {
             get { return GetPreviousFloor().Name; }
         }
 
-        public void Previous()
+
+        /// <summary>
+        /// Go to previous object of this context.
+        /// Here, this is the previous floor.
+        /// </summary>
+        public void PreviousObject()
         {
             Navigate(GetPreviousFloor().Id);
-
-            //_activeFloor = GetPreviousFloor();
-            //_child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
-
-            //NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-
-            //_floorView.UnloadFloorZones();
-            //_floorView.LoadFloorZones(_activeFloor, _sources);
         }
+
 
         public void Navigate(Address id)
         {
@@ -178,7 +218,14 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
 
-
+        private Floor GetNextFloor()
+        {
+            int index = _floors.IndexOf(_activeFloor);
+            if (index >= _floors.Count - 1)
+                return _floors[0];
+            else
+                return _floors[index + 1];
+        }
 
         private Floor GetPreviousFloor()
         {
@@ -199,15 +246,6 @@ namespace NuvoControl.Client.Viewer.ViewModel
             return null;
         }
 
-        public Visibility Visibility1
-        {
-            get { return _visibility; }
-            set
-            {
-                _visibility = value;
-                NotifyPropertyChanged(new PropertyChangedEventArgs("Visibility1"));
-            }
-        }
 
         public void OnHierarchyActivated()
         {
