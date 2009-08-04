@@ -14,6 +14,6 @@
 
     This namespace contains common configuration classes, which are used on client as well as on service side.
     <br/>The following class diagram shows the configuration classes: 
-    <a href="../ClassDiagrams/ConfigurationOverview.jpg">ConfigurationOverview</a>
+    \image html ConfigurationOverview.jpg "Configuration Overview"
 
 */
