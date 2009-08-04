@@ -152,7 +152,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Determines wether the specified source equals the current source.
         /// </summary>
-        /// <param name="id">The source to compare with.</param>
+        /// <param name="source">The source to compare with.</param>
         /// <returns>True if the specified source is equal to the current source; otherwise, false.</returns>
         public bool Equals(Source source)
         {
@@ -166,8 +166,8 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Equality operator
         /// </summary>
-        /// <param name="id1">Left hand side parameter.</param>
-        /// <param name="id2">Reight hand side parameter</param>
+        /// <param name="source1">Left hand side parameter.</param>
+        /// <param name="source2">Reight hand side parameter</param>
         /// <returns>True, if the specified sources are equal; otherwise false.</returns>
         public static bool operator ==(Source source1, Source source2)
         {
@@ -181,8 +181,8 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Unequality operator
         /// </summary>
-        /// <param name="id1">Left hand side parameter.</param>
-        /// <param name="id2">Reight hand side parameter</param>
+        /// <param name="source1">Left hand side parameter.</param>
+        /// <param name="source2">Reight hand side parameter</param>
         /// <returns>True, if the specified sources are unequal; otherwise false.</returns>
         public static bool operator !=(Source source1, Source source2)
         {

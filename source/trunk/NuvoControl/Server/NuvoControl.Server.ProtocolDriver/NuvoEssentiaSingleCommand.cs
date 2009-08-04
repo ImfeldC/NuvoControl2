@@ -37,6 +37,27 @@ namespace NuvoControl.Server.ProtocolDriver
     /// send to and received from Nuvo Essentia. The members are either used as input data to
     /// replace the placeholders in the out-going command, or to store the information retrieved
     /// from the incoming command
+    /// 
+    /// This class contains public and private methods to replace placeholders
+    /// in the command string.
+    /// 
+    /// The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:
+    /// I O 
+    /// x -  aa,bb,cc,dd,ee,ff --> for the IR carrier frequency. Replaced by replacePlaceholderForIRFrequency().
+    /// x x  xx  --> Zone Id. Replaced by replacePlaceholderForZone(). Parsed with parseCommandForZone().
+    /// x -  ppp --> Zone power status. Replaced by replacePlaceholderForPowerStatus(). Parsed with parseCommandForPowerStatus().
+    /// x x  s   --> Source id. Replaced by replacePlaceholderForSource(). Parsed with parseCommandForSource().
+    /// x -  q   --> Source group (on/off). Parsed with parseCommandForSourceGroupStatus().
+    /// x x  yy  --> Volume level. Replaced by replacePlaceholderWithVolumeLevel(). Parsed with parseCommandForVolumeLevel().
+    /// x -  i   --> DIP switch overridden (on/off). Parsed with parseCommandForDIPSwitchOverrideStatus().
+    /// x x  uuu  --> Bass EQ level. Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForBassLevel().
+    /// x x  ttt  --> Treble EQ level. Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForTrebleLevel().
+    /// x -  r   --> Volume reset (on/off). Parsed with parseCommandForVolumeResetStatus().
+    /// x -  vz.zz --> Firmware version. Parsed with parseCommandForFirmwareVersion().
+    /// 
+    /// In outgoing commands Replacement methods are used. 
+    /// For the incoming commands refer the Parse Section.
+    /// 
     /// </summary>
     public class NuvoEssentiaSingleCommand : INuvoEssentiaSingleCommand
     {
@@ -47,6 +68,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
+
         private Profile _profile;
 
         Guid _guid;
@@ -58,14 +80,14 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// Public constant defining the maximum value of the Nuvo Essentia volume level.
         /// Each value matching the following ruls is ok:
-        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// VOLUME_MINVALUE is less or equal to 'value' is less or equal to VOLUMEMAXLEVEL
         /// </summary>
         public const int NUVOESSENTIA_VOLUME_MAXVALUE = 0;
 
         /// <summary>
         /// Public constant defining the minimum value of the Nuvo Essentia volume level.
         /// Each value matching the following ruls is ok:
-        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// VOLUME_MINVALUE is less or equal to 'value' is less or equal to VOLUMEMAXLEVEL
         /// </summary>
         public const int NUVOESSENTIA_VOLUME_MINVALUE = -79;
 
@@ -103,6 +125,12 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region Outgoing Command Constructors
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// This constructor is only useable for paramaterless commands. Use other constructors if you need to pass 
+        /// parameters, e.g. the zone id, etc.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command)
         {
             constructMembers();
@@ -110,6 +138,11 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="source">Source id, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaSources source)
         {
             constructMembers();
@@ -118,6 +151,11 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="zone">Zone id, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone)
         {
             constructMembers();
@@ -126,6 +164,12 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="zone">Zone id, which shall be used in the outgoing command.</param>
+        /// <param name="source">Source id, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source)
         {
             constructMembers();
@@ -135,6 +179,12 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="zone">Zone id, which shall be used in the outgoing command.</param>
+        /// <param name="volume">Volume Level, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int volume)
         {
             constructMembers();
@@ -144,6 +194,13 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="zone">Zone id, which shall be used in the outgoing command.</param>
+        /// <param name="basslevel">Bass Level, which shall be used in the outgoing command.</param>
+        /// <param name="treblelevel">Treble Level, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, int basslevel, int treblelevel)
         {
             constructMembers();
@@ -154,6 +211,15 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="zone">Zone is, which shall be used in the outgoing command.</param>
+        /// <param name="source">Source id, which shall be used in the outgoing command.</param>
+        /// <param name="volume">Volume Level, which shall be used in the outgoing command.</param>
+        /// <param name="basslevel">Bass Level, which shall be used in the outgoing command.</param>
+        /// <param name="treblelevel">Treble Level, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, ENuvoEssentiaSources source, int volume, int basslevel, int treblelevel)
         {
             constructMembers();
@@ -166,6 +232,21 @@ namespace NuvoControl.Server.ProtocolDriver
             _outgoingCommand = buildOutgoingCommand();
         }
 
+        /// <summary>
+        /// Constructor to build an outgoing command.
+        /// </summary>
+        /// <param name="command">NuvoEssentia command to build.</param>
+        /// <param name="zone">Zone id, which shall be used in the outgoing command.</param>
+        /// <param name="source">Source id, which shall be used in the outgoing command.</param>
+        /// <param name="volume">Volume Level, which shall be used in the outgoing command.</param>
+        /// <param name="basslevel">Bass Level, which shall be used in the outgoing command.</param>
+        /// <param name="treblelevel">Treble Level, which shall be used in the outgoing command.</param>
+        /// <param name="powerStatus">Power Status, which shall be used in the outgoing command.</param>
+        /// <param name="ircf">Array of IR Carrier Frequency, which shall be used in the outgoing command.</param>
+        /// <param name="dipSwitchOverrideStatus">DIP Switch Override Status, which shall be used in the outgoing command.</param>
+        /// <param name="volumeResetStatus">Volume Reset Status, which shall be used in the outgoing command.</param>
+        /// <param name="sourceGroupStatus">Source Group Status, which shall be used in the outgoing command.</param>
+        /// <param name="firmwareVersion">Firmware Version, which shall be used in the outgoing command.</param>
         public NuvoEssentiaSingleCommand(
             ENuvoEssentiaCommands command, ENuvoEssentiaZones zone, 
             ENuvoEssentiaSources source, int volume, int basslevel, int treblelevel,
@@ -193,6 +274,12 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region Incoming Command Constructors
 
+        /// <summary>
+        /// Constructor to build an incoming command.
+        /// If the command has been succesfully parsed, the values can be asked vai the member accessors, 
+        /// like ZoneId, VolumeLevel, etc.
+        /// </summary>
+        /// <param name="commandString">Command string received from NuvoEssentia.</param>
         public NuvoEssentiaSingleCommand(string commandString)
         {
             constructMembers();
@@ -264,7 +351,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// Searches in the profile the command passed as string the corresponding incoming template.
         /// </summary>
-        /// <param name="command">Command (passed as string)</param>
+        /// <param name="commandString">Command (passed as string)</param>
         /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
         private static ENuvoEssentiaCommands searchNuvoEssentiaCommandWithIncomingCommand(string commandString)
         {
@@ -375,6 +462,12 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region IComparable Members
 
+        /// <summary>
+        /// Method required for the interface IComparable.
+        /// It compares the GUID. If the GUID is the same in both objects, thsi method returns true.
+        /// </summary>
+        /// <param name="obj">Object to compare to.</param>
+        /// <returns>True, if the objects are identical.</returns>
         public int CompareTo(object obj)
         {
             return this._guid.CompareTo(((NuvoEssentiaSingleCommand)obj)._guid);
@@ -382,55 +475,84 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
-
         #region INuvoEssentiaCommand Members
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public Guid Guid
         {
             get { return _guid; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public ENuvoEssentiaCommands Command
         {
             get { return _command; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public bool Valid
         {
             get { return _command != ENuvoEssentiaCommands.NoCommand; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public DateTime SendDateTime
         {
             get { return _sendDateTime; }
             set { _sendDateTime = value; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public DateTime ReceiveDateTime
         {
             get { return _receiveDateTime; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public DateTime CreatedDateTime
         {
             get { return _createDateTime; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public string OutgoingCommandTemplate
         {
             get { return _outgoingCommandTemplate; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public string IncomingCommandTemplate
         {
             get { return _incomingCommandTemplate; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public string OutgoingCommand
         {
             get { return _outgoingCommand; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public string IncomingCommand
         {
             get
@@ -445,26 +567,41 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public ENuvoEssentiaZones ZoneId
         {
             get { return _zoneId; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public ENuvoEssentiaSources SourceId
         {
             get { return _sourceId; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public EZonePowerStatus PowerStatus
         {
             get { return _powerStatus; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public EIRCarrierFrequency IrCarrierFrequencySource(ENuvoEssentiaSources source)
         {
             return _irCarrierFrequencySource[(int)source-1];
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public int VolumeLevel
         {
             get { return _volume; }
@@ -475,59 +612,55 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public int BassLevel
         {
             get { return _basslevel; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public int TrebleLevel
         {
             get { return _treblelevel; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public EVolumeResetStatus VolumeResetStatus
         {
             get { return _volumeResetStatus; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public EDIPSwitchOverrideStatus DIPSwitchOverrideStatus
         {
             get { return _dipSwitchOverrideStatus; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public ESourceGroupStatus SourceGrupStatus
         {
             get { return _sourceGroupStatus; }
         }
 
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public string FirmwareVersion
         {
             get { return _firmwareVersion; }
         }
 
         #endregion
-
-        ///
-        /// This section contains public and private methods to replace placeholders
-        /// in the command string.
-        /// 
-        /// The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:
-        /// I O 
-        /// x -  aa,bb,cc,dd,ee,ff --> for the IR carrier frequency. Replaced by replacePlaceholderForIRFrequency().
-        /// x x  xx  --> Zone Id. Replaced by replacePlaceholderForZone(). Parsed with parseCommandForZone().
-        /// x -  ppp --> Zone power status. Replaced by replacePlaceholderForPowerStatus(). Parsed with parseCommandForPowerStatus().
-        /// x x  s   --> Source id. Replaced by replacePlaceholderForSource(). Parsed with parseCommandForSource().
-        /// x -  q   --> Source group (on/off). Parsed with parseCommandForSourceGroupStatus().
-        /// x x  yy  --> Volume level. Replaced by replacePlaceholderWithVolumeLevel(). Parsed with parseCommandForVolumeLevel().
-        /// x -  i   --> DIP switch overridden (on/off). Parsed with parseCommandForDIPSwitchOverrideStatus().
-        /// x x  uuu  --> Bass EQ level. Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForBassLevel().
-        /// x x  ttt  --> Treble EQ level. Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForTrebleLevel().
-        /// x -  r   --> Volume reset (on/off). Parsed with parseCommandForVolumeResetStatus().
-        /// x -  vz.zz --> Firmware version. Parsed with parseCommandForFirmwareVersion().
-        /// 
-        /// In outgoing commands Replacement methods are used. 
-        /// For the incoming commands refer the Parse Section.
-        /// 
 
         #region Command Replace Section
 
@@ -658,6 +791,13 @@ namespace NuvoControl.Server.ProtocolDriver
         /// This method executes all known replacements.
         /// </summary>
         /// <param name="command">Command string with placeholders</param>
+        /// <param name="zoneId">Zone Id, to replace in template command string.</param>
+        /// <param name="sourceId">Source Id, to replace in template command string.</param>
+        /// <param name="volume">Volume Level, to replace in template command string.</param>
+        /// <param name="bassLevel">Bass Level, to replace in template command string.</param>
+        /// <param name="trebleLevel">Treble Level, to replace in template command string.</param>
+        /// <param name="powerStatus">Power Status, to replace in template command string.</param>
+        /// <param name="irCarrierFrequencySource">Array of IR Carrier Frequency, to replace in template command string.</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
         static public string replacePlaceholders(string command, ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, EZonePowerStatus powerStatus, EIRCarrierFrequency[] irCarrierFrequencySource)
         {
@@ -679,7 +819,18 @@ namespace NuvoControl.Server.ProtocolDriver
         /// values. Returns a string containing the values.
         /// This method executes all known replacements.
         /// </summary>
-        /// <param name="command">Command string with placeholders</param>
+        /// <param name="command">Template command string with placeholders</param>
+        /// <param name="zoneId">Zone Id, to replace in template command string.</param>
+        /// <param name="sourceId">Source Id, to replace in template command string.</param>
+        /// <param name="volume">Volume Level, to replace in template command string.</param>
+        /// <param name="bassLevel">Bass Level, to replace in template command string.</param>
+        /// <param name="trebleLevel">Treble Level, to replace in template command string.</param>
+        /// <param name="powerStatus">Power Status, to replace in template command string.</param>
+        /// <param name="irCarrierFrequencySource">Array of IR Carrier Frequency, to replace in template command string.</param>
+        /// <param name="sourceGroupStatus">Source Group Status, to replace in template command string.</param>
+        /// <param name="volumeResetStatus">Volume Reset Status, to replace in template command string.</param>
+        /// <param name="dipSwitchOverrideStatus">DIP Switch Overrids Status, to replace in template command string.</param>
+        /// <param name="version">Version, to replace in template command string.</param>
         /// <returns>Result string, placeholders replaced with values.</returns>
         static public string replacePlaceholders(string command, 
             ENuvoEssentiaZones zoneId, ENuvoEssentiaSources sourceId, int volume, int bassLevel, int trebleLevel, 
@@ -973,7 +1124,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the default source group status placeholder with the source group status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="source">Source Group Status</param>
+        /// <param name="sourceGroupStatus">Source Group Status</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForSourceGroupStatus(string command, ESourceGroupStatus sourceGroupStatus)
         {
@@ -984,7 +1135,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the source group status placeholder with the source group status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="source">source group status</param>
+        /// <param name="sourceGroupStatus">source group status</param>
         /// <param name="placeholder">Placeholder for the source group status</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForSourceGroupStatus(string command, ESourceGroupStatus sourceGroupStatus, string placeholder)
@@ -1007,7 +1158,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the default volume reset status placeholder with the volume reset status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="source">Volume Reset Status</param>
+        /// <param name="volumeResetStatus">Volume Reset Status</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForVolumeResetStatus(string command, EVolumeResetStatus volumeResetStatus)
         {
@@ -1018,7 +1169,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the volume reset status placeholder with the volume reset status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="source">volume reset status</param>
+        /// <param name="volumeResetStatus">volume reset status</param>
         /// <param name="placeholder">Placeholder for the volume reset status</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForVolumeResetStatus(string command, EVolumeResetStatus volumeResetStatus, string placeholder)
@@ -1041,7 +1192,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the default DIP Switch Override Status placeholder with the DIP Switch Override Status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="source">DIP Switch Override Status</param>
+        /// <param name="dipSwitchOverrideStatus">DIP Switch Override Status</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForDIPSwitchOverrideStatus(string command, EDIPSwitchOverrideStatus dipSwitchOverrideStatus)
         {
@@ -1052,7 +1203,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the DIP Switch Override Status placeholder with the DIP Switch Override Status in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="source">DIP Switch Override Status</param>
+        /// <param name="dipSwitchOverrideStatus">DIP Switch Override Status</param>
         /// <param name="placeholder">Placeholder for the DIP Switch Override Status</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForDIPSwitchOverrideStatus(string command, EDIPSwitchOverrideStatus dipSwitchOverrideStatus, string placeholder)
@@ -1075,7 +1226,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Replaces the version in the command string.
         /// </summary>
         /// <param name="command">Command string</param>
-        /// <param name="zone">Version string</param>
+        /// <param name="version">Version string</param>
         /// <returns>Command string with replaced placeholders.</returns>
         static private string replacePlaceholderForVersion(string command, string version)
         {
@@ -1215,7 +1366,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// values. Returns a string containing the values.
         /// This method executes all known replacements.
         /// </summary>
-        /// <param name="command">Command string with placeholders</param>
+        /// <param name="commandString">Command string with placeholders</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         private void parseCommand(string commandString, string commandStringTemplate)
         {
             _zoneId = parseCommandForZone(commandString, commandStringTemplate);
@@ -1235,7 +1387,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts all IR Carrier Frequency out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         private void parseCommandForALLIRCarrierFrequency(string commandString, string commandStringTemplate)
         {
             _irCarrierFrequencySource[0] = parseCommandForIRCarrierFrequency(commandString, commandStringTemplate, "aa");
@@ -1251,7 +1404,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// using the passed pattern.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <param name="placeholder">Pattern to search for in the command template.</param>
         /// <returns>IR Carrier Frequency, extracted out of the command string.</returns>
         static private EIRCarrierFrequency parseCommandForIRCarrierFrequency(string commandString, string commandStringTemplate, string placeholder)
@@ -1281,7 +1435,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the zone id out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Zone id, extracted out of the command string.</returns>
         static private ENuvoEssentiaZones parseCommandForZone(string commandString, string commandStringTemplate)
         {
@@ -1304,7 +1459,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the source id out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Source id, extracted out of the command string.</returns>
         static private ENuvoEssentiaSources parseCommandForSource(string commandString, string commandStringTemplate)
         {
@@ -1327,7 +1483,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the power status out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Power status, extracted out of the command string.</returns>
         static private EZonePowerStatus parseCommandForPowerStatus(string commandString, string commandStringTemplate)
         {
@@ -1357,7 +1514,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the volume level out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Volume level, extracted out of the command string.</returns>
         static private int parseCommandForVolumeLevel(string commandString, string commandStringTemplate)
         {
@@ -1380,7 +1538,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the bass level out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Bass level, extracted out of the command string.</returns>
         static private int parseCommandForBassLevel(string commandString, string commandStringTemplate)
         {
@@ -1403,7 +1562,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the treble level out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Treble level, extracted out of the command string.</returns>
         static private int parseCommandForTrebleLevel(string commandString, string commandStringTemplate)
         {
@@ -1426,7 +1586,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the Volume Reset Status out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Volume Reset Status, extracted out of the command string.</returns>
         static private EVolumeResetStatus parseCommandForVolumeResetStatus(string commandString, string commandStringTemplate)
         {
@@ -1449,7 +1610,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the Source Group Status out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Source Group Status, extracted out of the command string.</returns>
         static private ESourceGroupStatus parseCommandForSourceGroupStatus(string commandString, string commandStringTemplate)
         {
@@ -1472,7 +1634,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the DIP Switch Override Status out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>DIP Switch Override Status, extracted out of the command string.</returns>
         static private EDIPSwitchOverrideStatus parseCommandForDIPSwitchOverrideStatus(string commandString, string commandStringTemplate)
         {
@@ -1495,7 +1658,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Extracts the firmware version out of the recieved command string.
         /// The member _incomingCommandTemplate needs to be set prior.
         /// </summary>
-        /// <param name="incomingCommand">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandString">Command string received from Nuvo Essentia.</param>
+        /// <param name="commandStringTemplate">Command Template, expected for this command.</param>
         /// <returns>Firmware Version, extracted out of the command string.</returns>
         static private string parseCommandForFirmwareVersion(string commandString, string commandStringTemplate)
         {

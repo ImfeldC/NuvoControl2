@@ -260,12 +260,17 @@ namespace NuvoControl.Server.Simulator
         }
 
         /// <summary>
-        /// Opens the queues of this class.
+        /// Opens the queues of this class and disposes all messages in the queues.
         /// </summary>
         private void OpenQueues()
         {
             _sendQueue = GetQueue(_sendQueueName);
             _rcvQueue = GetQueue(_rcvQueueName);
+
+            // Clear the content of the queues
+            PurgeQueue(_sendQueue);
+            PurgeQueue(_rcvQueue);
+
             _rcvQueue.ReceiveCompleted += new ReceiveCompletedEventHandler(_rcvQueue_ReceiveCompleted);
             _rcvQueue.BeginReceive();
         }
@@ -279,6 +284,21 @@ namespace NuvoControl.Server.Simulator
             _sendQueue = null;
             _rcvQueue.Close();
             _rcvQueue = null;
+        }
+
+        /// <summary>
+        /// Purges the content of a queue.
+        /// Writes a log message with the number of disposed (deleted) messages.
+        /// </summary>
+        /// <param name="msgQueue">Queue, where to delete the messages.</param>
+        private void PurgeQueue(MessageQueue msgQueue)
+        {
+            System.Messaging.Message[] msgs = _rcvQueue.GetAllMessages();
+            if (msgs.Count() > 0)
+            {
+                _rcvQueue.Purge();
+                _log.Warn(m => m("{0} message(s) disposed from queue '{1}'", msgs.Count(), msgQueue.FormatName));
+            }
         }
 
         /// <summary>

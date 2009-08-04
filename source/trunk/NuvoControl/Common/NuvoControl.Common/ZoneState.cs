@@ -70,14 +70,14 @@ namespace NuvoControl.Common
         /// <summary>
         /// Public constant defining the maximum value of the volume level.
         /// Each value matching the following ruls is ok:
-        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// VOLUME_MINVALUE is less or equal to 'value' is less or equal to VOLUMEMAXLEVEL
         /// </summary>
         public const int VOLUME_MAXVALUE = 100;
 
         /// <summary>
         /// Public constant defining the minimum value of the volume level.
         /// Each value matching the following ruls is ok:
-        /// VOLUME_MINVALUE <= 'value' <= VOLUMEMAXLEVEL
+        /// VOLUME_MINVALUE is less or equal to 'value' is less or equal to VOLUMEMAXLEVEL
         /// </summary>
         public const int VOLUME_MINVALUE = 0;
 
@@ -134,6 +134,7 @@ namespace NuvoControl.Common
         /// <param name="source">Source, selected in this zone.</param>
         /// <param name="powerStatus">Power Status, of this zone.</param>
         /// <param name="volume">Volume, of this zone.</param>
+        /// <param name="zoneQuality">Zone Quality, of this zone.</param>
         public ZoneState(Address source, bool powerStatus, int volume, ZoneQuality zoneQuality) : this()
         {
             _source = source;
