@@ -124,6 +124,7 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             _sendQueue = GetQueue(_sendQueueName);
             _rcvQueue = GetQueue(_rcvQueueName);
+
             _rcvQueue.ReceiveCompleted += new ReceiveCompletedEventHandler(_rcvQueue_ReceiveCompleted);
             _rcvQueue.BeginReceive();
         }

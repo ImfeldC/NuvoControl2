@@ -61,52 +61,52 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         ///
 
         /// <summary>
-        /// Command: *IRSETSR<CR> – Reads status of SOURCE IR carrier frequency settings
-        /// RESPONSE:#IRSET:aa,bb,cc,dd,ee,ff<CR> where:aa = IR carrier frequency of SOURCE 1 ("38" or "56") bb = carrier frequency of SOURCE 2 ("38" or "56") cc = carrier frequency of SOURCE 3 ("38" or "56") dd = carrier frequency of SOURCE 4 ("38" or "56") ee = carrier frequency of SOURCE 5 ("38" or "56") ff = carrier frequency of SOURCE 6 ("38" or "56")
+        /// Command: *IRSETSR – Reads status of SOURCE IR carrier frequency settings
+        /// RESPONSE:#IRSET:aa,bb,cc,dd,ee,ff where:aa = IR carrier frequency of SOURCE 1 ("38" or "56") bb = carrier frequency of SOURCE 2 ("38" or "56") cc = carrier frequency of SOURCE 3 ("38" or "56") dd = carrier frequency of SOURCE 4 ("38" or "56") ee = carrier frequency of SOURCE 5 ("38" or "56") ff = carrier frequency of SOURCE 6 ("38" or "56")
         /// NOTE – the Main Unit ships with the carrier frequency DEFAULT setting of38 KHz for all six sources
         /// </summary>
         ReadStatusSOURCEIR = 0,
 
         /// <summary>
-        /// COMMAND: *IRSETDF<CR> – Restores DEFAULT SOURCE IR carrier frequency settings (38 KHz for all six sources).
-        /// RESPONSE: Same response as for #IRSETSR<CR>
+        /// COMMAND: *IRSETDF – Restores DEFAULT SOURCE IR carrier frequency settings (38 KHz for all six sources).
+        /// RESPONSE: Same response as for #IRSETSR
         /// </summary>
         RestoreDefaultSOURCEIR = 1,
 
         /// <summary>
-        /// COMMAND: *SxIR56SET<CR> - sets SOURCE x to 56 KHz IR repeat carrier (x is 1 to 6).
-        /// RESPONSE: Same response as for #IRSETSR<CR>
+        /// COMMAND: *SxIR56SET - sets SOURCE x to 56 KHz IR repeat carrier (x is 1 to 6).
+        /// RESPONSE: Same response as for #IRSETSR
         /// </summary>
         SetSOURCEIR56 = 2,
 
         /// <summary>
-        /// COMMAND: *SxIR38SET<CR> - sets SOURCE x to 38 KHz IR repeat carrier (x is 1 to 6).
-        /// RESPONSE: Same response as for #IRSETSR<CR>
+        /// COMMAND: *SxIR38SET - sets SOURCE x to 38 KHz IR repeat carrier (x is 1 to 6).
+        /// RESPONSE: Same response as for #IRSETSR
         /// </summary>
         SetSOURCEIR38 = 3,
 
         /// <summary>
-        /// COMMAND: *ZxxCONSR<CR> - Connect STATUS REQUEST where xx is zone # from 1 to 12
-        /// RESPONSE:#ZxxPWRppp,SRCs,GRPq,VOL-yy<CR>
+        /// COMMAND: *ZxxCONSR - Connect STATUS REQUEST where xx is zone # from 1 to 12
+        /// RESPONSE:#ZxxPWRppp,SRCs,GRPq,VOL-yy
         /// -ppp = "ON" (2 characters)or "OFF" (3 characters)
         /// -s = SOURCE NUMBER 1 to 6
         /// -q = 0 if SOURCE GROUP is ON / 1 if SOURCE GROUP is OFF
         /// -yy = level below max in dB: -00 to -79 dB (include lead 0 for all single-digit values)
         /// -yy = "MT" if in MUTE state
         /// -yy = "XM" if external MUTE is being held active 
-        /// This response will also be issued in response to pressing the ON/OFF, VOLUME, or SOURCEkeys on a KEYPAD. NOTE – the response will be issued if a SOURCE key is press`ed on azone that is powered OFF even though the key press has no effect on the system. It will beoutput at every increment during a volume ramp initiated by HOLDING a VOLUME UP orVOLUME DOWN key on a keypad. It will also be issued at every increment of a volumeramp commanded by the *ZxxVOL+<CR> and *ZxxVOL-<CR> commands (see below).
-        /// The MUTE value will be asserted if a *ZxMTON<CR> command has been received, OR if thevolume is run all the way to the lowest possible point (volume off). An active EXTERNALMUTE input, however, will always override other volume response values with the "XM" response.
+        /// This response will also be issued in response to pressing the ON/OFF, VOLUME, or SOURCEkeys on a KEYPAD. NOTE – the response will be issued if a SOURCE key is press`ed on azone that is powered OFF even though the key press has no effect on the system. It will beoutput at every increment during a volume ramp initiated by HOLDING a VOLUME UP orVOLUME DOWN key on a keypad. It will also be issued at every increment of a volumeramp commanded by the *ZxxVOL+ and *ZxxVOL- commands (see below).
+        /// The MUTE value will be asserted if a *ZxMTON command has been received, OR if thevolume is run all the way to the lowest possible point (volume off). An active EXTERNALMUTE input, however, will always override other volume response values with the "XM" response.
         /// </summary>
         ReadStatusCONNECT = 4,
 
         /// <summary>
-        /// COMMAND:*ZxxSETSR<CR> – ZoneSet STATUS REQUEST where xx is zone # from 1 to 12
-        /// RESPONSE:#ZxxORp,BASSyy,TREByy,GRPq,VRSTr<CR>
+        /// COMMAND:*ZxxSETSR – ZoneSet STATUS REQUEST where xx is zone # from 1 to 12
+        /// RESPONSE:#ZxxORp,BASSyy,TREByy,GRPq,VRSTr
         /// -p = 1 if DIP switches are overridden*0 if DIP switches are in control
         /// -yy = EQ level, dB, –8 to +0 (flat) to +8 in 1 dB increments
         /// -q = 0 if SOURCE GROUP is ON / 1 if SOURCE GROUP is OFF (This follows DIP switch definition.)
         /// -r = 0 if VOLUME RESET is ON / 1 if VOLUME RESET is OFF (This follows DIP switch definition.)
-        /// *override set to 1 FOR THIS ZONE only if one of commands *ZxxBASSyy<CR>, *ZxxTREByy<CR>, *ZxxGRPq<CR>, or *ZxxVRSTr<CR> are issued (seedescriptions below).
+        /// *override set to 1 FOR THIS ZONE only if one of commands *ZxxBASSyy, *ZxxTREByy, *ZxxGRPq, or *ZxxVRSTr are issued (seedescriptions below).
         /// Once it is SET by one of these commands:
         /// a. It will remain set until power is cycled on the unit.
         /// b. Non-address DIP switch changes on a connected KEYPAD connected to this zone will be ignored.
@@ -115,173 +115,173 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         ReadStatusZONE = 5,
 
         /// <summary>
-        /// COMMAND: *ZxxON<CR> – Turn zone xx ON
-        /// RESPONSE:Same response as for *ZxxCONSR<CR>
+        /// COMMAND: *ZxxON – Turn zone xx ON
+        /// RESPONSE:Same response as for *ZxxCONSR
         /// </summary>
         TurnZoneON = 6,
 
         /// <summary>
-        /// COMMAND: *ZxxOFF<CR> – Turn zone xx OFF
-        /// RESPONSE:Same response as for *ZxxCONSR<CR>
+        /// COMMAND: *ZxxOFF – Turn zone xx OFF
+        /// RESPONSE:Same response as for *ZxxCONSR
         /// </summary>
         TurnZoneOFF = 7,
 
         /// <summary>
-        /// COMMAND: *ALLOFF<CR> – Turn ALL zones OFF
-        /// RESPONSE:#ALLOFF<CR>
+        /// COMMAND: *ALLOFF – Turn ALL zones OFF
+        /// RESPONSE:#ALLOFF
         /// This RESPONSE is also issued when ALL OFF is pressed on any KEYPAD
         /// </summary>
         TurnALLZoneOFF = 8,
 
         /// <summary>
-        /// COMMAND: *ALLV+<CR> – Ramp ALL zones UP at a 10 dB/second rate in 1 dB steps
-        /// RESPONSE:#ALLV+<CR>
-        /// The ramp action will be cancelled when all zones reach MAXIMUM volume, or when an *ALLHLD<CR> Command is received. Note that to stop theramp with this command before maximum volume, one reference zone must be periodically polled with a *ZxxCONSR<CR> Command to determinewhen the desired volume point has been reached. Note that ramps in different zones may start at different levels and will all ramp at the samerate.
+        /// COMMAND: *ALLV+ – Ramp ALL zones UP at a 10 dB/second rate in 1 dB steps
+        /// RESPONSE:#ALLV+
+        /// The ramp action will be cancelled when all zones reach MAXIMUM volume, or when an *ALLHLD Command is received. Note that to stop theramp with this command before maximum volume, one reference zone must be periodically polled with a *ZxxCONSR Command to determinewhen the desired volume point has been reached. Note that ramps in different zones may start at different levels and will all ramp at the samerate.
         /// </summary>
         RampVolumeALLZoneUP = 9,
 
         /// <summary>
-        /// COMMAND: *ALLV-<CR> – Ramp ALL zones DOWN at a 10 dB/second rate in 1 dB steps
-        /// RESPONSE:#ALLV-<CR>
-        /// The ramp action will be cancelled when all zones reach MINIMUM (OFF) volume, or when an *ALLHLD<CR> Command is received. Note that tostop the ramp with this command before the minimum volume, one reference zone must be periodically polled with a *ZxxCONSR<CR> Commandto determine when the desired volume point has been reached. Note that ramps in different zones may start at different levels and will all rampat the same rate
+        /// COMMAND: *ALLV- – Ramp ALL zones DOWN at a 10 dB/second rate in 1 dB steps
+        /// RESPONSE:#ALLV-
+        /// The ramp action will be cancelled when all zones reach MINIMUM (OFF) volume, or when an *ALLHLD Command is received. Note that tostop the ramp with this command before the minimum volume, one reference zone must be periodically polled with a *ZxxCONSR Commandto determine when the desired volume point has been reached. Note that ramps in different zones may start at different levels and will all rampat the same rate
         /// </summary>
         RampVolumeALLZoneDOWN = 10,
 
         /// <summary>
-        /// COMMAND: *ALLHLD<CR> – Stops ramp action initiated by *ALLV+<CR> Or *ALLV-<CR>
-        /// RESPONSE:#ALLHLD-<CR>
+        /// COMMAND: *ALLHLD – Stops ramp action initiated by *ALLV+ Or *ALLV-
+        /// RESPONSE:#ALLHLD-
         /// This results in a HOLD of the level at time of command receipt
         /// </summary>
         StopRampVolumeALLZone = 11,
 
         /// <summary>
-        /// COMMAND: *ALLMON<CR> – ALL MUTE ON
-        /// RESPONSE:# ALLMON<CR>
+        /// COMMAND: *ALLMON – ALL MUTE ON
+        /// RESPONSE:# ALLMON
         /// </summary>
         MuteALLZoneON = 12,
 
         /// <summary>
-        /// COMMAND: *ALLMOFF<CR> – ALL MUTE OFF
-        /// RESPONSE:#ALLMOFF<CR>
+        /// COMMAND: *ALLMOFF – ALL MUTE OFF
+        /// RESPONSE:#ALLMOFF
         /// </summary>
         MuteALLZoneOFF = 13,
 
         /// <summary>
-        /// COMMAND: *ZxxSRCp<CR> – Switch zone xx to SOURCE p ( 1 to 6).
-        /// RESPONSE:Same response as for *ZxxCONSR<CR>
+        /// COMMAND: *ZxxSRCp – Switch zone xx to SOURCE p ( 1 to 6).
+        /// RESPONSE:Same response as for *ZxxCONSR
         /// </summary>
         SetSource = 14,
 
         /// <summary>
-        /// COMMAND: *ZxxVOLyy<CR> – Set volume of zone xx to level yy below max in dB from –0 to –78 dB (include lead 0 for all single-digit values).
-        /// RESPONSE:Same response as for *ZxxCONSR<CR>
+        /// COMMAND: *ZxxVOLyy – Set volume of zone xx to level yy below max in dB from –0 to –78 dB (include lead 0 for all single-digit values).
+        /// RESPONSE:Same response as for *ZxxCONSR
         /// </summary>
         SetVolume = 15,
 
         /// <summary>
-        /// COMMAND:*ZxxVOL+<CR> – STARTS zone xx volume ramp UP at the rate of +10 dB per second in +1 dB steps. (This is the same as holding VOLUME UP key on a KEYPAD for 1 second).
-        /// RESPONSE: Same response as for *ZxxCONSR<CR>, updated 10 times per second.
+        /// COMMAND:*ZxxVOL+ – STARTS zone xx volume ramp UP at the rate of +10 dB per second in +1 dB steps. (This is the same as holding VOLUME UP key on a KEYPAD for 1 second).
+        /// RESPONSE: Same response as for *ZxxCONSR, updated 10 times per second.
         /// </summary>
         RampVolumeUP = 16,
 
         /// <summary>
-        /// COMMAND:*ZxxVOL-<CR> – STARTS zone xx volume ramp DOWN at the rate of -10 dB per second in -1 dB steps. (This is the same as holding VOLUME UP key on a KEYPAD for 1 second).
-        /// RESPONSE: Same response as for *ZxxCONSR<CR>, updated 10 times per second.
+        /// COMMAND:*ZxxVOL- – STARTS zone xx volume ramp DOWN at the rate of -10 dB per second in -1 dB steps. (This is the same as holding VOLUME UP key on a KEYPAD for 1 second).
+        /// RESPONSE: Same response as for *ZxxCONSR, updated 10 times per second.
         /// </summary>
         RampVolumeDOWN = 17,
 
         /// <summary>
-        /// COMMAND:*ZxxVHLD<CR> – STOPS zone xx volume ramp initiated by *ZxxVOL+<CR> or *ZxxVOL-<CR> commands. This results in a HOLD of the level at time of command receipt.
-        /// RESPONSE: #ZxxVHLD<CR>
+        /// COMMAND:*ZxxVHLD – STOPS zone xx volume ramp initiated by *ZxxVOL+ or *ZxxVOL- commands. This results in a HOLD of the level at time of command receipt.
+        /// RESPONSE: #ZxxVHLD
         /// </summary>
         StopRampVolume = 18,
 
         /// <summary>
-        /// COMMAND:*ZxxMTON<CR> – zone xx MUTE ON (mutes currently connected source)
-        /// RESPONSE:Same response as for *ZxxCONSR<CR>
+        /// COMMAND:*ZxxMTON – zone xx MUTE ON (mutes currently connected source)
+        /// RESPONSE:Same response as for *ZxxCONSR
         /// </summary>
         MuteON = 19,
 
         /// <summary>
-        /// COMMAND:*ZxxMTOFF<CR> – zone xx MUTE OFF (returns zone output to currently connected source at previous volume setting).
-        /// RESPONSE:Same response as for *ZxxCONSR<CR>
+        /// COMMAND:*ZxxMTOFF – zone xx MUTE OFF (returns zone output to currently connected source at previous volume setting).
+        /// RESPONSE:Same response as for *ZxxCONSR
         /// </summary>
         MuteOFF = 20,
 
         /// <summary>
-        /// COMMAND:*ZxxBASSyyy<CR> – zone xx BASS EQ with yyy = EQ level, dB, –12 to +0 (flat) to +12 in 2 dB increments. USE LEAD "0" IN TENS PLACE FOR VALUE LESS THAN 10.
-        /// RESPONSE:Same response as for *ZxxSETSR<CR>
+        /// COMMAND:*ZxxBASSyyy – zone xx BASS EQ with yyy = EQ level, dB, –12 to +0 (flat) to +12 in 2 dB increments. USE LEAD "0" IN TENS PLACE FOR VALUE LESS THAN 10.
+        /// RESPONSE:Same response as for *ZxxSETSR
         /// NOTE: sending this command to the E6D will set override (lock out KEYPAD non-address DIP switches) for this zone until power is cycled
         /// </summary>
         SetBassLevel = 21,
 
         /// <summary>
-        /// COMMAND: *ZxxTREByyy<CR> – zone xx TREBLE EQ with yyy = EQ level, dB, –12 to +0 (flat) to +12 in 2 dB increments. USE LEAD "0" IN TENS PLACE FOR VALUE LESS THAN 10.
-        /// RESPONSE:Same response as for *ZxxSETSR<CR>
+        /// COMMAND: *ZxxTREByyy – zone xx TREBLE EQ with yyy = EQ level, dB, –12 to +0 (flat) to +12 in 2 dB increments. USE LEAD "0" IN TENS PLACE FOR VALUE LESS THAN 10.
+        /// RESPONSE:Same response as for *ZxxSETSR
         /// NOTE: sending this command to the E6D will set override (lock out KEYPAD non-address DIP switches) for this zone until power is cycled.
         /// </summary>
         SetTrebleLevel = 22,
 
         /// <summary>
-        /// COMMAND:*ZxxGRPON<CR> – zone xx SOURCE GROUP ON.
-        /// RESPONSE:Same response as for *ZxxSETSR<CR>
+        /// COMMAND:*ZxxGRPON – zone xx SOURCE GROUP ON.
+        /// RESPONSE:Same response as for *ZxxSETSR
         /// NOTE: sending this command to the E6D will set override (lock out KEYPAD non-address DIP switches) for this zone until power is cycled.
         /// </summary>
         SetSourceGroupON = 23,
 
         /// <summary>
-        /// COMMAND:*ZxxGRPOFF<CR> – zone xx SOURCE GROUP OFF.
-        /// RESPONSE:Same response as for *ZxxSETSR<CR>
+        /// COMMAND:*ZxxGRPOFF – zone xx SOURCE GROUP OFF.
+        /// RESPONSE:Same response as for *ZxxSETSR
         /// NOTE: sending this command to the E6D will set override (lock out KEYPAD non-address DIP switches) for this zone until power is cycled.
         /// </summary>
         SetSourceGroupOFF = 24,
 
         /// <summary>
-        /// COMMAND:*ZxxVRSTON<CR> – zone xx VOLUME RESET ON.
-        /// RESPONSE:Same response as for *ZxxSETSR<CR>
+        /// COMMAND:*ZxxVRSTON – zone xx VOLUME RESET ON.
+        /// RESPONSE:Same response as for *ZxxSETSR
         /// NOTE: sending this command to the E6D will set override (lock out KEYPAD non-address DIP switches) for this zone until power is cycled.
         /// </summary>
         SetVolumeResetON = 25,
 
         /// <summary>
-        /// COMMAND:*ZxxVRSTOFF<CR> – zone xx VOLUME RESET OFF.
-        /// RESPONSE:Same response as for *ZxxSETSR<CR>
+        /// COMMAND:*ZxxVRSTOFF – zone xx VOLUME RESET OFF.
+        /// RESPONSE:Same response as for *ZxxSETSR
         /// NOTE: sending this command to the E6D will set override (lock out KEYPAD non-address DIP switches) for this zone until power is cycled.
         /// </summary>
         SetVolumeResetOFF = 26,
 
         /// <summary>
-        /// COMMAND:*ZxxLKON<CR> – zone xx KEYPAD LOCK ON – This will INHIBIT ANY keypad control input on the zone. This is the same as activating the Parental lock control at a keypad by holding down a SOURCE key for three seconds).
-        /// RESPONSE:#ZxxLKON<CR>
+        /// COMMAND:*ZxxLKON – zone xx KEYPAD LOCK ON – This will INHIBIT ANY keypad control input on the zone. This is the same as activating the Parental lock control at a keypad by holding down a SOURCE key for three seconds).
+        /// RESPONSE:#ZxxLKON
         /// </summary>
         SetKeypadLockON = 27,
 
         /// <summary>
-        /// COMMAND:*ZxxLKOFF<CR> – zone xx KEYPAD LOCK ON – This will RESTORE ALL keypad control input on the zone (useful as Parental lock control) . This is the same as de-activating the Parental lock control at a keypad byholding down a SOURCE key for three seconds).
-        /// RESPONSE: #ZxxLKOFF<CR>
+        /// COMMAND:*ZxxLKOFF – zone xx KEYPAD LOCK ON – This will RESTORE ALL keypad control input on the zone (useful as Parental lock control) . This is the same as de-activating the Parental lock control at a keypad byholding down a SOURCE key for three seconds).
+        /// RESPONSE: #ZxxLKOFF
         /// </summary>
         SetKeypadLockOFF = 28,
 
         /// <summary>
-        /// COMMAND:*VER<CR> – Firmware version query.
-        /// RESPONSE: #MPU_E6Dvx.yy<CR> where x is the major version number and yyis the minor version number.
+        /// COMMAND:*VER – Firmware version query.
+        /// RESPONSE: #MPU_E6Dvx.yy where x is the major version number and yyis the minor version number.
         /// </summary>
         ReadVersion = 29,
 
         /// <summary>
-        /// RESPONSE: #EXTMON<CR> Issued whenever the External MUTE first activates (closure to ground) and 0 whenever the External MUTE de-activates (open connection to ground).
+        /// RESPONSE: #EXTMON Issued whenever the External MUTE first activates (closure to ground) and 0 whenever the External MUTE de-activates (open connection to ground).
         /// NOTE – there is no COMMAND associated with this response; it is always initiated by a change at the EXT. MUTE input.
         /// </summary>
         ExternalMuteActivated = 30,
 
         /// <summary>
-        /// RESPONSE: #EXTMOFF<CR> Issued whenever External MUTE de-activates (open connection to ground).
+        /// RESPONSE: #EXTMOFF Issued whenever External MUTE de-activates (open connection to ground).
         /// NOTE – there is no COMMAND associated with this response; it is always initiated by a change at the EXT. MUTE input
         /// </summary>
         ExternalMuteDeactivated = 31,
 
         /// <summary>
-        /// RESPONSE: #?<CR> If a command has an error in it (does not adhere to exact command syntax), the E6D will respond with a "#?<CR>" string.
+        /// RESPONSE: #? If a command has an error in it (does not adhere to exact command syntax), the E6D will respond with a "#?" string.
         /// NOTE – there is no COMMAND associated with this response; it is always initiated if an error has been found in a command.
         /// </summary>
         ErrorInCommand = 32,

@@ -83,26 +83,41 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
+        /// <summary>
+        /// Defines the communication port, e.g. "COM1"
+        /// </summary>
         public string Port
         {
             get { return _port; }
         }
 
+        /// <summary>
+        /// Defines the communication baud rate, e.g. 9600
+        /// </summary>
         public int BaudRate
         {
             get { return _baudRate; }
         }
 
+        /// <summary>
+        /// Defines the number of data bits, either 7 or 8.
+        /// </summary>
         public int DataBits
         {
             get { return _dataBits; }
         }
 
+        /// <summary>
+        /// Defines the number of parity bit, either 0 or 1.
+        /// </summary>
         public int ParityBit
         {
             get { return _parityBit; }
         }
 
+        /// <summary>
+        /// Defines the parity mode, e.g. N (=Normal), E (=Even) or O (=Odd)
+        /// </summary>
         public string ParityMode
         {
             get { return _parityMode; }
