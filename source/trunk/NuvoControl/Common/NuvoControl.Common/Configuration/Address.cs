@@ -26,7 +26,9 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// This is a system configuration class. It is a data structurer.
+    /// This is a system configuration class. 
+    /// 
+    /// It is a data structurer.
     /// It defines a unique address of any object of NuvoEssentia or any other device.
     /// A zone or a source is uniquely addressed with such objects.
     /// </summary>

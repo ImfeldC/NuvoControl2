@@ -26,7 +26,9 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// This is a system configuration class. It is a data structurer.
+    /// This is a system configuration class. 
+    /// 
+    /// It is a data structurer.
     /// It defines attributes used to instantiate the appropriate protocol driver.
     /// </summary>
     public class Protocol

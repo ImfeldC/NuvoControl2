@@ -26,7 +26,9 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// This is a system configuration class. It is a data structurer.
+    /// This is a system configuration class. 
+    /// 
+    /// It is a data structurer.
     /// Is used as base class for all function classes.
     /// </summary>
     [DataContract]
