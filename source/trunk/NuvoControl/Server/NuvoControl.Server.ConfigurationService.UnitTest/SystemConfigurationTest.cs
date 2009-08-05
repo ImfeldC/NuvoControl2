@@ -31,9 +31,10 @@ using System.Drawing;
 namespace NuvoControl.Server.ConfigurationService.UnitTest
 { 
     /// <summary>
-    ///This is a test class for SystemConfigurationTest and is intended
-    ///to contain all SystemConfigurationTest Unit Tests
-    ///</summary>
+    /// Test class for SystemConfigurationTest 
+    /// 
+    /// It is intended to contain all SystemConfigurationTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class SystemConfigurationTest
     {
@@ -42,7 +43,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -90,7 +91,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests the successful validation if the system configuration.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTest()
         {
@@ -103,7 +104,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests the validation in case of not distinct zone definitions
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTestNotDistinctZones()
         {
@@ -116,7 +117,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests the validation in case of not distinct source definitions
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTestNotDistinctSources()
         {
@@ -129,7 +130,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests invalid zone id definition in the graphic configuration.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTestInvalidZoneIdInGraphic()
         {
@@ -142,7 +143,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests invalid source id definition in the graphic configuration.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTestInvalidSourceIdInGraphic()
         {
@@ -155,7 +156,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests invalid zone id definition in sleep function.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTestInvalidZoneIdInSleepFunction()
         {
@@ -168,7 +169,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         /// <summary>
         ///A test for Validate
         ///It tests invalid source id definition in alarm function.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTestInvalidSourceIdInAlarmFunction()
         {

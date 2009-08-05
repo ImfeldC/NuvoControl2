@@ -28,9 +28,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 {
     
     /// <summary>
-    ///This is a test class for NuvoEssentiaCommandTest and is intended
-    ///to contain all NuvoEssentiaCommandTest Unit Tests
-    ///</summary>
+    /// Test class for NuvoEssentiaCommandTest
+    ///
+    /// It is intended to contain all NuvoEssentiaCommandTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class NuvoEssentiaSingleCommandTest
     {
@@ -47,7 +48,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -206,7 +207,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderForIRFrequency
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderForIRFrequencyTest()
@@ -225,7 +226,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderForSource
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderForSourceTest()
@@ -242,7 +243,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderForZone
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderForZoneTest()
@@ -258,7 +259,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderForPowerStatus
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderForPowerStatusTest()
@@ -274,7 +275,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderWithVolumeLevel
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderWithVolumeLevelTest()
@@ -296,7 +297,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderWithBassTrebleLevel
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderWithBassTrebleLevelTest()
@@ -318,7 +319,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholderWithNumberConsideringPlusMinus
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholderWithNumberConsideringPlusMinusTest()
@@ -340,7 +341,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for replacePlaceholders
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void replacePlaceholdersTest()
@@ -353,7 +354,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for buildOutgoingCommand: Read Version
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void buildOutgoingCommand1Test()
@@ -365,7 +366,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for buildOutgoingCommand: Read Status Connect for Zone 5
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void buildOutgoingCommand2Test()
@@ -378,7 +379,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for buildOutgoingCommand: Set Source for Zone 10 and Source 2
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void buildOutgoingCommand3Test()
@@ -391,7 +392,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for buildOutgoingCommand: Set Volume for Zone 12 and Volume Level -60
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void buildOutgoingCommand4Test()
@@ -404,7 +405,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for buildOutgoingCommand: Set Bass and Treble Level
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void buildOutgoingCommand5Test()
@@ -440,7 +441,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for parseCommand
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void parseCommandTest()
@@ -465,7 +466,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for parseCommandForSource
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void parseCommandForSourceTest()
@@ -488,7 +489,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for parseCommandForZone
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void parseCommandForZoneTest()
@@ -503,7 +504,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for parseCommandForPowerStatus
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void parseCommandForPowerStatusTest()
@@ -533,7 +534,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for parseCommandForBassLevel
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void parseCommandForBassAndTrebleLevelTest()
@@ -560,7 +561,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for parseCommandForVolumeLevel
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void parseCommandForVolumeLevelTest()
@@ -604,7 +605,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for NuvoEssentiaSingleCommand Constructor
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void NuvoEssentiaSingleCommandConstructorTest()
         {

@@ -24,9 +24,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     
     
     /// <summary>
-    ///This is a test class for ProtocolDriverFactoryTest and is intended
-    ///to contain all ProtocolDriverFactoryTest Unit Tests
-    ///</summary>
+    /// Test class for ProtocolDriverFactoryTest 
+    /// 
+    /// It is intended to contain all ProtocolDriverFactoryTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class ProtocolDriverFactoryTest
     {
@@ -37,7 +38,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -83,7 +84,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for LoadDriver
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void LoadDriverTest()
         {

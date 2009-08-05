@@ -27,6 +27,7 @@ namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
     /// Interaction logic for ZoneCommander.xaml
+    /// 
     /// This is the control, which offers commanding a zone.
     /// </summary>
     public partial class ZoneCommander : UserControl

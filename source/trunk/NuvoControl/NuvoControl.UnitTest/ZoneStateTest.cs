@@ -18,7 +18,7 @@ namespace NuvoControl.UnitTest
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -126,7 +126,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>True</c>, because the right and left value are null.
         /// This means both are the same, so they are equal.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality1Test()
         {
@@ -141,7 +141,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>False</c>, because the right and left value are null.
         /// The comparison fails, if one or both parameters are null.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality2Test()
         {
@@ -156,7 +156,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>False</c>, because the right value is null.
         /// The comparison fails, if one or both parameters are null.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality3Test()
         {
@@ -171,7 +171,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>False</c>, because the left value is null.
         /// The comparison fails, if one or both parameters are null.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality4Test()
         {
@@ -185,7 +185,7 @@ namespace NuvoControl.UnitTest
         /// <summary>
         ///A test for op_Equality
         /// Expected result: Return <c>True</c>, because the left and the right value are the same.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality5Test()
         {
@@ -199,7 +199,7 @@ namespace NuvoControl.UnitTest
         /// <summary>
         ///A test for op_Equality
         /// Expected result: Return <c>True</c>, because the left and the right value are the same.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality6Test()
         {
@@ -214,7 +214,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>False</c>, because the left and the right value are NOT the same.
         /// A different address is used.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality7Test()
         {
@@ -229,7 +229,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>False</c>, because the left and the right value are NOT the same.
         /// A different power status is used.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality8Test()
         {
@@ -244,7 +244,7 @@ namespace NuvoControl.UnitTest
         ///A test for op_Equality
         /// Expected result: Return <c>False</c>, because the left and the right value are NOT the same.
         /// A different volume level is used.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void op_Equality9Test()
         {

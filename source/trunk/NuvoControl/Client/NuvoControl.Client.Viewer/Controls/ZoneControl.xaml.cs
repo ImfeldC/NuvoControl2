@@ -29,6 +29,7 @@ namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
     /// Interaction logic for ZoneControl.xaml
+    /// 
     /// This is the zone control instantiated per zone in the floor view.
     /// </summary>
     public partial class ZoneControl : UserControl

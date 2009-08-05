@@ -34,6 +34,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 {
     /// <summary>
     /// Implements the functions for monitoring and controlling NuvoControl zones.
+    /// 
     /// A monitor and control service is WCF service, hosted as sessionful service. Thus an object of this class is
     /// instantiated per client proxy. This allows to keep state per client proxy.
     /// The monitor and control service keeps following state, related to a client: Callback interface and all subscribed zones.
@@ -88,7 +89,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         #region IMonitorAndControl Members
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         public void Connect()
         {
@@ -101,7 +102,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         public void Disconnect()
         {
@@ -111,7 +112,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneId"></param>
         /// <param name="stateCommand"></param>
@@ -122,7 +123,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>
@@ -133,7 +134,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneId"></param>
         public void Monitor(Address zoneId)
@@ -144,7 +145,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneIds"></param>
         public void MonitorMultiple(Address[] zoneIds)
@@ -157,7 +158,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneId"></param>
         public void RemoveMonitor(Address zoneId)
@@ -168,7 +169,7 @@ namespace NuvoControl.Server.MonitorAndControlService
 
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneIds"></param>
         public void RemoveMonitorMultiple(Address[] zoneIds)

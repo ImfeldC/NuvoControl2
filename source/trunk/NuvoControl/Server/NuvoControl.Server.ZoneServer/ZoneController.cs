@@ -32,7 +32,9 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 namespace NuvoControl.Server.ZoneServer
 {
     /// <summary>
-    /// This is the controller class for a zone. It is responsible to command the 'real' zone via the protocol driver.
+    /// This is the controller class for a zone. 
+    /// 
+    /// It is responsible to command the 'real' zone via the protocol driver.
     /// Upon receiving new values/states via protocol driver, it notifies subscribed clients.
     /// Thus, it manages subscribed clients.
     /// </summary>

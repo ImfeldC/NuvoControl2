@@ -201,10 +201,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     /// All systems - which would like to be monitored and controlled - by NuvoControl
     /// are required to implement this interface.
     /// 
-    /// <br>The following class diagram shows the interface hirarchy: 
+    /// The following class diagram shows the interface hirarchy: 
     /// \image html ProtocolDriverInterfaceOverview.jpg "Protocol Driver Interface Overview"
     /// 
-    /// <br>
     /// The following class diagram shows the protocol stack: 
     /// \image html ProtocolDriverOverview.jpg "Protocol Driver Overview"
     /// </summary>

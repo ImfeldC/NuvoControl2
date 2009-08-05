@@ -13,9 +13,10 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
     
     
     /// <summary>
-    ///This is a test class for MonitorAndControlServiceTest and is intended
-    ///to contain all MonitorAndControlServiceTest Unit Tests
-    ///</summary>
+    /// Test class for MonitorAndControlServiceTest 
+    /// 
+    /// It is intended to contain all MonitorAndControlServiceTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class MonitorAndControlServiceTest: IMonitorAndControlNotification
     {
@@ -26,7 +27,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -72,7 +73,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for SetZoneState
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void SetZoneStateTest()
         {
@@ -86,7 +87,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 /*
         /// <summary>
         ///A test for StoreSubscribedZoneId
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.MonitorAndControlService.dll")]
         public void StoreSubscribedZoneIdTest()
@@ -102,7 +103,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for RemoveSubscribedZoneId
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.MonitorAndControlService.dll")]
         public void RemoveSubscribedZoneIdTest()
@@ -115,7 +116,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for RemoveMonitorMultiple
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void RemoveMonitorMultipleTest()
         {
@@ -127,7 +128,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for RemoveMonitor
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void RemoveMonitorTest()
         {
@@ -139,7 +140,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for OnZoneNotification
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.MonitorAndControlService.dll")]
         public void OnZoneNotificationTest()
@@ -153,7 +154,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for NotifySubscribers
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.MonitorAndControlService.dll")]
         public void NotifySubscribersTest()
@@ -167,7 +168,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for MonitorMultiple
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void MonitorMultipleTest()
         {
@@ -179,7 +180,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for Monitor
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void MonitorTest()
         {
@@ -191,7 +192,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for GetZoneState
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void GetZoneStateTest()
         {
@@ -206,7 +207,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for Dispose
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void DisposeTest()
         {
@@ -217,7 +218,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for Disconnect
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void DisconnectTest()
         {
@@ -228,7 +229,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for Connect
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ConnectTest()
         {
@@ -239,7 +240,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for Cleanup
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.MonitorAndControlService.dll")]
         public void CleanupTest()
@@ -251,7 +252,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for MonitorAndControlService Constructor
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void MonitorAndControlServiceConstructorTest1()
         {
@@ -261,7 +262,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 
         /// <summary>
         ///A test for MonitorAndControlService Constructor
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void MonitorAndControlServiceConstructorTest()
         {

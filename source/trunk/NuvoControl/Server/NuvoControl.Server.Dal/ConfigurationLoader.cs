@@ -34,6 +34,7 @@ namespace NuvoControl.Server.Dal
 {
     /// <summary>
     /// This class contains the functionality to load the Nuvo Control XML configuration file into a XDocument object.
+    /// 
     /// It checks the version of the XML file and
     /// it contains the functionality to convert the XDocument into the configuration data objects, which describe the system.
     /// </summary>

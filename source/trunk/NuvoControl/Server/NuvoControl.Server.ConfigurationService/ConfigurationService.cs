@@ -33,7 +33,8 @@ using System.ServiceModel;
 namespace NuvoControl.Server.ConfigurationService
 {
     /// <summary>
-    /// This class implements the interface of the configuration service. <see cref="IConfigure"/> and <see cref="IConfigureInternal"/>
+    /// This class implements the interface of the configuration service <see cref="IConfigure"/> and <see cref="IConfigureInternal"/>
+    /// 
     /// The configuration service is a WCF-service, hosted as singleton.
     /// It defines functionality to read the actual configuration of the NuvoControl system.
     /// It defines functionality to modify the actual configuration of the NuvoControl system.

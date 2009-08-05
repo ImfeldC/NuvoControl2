@@ -49,6 +49,7 @@ namespace NuvoControl.Common
 
     /// <summary>
     /// Public class to hold the state of a zone.
+    /// 
     /// It contains the main state of a zone, like selected source, the current power status
     /// (like on or off) and the current volume level.
     /// It holds also additional data about the zone state, like 'Lats Update' to indicate the

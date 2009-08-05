@@ -25,7 +25,8 @@ using System.Text;
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
     /// <summary>
-    /// Public interface for a single Nuvo Essentai command.
+    /// Public interface for a single Nuvo Essentia command.
+    /// 
     /// It has members for all possible values send and/or received from Nuvo Essentia.
     /// Depending on the specified command not all members will be used and set at runtime
     /// to the correct value received from Nuvo Essentia.

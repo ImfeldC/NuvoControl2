@@ -26,6 +26,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
 {
     /// <summary>
     /// Specifies a all attributes of a view at a point of time.
+    /// 
     /// With this data, it is possible to navigate within the application and within history as well.
     /// </summary>
     public class NavigationItem
