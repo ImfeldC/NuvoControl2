@@ -14,7 +14,7 @@
 
     This server contains an image of the state of the connected devices. It allows to command the devices and to retrieve state of devices.
     Typically, the zone server is instantiated once per Nuvo Control server
-    <br/>The following class diagram shows this layer: 
+    <br>The following class diagram shows this layer: 
     \image html ZoneServerOverview.jpg "Zone Server Overview"
 
 */

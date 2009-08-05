@@ -105,6 +105,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="NamespaceDoc.dox" />
     <None Include="NuvoControl.Server.ProtocolDriver.cd" />
     <None Include="ProtocolDriverOverview.cd" />
     <None Include="Properties\Settings.settings">

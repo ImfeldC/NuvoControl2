@@ -149,6 +149,7 @@ namespace NuvoControl.Test.NuvoClient
         /// <param name="sBits">Desired StopBits</param>
         /// <param name="dBits">Desired DataBits</param>
         /// <param name="name">Desired PortName</param>
+        /// <param name="rtb">Rich Textbox, to display messages.</param>
         public CommunicationManager(string baud, string par, string sBits, string dBits, string name, RichTextBox rtb)
         {
             _baudRate = baud;

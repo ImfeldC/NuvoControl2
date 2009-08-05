@@ -19,9 +19,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// It is mainly used in case of unit tests, to pass-in a mock test object.
         /// Is possible use the method of the <c>IProtocol</c> interface. 
         /// See <see cref="IProtocol.Open"/> for more information.
-        /// <note type="implementnotes">
-        ///     Use - if possible - the <c>Open</c> method of the base interface <c>IProtocol</c>.
-        /// </note>
+        /// Use - if possible - the <c>Open</c> method of the base interface <c>IProtocol</c>.
         /// </summary>
         /// <param name="system">System type.</param>
         /// <param name="deviceId">Device Id, for this device.</param>

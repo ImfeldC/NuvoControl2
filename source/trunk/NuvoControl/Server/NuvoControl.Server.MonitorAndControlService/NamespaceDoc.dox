@@ -14,7 +14,7 @@
 
     This namespace contains the WCF monitor and control service.
     Basically it contains functionalty to control and monitor NuvoEssentia devices.
-    <br/>The following class diagram shows this layer: 
+    <br>The following class diagram shows this layer: 
     \image html MonitorAndControlServiceOverview.jpg "Monitor And Control Service Overview"
 
 */

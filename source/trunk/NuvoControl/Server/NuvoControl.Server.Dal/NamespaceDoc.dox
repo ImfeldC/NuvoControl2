@@ -15,6 +15,6 @@
     This namespace contains data access layer functionality.
     Basically it contains functionalty to read the system configuration from persistancy store and converts it
     into the system configuration objects.
-    <br/>The following class diagram shows this layer: 
+    <br>The following class diagram shows this layer: 
     \image html DalOverview.jpg "Dal Overview"
 */

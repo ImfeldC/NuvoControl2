@@ -49,7 +49,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// Creates a serial port driver, based on the specified parameters.
         /// </summary>
         /// <param name="assemblyName">The assebly name containing the class specified by the second parameter.</param>
-        /// <param name="className">The full specified class name, which implements <see>ISerialPort</see></param>
+        /// <param name="className">The full specified class name, which implements *ISerialPort</param>
         /// <returns>The interface of the serial port driver or null, if the driver could not be loaded.</returns>
         public static ISerialPort LoadDriver(string assemblyName, string className)
         {

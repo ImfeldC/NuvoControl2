@@ -69,7 +69,7 @@ namespace NuvoControl.Server.ConfigurationService
 
         /// <summary>
         /// Adds a new function to the system configuration.
-        /// <br>The function is validated.</br>
+        /// <b>The function is validated.</b>
         /// </summary>
         /// <param name="newFunction">The new function to add.</param>
         /// <returns>True, if the function is valid; otherwise false.</returns>
