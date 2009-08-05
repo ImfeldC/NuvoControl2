@@ -64,7 +64,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// Nuvo Essentia command, nothing is sent to the lower 
         /// system.
         /// </summary>
-        /// <param name="command">Nuvo Essentia command (as string). Without starting *-sign and leading '<BR>'sign.</param>
+        /// <param name="command">Nuvo Essentia command (as string). Without starting *-sign and leading 'carriage return'sign.</param>
         void SendCommand(string command);
 
         /// <summary>
