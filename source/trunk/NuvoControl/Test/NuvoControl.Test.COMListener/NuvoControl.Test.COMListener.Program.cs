@@ -36,17 +36,10 @@ namespace NuvoControl.Test.COMListener
 
     static class Program
     {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// \fn	[STAThread] static void Main()
-        ///
-        /// \brief	
-        /// 		The main entry point for the application. 
-        /// 		Uses the ILog intercface for common logging.
-        ///
-        /// \author	Administrator
-        /// \date	17.05.2009
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// The main entry point for the application. 
+        /// Uses the ILog intercface for common logging.
+        /// </summary>
         [STAThread]
         static void Main()
         {

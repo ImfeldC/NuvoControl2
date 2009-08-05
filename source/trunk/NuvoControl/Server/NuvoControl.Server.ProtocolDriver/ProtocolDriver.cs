@@ -39,11 +39,11 @@ namespace NuvoControl.Server.ProtocolDriver
     /// devices.
     /// 
     /// <br/>The following class diagram shows the interface hirarchy: 
-    /// <a href="../ClassDiagrams/ProtocolDriverInterfaceOverview.jpg">ProtocolDriverInterfaceOverview</a>
     /// \image html ProtocolDriverInterfaceOverview.jpg
+    /// 
     /// <br/>The following class diagram shows the protocol stack: 
-    /// <a href="../ClassDiagrams/ProtocolDriverOverview.jpg">ProtocolDriverOverview</a>
     /// \image html ProtocolDriverOverview.jpg
+    /// 
     /// </summary>
     public class NuvoEssentiaProtocolDriver : INuvoProtocol, IDisposable
     {

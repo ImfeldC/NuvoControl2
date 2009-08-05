@@ -102,16 +102,10 @@ namespace NuvoControl.Server.ProtocolDriver
             _serialPort.Open(_serialPortConnectInformation);
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// \fn	public void SendTelegram(string telegram)
-        ///
-        /// \brief	Send telegram. Add leading '*' and '<CR>' sign 
-        ///
-        /// \author	Administrator
-        /// \date	18.05.2009
-        ///
-        /// \param	telegram - The telegram without leading '*' and ending '<CR>'. 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Send telegram. Add leading '*' and 'carriage return' sign at end 
+        /// </summary>
+        /// <param name="telegram">The telegram without leading '*' and ending 'carriage return'</param>
         public void SendTelegram(string telegram)
         {
             if ((telegram != null) && (telegram.Length > 0))
@@ -142,7 +136,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// \brief	
         /// 		method that will be called when theres data waiting in the buffer. 
         /// 		The received text is parsed, that it macthes the expected Nuvo telegram.
-        /// 		It should start with a '#' sign and end with a '<CR>'
+        /// 		It should start with a '#' sign and end with a 'carriage return'
         ///
         /// \author	Ch. Imfeld
         /// \date	18.05.2009
