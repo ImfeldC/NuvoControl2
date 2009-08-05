@@ -15,6 +15,6 @@
     This namespace contains the WCF configuration service.
     Basically it contains functionalty to read the system configuration and add functions via the exposed WCF interface.
     It is specified as singleton.
-    <br/>The following class diagram shows this layer: 
+    <br>The following class diagram shows this layer: 
     \image html ConfigurationServiceOverview.jpg "Configuration Service Overview"
 */

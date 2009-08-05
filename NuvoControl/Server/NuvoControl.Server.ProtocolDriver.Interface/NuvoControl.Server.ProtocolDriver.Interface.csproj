@@ -72,6 +72,7 @@
     <Compile Include="ProtocolDriverFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NamespaceDoc.dox" />
     <None Include="NuvoControl.Server.ProtocolDriver.Interface.cd" />
     <None Include="ProtocolDriverInterfaceOverview.cd" />
   </ItemGroup>

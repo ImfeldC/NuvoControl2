@@ -38,10 +38,10 @@ namespace NuvoControl.Server.ProtocolDriver
     /// An application should use this class to instantiate a protocol stack to one or more
     /// devices.
     /// 
-    /// <br/>The following class diagram shows the interface hirarchy: 
+    /// <br>The following class diagram shows the interface hirarchy: 
     /// \image html ProtocolDriverInterfaceOverview.jpg
     /// 
-    /// <br/>The following class diagram shows the protocol stack: 
+    /// <br>The following class diagram shows the protocol stack: 
     /// \image html ProtocolDriverOverview.jpg
     /// 
     /// </summary>

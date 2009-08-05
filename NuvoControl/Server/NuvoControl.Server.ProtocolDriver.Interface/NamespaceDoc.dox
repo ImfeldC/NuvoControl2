@@ -13,9 +13,9 @@
     \brief Contains the public interface(s) to access the protocol driver
 
     This namespace contains the public interface(s) to access the protocol driver.
-    <br/>The following class diagram shows the interface hirarchy: 
+    <br>The following class diagram shows the interface hirarchy: 
     \image html ProtocolDriverInterfaceOverview.jpg "Protocol Driver Interface Overview"
 
-    <br/>The following class diagram shows the protocol stack: 
+    <br>The following class diagram shows the protocol stack: 
     \image html ProtocolDriverOverview.jpg "Protocol Driver Overview"
 */
