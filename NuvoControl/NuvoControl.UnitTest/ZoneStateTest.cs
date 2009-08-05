@@ -5,8 +5,9 @@ namespace NuvoControl.UnitTest
     
     
     /// <summary>
-    /// This is a test class for ZoneStateTest and is intended
-    /// to contain all ZoneStateTest Unit Tests
+    /// Test class for ZoneStateTest
+    /// 
+    /// It is intended to contain all ZoneStateTest Unit Tests
     /// </summary>
     [TestClass()]
     public class ZoneStateTest

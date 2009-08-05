@@ -198,6 +198,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     /// <summary>
     /// This is the main interface used by the NuvoControl Monitor and Control Service.
+    /// 
     /// All systems - which would like to be monitored and controlled - by NuvoControl
     /// are required to implement this interface.
     /// 

@@ -20,6 +20,7 @@ namespace NuvoControl.Server.Simulator
 
     /// <summary>
     /// Event Handler class for the zone state controller.
+    /// 
     /// Contains the zone id where this event belongs to. In addition it holds
     /// the previous and new zone state.
     /// </summary>

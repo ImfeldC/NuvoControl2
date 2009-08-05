@@ -26,6 +26,7 @@ namespace NuvoControl.Client.Viewer.Commands
 {
     /// <summary>
     /// This class defines commands, used in various places within the application.
+    ///
     /// E.g. Navigation commands, Zone commands.
     /// All commands support shortcuts.
     /// </summary>

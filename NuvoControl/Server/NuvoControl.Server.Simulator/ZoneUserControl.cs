@@ -38,6 +38,7 @@ namespace NuvoControl.Server.Simulator
 
         /// <summary>
         /// Zone user control event argument class.
+        /// 
         /// Contains the current selected zone, as zone id. And the prvious selected zone state and the
         /// source sender zone user control.
         /// </summary>

@@ -30,6 +30,7 @@ namespace NuvoControl.Client.Viewer.Controls
 {
     /// <summary>
     /// Interaction logic for FloorView.xaml
+    /// 
     /// Contains the logic to unload and load its appropriate zones.
     /// </summary>
     public partial class FloorView : UserControl, IFloorViewNotification

@@ -28,9 +28,7 @@ using System.ServiceModel;
 namespace NuvoControl.Server.ConfigurationService
 {
     /// <summary>
-    /// Defines functionality to read the actual configuration of the NuvoControl system.
-    /// Defines functionality to modify the actual configuration of the NuvoControl system.
-    /// Defines functionality to save the actual configuration of the NuvoControl system.
+    /// Defines functionality to read, modify and save the actual configuration of the NuvoControl system.
     /// </summary>
     [ServiceContract]
     public interface IConfigure
