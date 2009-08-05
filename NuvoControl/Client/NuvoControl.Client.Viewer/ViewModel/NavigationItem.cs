@@ -108,7 +108,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// Determines wether the specified address equals the current address.
         /// </summary>
-        /// <param name="id">The navigation item to compare with.</param>
+        /// <param name="item">The navigation item to compare with.</param>
         /// <returns>True if the specified navigation item is equal to the current navigation item; otherwise, false.</returns>
         public bool Equals(NavigationItem item)
         {
@@ -122,8 +122,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// Equality operator
         /// </summary>
-        /// <param name="id1">Left hand side parameter.</param>
-        /// <param name="id2">Reight hand side parameter</param>
+        /// <param name="item1">Left hand side parameter.</param>
+        /// <param name="item2">Reight hand side parameter</param>
         /// <returns>True, if the specified items are equal; otherwise false.</returns>
         public static bool operator ==(NavigationItem item1, NavigationItem item2)
         {
@@ -137,8 +137,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// Unequality operator
         /// </summary>
-        /// <param name="id1">Left hand side parameter.</param>
-        /// <param name="id2">Reight hand side parameter</param>
+        /// <param name="item1">Left hand side parameter.</param>
+        /// <param name="item2">Reight hand side parameter</param>
         /// <returns>True, if the specified items are unequal; otherwise false.</returns>
         public static bool operator !=(NavigationItem item1, NavigationItem item2)
         {

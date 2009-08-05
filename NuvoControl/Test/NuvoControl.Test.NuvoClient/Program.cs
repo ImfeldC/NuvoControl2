@@ -25,28 +25,15 @@ using Common.Logging;
 
 namespace NuvoControl.Test.NuvoClient
 {
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// \class	Program
-    ///
-    /// \brief	Program. Main program class of COMListener
-    ///
-    /// \author	Administrator
-    /// \date	17.05.2009
-    ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+    /// <summary>
+    /// Program. Main program class of COMListener
+    /// </summary>
     static class Program
     {
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// \fn	[STAThread] static void Main()
-        ///
-        /// \brief	
-        /// 		The main entry point for the application. 
-        /// 		Uses the ILog intercface for common logging.
-        ///
-        /// \author	Administrator
-        /// \date	17.05.2009
-        ////////////////////////////////////////////////////////////////////////////////////////////////////
-
+        /// <summary>
+        /// The main entry point for the application. 
+        /// Uses the ILog intercface for common logging.
+        /// </summary>
         [STAThread]
         static void Main()
         {

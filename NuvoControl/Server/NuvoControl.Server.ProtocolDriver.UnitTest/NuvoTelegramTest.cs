@@ -228,7 +228,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         /// Unittest to test the event onTelegramReceived of the telegram layer.
-        /// Test: Receive 'incomplete' telegram (start with '\r')
+        /// Test: Receive 'incomplete' telegram (start with carriage return)
         /// Expected: Return 'COMAND'
         /// </summary>
         [TestMethod()]
@@ -247,7 +247,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         /// Unittest to test the event onTelegramReceived of the telegram layer.
-        /// Test: Receive buggy telegram (start with '\r' and several '#' signs)
+        /// Test: Receive buggy telegram (start with carriage return and several '#' signs)
         /// Expected: Return 'COMAND'
         /// </summary>
         [TestMethod()]
@@ -288,7 +288,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         /// Unittest to test the write method of the telegram layer.
         /// Test: Send regular telegram
-        /// Expected: Telegram is send, adding leading #-sign and ending '\r'-sign
+        /// Expected: Telegram is send, adding leading #-sign and ending 'carriage return'-sign
         /// </summary>
         [TestMethod()]
         public void Write1Test()

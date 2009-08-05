@@ -203,7 +203,7 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
         /// It considers values like zone id, volume, etc. to build the expected string.
         /// It adds also the expected start and stop character.
         /// </summary>
-        /// <param name="command">Outgoing command string, where all placeholders have been replaced.</param>
+        /// <param name="text">Outgoing command string, where all placeholders have been replaced.</param>
         /// <returns>Returns the expected incoming command string.</returns>
         public static string createIncomingCommand(string text)
         {
