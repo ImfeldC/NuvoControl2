@@ -69,6 +69,7 @@ namespace NuvoControl.Server.ZoneServer
 
     /// <summary>
     /// Defines the interface of a zone controller.
+    /// 
     /// Defines functionality to read and write zones and to monitor (subsciptions) zone state changes.
     /// </summary>
     public interface IZoneController
