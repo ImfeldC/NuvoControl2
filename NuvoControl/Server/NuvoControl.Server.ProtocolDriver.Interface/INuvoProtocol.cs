@@ -8,7 +8,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 {
     /// <summary>
     /// This interface extends the main interface <c>IProtocol</c>, with specific methods for 
-    /// Nuvo devices. This interface extends the possible range of commands, but it is 
+    /// Nuvo devices. 
+    /// 
+    /// This interface extends the possible range of commands, but it is 
     /// no longer general and the same for all devices.
     /// </summary>
     public interface INuvoProtocol : IProtocol

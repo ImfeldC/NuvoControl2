@@ -32,9 +32,9 @@ using NuvoControl.Server.Dal;
 namespace NuvoControl.Server.Dal.UnitTest
 {
     /// <summary>
-    ///This is a test class for ConfigurationLoaderTest and is intended
-    ///to contain all ConfigurationLoaderTest Unit Tests
-    ///</summary>
+    /// This is a test class for ConfigurationLoaderTest and is intended
+    /// to contain all ConfigurationLoaderTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class ConfigurationLoaderTest
     {
@@ -43,7 +43,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -89,7 +89,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
         /// <summary>
         ///A test for ConfigurationLoader Constructor with wellformed XML file.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ConfigurationLoaderConstructorTestWellFormedXml()
         {
@@ -101,7 +101,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
         /// <summary>
         ///A test for ConfigurationLoader Constructor with wrong XML file path.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [ExpectedException(typeof(DirectoryNotFoundException), "The directory exists inappropriately.")]
         public void ConfigurationLoaderConstructorTestWrongXmlFilePath()
@@ -113,7 +113,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
         /// <summary>
         ///A test for ConfigurationLoader Constructor with wrong XML file name.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [ExpectedException(typeof(FileNotFoundException), "The XML Configuration file exists inappropriately.")]
         public void ConfigurationLoaderConstructorTestWrongXmlFileName()
@@ -125,7 +125,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
         /// <summary>
         ///A test for ConfigurationLoader Constructor with not well formed XML file.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [ExpectedException(typeof(XmlException), "The XML Configuration file is well formed inappropriately.")]
         public void ConfigurationLoaderConstructorTestNotWellFormedXml()
@@ -137,7 +137,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
         /// <summary>
         ///A test for Validate
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void ValidateTest()
         {
@@ -149,7 +149,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
         /// <summary>
         ///A test for GetConfiguration
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void GetConfigurationTest()
         {

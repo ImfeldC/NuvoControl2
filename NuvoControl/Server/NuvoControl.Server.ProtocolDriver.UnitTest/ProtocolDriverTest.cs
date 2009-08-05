@@ -30,9 +30,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     
     
     /// <summary>
-    ///This is a test class for ProtocolDriverTest and is intended
-    ///to contain all ProtocolDriverTest Unit Tests
-    ///</summary>
+    /// Test class for ProtocolDriverTest
+    /// 
+    /// It is intended to contain all ProtocolDriverTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class ProtocolDriverTest
     {
@@ -58,7 +59,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -108,7 +109,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for SendCommand. Using the combined (non-single) command.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void SendCommandTest1()
         {
@@ -124,7 +125,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for SendCommand. Using the Single Command.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void SendCommandTest()
         {

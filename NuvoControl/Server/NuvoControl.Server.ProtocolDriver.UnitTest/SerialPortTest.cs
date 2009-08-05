@@ -26,9 +26,10 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
     
     
     /// <summary>
-    ///This is a test class for SerialPortTest and is intended
-    ///to contain all SerialPortTest Unit Tests
-    ///</summary>
+    /// Test class for SerialPortTest 
+    /// 
+    /// It is intended to contain all SerialPortTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class SerialPortTest
     {
@@ -39,7 +40,7 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -85,7 +86,7 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
 
         /// <summary>
         ///A test for Open
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void OpenTest()
         {
@@ -98,7 +99,7 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
 
         /// <summary>
         ///A test for IsOpen
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void IsOpenTest()
         {
@@ -109,7 +110,7 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
 
         /// <summary>
         ///A test for Write
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void WriteTest()
         {
@@ -122,7 +123,7 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
 
         /// <summary>
         ///A test for OpenPort.
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void OpenPortTest()

@@ -27,9 +27,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     
     
     /// <summary>
-    ///This is a test class for NuvoEssentiaProtocolTest and is intended
-    ///to contain all NuvoEssentiaProtocolTest Unit Tests
-    ///</summary>
+    /// Test class for NuvoEssentiaProtocolTest 
+    /// 
+    /// It is intended to contain all NuvoEssentiaProtocolTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class NuvoEssentiaProtocolTest
     {
@@ -49,7 +50,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -665,7 +666,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         ///A test for NuvoEssentiaProtocol Constructor
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         public void NuvoEssentiaProtocolConstructorTest()
         {

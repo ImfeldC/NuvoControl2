@@ -32,6 +32,7 @@ namespace NuvoControl.Server.ZoneServer
 {
     /// <summary>
     /// Implements the interface of the zone server.
+    /// 
     /// This server contains an image of state of the connected devices.
     /// It allows to command the devices and to retrieve state of devices.
     /// Typically, the zone server is instantiated once per Nuvo Control server.

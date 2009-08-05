@@ -32,6 +32,7 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
     /// This class implements the protocol stack to acces the Nuvo Essentia.
+    /// 
     /// This is the main class which combines the access to the protocol stack.
     /// It implements the extended <c>INuvoProtocol</c> interface, which inherits from 
     /// <c>IProtocol</c> interface.

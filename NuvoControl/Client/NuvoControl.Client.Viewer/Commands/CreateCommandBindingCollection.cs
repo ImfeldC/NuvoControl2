@@ -28,6 +28,7 @@ namespace NuvoControl.Client.Viewer.Commands
 {
     /// <summary>
     /// An attached property.
+    /// 
     /// It is used, to store command bindings dynamically within the commandbindings collection of UIElements.
     /// This allows defining command bindings (with their handlers) in view model classes.
     /// </summary>

@@ -27,9 +27,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     
     
     /// <summary>
-    ///This is a test class for NuvoTelegramTest and is intended
-    ///to contain all NuvoTelegramTest Unit Tests
-    ///</summary>
+    /// Test class for NuvoTelegramTest 
+    /// 
+    /// It is intended to contain all NuvoTelegramTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class NuvoTelegramTest
     {
@@ -54,7 +55,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get
@@ -212,7 +213,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// Unittest to test the event onTelegramReceived of the telegram layer.
         /// Test: Receive 'empty' telegram
         /// Expected: Return '' and telegram buffer contains 3 charachters
-        ///</summary>
+        /// </summary>
         [TestMethod()]
         [DeploymentItem("NuvoControl.Server.ProtocolDriver.dll")]
         public void onTelegramReceived6Test()

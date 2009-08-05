@@ -27,9 +27,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     
     
     /// <summary>
-    ///This is a test class for ProtocolDriverSimulatorTest and is intended
-    ///to contain all ProtocolDriverSimulatorTest Unit Tests
-    ///</summary>
+    /// Test class for ProtocolDriverSimulatorTest 
+    /// 
+    /// It is intended to contain all ProtocolDriverSimulatorTest Unit Tests
+    /// </summary>
     [TestClass()]
     public class ProtocolDriverSimulatorTest
     {
@@ -40,7 +41,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// <summary>
         ///Gets or sets the test context which provides
         ///information about and functionality for the current test run.
-        ///</summary>
+        /// </summary>
         public TestContext TestContext
         {
             get

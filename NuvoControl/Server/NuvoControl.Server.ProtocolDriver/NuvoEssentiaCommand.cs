@@ -29,6 +29,7 @@ namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
     /// Class to handle multiple Nuvo Essentia commands.
+    /// 
     /// See class <see cref="INuvoEssentiaSingleCommand"/> for more information.
     /// </summary>
     public class NuvoEssentiaCommand : INuvoEssentiaCommand
