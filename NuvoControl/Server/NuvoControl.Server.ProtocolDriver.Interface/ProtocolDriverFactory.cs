@@ -49,7 +49,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// Creates a protocol driver, based on the specified parameters.
         /// </summary>
         /// <param name="assemblyName">The assebly name containing the class specified by the second parameter.</param>
-        /// <param name="className">The full specified class name, which implements *IProtocol</param>
+        /// <param name="className">The full specified class name, which implements IProtocol</param>
         /// <returns>The interface of the protocol driver or null, if the driver could not be loaded.</returns>
         public static IProtocol LoadDriver(string assemblyName, string className)
         {
