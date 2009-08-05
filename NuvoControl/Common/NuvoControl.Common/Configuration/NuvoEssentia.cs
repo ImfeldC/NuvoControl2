@@ -26,7 +26,9 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// This is a system configuration class. It is a data structurer.
+    /// This is a system configuration class. 
+    /// 
+    /// It is a data structurer.
     /// It defines attributes of a device. E.g. the NuvoEssentia.
     /// </summary>
     public class Device

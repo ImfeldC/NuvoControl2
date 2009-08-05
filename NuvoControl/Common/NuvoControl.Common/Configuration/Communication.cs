@@ -26,7 +26,9 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// This is a system configuration class. It is a data structurer.
+    /// This is a system configuration class. 
+    /// 
+    /// It is a data structurer.
     /// It defines communication parameters of a link to a device.
     /// </summary>
     public class Communication
