@@ -475,7 +475,7 @@ MAX_INITIALIZER_LINES  = 30
 # then setting the SHOW_DIRECTORIES tag to YES will show the directory hierarchy 
 # in the documentation. The default is NO.
 
-SHOW_DIRECTORIES       = NO
+SHOW_DIRECTORIES       = YES
 
 # Set the SHOW_FILES tag to NO to disable the generation of the Files page. 
 # This will remove the Files entry from the Quick Index and from the 
@@ -542,7 +542,7 @@ WARN_IF_DOC_ERROR      = YES
 # wrong or incomplete parameter documentation, but not about the absence of 
 # documentation.
 
-WARN_NO_PARAMDOC       = NO
+WARN_NO_PARAMDOC       = YES
 
 # The WARN_FORMAT tag determines the format of the warning messages that 
 # doxygen can produce. The string should contain the $file, $line, and $text 
@@ -557,7 +557,7 @@ WARN_FORMAT            = "$file:$line: $text"
 # and error messages should be written. If left blank the output is written 
 # to stderr.
 
-WARN_LOGFILE           = 
+WARN_LOGFILE           = doxygen_warn.txt
 
 #---------------------------------------------------------------------------
 # configuration options related to the input files
@@ -615,7 +615,9 @@ FILE_PATTERNS          = *.c \
                          *.f90 \
                          *.f \
                          *.vhd \
-                         *.vhdl
+                         *.vhdl \
+                         *.sln \
+                         *.xml
 
 # The RECURSIVE tag can be used to turn specify whether or not subdirectories 
 # should be searched for input files as well. Possible values are YES and NO. 
@@ -642,7 +644,11 @@ EXCLUDE_SYMLINKS       = NO
 # for example use the pattern */test/*
 
 EXCLUDE_PATTERNS       = */.svn/* \
-                         */NamespaceDoc.cs
+                         */NamespaceDoc.cs \
+                         */bin/Debug/* \
+                         */bin/Release/* \
+                         */obj/Release/* \
+                         */obj/Debug/*
 
 # The EXCLUDE_SYMBOLS tag can be used to specify one or more symbol names 
 # (namespaces, classes, functions, etc.) that should be excluded from the 

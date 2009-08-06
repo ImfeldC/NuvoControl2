@@ -26,14 +26,103 @@ using AMS.Profile;
 using Common.Logging;
 using NuvoControl.Common;
 
+/*! 
+ * \page pagePlaceHolders Placeholders
+ * This page explains the placeholders used to identify values in the command templates. <br>
+ * The command templates are configured in the file \ref NuvoEssentiaProfile.xml <br> 
+ * The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:
+ * <table>
+ * <tr> 
+ *     <th><b> I </b></th> 
+ *     <th><b> O </b></th> 
+ *     <th><b> Placeholder </b></th> 
+ *     <th><b> Field </b></th> 
+ *     <th><b> Description </b></th>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>-</td>
+ *     <td>aa,bb,cc,dd,ee,ff</td>
+ *     <td>for the IR carrier frequency.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderForIRFrequency() .</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>x</td>
+ *     <td>xx</td>
+ *     <td>Zone Id.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderForZone(). 
+ *         Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForZone().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>-</td>
+ *     <td>ppp</td>
+ *     <td>Zone power status.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderForPowerStatus(). 
+ *         Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForPowerStatus().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>x</td>
+ *     <td>s</td>
+ *     <td>Source id.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderForSource(). 
+ *         Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForSource().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>-</td>
+ *     <td>q</td>
+ *     <td>Source group (on/off).</td>
+ *     <td>Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForSourceGroupStatus().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>x</td>
+ *     <td>yy</td>
+ *     <td>Volume level.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderWithVolumeLevel(). 
+ *         Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForVolumeLevel().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>-</td>
+ *     <td>i</td>
+ *     <td>DIP switch overridden (on/off).</td>
+ *     <td>Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForDIPSwitchOverrideStatus().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>x</td>
+ *     <td>uuu</td>
+ *     <td>Bass EQ level.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderWithBassTrebleLevel(). 
+ *         Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForBassLevel().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>x</td>
+ *     <td>ttt</td>
+ *     <td>Treble EQ level.</td>
+ *     <td>Replaced by NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::replacePlaceholderWithBassTrebleLevel(). 
+ *         Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForTrebleLevel().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>-</td>
+ *     <td>r</td>
+ *     <td>Volume reset (on/off).</td>
+ *     <td>Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForVolumeResetStatus().</td>
+ * </tr><tr>
+ *     <td>x</td>
+ *     <td>-</td>
+ *     <td>vz.zz</td>
+ *     <td>Firmware version.</td>
+ *     <td>Parsed with NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand::parseCommandForFirmwareVersion().</td>
+ * </tr>
+ * </table>
+ * 
+ */
+
 namespace NuvoControl.Server.ProtocolDriver
 {
     /// <summary>
     /// This class represents a single Nuvo Essentia command.
     /// 
-    /// It has members for all possible values send and/or received from Nuvo Essentia.
+    /// This class has members to parse or replace for all possible values send and/or received from Nuvo Essentia.
     /// Depending on the specified command not all members will be used and set at runtime
-    /// to the correct value received from Nuvo Essentia.
+    /// to a value received from Nuvo Essentia.
     /// Mainly it has several parse and replace methods to build and parse the command string
     /// send to and received from Nuvo Essentia. The members are either used as input data to
     /// replace the placeholders in the out-going command, or to store the information retrieved
@@ -42,82 +131,7 @@ namespace NuvoControl.Server.ProtocolDriver
     /// This class contains public and private methods to replace placeholders
     /// in the command string.
     /// 
-    /// The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:
-    /// <table>
-    /// <tr> 
-    ///     <th><b> I </b></th> 
-    ///     <th><b> O </b></th> 
-    ///     <th><b> Placeholder </b></th> 
-    ///     <th><b> Field </b></th> 
-    ///     <th><b> Description </b></th>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>-</td>
-    ///     <td>aa,bb,cc,dd,ee,ff</td>
-    ///     <td>for the IR carrier frequency.</td>
-    ///     <td>Replaced by replacePlaceholderForIRFrequency().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>x</td>
-    ///     <td>xx</td>
-    ///     <td>Zone Id.</td>
-    ///     <td>Replaced by replacePlaceholderForZone(). Parsed with parseCommandForZone().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>-</td>
-    ///     <td>ppp</td>
-    ///     <td>Zone power status.</td>
-    ///     <td>Replaced by replacePlaceholderForPowerStatus(). Parsed with parseCommandForPowerStatus().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>x</td>
-    ///     <td>s</td>
-    ///     <td>Source id.</td>
-    ///     <td>Replaced by replacePlaceholderForSource(). Parsed with parseCommandForSource().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>-</td>
-    ///     <td>q</td>
-    ///     <td>Source group (on/off).</td>
-    ///     <td>Parsed with parseCommandForSourceGroupStatus().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>x</td>
-    ///     <td>yy</td>
-    ///     <td>Volume level.</td>
-    ///     <td>Replaced by replacePlaceholderWithVolumeLevel(). Parsed with parseCommandForVolumeLevel().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>-</td>
-    ///     <td>i</td>
-    ///     <td>DIP switch overridden (on/off).</td>
-    ///     <td>Parsed with parseCommandForDIPSwitchOverrideStatus().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>x</td>
-    ///     <td>uuu</td>
-    ///     <td>Bass EQ level.</td>
-    ///     <td>Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForBassLevel().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>x</td>
-    ///     <td>ttt</td>
-    ///     <td>Treble EQ level.</td>
-    ///     <td>Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForTrebleLevel().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>-</td>
-    ///     <td>r</td>
-    ///     <td>Volume reset (on/off).</td>
-    ///     <td>Parsed with parseCommandForVolumeResetStatus().</td>
-    /// </tr><tr>
-    ///     <td>x</td>
-    ///     <td>-</td>
-    ///     <td>vz.zz</td>
-    ///     <td>Firmware version.</td>
-    ///     <td>Parsed with parseCommandForFirmwareVersion().</td>
-    /// </tr>
-    /// </table>
+    /// The allowed placeholders are explained in more detail on the page \ref pagePlaceHolders "Placeholders"
     /// 
     /// In outgoing commands Replacement methods are used.
     /// For the incoming commands refer the Parse Section.
