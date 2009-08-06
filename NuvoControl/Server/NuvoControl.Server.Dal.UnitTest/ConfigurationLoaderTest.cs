@@ -32,8 +32,9 @@ using NuvoControl.Server.Dal;
 namespace NuvoControl.Server.Dal.UnitTest
 {
     /// <summary>
-    /// This is a test class for ConfigurationLoaderTest and is intended
-    /// to contain all ConfigurationLoaderTest Unit Tests
+    /// Test class for ConfigurationLoaderTest
+    /// 
+    /// It is intended to contain all ConfigurationLoaderTest Unit Tests
     /// </summary>
     [TestClass()]
     public class ConfigurationLoaderTest

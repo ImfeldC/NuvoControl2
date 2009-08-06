@@ -11,6 +11,12 @@
    <BR>
    Back to main page, use \ref main
 
+
+   \defgroup moduleconfiguration Configuration
+   This module explains the different configuration files.
+   <BR>
+   Back to main page, use \ref main
+
  
    \defgroup moduletools Tools
    This module contains information and documentation about the used tools.

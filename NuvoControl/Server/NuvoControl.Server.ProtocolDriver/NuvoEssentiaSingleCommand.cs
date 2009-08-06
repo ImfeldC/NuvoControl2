@@ -42,20 +42,83 @@ namespace NuvoControl.Server.ProtocolDriver
     /// This class contains public and private methods to replace placeholders
     /// in the command string.
     /// 
-    /// The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:<BR>
-    /// I O <BR>
-    /// x -  aa,bb,cc,dd,ee,ff --> for the IR carrier frequency. Replaced by replacePlaceholderForIRFrequency().<BR>
-    /// x x  xx  --> Zone Id. Replaced by replacePlaceholderForZone(). Parsed with parseCommandForZone().<BR>
-    /// x -  ppp --> Zone power status. Replaced by replacePlaceholderForPowerStatus(). Parsed with parseCommandForPowerStatus().<BR>
-    /// x x  s   --> Source id. Replaced by replacePlaceholderForSource(). Parsed with parseCommandForSource().<BR>
-    /// x -  q   --> Source group (on/off). Parsed with parseCommandForSourceGroupStatus().<BR>
-    /// x x  yy  --> Volume level. Replaced by replacePlaceholderWithVolumeLevel(). Parsed with parseCommandForVolumeLevel().<BR>
-    /// x -  i   --> DIP switch overridden (on/off). Parsed with parseCommandForDIPSwitchOverrideStatus().<BR>
-    /// x x  uuu  --> Bass EQ level. Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForBassLevel().<BR>
-    /// x x  ttt  --> Treble EQ level. Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForTrebleLevel().<BR>
-    /// x -  r   --> Volume reset (on/off). Parsed with parseCommandForVolumeResetStatus().<BR>
-    /// x -  vz.zz --> Firmware version. Parsed with parseCommandForFirmwareVersion().<BR>
-    /// <BR>
+    /// The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:
+    /// <table>
+    /// <tr> 
+    ///     <th><b> I </b></th> 
+    ///     <th><b> O </b></th> 
+    ///     <th><b> Placeholder </b></th> 
+    ///     <th><b> Field </b></th> 
+    ///     <th><b> Description </b></th>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>-</td>
+    ///     <td>aa,bb,cc,dd,ee,ff</td>
+    ///     <td>for the IR carrier frequency.</td>
+    ///     <td>Replaced by replacePlaceholderForIRFrequency().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>x</td>
+    ///     <td>xx</td>
+    ///     <td>Zone Id.</td>
+    ///     <td>Replaced by replacePlaceholderForZone(). Parsed with parseCommandForZone().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>-</td>
+    ///     <td>ppp</td>
+    ///     <td>Zone power status.</td>
+    ///     <td>Replaced by replacePlaceholderForPowerStatus(). Parsed with parseCommandForPowerStatus().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>x</td>
+    ///     <td>s</td>
+    ///     <td>Source id.</td>
+    ///     <td>Replaced by replacePlaceholderForSource(). Parsed with parseCommandForSource().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>-</td>
+    ///     <td>q</td>
+    ///     <td>Source group (on/off).</td>
+    ///     <td>Parsed with parseCommandForSourceGroupStatus().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>x</td>
+    ///     <td>yy</td>
+    ///     <td>Volume level.</td>
+    ///     <td>Replaced by replacePlaceholderWithVolumeLevel(). Parsed with parseCommandForVolumeLevel().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>-</td>
+    ///     <td>i</td>
+    ///     <td>DIP switch overridden (on/off).</td>
+    ///     <td>Parsed with parseCommandForDIPSwitchOverrideStatus().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>x</td>
+    ///     <td>uuu</td>
+    ///     <td>Bass EQ level.</td>
+    ///     <td>Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForBassLevel().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>x</td>
+    ///     <td>ttt</td>
+    ///     <td>Treble EQ level.</td>
+    ///     <td>Replaced by replacePlaceholderWithBassTrebleLevel(). Parsed with parseCommandForTrebleLevel().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>-</td>
+    ///     <td>r</td>
+    ///     <td>Volume reset (on/off).</td>
+    ///     <td>Parsed with parseCommandForVolumeResetStatus().</td>
+    /// </tr><tr>
+    ///     <td>x</td>
+    ///     <td>-</td>
+    ///     <td>vz.zz</td>
+    ///     <td>Firmware version.</td>
+    ///     <td>Parsed with parseCommandForFirmwareVersion().</td>
+    /// </tr>
+    /// </table>
+    /// 
     /// In outgoing commands Replacement methods are used.
     /// For the incoming commands refer the Parse Section.
     /// 
