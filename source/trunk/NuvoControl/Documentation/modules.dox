@@ -29,14 +29,14 @@
 
 
 
-   \defgroup moduleconfiguration Configuration
+   \defgroup moduleconfiguration "Configuration"
    This module explains the different configuration files. There are several places where NuvoControl can be customized and configured. 
    If you are not familiar yet with the project, read first the module \ref moduleIntroduction "Introduction".
 
-   \section secNuvoControlConfiguration NuvoControl Configuration
+   \section secNuvoControlConfiguration "NuvoControl Configuration"
    \todo Describe NuvoControl Configuration (like the XML files, etc.). Explain also the possible settings done via the 'settings' (properties).
 
-   \section secProtocolDriverConfiguration Protocol Driver Configuration
+   \section secProtocolDriverConfiguration "Protocol Driver Configuration"
    The configuration of the protocol driver is explained on the page \ref pageProtocolDriverConfiguration "Protocol Driver Configuration"
 
    <BR>
@@ -44,7 +44,7 @@
 
 
  
-   \defgroup moduletools Tools
+   \defgroup moduletools "Tools"
    This module contains information and documentation about the used tools.
 
    \section secDevTools Development Tools
@@ -53,7 +53,7 @@
    \subsection secDevToolVS Visual Studio 2008
    We used for Visual Studio 2008 as development tool.
 
-   \subsection secDevToolSVN Subversion (Source Code Repository)
+   \subsection secDevToolSVN "Subversion (Source Code Repository)"
    To store our source code we used subversion. We used a public repository for that, this allowed us to share the sources easy between the
    team members and the automatic build process (see \ref secBuildToolCC "Cruise Control .NET")
 
