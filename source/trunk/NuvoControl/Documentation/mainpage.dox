@@ -2,10 +2,38 @@
  
   \section intro Introduction
  
-  Das Bild zeigt eine Übersicht über das Multiraum System mit sechs Zonen. Mit einem optionalen Zusatzverstärker können total zwölf Zonen angesteuert werden.
-  Die einzelnen Zonen werden über eine CAT5 Kabel und zwei 2-adrigen Lautsprecherkabeln an den Multiraum Verstärker angeschlossen. Über die zwei 2-adrigen Lautsprecherkabel verteilt der Verstärker die analogen Musiksignale direkt an die Lautsprecher der Zone, es ist kein zusätzlicher Zonen-Verstärker nötig. Das CAT5 Kabel verbindet das Zonen-Keypad mit dem Verstärker. Das Keypad erlaubt mit seinen Tasten die direkte Wahl der gewünschten Audio-Source für die entsprechende Zone. Im Bild blau eingezeichnet.
-  Das NuVo System erlaubt die Integration von beliebigen HiFi Geräten. Sie werden mittels Cinch und IR-Link Kabel an den Multiraum-Verstärker angeschlossen. Mittels dem IR-Link können IR-Signale vom Keypad direkt an das HiFi-Gerät weitergegeben werden. Diese Verbindung ist grün eingezeichnet.
-  Zusätzlich besitzt der Verstärker eine RS232 Schnittstelle über die ein Personal Computer angeschlossen werden kann. Über diese Schnittstelle können alle Funktionen vom PC aus gesteuert werden, zudem können die Zonen Zustände angefragt werden. Diese Verbindung ist rot eingezeichnet.
+  Bei dem Projekt NuvoControl handelt es sich um eine Software zu Ansteuerung und Visualisierung einer Audio Multiraum Anlage von Nuvo Systems.
+
+Das Bild zeigt eine Übersicht der NuvoControl Software mit der zu steuernden Multiraum Anlage.
+
+Das Multiraum System hat zwölf Zonen. Jede Zone verfügt über ein Keypad zur Steuerung der dazugehörigen Zone und zwei Lautsprechern. Das Keypad erlaubt mit seinen Tasten die direkte Wahl der gewünschten Audio-Source (im Bild blau eingezeichnet).
+Das Nuvo System erlaubt die Integration von bis zu sechs beliebigen HiFi Geräten (diese Verbindung ist grün eingezeichnet).
+Zusätzlich besitzt der Verstärker eine RS232 Schnittstelle über die die Multiraum Anlage gesteuert werden kann. Es können sämtliche Funktionen ausgeführt sowie alle Zustände der Zonen abgefragt werden (diese Verbindung ist rot eingezeichnet).
+
+Die Visualisierungs- und Steuersoftware NuvoControl der Audio-Multiraum-Anlage steuert die Multiraum Anlage über die RS232 Schnittstelle und visualisiert den Zustand des ganzen Systems. Die Software erweitert die existierenden Möglichkeiten der Anlage um weitere Funktionalität, wie Sleep- und Weckfunktion.
+
+Die Software NuvoControl basiert auf einer Client-Server Architektur, welche mehrere Clients unterstützt.
+•	Erste Kernkomponente ist der Monitor & Control - Service welcher die Steuerung von NuvoEssentia erlaubt sowie den Zustand von NuvoEssentia abfragt und für eine Visualisierung zu Verfügung stellt.
+•	Zweite Kernkomponente ist ein GUI, welches den Zustand von NuvoEssentia graphisch darstellt und Bedienoperationen unterstützt.
+•	Dritte Kernkomponente ist der NuvoEssentia Treiber, welcher das eigentliche Protokoll zu NuvoEssentia implementiert.
+•	Vierte Kernkomponente ist der Function - Service, welcher die Sleep- und Weckfunktion implementiert.
+•	Die gesamte Software ist mittels XML Files konfigurierbar. Anzahl Zonen, Adressierung der Zonen, Visualisierung der Zonen, verwendete Kommunikationstreiber und weitere Einstellungen sind dynamisch änderbar.
+•	Sämtliche Softwareteile sind eventbasiert (Subscription Pattern).
+
+Für die Projektrealisierung haben wir die folgenden Technologien und Methoden eingesetzt:
+•	Implementation mit C#
+•	Client-Server Kommunikation mit Web Services, implementiert mit WCF
+•	Server zu Multiraum-Simulator Kommunikation mit Queues (MSMQ)
+•	GUI Implementation mit Windows Presentation Foundation (WPF)
+•	Visual Studio 2008 mit dem Unit Test Framework von Microsoft (VSTS)
+•	Continuous-Build Integration mit CruiseControl.NET
+•	Dokumentation erstellt mit Hilfe von Microsoft Sandcastle (NDoc) und Doxygen
+•	UML Modellierung mittels Enterprise Architect (EA)
+•	Use-Case basiertes Requirements Engineering (nach Cockburn / Bianchi)
+•	Requirements Driven Development (RDD) (gemäss Wirfs-Brock / Tobler)
+•	Agiler Entwicklungsprozess gemäss SCRUM
+
+
  
   \section content Inhalt
  
