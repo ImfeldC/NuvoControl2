@@ -1,4 +1,5 @@
 /*!
+
    \defgroup modulepm Project Managment
    This module describes the project managment issues, like project handbook, scrum related documents, etc.
    <BR>
@@ -14,6 +15,9 @@
 
    \defgroup moduleconfiguration Configuration
    This module explains the different configuration files.
+
+   The configuration of the protocol driver is explained on the page \ref pageProtocolDriverConfiguration "Protocol Driver Configuration"
+
    <BR>
    Back to main page, use \ref main
 
