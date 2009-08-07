@@ -1,0 +1,20 @@
+\page pageBuildTools Build Tools
+
+\section secBuildTools Build Tools
+This section describes all tools used for the build process.
+
+\subsection secBuildToolCC Cruise Control .NET
+We setup and implemented a continous integration build process. For this purpose we decided to use Cruise Control .NET.
+This is an open-source tool.
+
+\subsection secBuildToolDoxygen Doxygen (Documentation Tool)
+To generate the documentation for this project we use the open-source tool doxygen.
+This tool analyzes the source code and generates the documentation for the whole system.
+
+\subsection secUltraEdit UltraEdit (Plugin)
+To allow easier editing we used a plugin for UltraEdit, which supports syntax highlighting for doxygen files.
+This made the whole documentation process easier.
+
+<BR>
+Back to \ref main "main page"
+
