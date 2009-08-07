@@ -1,0 +1,13 @@
+\page pageDevTools Development Tools
+
+\section secDevTools Development Tools
+This section describes all tools used for the development process.
+
+\subsection secDevToolVS Visual Studio 2008
+We used for Visual Studio 2008 as development tool.
+
+\subsection secDevToolSVN Subversion (Source Code Repository)
+To store our source code we used subversion. We used a public repository for that, this allowed us to share the sources easy between the
+team members and the automatic build process (see \ref secBuildToolCC "Cruise Control .NET")
+
+
