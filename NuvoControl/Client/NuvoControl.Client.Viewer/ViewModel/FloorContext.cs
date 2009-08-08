@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      FloorContext.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,23 +24,64 @@ using System.Windows.Media.Imaging;
 using System.Windows;
 using System.IO;
 
-
 using NuvoControl.Common.Configuration;
 using NuvoControl.Client.Viewer.Commands;
 
 namespace NuvoControl.Client.Viewer.ViewModel
 {
+    /// <summary>
+    /// This is the logical context for the floor view of the viewer.
+    /// It contains the logical context of the floors of a building.
+    /// </summary>
     public class FloorContext : INotifyPropertyChanged, IHierarchyContext
     {
+        #region Fields
+
+        /// <summary>
+        /// All floors of a building.
+        /// </summary>
         private List<Floor> _floors;
+
+        /// <summary>
+        /// All available sources of the audio system.
+        /// </summary>
         private List<Source> _sources;
+
+        /// <summary>
+        /// The currently shown floor in the floor view.
+        /// </summary>
         private Floor _activeFloor;
+
+        /// <summary>
+        /// The notification handle to the floor view.
+        /// </summary>
         private IFloorViewNotification _floorView;
+
+        /// <summary>
+        /// The parent context. This is the main context (building)
+        /// </summary>
         private IHierarchyContext _parent = null;
+
+        /// <summary>
+        /// The child context. This is the zone context.
+        /// </summary>
         private IHierarchyContext _child = null;
+
+        /// <summary>
+        /// Visibility of the floor view.
+        /// </summary>
         private Visibility _visibility = Visibility.Collapsed;
 
+        #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="floors">All floors of a building.</param>
+        /// <param name="sources">All available sources of the audio system.</param>
+        /// <param name="floorView">The notification handle to the floor view.</param>
         public FloorContext(List<Floor> floors, List<Source> sources, IFloorViewNotification floorView)
         {
             _floors = floors;
@@ -32,12 +90,21 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _floorView = floorView;
         }
 
- 
+        #endregion
+
+        #region Public Interface
+
+        /// <summary>
+        /// The name of the current shown floor.
+        /// </summary>
         public string FloorName
         {
             get { return _activeFloor.Name; }
         }
 
+        /// <summary>
+        /// The plan of the current shown floor.
+        /// </summary>
         public BitmapImage FloorPlan
         {
             get
@@ -47,23 +114,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+        /// <summary>
+        /// Tooltip for the floor view.
+        /// </summary>
         public string ToolTip
         {
             get { return ("Click to browse down"); }
         }
 
-        public List<NavigationItem> NavigationObjects
-        {
-            get
-            {
-                List<NavigationItem> items = new List<NavigationItem>();
-                foreach (Floor floor in _floors)
-                {
-                    items.Add(new NavigationItem(this, floor.Id, floor.Name));
-                }
-                return items;
-            }
-        }
+        #endregion
 
         #region INotifyPropertyChanged Members
 
@@ -197,7 +256,75 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
 
+        /// <summary>
+        /// Navigate to a specified object of this context.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to. Here, this is the id of a floor.</param>
         public void Navigate(Address id)
+        {
+            Navigate(id, true);
+        }
+
+
+        /// <summary>
+        /// Get all navigations objects of this context.
+        /// Here, these are all floors.
+        /// </summary>
+        public List<NavigationItem> NavigationObjects
+        {
+            get
+            {
+                List<NavigationItem> items = new List<NavigationItem>();
+                foreach (Floor floor in _floors)
+                {
+                    items.Add(new NavigationItem(this, floor.Id, floor.Name));
+                }
+                return items;
+            }
+        }
+
+
+        /// <summary>
+        /// Called, when this context got activated.
+        /// i.e. the corresponding floor view was set to visible.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to.</param>
+        public void OnHierarchyActivated(Address id)
+        {
+            Navigate(id, false);
+        }
+
+
+        /// <summary>
+        /// Called, when this context is deactivated.
+        /// i.e. the floor view was set to collapsed.
+        /// </summary>
+        public void OnHierarchyDeactivated()
+        {
+            _floorView.UnloadFloorZones();
+        }
+
+
+        /// <summary>
+        /// Updates the context with the specified parameter.
+        /// </summary>
+        /// <param name="context"></param>
+        public void UpdateContext(IHierarchyContext context)
+        {
+            // not used
+        }
+
+
+        #endregion
+
+        #region Non-Public Interface
+
+        /// <summary>
+        /// Navigate to a specified object of this context.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to. Here, this is the id of a floor.</param>
+        /// <param name="unloadPreviousFloor">Set to true, if previous floor must be unloaded first.</param>
+        private void Navigate(Address id, bool unloadPreviousFloor)
         {
             if (id != null)
             {
@@ -213,11 +340,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
 
-            _floorView.UnloadFloorZones();
+            if (unloadPreviousFloor)
+                _floorView.UnloadFloorZones();
             _floorView.LoadFloorZones(_activeFloor, _sources);
         }
 
 
+        /// <summary>
+        /// Gets the next floor object of the floor context.
+        /// </summary>
+        /// <returns></returns>
         private Floor GetNextFloor()
         {
             int index = _floors.IndexOf(_activeFloor);
@@ -227,6 +359,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
                 return _floors[index + 1];
         }
 
+
+        /// <summary>
+        /// Gets the previous floor object of the floor context.
+        /// </summary>
+        /// <returns></returns>
         private Floor GetPreviousFloor()
         {
             int index = _floors.IndexOf(_activeFloor);
@@ -236,6 +373,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
                 return _floors[index - 1];
         }
 
+
+        /// <summary>
+        /// Finds the specified floor object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The found object; null if none found.</returns>
         private Floor FindFloor(Address id)
         {
             foreach (Floor floor in _floors)
@@ -246,33 +389,23 @@ namespace NuvoControl.Client.Viewer.ViewModel
             return null;
         }
 
-
-        public void OnHierarchyActivated()
-        {
-            //_floorView.LoadFloorZones(_activeFloor, _sources);
-            //_child.UpdateContext(new ZoneContext(_activeFloor.Zones, _sources));
-        }
-
-        public void OnHierarchyDeactivated()
-        {
-            _floorView.UnloadFloorZones();
-        }
-
-
-        public void UpdateContext(IHierarchyContext context)
-        {
-            // not used
-        }
-
-
-
         #endregion
-
     }
 
+
+
+    /// <summary>
+    /// Interface to notify the floor view to update its zones.
+    /// </summary>
     public interface IFloorViewNotification
     {
         void LoadFloorZones(Floor activeFloor, List<Source> sources);
         void UnloadFloorZones();
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

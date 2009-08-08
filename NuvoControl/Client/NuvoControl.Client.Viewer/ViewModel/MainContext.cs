@@ -85,6 +85,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Tooltip of for the view of the context.
+        /// </summary>
+        public string ToolTip
+        {
+            get { return ("Click to browse down to " + _child.ObjectName); }
+        }
+
+
         #endregion
 
         #region IHierarchyContext Members
@@ -140,18 +150,6 @@ namespace NuvoControl.Client.Viewer.ViewModel
             {
                 _visibility = value;
                 NotifyPropertyChanged(new PropertyChangedEventArgs("ContextVisibility"));
-            }
-        }
-
-
-
-        public List<NavigationItem> NavigationObjects
-        {
-            get
-            {
-                List<NavigationItem> items = new List<NavigationItem>();
-                items.Add(new NavigationItem(this, _building.Id, _building.Name));
-                return items;
             }
         }
 
@@ -216,35 +214,61 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
 
+        /// <summary>
+        /// Navigate to a specified object of this context.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to. Here, there is no object to nvaigate to.</param>
         public void Navigate(Address id)
         {
+            // nothing to implement
         }
 
 
-
-        public string ToolTip
+        /// <summary>
+        /// Get all navigations objects of this context.
+        /// Here, we have just one object. This is the top object (building).
+        /// </summary>
+        public List<NavigationItem> NavigationObjects
         {
-            get { return ("Click to browse down to " + _child.ObjectName); }
+            get
+            {
+                List<NavigationItem> items = new List<NavigationItem>();
+                items.Add(new NavigationItem(this, _building.Id, _building.Name));
+                return items;
+            }
         }
 
-        public void OnHierarchyActivated()
+
+        /// <summary>
+        /// Called, when this context got activated. i.e. the corresponding active object is visible.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to.</param>
+        public void OnHierarchyActivated(Address id)
         {
-            // noting to do
+            // nothing to do
         }
 
+
+        /// <summary>
+        /// Called, when this context is deactivated. i.e. this corresponding active object is not visible.
+        /// </summary>
         public void OnHierarchyDeactivated()
         {
+            // nothing to do
         }
 
 
+        /// <summary>
+        /// Updates the context with the specified parameter.
+        /// </summary>
+        /// <param name="context"></param>
         public void UpdateContext(IHierarchyContext context)
         {
-        }
+            // nothing to do
+        }        
+        
 
         #endregion
-
-
-
 
         #region INotifyPropertyChanged Members
 

@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      MainWindow.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,49 +39,83 @@ using NuvoControl.Client.ServiceAccess;
 namespace NuvoControl.Client.Viewer
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Interaction logic for MainWindow.xaml
+    /// Startup code.
     /// </summary>
     public partial class MainWindow : Window
     {
+        #region Fields
+
+        /// <summary>
+        /// The main/top view.
+        /// </summary>
         private MainView _mainView = new MainView();
+
+        /// <summary>
+        /// The floor view.
+        /// </summary>
         private FloorView _floorView = new FloorView();
+
+        /// <summary>
+        /// The zone view.
+        /// </summary>
         private ZoneView _zoneView = new ZoneView();
 
+        /// <summary>
+        /// The graphic configuration
+        /// </summary>
         private Graphic _graphic;
+
+        /// <summary>
+        /// The navigation object.
+        /// </summary>
         private Navigator _navigator;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
 
-            ServiceConfigurator.Configure(true);
+            ServiceConfigurator.Configure(false);
             ReadConfiguration();
             InitializeViews();
             InitializeViewModel();
         }
 
+        #endregion
 
+        #region Non-Public Interface
+
+
+        /// <summary>
+        /// Reads the configuration from the service.
+        /// </summary>
         private void ReadConfiguration()
         {
             _graphic = ServiceProxy.ConfigurationProxy.GetGraphicConfiguration();
         }
 
 
+        /// <summary>
+        /// Initializes all view.
+        /// </summary>
         private void InitializeViews()
         {
             _mainGrid.Children.Add(_floorView);
-//            _floorView.Visibility = Visibility.Collapsed;
-
             _mainGrid.Children.Add(_mainView);
- //           _mainView.Visibility = Visibility.Visible;
-
             _mainGrid.Children.Add(_zoneView);
-  //          _zoneView.Visibility = Visibility.Collapsed;
-
-
         }
 
 
+        /// <summary>
+        /// Initializes the view model.
+        /// </summary>
         private void InitializeViewModel()
         {
             MainContext mainContext = new MainContext(_graphic.Building);
@@ -90,79 +141,19 @@ namespace NuvoControl.Client.Viewer
         }
 
 
-        /*
-                private void BrowseDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
-                {
-                    _mainView.Visibility = Visibility.Collapsed;
-                    _floorView.Visibility = Visibility.Visible;
-
-
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[0], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[1], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[2], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[3], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[4], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[5], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[6], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[7], _graphic.Sources);
-                    _floorView.CreateZone(_graphic.Building.Floors[0].Zones[8], _graphic.Sources);
-
-                }
-
-
-                private void BrowseDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
-                {
-                    e.CanExecute = true;
-                }
-
-
-                private void _btnFwd_Click(object sender, RoutedEventArgs e)
-                {
-                    //NavigationService nav = NavigationService.GetNavigationService((Page)frame1.Content);
-                    //Page page = new PageZones();
-                    //page.KeepAlive = true;
-                    //page.Name = "PageZones" + counter.ToString();
-                    //counter++;
-
-                    //nav.Navigate(page);
-
-                    //MainView mainView = new MainView();
-                    //_mainGrid.Children.Add(mainView);
-                    //Grid.SetColumn(mainView, 0);
-                    //Grid.SetRow(mainView, 0);
-
-
-
-                }
-
-
-                private void _btnBack_Click(object sender, RoutedEventArgs e)
-                {
-                    _mainView.Visibility = Visibility.Collapsed;
-
-                    ZoneView zoneView = new ZoneView();
-                    _mainGrid.Children.Add(zoneView);
-                    Grid.SetColumn(zoneView, 0);
-                    Grid.SetRow(zoneView, 0);
-
-                }
-        */
-
-        private void MouseUp_Event(object sender, RoutedEventArgs e)
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-
+            ServiceProxy.MonitorAndControlProxy.Dispose();
+            ServiceProxy.ConfigurationProxy.Dispose();
+            base.OnClosing(e);
         }
 
-        private void NewExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-
-        }
-
-        private void NewCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = true;
-        }
-
-
+        #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

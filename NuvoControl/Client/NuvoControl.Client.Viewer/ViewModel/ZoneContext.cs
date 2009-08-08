@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      ZoneContext.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,34 +35,78 @@ using NuvoControl.Client.ServiceAccess;
 
 namespace NuvoControl.Client.Viewer.ViewModel
 {
+    /// <summary>
+    /// This is the logical context for the zone view of the viewer.
+    /// It contains the logical context of the zones of a floor.
+    /// </summary>
     public class ZoneContext : INotifyPropertyChanged, IHierarchyContext
     {
+        #region Fields
+
+        /// <summary>
+        /// All zones of a floor.
+        /// </summary>
         private List<Zone> _zones;
+
+        /// <summary>
+        /// The currently shown zone in the zone view.
+        /// </summary>
         private Zone _activeZone;
+
+        /// <summary>
+        /// Thew zone state of the zone shown in the zone view.
+        /// </summary>
         private ZoneState _zoneState;
+
+        /// <summary>
+        /// All available sources of the audio system.
+        /// </summary>
         private List<Source> _sources = new List<Source>();
+
+        /// <summary>
+        /// Collection view to the sources
+        /// </summary>
         private ListCollectionView _viewSources;
+
+        /// <summary>
+        /// The parent context. This is the floor  context.
+        /// </summary>
         private IHierarchyContext _parent = null;
+
+        /// <summary>
+        /// The child context. No child context exists for the zone context.
+        /// </summary>
         private IHierarchyContext _child = null;
+
+        /// <summary>
+        /// Visibility of the zone view.
+        /// </summary>
         private Visibility _visibility = Visibility.Collapsed;
+
+        /// <summary>
+        /// Flag, used to suppress source selection changes.
+        /// </summary>
         private bool _ignoreViewSelectionChange = false;
 
+        /// <summary>
+        /// Comamnd bindings for volume up and down command and power on/off command
+        /// </summary>
         private CommandBindingCollection _bindings = new CommandBindingCollection();
+
+        /// <summary>
+        /// Used to dispatch server notifications to the GUI thread.
+        /// </summary>
         private SynchronizationContext _synchronizationContext = null;
 
-        //public ZoneContext(Zone zone, List<Source> sources)
-        //{
-        //    this._zones = null;
-        //    this._activeZone = zone;
-        //    this._zoneState = new ZoneState();
-        //    this._sources = sources;
-        //    _viewSources = (ListCollectionView)CollectionViewSource.GetDefaultView(this._sources);
-        //    _viewSources.CurrentChanged += new EventHandler(_viewSources_CurrentChanged);
+        #endregion
 
-        //    _binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
-        //    //_bindings.Add(binding);
-        //}
+        #region Constructors
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="zones"></param>
+        /// <param name="sources"></param>
         public ZoneContext(List<Zone> zones, List<Source> sources)
         {
             _synchronizationContext = SynchronizationContext.Current;
@@ -66,7 +127,16 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         }
 
+        #endregion
 
+        #region Command Handlers
+
+
+        /// <summary>
+        /// Command handler for volume up command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolumeUpCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             lock (this)
@@ -82,6 +152,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// CanExecute handler for volume up command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolumeUpCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             lock (this)
@@ -93,6 +169,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Command handler for volume down command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolumeDownCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             lock (this)
@@ -108,6 +190,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// CanExecute handler for volume down command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void VolumeDownCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             lock (this)
@@ -119,6 +207,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// Command handler for power on/off command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PowerCommand_Executed(object sender, ExecutedRoutedEventArgs e)
         {
             lock (this)
@@ -132,53 +226,64 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// CanExecute handler for power on/off command.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PowerCommand_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
         }
 
+        #endregion
 
-        void _viewSources_CurrentChanged(object sender, EventArgs e)
-        {
-            lock (this)
-            {
-                ListCollectionView view = sender as ListCollectionView;
-                if (view != null && view.CurrentItem != null && _ignoreViewSelectionChange == false)
-                {
-                    _zoneState.CommandUnacknowledged = true;
-                    ZoneState cmdState = new ZoneState(_zoneState);
-                    cmdState.Source = (view.CurrentItem as Source).Id;
-                    NotifyPropertyChanged(new PropertyChangedEventArgs(""));
 
-                    ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, cmdState);
 
-                    //this._zoneState.Source = (view.CurrentItem as Source).Id;
-                    //NotifyPropertyChanged(new PropertyChangedEventArgs("ZoneStateSource"));
-                }
-            }
-        }
+        #region Public Interface
 
+
+        /// <summary>
+        /// The command bindings of the zone control commands
+        /// </summary>
         public CommandBindingCollection CommandBindingsDynamic
         {
             get { return _bindings; }
         }
 
+
+        /// <summary>
+        /// The name of the active zone.
+        /// </summary>
         public string ZoneName
         {
             get { return _activeZone.Name; }
         }
 
+
+        /// <summary>
+        /// The state of the active zone.
+        /// </summary>
         public ZoneState ZoneState
         {
             get { return _zoneState; }
         }
 
+
+        /// <summary>
+        /// The source selected for the active zone.
+        /// </summary>
         public Address SourceZoneState
         {
             get { return _zoneState.Source; }
 
         }
 
+
+        /// <summary>
+        /// The power state of the active zone
+        /// </summary>
         public bool PowerZoneState
         {
             get { return _zoneState.PowerStatus; }
@@ -187,27 +292,47 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }        
         }
 
+
+        /// <summary>
+        /// The quality of the active zone
+        /// </summary>
         public ZoneQuality QualityZoneState
         {
             get { return _zoneState.ZoneQuality; }
 
         }
 
+
+        /// <summary>
+        /// The unacknowledged flag of the active zone.
+        /// </summary>
         public bool UnackZoneState
         {
             get { return _zoneState.CommandUnacknowledged; }
         }
 
+
+        /// <summary>
+        /// The volume of the active zone.
+        /// </summary>
         public string VolumeZoneState
         {
             get { return _zoneState.Volume.ToString(); }
         }
 
+
+        /// <summary>
+        /// The volume of the acative zone.
+        /// </summary>
         public int Volume
         {
             get { return _zoneState.Volume; }
         }
 
+
+        /// <summary>
+        /// The image of the active zone.
+        /// </summary>
         public BitmapImage ZoneImage
         {
             get
@@ -217,16 +342,28 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// All audio sources
+        /// </summary>
         public List<Source> Sources
         {
             get { return _sources; }
         }
 
+
+        /// <summary>
+        /// The list vollection view of the sources
+        /// </summary>
         public ListCollectionView ViewSources
         {
             get { return _viewSources; }
         }
 
+
+        /// <summary>
+        /// The currently selected source.
+        /// </summary>
         public Source SelectedSource
         {
             get
@@ -242,21 +379,45 @@ namespace NuvoControl.Client.Viewer.ViewModel
             }
         }
 
+
+        /// <summary>
+        /// The floor plan coordinates of the active zone.
+        /// </summary>
         public PointCollection FloorPlanCoordinates
         {
             get { return new PointCollection(_activeZone.FloorPlanCoordinates); }
         }
 
-        private void NotifyPropertyChanged(PropertyChangedEventArgs e)
+
+        /// <summary>
+        /// Called from parent context when the zone is instantiated.
+        /// </summary>
+        public void ZoneLoaded()
         {
-            if (PropertyChanged != null)
-                PropertyChanged(this, e);
+            Subscribe(_activeZone.Id);
         }
+
+
+        /// <summary>
+        /// Called from parent context when the zone is deleted.
+        /// </summary>
+        public void ZoneUnloaded()
+        {
+            Unsubscribe(_activeZone.Id);
+        }
+
+        #endregion
 
         #region INotifyPropertyChanged Members
 
         public event PropertyChangedEventHandler PropertyChanged;
 
+        private void NotifyPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (PropertyChanged != null)
+                PropertyChanged(this, e);
+        }        
+        
         #endregion
 
         #region IHierarchyContext Members
@@ -313,20 +474,6 @@ namespace NuvoControl.Client.Viewer.ViewModel
             {
                 _visibility = value;
                 NotifyPropertyChanged(new PropertyChangedEventArgs("ContextVisibility"));
-            }
-        }
-
-
-        public List<NavigationItem> NavigationObjects
-        {
-            get
-            {
-                List<NavigationItem> items = new List<NavigationItem>();
-                foreach (Zone zone in _zones)
-                {
-                    items.Add(new NavigationItem(this, zone.Id, zone.Name));
-                }
-                return items;
             }
         }
 
@@ -391,67 +538,59 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
 
+        /// <summary>
+        /// Navigate to a specified object of this context.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to. Here, this is the id of a zone.</param>
         public void Navigate(Address id)
         {
-            Zone tempZone = FindZone(id);
-            if (tempZone == null)
-                return;
-
-            Unsubscribe(_activeZone.Id);
-            _activeZone = tempZone;
-            Subscribe(_activeZone.Id);
-            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
-            // TODO unsubscribe
+            Navigate(id, true);
         }
 
 
-
-
-        private Zone GetNextZone()
+        /// <summary>
+        /// Get all navigations objects of this context.
+        /// Here, these are all zones of a floor.
+        /// </summary>
+        public List<NavigationItem> NavigationObjects
         {
-            int index = _zones.IndexOf(_activeZone);
-            if (index >= _zones.Count - 1)
-                return _zones[0];
-            else
-                return _zones[index + 1];
-        }
-
-
-        private Zone GetPreviousZone()
-        {
-            int index = _zones.IndexOf(_activeZone);
-            if (index <= 0)
-                return _zones[_zones.Count - 1];
-            else
-                return _zones[index - 1];
-
-        }
-
-        private Zone FindZone(Address id)
-        {
-            foreach (Zone zone in _zones)
+            get
             {
-                if (zone.Id.Equals(id))
-                    return zone;
+                List<NavigationItem> items = new List<NavigationItem>();
+                foreach (Zone zone in _zones)
+                {
+                    items.Add(new NavigationItem(this, zone.Id, zone.Name));
+                }
+                return items;
             }
-            return null;
         }
 
 
-
-
-        public void OnHierarchyActivated()
+        /// <summary>
+        /// Called, when this context got activated.
+        /// i.e. the corresponding zone view was set to visible.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to.</param>
+        public void OnHierarchyActivated(Address id)
         {
-            //Subscribe(_activeZone.Id);
+            Navigate(id, false);
         }
 
 
+        /// <summary>
+        /// Called, when this context is deactivated.
+        /// i.e. the floor view was set to collapsed.
+        /// </summary>
         public void OnHierarchyDeactivated()
         {
             Unsubscribe(_activeZone.Id);
         }
 
 
+        /// <summary>
+        /// Updates the context with the specified new zone context.
+        /// </summary>
+        /// <param name="context">The new zone context.</param>
         public void UpdateContext(IHierarchyContext context)
         {
             if ((context is ZoneContext) == false)
@@ -472,43 +611,124 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         #endregion
 
-
-        public void ZoneLoaded()
-        {
-            Subscribe(_activeZone.Id);
-        }
-
-
-        public void ZoneUnloaded()
-        {
-            Unsubscribe(_activeZone.Id);
-        }
+        #region Non-Public Interface
 
         /// <summary>
-        /// Subscribe for notifications for all zones of this context
+        /// Navigate to a specified object of this context.
+        /// </summary>
+        /// <param name="id">The id of the object to navigate to. Here, this is the id of a zone.</param>
+        /// <param name="unsubscribePreviousZone">Set to true, if previous zone must be unsubscribed first.</param>
+        private void Navigate(Address id, bool unsubscribePreviousZone)
+        {
+            Zone tempZone = FindZone(id);
+            if (tempZone == null)
+                tempZone = _zones[0];
+
+            if (unsubscribePreviousZone)
+                Unsubscribe(_activeZone.Id);
+            _activeZone = tempZone;
+            Subscribe(_activeZone.Id);
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+        }
+
+
+        /// <summary>
+        /// Gets the next zone object of the zone context.
+        /// </summary>
+        /// <returns></returns>
+        private Zone GetNextZone()
+        {
+            int index = _zones.IndexOf(_activeZone);
+            if (index >= _zones.Count - 1)
+                return _zones[0];
+            else
+                return _zones[index + 1];
+        }
+
+
+        /// <summary>
+        /// Gets the previous zone object of the zone context.
+        /// </summary>
+        /// <returns></returns>
+        private Zone GetPreviousZone()
+        {
+            int index = _zones.IndexOf(_activeZone);
+            if (index <= 0)
+                return _zones[_zones.Count - 1];
+            else
+                return _zones[index - 1];
+
+        }
+
+
+        /// <summary>
+        /// Finds the specified zone object.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>The found object; null if none found.</returns>
+        private Zone FindZone(Address id)
+        {
+            foreach (Zone zone in _zones)
+            {
+                if (zone.Id.Equals(id))
+                    return zone;
+            }
+            return null;
+        }
+
+
+        /// <summary>
+        /// Subscribe for notifications for all zones of this context. Reads the zones state immediate.
         /// </summary>
         private void Subscribe(Address id)
         {
+            _ignoreViewSelectionChange = true;
+
             _zoneState = ServiceProxy.MonitorAndControlProxy.GetZoneState(id);
             ServiceProxy.MonitorAndControlProxy.Monitor(id, ZoneUpdateNotification);
+
+            _ignoreViewSelectionChange = false;
+
         }
 
 
         /// <summary>
         /// Unsubscribes for notifications for all zones of this context
         /// </summary>
-        public void Unsubscribe(Address id)
+        private void Unsubscribe(Address id)
         {
             ServiceProxy.MonitorAndControlProxy.RemoveMonitor(id, ZoneUpdateNotification);
         }
 
-        //public void UnsubscribeAll()
-        //{
-        //    foreach (Zone zone in _zones)
-        //    {
-        //        Unsubscribe(zone.Id);
-        //    }
-        //}
+
+        /// <summary>
+        /// Selection change handler for the source selection list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _viewSources_CurrentChanged(object sender, EventArgs e)
+        {
+            lock (this)
+            {
+                ListCollectionView view = sender as ListCollectionView;
+                if (view != null && view.CurrentItem != null && _ignoreViewSelectionChange == false)
+                {
+                    _zoneState.CommandUnacknowledged = true;
+                    ZoneState cmdState = new ZoneState(_zoneState);
+                    cmdState.Source = (view.CurrentItem as Source).Id;
+                    NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
+                    ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, cmdState);
+
+                    //this._zoneState.Source = (view.CurrentItem as Source).Id;
+                    //NotifyPropertyChanged(new PropertyChangedEventArgs("ZoneStateSource"));
+                }
+            }
+        }
+
+        #endregion
+
+        #region Server Notification
 
         public void ZoneUpdateNotification(object sender, ZoneStateEventArgs e)
         {
@@ -520,9 +740,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
                 _ignoreViewSelectionChange = false;
             };
             _synchronizationContext.Post(callback, null);
-
-
         }
+
+        #endregion
 
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

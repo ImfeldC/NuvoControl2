@@ -73,7 +73,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// Navigate to a specified object of this context.
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="id">The id of the object to navigate to.</param>
         void Navigate(Address id);
 
         /// <summary>
@@ -84,7 +84,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// Called, when this context got activated. i.e. the corresponding acitve object is visible.
         /// </summary>
-        void OnHierarchyActivated();
+        /// <param name="id">The id of the object to navigate to.</param>
+        void OnHierarchyActivated(Address id);
 
         /// <summary>
         /// Called, when this context is deactivated. i.e. this corresponding active object is not visible.
