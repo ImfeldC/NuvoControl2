@@ -257,8 +257,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
             targetItem.Context.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = targetItem.Context;
-            _context.OnHierarchyActivated();
-            _context.Navigate(targetItem.Id);
+            _context.OnHierarchyActivated(targetItem.Id);
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
@@ -291,8 +290,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
             targetItem.Context.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = targetItem.Context;
-            _context.OnHierarchyActivated();
-            _context.Navigate(targetItem.Id);
+            _context.OnHierarchyActivated(targetItem.Id);
 
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
             _ignoreViewSelectionChange = false;
@@ -325,11 +323,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _context.Parent.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = _context.Parent;
-            _context.OnHierarchyActivated();
-            if ((e.Parameter != null) && (e.Parameter is Address))
-                _context.Navigate(e.Parameter as Address);
-            else
-                _context.Navigate(null);
+            _context.OnHierarchyActivated(e.Parameter as Address);
+            //if ((e.Parameter != null) && (e.Parameter is Address))
+            //    _context.Navigate(e.Parameter as Address);
+            //else
+            //    _context.Navigate(null);
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
@@ -362,11 +360,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _context.Child.ContextVisibility = Visibility.Visible;
             _context.OnHierarchyDeactivated();
             _context = _context.Child;
-            _context.OnHierarchyActivated();
-            if ((e.Parameter != null) && (e.Parameter is Address))
-                _context.Navigate(e.Parameter as Address);
-            else
-                _context.Navigate(null);
+            _context.OnHierarchyActivated(e.Parameter as Address);
+            //if ((e.Parameter != null) && (e.Parameter is Address))
+            //    _context.Navigate(e.Parameter as Address);
+            //else
+            //    _context.Navigate(null);
 
             _historsList.Append(new NavigationItem(_context, new Address(_context.ObjectId), _context.ObjectName));
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
