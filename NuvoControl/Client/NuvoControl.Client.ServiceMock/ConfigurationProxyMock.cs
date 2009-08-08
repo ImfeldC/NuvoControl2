@@ -19,6 +19,10 @@ namespace NuvoControl.Client.ServiceMock
 
         #region IConfigure Members
 
+        public void RenewLease()
+        {
+        }
+
         public Graphic GetGraphicConfiguration()
         {
             return _configurationService.GetGraphicConfiguration();
