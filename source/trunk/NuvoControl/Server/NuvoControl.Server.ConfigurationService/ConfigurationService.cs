@@ -21,6 +21,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 using Common.Logging;
 
@@ -81,11 +82,22 @@ namespace NuvoControl.Server.ConfigurationService
         #region IConfigure Members
 
         /// <summary>
+        /// <see cref=">IMonitorAndControl"/>
+        /// </summary>
+        public void RenewLease()
+        {
+            Debug.WriteLine("Configuration Service; RenewLease().");
+        }
+
+
+        /// <summary>
         /// <see cref="IConfigure"/>
         /// </summary>
         /// <returns></returns>
         public Graphic GetGraphicConfiguration()
         {
+            Debug.WriteLine("Configuration Service; GetGraphicConfiguration().");
+
             return _systemConfiguration.Graphic;
         }
 

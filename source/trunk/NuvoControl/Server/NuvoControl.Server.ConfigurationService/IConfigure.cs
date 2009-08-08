@@ -34,6 +34,12 @@ namespace NuvoControl.Server.ConfigurationService
     public interface IConfigure
     {
         /// <summary>
+        /// Renews the session lease time.
+        /// </summary>
+        [OperationContract]
+        void RenewLease();
+
+        /// <summary>
         /// Returns the graphical configuration of the Nuvo Control system configuration.
         /// Such data are floor plans, zone coordinates, source pictures, ....
         /// </summary>
