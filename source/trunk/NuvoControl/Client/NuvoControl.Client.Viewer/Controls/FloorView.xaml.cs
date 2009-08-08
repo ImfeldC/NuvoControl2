@@ -103,11 +103,11 @@ namespace NuvoControl.Client.Viewer.Controls
             List<Zone> zones = new List<Zone>();
             zones.Add(zoneMod);
             ZoneContext zoneContext = new ZoneContext(zones, sources);
-            zoneContext.ZoneLoaded();
             zoneControl.DataContext = zoneContext;
             Canvas.SetLeft(zoneControl, xOffset);
             Canvas.SetTop(zoneControl, yOffset);
             _canvasFloor.Children.Add(zoneControl);
+            zoneContext.ZoneLoaded();
         }
 
 
