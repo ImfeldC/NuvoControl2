@@ -1,4 +1,21 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher based on code from Juval Löwy, Author of Programming WCF
+ *   Creation Date:  12.07.2009
+ *   File Name:      WsDualProxyHelper.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,3 +58,9 @@ namespace NuvoControl.Client.ServiceAccess
         }
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

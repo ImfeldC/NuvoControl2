@@ -2,6 +2,16 @@
 <xs:schema xmlns:tns="http://tempuri.org/" elementFormDefault="qualified" targetNamespace="http://tempuri.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:import schemaLocation="http://localhost:8080/ConfigurationService?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/NuvoControl.Common.Configuration" />
   <xs:import schemaLocation="http://localhost:8080/ConfigurationService?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:element name="RenewLease">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RenewLeaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="GetGraphicConfiguration">
     <xs:complexType>
       <xs:sequence />

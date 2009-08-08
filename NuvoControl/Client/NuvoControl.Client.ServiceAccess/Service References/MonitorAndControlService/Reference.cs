@@ -21,6 +21,9 @@ namespace NuvoControl.Client.ServiceAccess.MonitorAndControlService {
         [System.ServiceModel.OperationContractAttribute(IsTerminating=true, IsInitiating=false, Action="http://tempuri.org/IMonitorAndControl/Disconnect", ReplyAction="http://tempuri.org/IMonitorAndControl/DisconnectResponse")]
         void Disconnect();
         
+        [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IMonitorAndControl/RenewLease", ReplyAction="http://tempuri.org/IMonitorAndControl/RenewLeaseResponse")]
+        void RenewLease();
+        
         [System.ServiceModel.OperationContractAttribute(IsInitiating=false, Action="http://tempuri.org/IMonitorAndControl/SetZoneState", ReplyAction="http://tempuri.org/IMonitorAndControl/SetZoneStateResponse")]
         void SetZoneState(NuvoControl.Common.Configuration.Address zoneId, NuvoControl.Common.ZoneState stateCommand);
         
@@ -81,6 +84,10 @@ namespace NuvoControl.Client.ServiceAccess.MonitorAndControlService {
         
         public void Disconnect() {
             base.Channel.Disconnect();
+        }
+        
+        public void RenewLease() {
+            base.Channel.RenewLease();
         }
         
         public void SetZoneState(NuvoControl.Common.Configuration.Address zoneId, NuvoControl.Common.ZoneState stateCommand) {
