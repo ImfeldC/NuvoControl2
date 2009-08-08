@@ -17,12 +17,14 @@ namespace NuvoControl.Client.ServiceMock
         private Timer _timer;
         private IMonitorAndControlCallback _callback;
         private int _sourceCounter = 0;
-
+        private bool _continuousSimulation = false;
 
         public MonitorAndControlProxyMock()
         {
             _timer = new Timer(OnTimerCallback);
-            _timer.Change(10000, Timeout.Infinite);
+
+            if (_continuousSimulation)
+                _timer.Change(10000, Timeout.Infinite);
         }
 
         public void SetCallback(IMonitorAndControlCallback callback)
@@ -30,16 +32,28 @@ namespace NuvoControl.Client.ServiceMock
             _callback = callback;
         }
 
+        public bool ContinuousSimulation
+        {
+            get { return _continuousSimulation; }
+            set
+            {
+                _continuousSimulation = value;
+                if (_continuousSimulation)
+                    _timer.Change(10000, Timeout.Infinite);
+            }
+        }
+
         public void OnTimerCallback(object obj)
         {
-            //lock (_zonesSubscribed)
-            //{
-            //    foreach (Address zone in _zonesSubscribed.Keys)
-            //    {
-            //        _callback.OnZoneStateChanged(zone, GetSimulatedZoneState(zone));
-            //    }
-            //}
-            _timer.Change(10000, Timeout.Infinite);
+            lock (_zonesSubscribed)
+            {
+                foreach (Address zone in _zonesSubscribed.Keys)
+                {
+                    _callback.OnZoneStateChanged(zone, GetSimulatedZoneState(zone));
+                }
+            }
+            if (_continuousSimulation)
+                _timer.Change(10000, Timeout.Infinite);
         }
 
         #region IMonitorAndControl Members
@@ -55,6 +69,12 @@ namespace NuvoControl.Client.ServiceMock
         }
 
 
+        public void RenewLease()
+        {
+            return;
+        }
+
+
         public void SetZoneState(Address zoneId, ZoneState stateCommand)
         {
             lock (_zonesStates)
@@ -67,7 +87,7 @@ namespace NuvoControl.Client.ServiceMock
                 ZoneState stateCommandRet = _zonesStates[zoneId];
                 ThreadPool.QueueUserWorkItem(delegate(object obj)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     if (_callback != null)
                         _callback.OnZoneStateChanged(zoneId, stateCommandRet);
                 }, null);
@@ -125,8 +145,6 @@ namespace NuvoControl.Client.ServiceMock
                 if (_zonesStates.ContainsKey(zoneId) == false)
                     return null;
 
-                return new ZoneState(_zonesStates[zoneId]);
-
                 _zonesStates[zoneId].Volume++;
                 _zonesStates[zoneId].Volume = _zonesStates[zoneId].Volume % 100;
                 _zonesStates[zoneId].PowerStatus = !_zonesStates[zoneId].PowerStatus;
@@ -140,3 +158,9 @@ namespace NuvoControl.Client.ServiceMock
         #endregion
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/
