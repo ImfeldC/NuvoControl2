@@ -93,6 +93,8 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         public void Connect()
         {
+            Debug.WriteLine("M&C Service; Connect.");
+
             IMonitorAndControlNotification callback = OperationContext.Current.GetCallbackChannel<IMonitorAndControlNotification>();
             this._subscriber = callback;
             ServiceHostMc host = OperationContext.Current.Host as ServiceHostMc;
@@ -106,6 +108,8 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         public void Disconnect()
         {
+            Debug.WriteLine("M&C Service; Disconnect.");
+
             this._subscriber = null;
             Cleanup();
         }
@@ -113,6 +117,15 @@ namespace NuvoControl.Server.MonitorAndControlService
 
         /// <summary>
         /// <see cref="IMonitorAndControl"/>
+        /// </summary>
+        public void RenewLease()
+        {
+            Debug.WriteLine("M&C Service; RenewLease.");
+        }
+
+
+        /// <summary>
+        /// <see cref=">IMonitorAndControl"/>
         /// </summary>
         /// <param name="zoneId"></param>
         /// <param name="stateCommand"></param>
@@ -139,6 +152,8 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="zoneId"></param>
         public void Monitor(Address zoneId)
         {
+            Debug.WriteLine(String.Format("M&C Service; Monitor; Address: {0}", zoneId));
+
             _zoneServer.Monitor(zoneId, OnZoneNotification);
             StoreSubscribedZoneId(zoneId);
         }
@@ -163,6 +178,8 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="zoneId"></param>
         public void RemoveMonitor(Address zoneId)
         {
+            Debug.WriteLine(String.Format("M&C Service; RemoveMonitor; Address: {0}", zoneId));
+
             _zoneServer.RemoveMonitor(zoneId, OnZoneNotification);
             RemoveSubscribedZoneId(zoneId);
         }

@@ -63,6 +63,13 @@ namespace NuvoControl.Server.MonitorAndControlService
         [OperationContract(IsInitiating = false, IsTerminating = true)]
         void Disconnect();
 
+
+        /// <summary>
+        /// Renews the session lease time.
+        /// </summary>
+        [OperationContract(IsInitiating = false)]
+        void RenewLease();
+
         /// <summary>
         /// Commands the state of the specified zone.
         /// </summary>
