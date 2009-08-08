@@ -1,9 +1,27 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      MonitorAndControlProxy.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using System.Diagnostics;
+using System.Threading;
 
 using Common.Logging;
 using NuvoControl.Common;
@@ -12,32 +30,68 @@ using NuvoControl.Client.ServiceAccess.MonitorAndControlService;
 
 namespace NuvoControl.Client.ServiceAccess
 {
+    /// <summary>
+    /// Monitor and Control service proxy class.
+    /// Handles renewing the lease time.
+    /// Dispatches the notifications of the service to the appropriate zone contexts.
+    /// </summary>
     [CallbackBehavior(UseSynchronizationContext = false)]
     public class MonitorAndControlProxy: IMonitorAndControlCallback, IDisposable
     {
-        private class ZoneProxy
+        #region Nested Class
+
+        /// <summary>
+        /// Stores the client (zone context) subscriptions per zone
+        /// </summary>
+        private class ZoneSubscriptions
         {
-             /// <summary>
+            #region Fields
+
+            /// <summary>
             /// Event, on which clients can subscribe for zone state changes.
             /// </summary>
             private event ZoneNotification _zoneNotification;
+
             /// <summary>
             /// The zone, for which a client wants to subscribe.
             /// </summary>
             Address _zoneId;
 
+            /// <summary>
+            /// The subscribers
+            /// </summary>
             Dictionary<ZoneNotification, ZoneNotification> subscribers = new Dictionary<ZoneNotification, ZoneNotification>();
 
-            public ZoneProxy(Address zoneId)
+            #endregion
+
+            #region Constructors
+
+            /// <summary>
+            /// Constructor
+            /// </summary>
+            /// <param name="zoneId">Id of the zone.</param>
+            public ZoneSubscriptions(Address zoneId)
             {
                 this._zoneId = zoneId;
             }
 
+            #endregion
+
+            #region Public Interface
+
+            /// <summary>
+            /// Id of the zone.
+            /// </summary>
             public Address ZoneId
             {
                 get { return _zoneId; }
             }
 
+
+            /// <summary>
+            /// Add a new subriber to this zone.
+            /// </summary>
+            /// <param name="zoneNotification">Delegate of the subscriber.</param>
             public void AddSubscriber(ZoneNotification zoneNotification)
             {
                 if (subscribers.ContainsKey(zoneNotification))
@@ -48,6 +102,12 @@ namespace NuvoControl.Client.ServiceAccess
                 return;
             }
 
+
+            /// <summary>
+            /// Remove the subscriber from this zone.
+            /// </summary>
+            /// <param name="zoneNotification">Delegate of the subscriber.</param>
+            /// <returns>The number of subscribers.</returns>
             public int RemoveSubscriber(ZoneNotification zoneNotification)
             {
                 if (subscribers.ContainsKey(zoneNotification) == false)
@@ -58,35 +118,85 @@ namespace NuvoControl.Client.ServiceAccess
                 return subscribers.Count;
             }
 
+
+            /// <summary>
+            /// Notifies all subscribers with the new zone state.
+            /// </summary>
+            /// <param name="zoneState">The new zone state.</param>
             public void NotifyClients(ZoneState zoneState)
             {
                 if (_zoneNotification != null)
                     _zoneNotification(this, new ZoneStateEventArgs(zoneState));
             }
+
+            #endregion
         }
 
+        #endregion
 
+        #region Fields
 
+        /// <summary>
+        /// Renew the lease after every 30 seconds
+        /// </summary>
+        private const int RENEW_LEASE_TIME = 30000;
 
-        IMonitorAndControl _mcServiceProxy;
-        // Track whether Dispose has been called.
-        private bool disposed = false;
+        /// <summary>
+        /// The WCF service proxy.
+        /// </summary>
+        private IMonitorAndControl _mcServiceProxy;
 
+        /// <summary>
+        /// Track, whether Dispose has been called.
+        /// </summary>
+        private bool _disposed = false;
+
+        /// <summary>
+        /// Trace logger
+        /// </summary>
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
-        private Dictionary<Address, ZoneProxy> _zoneProxies = new Dictionary<Address, ZoneProxy>();
+        /// <summary>
+        /// Keeps the subscriptions per zone.
+        /// </summary>
+        private Dictionary<Address, ZoneSubscriptions> _zoneSubscriptions = new Dictionary<Address, ZoneSubscriptions>();
 
+        /// <summary>
+        /// Timer, used to renew the lease periodically.
+        /// </summary>
+        private Timer _timerRenewLease;
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Contructor, injects the service proxy
+        /// </summary>
+        /// <param name="mcServiceProxy"></param>
         public MonitorAndControlProxy(IMonitorAndControl mcServiceProxy)
         {
             this._mcServiceProxy = mcServiceProxy;
         }
 
+
+        /// <summary>
+        /// Default constructor, instantiates the M&C service proxy.
+        /// </summary>
         public MonitorAndControlProxy()
         {
             Initialize();
         }
 
+        #endregion
+
+        #region Public Interface
+
+        /// <summary>
+        /// Reads the zone state from the service.
+        /// </summary>
+        /// <param name="zoneId">Address of the zone.</param>
+        /// <returns>The read zone state.</returns>
         public ZoneState GetZoneState(Address zoneId)
         {
             Debug.WriteLine(String.Format("M&C Proxy; GetZoneState(); Address: {0}", zoneId));
@@ -94,6 +204,12 @@ namespace NuvoControl.Client.ServiceAccess
             return _mcServiceProxy.GetZoneState(zoneId);
         }
 
+
+        /// <summary>
+        /// Commands the zone state.
+        /// </summary>
+        /// <param name="zoneId">Address of the zone.</param>
+        /// <param name="command">The new zone state.</param>
         public void SetZoneState(Address zoneId, ZoneState command)
         {
             Debug.WriteLine(String.Format("M&C Proxy; SetZoneState(); Address: {0}, Command: {1}", zoneId, command));
@@ -101,18 +217,24 @@ namespace NuvoControl.Client.ServiceAccess
             _mcServiceProxy.SetZoneState(zoneId, command);
         }
 
+
+        /// <summary>
+        /// Monitors a zone. (Subscribes for zone state changes.)
+        /// </summary>
+        /// <param name="zoneId">Address of the zone.</param>
+        /// <param name="subscriber">The subscriber.</param>
         public void Monitor(Address zoneId, ZoneNotification subscriber)
         {
             Debug.WriteLine(String.Format("M&C Proxy; Monitor(); Address: {0}", zoneId));
 
             try
             {
-                if (_zoneProxies.ContainsKey(zoneId) == false)
+                if (_zoneSubscriptions.ContainsKey(zoneId) == false)
                 {
-                    _zoneProxies.Add(zoneId, new ZoneProxy(zoneId));
+                    _zoneSubscriptions.Add(zoneId, new ZoneSubscriptions(zoneId));
                     _mcServiceProxy.Monitor(zoneId);
                 }
-                _zoneProxies[zoneId].AddSubscriber(subscriber);
+                _zoneSubscriptions[zoneId].AddSubscriber(subscriber);
             }
             catch (ArgumentException exc)
             {
@@ -121,19 +243,25 @@ namespace NuvoControl.Client.ServiceAccess
             }
         }
 
+
+        /// <summary>
+        /// Removes a monitor for a zone. (Unubscribes for zone state changes.)
+        /// </summary>
+        /// <param name="zoneId">Address of the zone.</param>
+        /// <param name="subscriber">The subscriber.</param>
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)
         {
             Debug.WriteLine(String.Format("M&C Proxy; RemoveMonitor(); Address: {0}", zoneId));
 
             try
             {
-                if (_zoneProxies.ContainsKey(zoneId) == false)
+                if (_zoneSubscriptions.ContainsKey(zoneId) == false)
                     return;
 
-                if (_zoneProxies[zoneId].RemoveSubscriber(subscriber) == 0)
+                if (_zoneSubscriptions[zoneId].RemoveSubscriber(subscriber) == 0)
                 {
                     _mcServiceProxy.RemoveMonitor(zoneId);
-                    _zoneProxies.Remove(zoneId);
+                    _zoneSubscriptions.Remove(zoneId);
                 }
             }
             catch (Exception exc)
@@ -142,10 +270,16 @@ namespace NuvoControl.Client.ServiceAccess
             }
         }
 
+        #endregion
 
+        #region Non-Public Interface
+
+        /// <summary>
+        /// Initializes the connection to the service.
+        /// Starts the timer to periodically renew the lease.
+        /// </summary>
         private void Initialize()
         {
-
             try
             {
                 Debug.WriteLine("M&C Proxy; Initialize()");
@@ -155,79 +289,85 @@ namespace NuvoControl.Client.ServiceAccess
                 (_mcServiceProxy as MonitorAndControlClient).SetClientBaseAddress();
                 _mcServiceProxy.Connect();
 
+                _timerRenewLease = new Timer(OnRenewLeaseCallback);
+                _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+
                 Debug.WriteLine("M&C Proxy; Initialize() done.");
             }
             catch (Exception exc)
             {
+                _log.Error("Creating connection to the service failed.", exc);
                 (_mcServiceProxy as MonitorAndControlClient).Abort();
             }     
         }
 
+
+        /// <summary>
+        /// Timer callback to renew the lease time.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnRenewLeaseCallback(object obj)
+        {
+            _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+            _mcServiceProxy.RenewLease();
+        }
+
+        #endregion
+
         #region IMonitorAndControlCallback Members
 
+        /// <summary>
+        /// Notification from service on zone state changes.
+        /// </summary>
+        /// <param name="zoneId"></param>
+        /// <param name="zoneState"></param>
         public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
             Debug.WriteLine(String.Format("M&C Proxy; OnZoneStateChanged(); Address: {0}, State: {1}", zoneId, zoneState));
 
-            if (_zoneProxies.ContainsKey(zoneId))
-                _zoneProxies[zoneId].NotifyClients(zoneState);
+            if (_zoneSubscriptions.ContainsKey(zoneId))
+                _zoneSubscriptions[zoneId].NotifyClients(zoneState);
         }
 
         #endregion
 
         #region IDisposable Members
 
-        // Implement IDisposable.
-        // Do not make this method virtual.
-        // A derived class should not be able to override this method.
+        /// <summary>
+        /// Disposes the M&C service proxy and the internal time
+        /// </summary>
         public void Dispose()
         {
-            Dispose(true);
-            // This object will be cleaned up by the Dispose method.
-            // Therefore, you should call GC.SupressFinalize to
-            // take this object off the finalization queue
-            // and prevent finalization code for this object
-            // from executing a second time.
-            GC.SuppressFinalize(this);
-
-        }
-
-        // Dispose(bool disposing) executes in two distinct scenarios.
-        // If disposing equals true, the method has been called directly
-        // or indirectly by a user's code. Managed and unmanaged resources
-        // can be disposed.
-        // If disposing equals false, the method has been called by the
-        // runtime from inside the finalizer and you should not reference
-        // other objects. Only unmanaged resources can be disposed.
-        private void Dispose(bool disposing)
-        {
-            // Check to see if Dispose has already been called.
-            if (!this.disposed)
+            lock (this)
             {
-                // If disposing equals true, dispose all managed
-                // and unmanaged resources.
-                if (disposing)
+                if (_disposed = false)
                 {
-                    // Dispose managed resources.
                     if (_mcServiceProxy != null)
                     {
                         _mcServiceProxy.Disconnect();
                     }
+                    if (_timerRenewLease != null)
+                    {
+                        _timerRenewLease.Dispose();
+                        _timerRenewLease = null;
+                    }
+
+                    // Note disposing has been done.
+                    _disposed = true;
+
                 }
-
-                // Note disposing has been done.
-                disposed = true;
-
             }
+            GC.SuppressFinalize(this);
         }
+
         #endregion
     }
 
     /// <summary>
     /// Delegate declaration for the notification to the clients.
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
+    /// <param name="sender">Sender</param>
+    /// <param name="e">The zone state.</param>
     public delegate void ZoneNotification(object sender, ZoneStateEventArgs e);
 
     /// <summary>
@@ -259,3 +399,9 @@ namespace NuvoControl.Client.ServiceAccess
     }
 
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

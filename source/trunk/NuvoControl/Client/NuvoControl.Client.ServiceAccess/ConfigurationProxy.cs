@@ -1,7 +1,26 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Client.Viewer
+ *   Author:         Bernhard Limacher
+ *   Creation Date:  12.07.2009
+ *   File Name:      ConfigurationProxy.cs
+ * 
+ ***************************************************************************************************
+ * 
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
+using System.Threading;
 using System.ServiceModel;
 
 using Common.Logging;
@@ -11,89 +30,154 @@ using NuvoControl.Client.ServiceAccess.ConfigurationService;
 
 namespace NuvoControl.Client.ServiceAccess
 {
+    /// <summary>
+    /// Configuration service proxy class.
+    /// Handles renewing the lease time.
+    /// </summary>
     public class ConfigurationProxy : IDisposable
     {
+        #region Fields
+
+        /// <summary>
+        /// Renew the lease after every 30 seconds
+        /// </summary>
+        private const int RENEW_LEASE_TIME = 30000;
+
+        /// <summary>
+        /// Timer, used to renew the lease periodically.
+        /// </summary>
+        private Timer _timerRenewLease;
+
+        /// <summary>
+        /// WCF service proxy.
+        /// </summary>
         IConfigure _cfgServiceProxy;
 
-        // Track whether Dispose has been called.
-        private bool disposed = false;
+        /// <summary>
+        /// Track, whether Dispose has been called.
+        /// </summary>
+        private bool _disposed = false;
 
+        /// <summary>
+        /// Trace logger
+        /// </summary>
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Contructor, injects the service proxy
+        /// </summary>
+        /// <param name="mcServiceProxy"></param>
         public ConfigurationProxy(IConfigure cfgServiceProxy)
         {
             this._cfgServiceProxy = cfgServiceProxy;
         }
 
+
+        /// <summary>
+        /// Default constructor, instantiates the configuration service proxy.
+        /// </summary>
         public ConfigurationProxy()
         {
             Initialize();
         }
 
-        private void Initialize()
-        {
-            try
-            {
-                _cfgServiceProxy = new ConfigureClient();
-            }
-            catch (Exception exc)
-            {
-                (_cfgServiceProxy as ConfigureClient).Abort();
-            }
-        }
+        #endregion
 
+        #region Public Interface
+
+        /// <summary>
+        /// Reads the graphic configuration from the service.
+        /// </summary>
+        /// <returns></returns>
         public Graphic GetGraphicConfiguration()
         {
             return _cfgServiceProxy.GetGraphicConfiguration();
         }
 
-        #region IDisposable Members
+        #endregion
 
-        // Implement IDisposable.
-        // Do not make this method virtual.
-        // A derived class should not be able to override this method.
-        public void Dispose()
+        #region Non-Public Interface
+
+        /// <summary>
+        /// Initializes the connection to the service.
+        /// Starts the timer to periodically renew the lease.
+        /// </summary>
+        private void Initialize()
         {
-            Dispose(true);
-            // This object will be cleaned up by the Dispose method.
-            // Therefore, you should call GC.SupressFinalize to
-            // take this object off the finalization queue
-            // and prevent finalization code for this object
-            // from executing a second time.
-            GC.SuppressFinalize(this);
+            try
+            {
+                Debug.WriteLine("Configuration Proxy; Initialize()");
 
+                _cfgServiceProxy = new ConfigureClient();
+
+                _timerRenewLease = new Timer(OnRenewLeaseCallback);
+                _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+
+                Debug.WriteLine("Configuration Proxy; Initialize() done.");
+
+            }
+            catch (Exception exc)
+            {
+                _log.Error("Creating connection to the service failed.", exc);
+                (_cfgServiceProxy as ConfigureClient).Abort();
+            }
         }
 
-        // Dispose(bool disposing) executes in two distinct scenarios.
-        // If disposing equals true, the method has been called directly
-        // or indirectly by a user's code. Managed and unmanaged resources
-        // can be disposed.
-        // If disposing equals false, the method has been called by the
-        // runtime from inside the finalizer and you should not reference
-        // other objects. Only unmanaged resources can be disposed.
-        private void Dispose(bool disposing)
+
+        /// <summary>
+        /// Timer callback to renew the lease time.
+        /// </summary>
+        /// <param name="obj"></param>
+        private void OnRenewLeaseCallback(object obj)
         {
-            // Check to see if Dispose has already been called.
-            if (!this.disposed)
+            _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+            _cfgServiceProxy.RenewLease();
+        }
+
+
+        #endregion
+
+        #region IDisposable Members
+
+        /// <summary>
+        /// Disposes the M&C service proxy and the internal time
+        /// </summary>
+        public void Dispose()
+        {
+            lock (this)
             {
-                // If disposing equals true, dispose all managed
-                // and unmanaged resources.
-                if (disposing)
+                if (_disposed = false)
                 {
-                    // Dispose managed resources.
                     if (_cfgServiceProxy != null)
                     {
                         // TODO: how to close connection? abort?
                         (_cfgServiceProxy as ConfigureClient).Close();
                     }
+                    if (_timerRenewLease != null)
+                    {
+                        _timerRenewLease.Dispose();
+                        _timerRenewLease = null;
+                    }
+
+                    // Note disposing has been done.
+                    _disposed = true;
+
                 }
-
-                // Note disposing has been done.
-                disposed = true;
-
             }
+            GC.SuppressFinalize(this);
         }
+
         #endregion
 
     }
 }
+
+/**************************************************************************************************
+ * 
+ *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ * 
+**************************************************************************************************/

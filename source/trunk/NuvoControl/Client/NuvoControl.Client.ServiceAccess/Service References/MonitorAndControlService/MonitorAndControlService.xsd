@@ -22,6 +22,16 @@
       <xs:sequence />
     </xs:complexType>
   </xs:element>
+  <xs:element name="RenewLease">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="RenewLeaseResponse">
+    <xs:complexType>
+      <xs:sequence />
+    </xs:complexType>
+  </xs:element>
   <xs:element name="SetZoneState">
     <xs:complexType>
       <xs:sequence>

@@ -75,6 +75,9 @@ namespace NuvoControl.Client.ServiceAccess.ConfigurationService {
     [System.ServiceModel.ServiceContractAttribute(ConfigurationName="ConfigurationService.IConfigure")]
     public interface IConfigure {
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/RenewLease", ReplyAction="http://tempuri.org/IConfigure/RenewLeaseResponse")]
+        void RenewLease();
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetGraphicConfiguration", ReplyAction="http://tempuri.org/IConfigure/GetGraphicConfigurationResponse")]
         NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration();
         
@@ -116,6 +119,10 @@ namespace NuvoControl.Client.ServiceAccess.ConfigurationService {
         
         public ConfigureClient(System.ServiceModel.Channels.Binding binding, System.ServiceModel.EndpointAddress remoteAddress) : 
                 base(binding, remoteAddress) {
+        }
+        
+        public void RenewLease() {
+            base.Channel.RenewLease();
         }
         
         public NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration() {
