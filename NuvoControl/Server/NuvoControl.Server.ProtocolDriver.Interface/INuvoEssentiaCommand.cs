@@ -32,6 +32,13 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public interface INuvoEssentiaCommand
     {
         /// <summary>
+        /// Returns true if all sub-commands in the containser are finished.
+        /// This method can be used to check if an answer has been sent by Nuvo Essentia,
+        /// or if an answer is still expected.
+        /// </summary>
+        bool Finished { get; }
+
+        /// <summary>
         /// Adds an additional new command in the container. 
         /// </summary>
         /// <param name="command">Command to add.</param>

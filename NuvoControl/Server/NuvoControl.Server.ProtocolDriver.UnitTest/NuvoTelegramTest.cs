@@ -84,7 +84,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         //{
         //}
 
-        //Use TestInitialize to run code before running each test
+
+        /// <summary>
+        /// Use TestInitialize to run code before running each test
+        /// </summary>
         [TestInitialize()]
         public void MyTestInitialize()
         {
@@ -93,8 +96,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             _nuvoTelegramEventArgs = null;
             _eventMessageString = "";
         }
-        
-        //Use TestCleanup to run code after each test has run
+
+        /// <summary>
+        /// Use TestCleanup to run code after each test has run
+        /// </summary>
         [TestCleanup()]
         public void MyTestCleanup()
         {

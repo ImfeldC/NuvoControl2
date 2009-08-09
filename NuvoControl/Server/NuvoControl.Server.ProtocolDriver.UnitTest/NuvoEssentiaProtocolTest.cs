@@ -79,15 +79,20 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         //{
         //}
         //
-        //Use TestInitialize to run code before running each test
+
+        /// <summary>
+        /// Use TestInitialize to run code before running each test
+        /// </summary>
         [TestInitialize()]
         public void MyTestInitialize()
         {
             _eventRaisedCount = 0;
             _nuvoProtocolEventArgs = null;
         }
-        
-        //Use TestCleanup to run code after each test has run
+
+        /// <summary>
+        /// Use TestCleanup to run code after each test has run
+        /// </summary>
         [TestCleanup()]
         public void MyTestCleanup()
         {

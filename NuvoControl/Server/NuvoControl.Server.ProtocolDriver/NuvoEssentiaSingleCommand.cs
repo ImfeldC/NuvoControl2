@@ -582,6 +582,14 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// See base interface INuvoEssentiaSingleCommand for more information.
         /// </summary>
+        public bool Finished
+        {
+            get { return _receiveDateTime.Year > 1; }
+        }
+
+        /// <summary>
+        /// See base interface INuvoEssentiaSingleCommand for more information.
+        /// </summary>
         public DateTime SendDateTime
         {
             get { return _sendDateTime; }
@@ -1792,6 +1800,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         #endregion
+
 
 
     }

@@ -28,6 +28,12 @@ using AMS.Profile;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
+    /// <summary>
+    /// This class implements the Nuvo Essentia protocol.
+    /// 
+    /// Based on the interface \ref INuvoEssentiaProtocol this class implements
+    /// the concrete protocol used to communicate with the Nuvo Essentia system.
+    /// </summary>
     public class NuvoEssentiaProtocol : INuvoEssentiaProtocol
     {
         #region Common Logger
@@ -44,6 +50,11 @@ namespace NuvoControl.Server.ProtocolDriver
         private Queue<INuvoEssentiaSingleCommand> _runningCommands = new Queue<INuvoEssentiaSingleCommand>();
         private NuvoEssentiaSingleCommand _errorNuvoEssentiaCommand = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ErrorInCommand);
 
+        /// <summary>
+        /// Public constructor.
+        /// </summary>
+        /// <param name="deviceId">Device Id.</param>
+        /// <param name="nuvoTelegram">Optional. Used in case of unit test to pass a mock telegram object.</param>
         public NuvoEssentiaProtocol(int deviceId, INuvoTelegram nuvoTelegram)
         {
             _deviceId = deviceId;
@@ -52,6 +63,11 @@ namespace NuvoControl.Server.ProtocolDriver
             _serialPort.onTelegramReceived += new NuvoTelegramEventHandler(_serialPort_onTelegramReceived);
         }
 
+        /// <summary>
+        /// Event method called in case a telegram has been received.
+        /// </summary>
+        /// <param name="sender">This point to the sender of this event.</param>
+        /// <param name="e">Event parameters, passed by the sender.</param>
         void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
         {
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(e.Message);
@@ -69,6 +85,12 @@ namespace NuvoControl.Server.ProtocolDriver
             }
         }
 
+        /// <summary>
+        /// Method to check, if the incoming command is related to a previous send
+        /// outgoing command.
+        /// </summary>
+        /// <param name="incomingCommand">Incoming command.</param>
+        /// <returns>Return the running command.</returns>
         private INuvoEssentiaSingleCommand compareIncomingCommandWithRunningCommand(INuvoEssentiaSingleCommand incomingCommand)
         {
             INuvoEssentiaSingleCommand command = null;
@@ -108,29 +130,51 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region INuvoEssentiaProtocol Members
 
+        /// <summary>
+        /// Public event, used in case a command answer is received from Nuvo Essentia.
+        /// </summary>
         public event NuvoEssentiaProtocolEventHandler onCommandReceived;
 
+        /// <summary>
+        /// Open method, to open a connection to the serial port.
+        /// </summary>
+        /// <param name="serialPortConnectInformation">Connection information, to open the serial port.</param>
         public void Open(SerialPortConnectInformation serialPortConnectInformation)
         {
             _serialPort.Open(serialPortConnectInformation);
         }
 
+        /// <summary>
+        /// Close method, to close the serial port connection.
+        /// </summary>
         public void Close()
         {
             _serialPort.Close();
         }
 
+        /// <summary>
+        /// Send method to send a command string.
+        /// </summary>
+        /// <param name="commandString">Command sting to send.</param>
         public void SendCommand(string commandString)
         {
             NuvoEssentiaSingleCommand command = convertString2NuvoEssentiaCommand(commandString);
             Send(command);
         }
 
+        /// <summary>
+        /// Send method to send a single command.
+        /// </summary>
+        /// <param name="command">Combined command to send.</param>
         public void SendCommand(INuvoEssentiaSingleCommand command)
         {
             Send(command);
         }
 
+        /// <summary>
+        /// Send method to send a combined command.
+        /// </summary>
+        /// <param name="command">Combined command to send.</param>
         public void SendCommand(INuvoEssentiaCommand command)
         {
             for (INuvoEssentiaSingleCommand singleCommand = command.getNextCommand(null);
@@ -143,7 +187,10 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
-
+        /// <summary>
+        /// Send method for a single command.
+        /// </summary>
+        /// <param name="command">Command to send.</param>
         private void Send(INuvoEssentiaSingleCommand command)
         {
             if (command.Command != ENuvoEssentiaCommands.NoCommand)
@@ -169,6 +216,12 @@ namespace NuvoControl.Server.ProtocolDriver
             return new NuvoEssentiaSingleCommand(NuvoEssentiaSingleCommand.searchNuvoEssentiaCommandWithOutgoingCommand(command));
         }
 
+        /// <summary>
+        /// Comperes the zon eids.
+        /// </summary>
+        /// <param name="zone1">First zone to compare the id.</param>
+        /// <param name="zone2">Second zone to compare the id.</param>
+        /// <returns>Returns true, if the zone ids are the same.</returns>
         public static bool compareZoneIds(ENuvoEssentiaZones zone1, ENuvoEssentiaZones zone2)
         {
             if ((zone1 != ENuvoEssentiaZones.NoZone) && (zone2 != ENuvoEssentiaZones.NoZone))
@@ -180,21 +233,10 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
             }
 
-            // Either trrrhe zone ids are the same, or ...
+            // Either the zone ids are the same, or ...
             // At least one zone is not defined, so we can't compare them
             // return in this case 'true'
             return true;
-        }
-
-        internal NuvoTelegram NuvoTelegram
-        {
-            get
-            {
-                throw new System.NotImplementedException();
-            }
-            set
-            {
-            }
         }
 
     }
