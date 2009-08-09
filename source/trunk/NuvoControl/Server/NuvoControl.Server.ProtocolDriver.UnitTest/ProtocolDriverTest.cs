@@ -147,7 +147,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         /// <summary>
         /// A test for SendCommand
-        /// This test is intended to test the 'multiple' command. This command holds more than 
+        /// This test is intended to test one 'multiple' command. This command holds more than 
         /// one single command and executes them. To the client it should look like, that the driver
         /// is executing just one command.
         /// 
@@ -158,12 +158,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void SendCommandTest2()
         {
             INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone5, ENuvoEssentiaSources.Source4, -30);
-            _protDriver.SendCommand(_zoneAddress, command);
             _protDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protDriver_onCommandReceived);
             _protDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protDriver_onDeviceStatusUpdate);
             _protDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protDriver_onZoneStatusUpdate);
-
-            List<string> strMessageLsit = _nuvoTelegramMock.TelegramList;
+            _protDriver.SendCommand(_zoneAddress, command);
 
             _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-50"); // as answer to "Z05ON" (TurnZoneOn)
             _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-30"); // as answer to "Z05VOL30" (SetVolume)
@@ -172,6 +170,45 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.AreEqual(0, _protDeviceUpdatedEventArgs.Count);      // get ZERO device state update events
             Assert.AreEqual(3, _protCommandReceivedEventArgs.Count);    // get THREE command events
             Assert.AreEqual(1, _protZoneUpdatedEventArgs.Count);        // get ONE zone state update event
+        }
+
+        /// <summary>
+        /// A test for SendCommand
+        /// This test is intended to test more than one 'multiple' command. This command holds more than 
+        /// one single command and executes them. To the client it should look like, that the driver
+        /// is executing just one command.
+        /// 
+        /// Pass in a combined command to set the zone state (source, volume and power state).
+        /// This command, combines three single commands.
+        /// </summary>
+        [TestMethod()]
+        public void SendCommandTest3()
+        {
+            INuvoEssentiaCommand command1 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone5, ENuvoEssentiaSources.Source4, -30);
+            INuvoEssentiaCommand command2 = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone7, ENuvoEssentiaSources.Source2, -40);
+            _protDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protDriver_onCommandReceived);
+            _protDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protDriver_onDeviceStatusUpdate);
+            _protDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protDriver_onZoneStatusUpdate);
+            _protDriver.SendCommand(_zoneAddress, command1);
+            _protDriver.SendCommand(_zoneAddress, command2);
+
+            // return the answer of the first command
+            _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-50");
+            _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-30"); 
+            _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC4,GRP0,VOL-30");
+
+            Assert.AreEqual(0, _protDeviceUpdatedEventArgs.Count);      // get ZERO device state update events
+            Assert.AreEqual(3, _protCommandReceivedEventArgs.Count);    // get THREE command events
+            Assert.AreEqual(1, _protZoneUpdatedEventArgs.Count);        // get ONE zone state update event
+
+            // .. and now return the answer of the second command
+            _nuvoTelegramMock.passDataToTestClass("Z07PWRON,SRC3,GRP0,VOL-50");
+            _nuvoTelegramMock.passDataToTestClass("Z07PWRON,SRC3,GRP0,VOL-40");
+            _nuvoTelegramMock.passDataToTestClass("Z07PWRON,SRC2,GRP0,VOL-40");
+
+            Assert.AreEqual(0, _protDeviceUpdatedEventArgs.Count);      // get ZERO device state update events
+            Assert.AreEqual(6, _protCommandReceivedEventArgs.Count);    // get SIX command events
+            Assert.AreEqual(2, _protZoneUpdatedEventArgs.Count);        // get TWO zone state update event
         }
 
         /// <summary>
