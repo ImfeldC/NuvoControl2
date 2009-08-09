@@ -104,12 +104,12 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// List of running single commands, over all devices.
         /// </summary>
-        private Queue<INuvoEssentiaSingleCommand> _runningSingleCommands = new Queue<INuvoEssentiaSingleCommand>();
+        private List<INuvoEssentiaSingleCommand> _runningSingleCommands = new List<INuvoEssentiaSingleCommand>();
 
         /// <summary>
         /// List of running combined commands, over all devices.
         /// </summary>
-        private Queue<INuvoEssentiaCommand> _runningCombinedCommands = new Queue<INuvoEssentiaCommand>();
+        private List<INuvoEssentiaCommand> _runningCombinedCommands = new List<INuvoEssentiaCommand>();
 
         /// <summary>
         /// Private member to hold the timer used to send a 'ping' to the device.
@@ -250,7 +250,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     e.Command.PowerStatus != EZonePowerStatus.ZoneStatusUnknown &&
                     e.Command.VolumeLevel != ZoneState.VALUE_UNDEFINED &&
                     e.Command.SourceId != ENuvoEssentiaSources.NoSource &&
-                    checkRunningCommands() )
+                    checkRunningCommands(e.Command))
                 {
                     if (onZoneStatusUpdate != null)
                     {
@@ -277,19 +277,31 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Check the running combined commands. Return true only in case
         /// all sub-commands of a combined command are returned.
         /// </summary>
+        /// <param name="incomingCommand">Incoming command, used to find the corresponding combined command.</param>
         /// <returns>True in case, all sub-commands are finished of if no combined command is running.</returns>
-        private bool checkRunningCommands()
+        private bool checkRunningCommands(INuvoEssentiaSingleCommand incomingCommand)
         {
             bool allFinished = false;
 
             if (_runningCombinedCommands.Count > 0)
             {
-                INuvoEssentiaCommand command = _runningCombinedCommands.Peek();
-                allFinished = command.Finished;
-                if (allFinished)
+                foreach (INuvoEssentiaCommand command in _runningCombinedCommands)
                 {
-                    // Remove command from queue
-                    _runningCombinedCommands.Dequeue();
+                    for (INuvoEssentiaSingleCommand singleCommand = command.getNextCommand(null);
+                        singleCommand != null;
+                        singleCommand = command.getNextCommand(singleCommand)  )
+                    {
+                        if (singleCommand == incomingCommand)
+                        {
+                            allFinished = command.Finished;
+                            if (allFinished)
+                            {
+                                // Remove command from queue
+                                _runningCombinedCommands.Remove(command);
+                            }
+                            return allFinished;
+                        }
+                    }
                 }
             }
             else
@@ -489,7 +501,7 @@ namespace NuvoControl.Server.ProtocolDriver
             }
 
             _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
-            _runningSingleCommands.Enqueue(command);
+            _runningSingleCommands.Add(command);
         }
 
         /// <summary>
@@ -502,7 +514,7 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
             _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
-            _runningCombinedCommands.Enqueue(command);
+            _runningCombinedCommands.Add(command);
         }
 
         #endregion
