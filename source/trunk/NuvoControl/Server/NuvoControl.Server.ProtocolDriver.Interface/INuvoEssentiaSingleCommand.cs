@@ -52,6 +52,13 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         bool Valid { get; }
 
         /// <summary>
+        /// Returns true if an incoming command has been receiced.
+        /// This method can be used to check if an answer has been sent by Nuvo Essentia,
+        /// or if an answer is still expected.
+        /// </summary>
+        bool Finished { get; }
+
+        /// <summary>
         /// Returns the date and time, if this command was created.
         /// </summary>
         DateTime CreatedDateTime { get; }

@@ -24,6 +24,7 @@ using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ProtocolDriver.Test.Mock;
 using Common.Logging;
 using NuvoControl.Common;
+using System.Collections.Generic;
 
 namespace NuvoControl.Server.ProtocolDriver.Test
 {
@@ -52,7 +53,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         private Address _zoneAddress = null;
         private Communication _commConfig = new Communication("COM1", 9600, 8, 1, "None");
 
-        private ProtocolCommandReceivedEventArgs _eventArg;
+        private List<ProtocolCommandReceivedEventArgs> _protCommandReceivedEventArgs = new List<ProtocolCommandReceivedEventArgs>();
+        private List<ProtocolZoneUpdatedEventArgs> _protZoneUpdatedEventArgs = new List<ProtocolZoneUpdatedEventArgs>();
+        private List<ProtocolDeviceUpdatedEventArgs> _protDeviceUpdatedEventArgs = new List<ProtocolDeviceUpdatedEventArgs>();
 
         private TestContext testContextInstance;
 
@@ -88,7 +91,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         //{
         //}
         //
-        //Use TestInitialize to run code before running each test
+
+        /// <summary>
+        /// Use TestInitialize to run code before running each test
+        /// </summary>
         [TestInitialize()]
         public void MyTestInitialize()
         {
@@ -97,7 +103,9 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             createProtocolDriver(_deviceId, _commConfig);
         }
         
-        //Use TestCleanup to run code after each test has run
+        /// <summary>
+        /// Use TestCleanup to run code after each test has run
+        /// </summary>
         [TestCleanup()]
         public void MyTestCleanup()
         {
@@ -106,22 +114,6 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         
         #endregion
 
-
-        /// <summary>
-        ///A test for SendCommand. Using the combined (non-single) command.
-        /// </summary>
-        [TestMethod()]
-        public void SendCommandTest1()
-        {
-            INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source5,-22);
-            Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
-            _protDriver.SendCommand(zoneAddress, command);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("Z04ON", _nuvoTelegramMock.TelegramList[0]);
-            Assert.AreEqual("Z04VOL22", _nuvoTelegramMock.TelegramList[1]);
-            Assert.AreEqual("Z04SRC5", _nuvoTelegramMock.TelegramList[2]);
-            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
-        }
 
         /// <summary>
         ///A test for SendCommand. Using the Single Command.
@@ -136,6 +128,82 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.AreEqual("ALLMOFF", _nuvoTelegramMock.TelegramList[0]);
             Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
         }
+
+        /// <summary>
+        ///A test for SendCommand. Using the combined (non-single) command.
+        /// </summary>
+        [TestMethod()]
+        public void SendCommandTest1()
+        {
+            INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone4, ENuvoEssentiaSources.Source5, -22);
+            Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
+            _protDriver.SendCommand(zoneAddress, command);
+            string strMessage = _nuvoTelegramMock.Telegram;
+            Assert.AreEqual("Z04ON", _nuvoTelegramMock.TelegramList[0]);
+            Assert.AreEqual("Z04VOL22", _nuvoTelegramMock.TelegramList[1]);
+            Assert.AreEqual("Z04SRC5", _nuvoTelegramMock.TelegramList[2]);
+            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
+        }
+
+        /// <summary>
+        /// A test for SendCommand
+        /// This test is intended to test the 'multiple' command. This command holds more than 
+        /// one single command and executes them. To the client it should look like, that the driver
+        /// is executing just one command.
+        /// 
+        /// Pass in a combined command to set the zone state (source, volume and power state).
+        /// This command, combines three single commands.
+        /// </summary>
+        [TestMethod()]
+        public void SendCommandTest2()
+        {
+            INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone5, ENuvoEssentiaSources.Source4, -30);
+            _protDriver.SendCommand(_zoneAddress, command);
+            _protDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protDriver_onCommandReceived);
+            _protDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protDriver_onDeviceStatusUpdate);
+            _protDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protDriver_onZoneStatusUpdate);
+
+            List<string> strMessageLsit = _nuvoTelegramMock.TelegramList;
+
+            _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-50"); // as answer to "Z05ON" (TurnZoneOn)
+            _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-30"); // as answer to "Z05VOL30" (SetVolume)
+            _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC4,GRP0,VOL-50"); // as answer to "Z05SRC4" (SetSource)
+
+            Assert.AreEqual(0, _protDeviceUpdatedEventArgs.Count);      // get ZERO device state update events
+            Assert.AreEqual(3, _protCommandReceivedEventArgs.Count);    // get THREE command events
+            Assert.AreEqual(1, _protZoneUpdatedEventArgs.Count);        // get ONE zone state update event
+        }
+
+        /// <summary>
+        /// Event method used in SendCommandTest2
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
+        void _protDriver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
+        {
+            _protZoneUpdatedEventArgs.Add(e);
+        }
+
+        /// <summary>
+        /// Event method used in SendCommandTest2
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
+        void _protDriver_onDeviceStatusUpdate(object sender, ProtocolDeviceUpdatedEventArgs e)
+        {
+            _protDeviceUpdatedEventArgs.Add(e);
+        }
+
+        /// <summary>
+        /// Event method used in SendCommandTest2
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
+        void _protDriver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
+        {
+            _protCommandReceivedEventArgs.Add(e);
+        }
+
 
         /// <summary>
         /// A test for ReadZoneState
@@ -349,9 +417,14 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
         }
 
+        /// <summary>
+        /// Event method used in the test SimulatorCommandSetSourceTest
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
         void target_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
-            _eventArg = e;
+            _protCommandReceivedEventArgs.Add(e);
         }
 
     }

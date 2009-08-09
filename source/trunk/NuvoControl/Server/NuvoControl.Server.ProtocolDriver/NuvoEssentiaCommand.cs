@@ -176,6 +176,24 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// See description of INuvoEssentiaCommand
         /// </summary>
+        public bool Finished
+        {
+            get
+            {
+                bool allFinished = true;
+
+                foreach (INuvoEssentiaSingleCommand singleCommand in _commandList)
+                {
+                    allFinished &= singleCommand.Finished;
+                }
+
+                return allFinished;
+            }
+        }
+
+        /// <summary>
+        /// See description of INuvoEssentiaCommand
+        /// </summary>
         public INuvoEssentiaSingleCommand getNextCommand(INuvoEssentiaSingleCommand prevCommand)
         {
             if (_commandList.Count <= 0)
@@ -242,6 +260,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         #endregion
+
 
 
     }
