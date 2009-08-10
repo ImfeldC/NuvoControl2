@@ -4,24 +4,37 @@
     xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
     Title="Window1" Height="600" Width="800"
     commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}" Name="_mainWindow">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Skins/NuvoControlStylesFreak.xaml"></ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
     <DockPanel Name="dockPanel1" LastChildFill="True">
-        <Menu Height="22" Name="menu1" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Top">
-            <MenuItem Header="_File">
-                <MenuItem Command="commands:CustomCommands.AppExit"/>
+        <Menu  Name="menu1" DockPanel.Dock="Top" HorizontalAlignment="Stretch" VerticalAlignment="Top" Style="{DynamicResource BarStyle}">
+            <MenuItem Header="_File" Style="{DynamicResource BarStyle}">
+                <MenuItem Command="commands:CustomCommands.AppExit"  Style="{DynamicResource MenuItemStyle}"/>
             </MenuItem>
-            <MenuItem Header="_Edit"></MenuItem>
-            <MenuItem Header="_View">
-                <MenuItem Command="BrowseBack"/>
-                <MenuItem Command="BrowseForward"/>
-                <MenuItem Command="commands:CustomCommands.BrowseUp"/>
-                <MenuItem Command="commands:CustomCommands.BrowseDown"/>
-                <MenuItem Command="commands:CustomCommands.BrowsePrevious"/>
-                <MenuItem Command="commands:CustomCommands.BrowseNext"/>
+            <MenuItem Header="_Edit"  Style="{DynamicResource BarStyle}"></MenuItem>
+            <MenuItem Header="_View"  Style="{DynamicResource BarStyle}">
+                <MenuItem Command="BrowseBack" Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Command="BrowseForward" Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Command="commands:CustomCommands.BrowseUp" Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Command="commands:CustomCommands.BrowseDown" Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Command="commands:CustomCommands.BrowsePrevious" Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Command="commands:CustomCommands.BrowseNext" Style="{DynamicResource MenuItemStyle}"/>
             </MenuItem>
-            <MenuItem Header="_Skins"></MenuItem>
-            <MenuItem Header="_Help"></MenuItem>
+            <MenuItem Header="_Skins"  Style="{DynamicResource BarStyle}">
+                <MenuItem Name="_btnMenuClassic" Header="Classic" IsCheckable="True" Checked="_btnMenuClassic_Checked"  Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Name="_btnMenuSmooth" Header="Smooth" IsCheckable="True"  Checked="_btnMenuSmooth_Checked" IsChecked="True"  Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Name="_btnMenuSteel" Header="Steel" IsCheckable="True"  Checked="_btnMenuSteel_Checked"  Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Name="_btnMenuTechno" Header="Machine" IsCheckable="True"  Checked="_btnMenuTechno_Checked"  Style="{DynamicResource MenuItemStyle}"/>
+                <MenuItem Name="_btnMenuFreak" Header="Freak" IsCheckable="True"  Checked="_btnMenuFreak_Checked"  Style="{DynamicResource MenuItemStyle}"/>
+            </MenuItem>
+            <MenuItem Header="_Help"  Style="{DynamicResource BarStyle}"></MenuItem>
         </Menu>
-        <ToolBar Height="48" Name="toolBar1" HorizontalAlignment="Stretch" VerticalAlignment="Top" DockPanel.Dock="Top">
+        <ToolBar Height="48" Name="toolBar1" HorizontalAlignment="Stretch" VerticalAlignment="Top" DockPanel.Dock="Top" Style="{DynamicResource ToolbarStyle}">
             <Button Name="_btnBack" Padding="0" Command="NavigationCommands.BrowseBack" ToolTip="{Binding Path=BackToolTip}">
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -86,8 +99,8 @@
             <Label VerticalAlignment="Center" Margin="5">View:</Label>
             <ComboBox Name="_viewName" MinWidth="100" ItemsSource="{Binding Path=NavigationItems}" SelectedItem="{Binding Path=SelectedNavigationItem}"  IsSynchronizedWithCurrentItem="True"></ComboBox>
         </ToolBar>
-        <StatusBar Height="23" Name="statusBar1" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Top" />
-        <Grid Name="_mainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="#FFF8F8F4" MinWidth="100" MinHeight="100">
+        <StatusBar Height="23" Name="statusBar1" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" VerticalAlignment="Bottom" VerticalContentAlignment="Top" Style="{DynamicResource BarStyle}"/>
+        <Grid Name="_mainGrid" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinWidth="100" MinHeight="100" Style="{DynamicResource ZonePopupStyle}">
             <Grid.RowDefinitions>
                 <RowDefinition />
             </Grid.RowDefinitions>

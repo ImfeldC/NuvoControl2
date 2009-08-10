@@ -10,10 +10,11 @@
             <RowDefinition />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Button Name="_btnOpenCommander" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1" Click="_btnOpenCommander_Click" VerticalContentAlignment="Top">+</Button>
+        <Button Name="_btnOpenCommander" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1" Click="_btnOpenCommander_Click"
+                VerticalContentAlignment="Top" Style="{DynamicResource ZoneControlStyle}">+</Button>
         <ctrls:ZoneInfo Grid.Row="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Top" HorizontalAlignment="Left" VerticalAlignment="Top"></ctrls:ZoneInfo>
-        <Popup Name="_popupCommander" StaysOpen="False" Placement="Relative" MinWidth="100" MinHeight="100" PopupAnimation="Slide" AllowsTransparency="True">
-            <Border Background="#FFF8F8F4" BorderBrush="#FFACAC8C" BorderThickness="2" Button.Click="_btnCloseCommander_Click">
+        <Popup Name="_popupCommander" StaysOpen="False" Placement="Relative" MinWidth="100" MinHeight="50" PopupAnimation="Slide" AllowsTransparency="True">
+            <Border BorderThickness="2" Button.Click="_btnCloseCommander_Click" Style="{DynamicResource ZonePopupStyle}">
                 <ctrls:ZoneCommander></ctrls:ZoneCommander>
             </Border>
         </Popup>

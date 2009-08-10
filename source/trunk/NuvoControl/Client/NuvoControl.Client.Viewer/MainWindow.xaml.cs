@@ -82,7 +82,7 @@ namespace NuvoControl.Client.Viewer
         {
             InitializeComponent();
 
-            ServiceConfigurator.Configure(false);
+            ServiceConfigurator.Configure(true);
             ReadConfiguration();
             InitializeViews();
             InitializeViewModel();
@@ -140,6 +140,83 @@ namespace NuvoControl.Client.Viewer
 
         }
 
+
+        private void _btnMenuClassic_Checked(object sender, RoutedEventArgs e)
+        {
+            LoadNewSkin(@"../Skins/NuvoControlStylesClassic.xaml");
+            if (_btnMenuSmooth != null)
+                _btnMenuSmooth.IsChecked = false;
+            if (_btnMenuSteel != null)
+                _btnMenuSteel.IsChecked = false;
+            if (_btnMenuTechno != null)
+                _btnMenuTechno.IsChecked = false;
+            if (_btnMenuFreak != null)
+                _btnMenuFreak.IsChecked = false;
+        }
+
+
+        private void _btnMenuSmooth_Checked(object sender, RoutedEventArgs e)
+        {
+            LoadNewSkin(@"../Skins/NuvoControlStylesSmooth.xaml");
+            if (_btnMenuClassic != null)
+                _btnMenuClassic.IsChecked = false;
+            if (_btnMenuSteel != null)
+                _btnMenuSteel.IsChecked = false;
+            if (_btnMenuTechno != null)
+                _btnMenuTechno.IsChecked = false;
+            if (_btnMenuFreak != null)
+                _btnMenuFreak.IsChecked = false;
+        }
+
+
+        private void _btnMenuTechno_Checked(object sender, RoutedEventArgs e)
+        {
+            LoadNewSkin(@"../Skins/NuvoControlStylesTechno.xaml");
+            if (_btnMenuClassic != null)
+                _btnMenuClassic.IsChecked = false;
+            if (_btnMenuSmooth != null)
+                _btnMenuSmooth.IsChecked = false;
+            if (_btnMenuSteel != null)
+                _btnMenuSteel.IsChecked = false;
+            if (_btnMenuFreak != null)
+                _btnMenuFreak.IsChecked = false;
+        }
+
+
+        private void _btnMenuSteel_Checked(object sender, RoutedEventArgs e)
+        {
+            LoadNewSkin(@"../Skins/NuvoControlStylesSteel.xaml");
+            if (_btnMenuClassic != null)
+                _btnMenuClassic.IsChecked = false;
+            if (_btnMenuSmooth != null)
+                _btnMenuSmooth.IsChecked = false;
+            if (_btnMenuTechno != null)
+                _btnMenuTechno.IsChecked = false;
+            if (_btnMenuFreak != null)
+                _btnMenuFreak.IsChecked = false;
+        }
+
+
+        private void _btnMenuFreak_Checked(object sender, RoutedEventArgs e)
+        {
+            LoadNewSkin(@"../Skins/NuvoControlStylesFreak.xaml");
+            if (_btnMenuClassic != null)
+                _btnMenuClassic.IsChecked = false;
+            if (_btnMenuSmooth != null)
+                _btnMenuSmooth.IsChecked = false;
+            if (_btnMenuSteel != null)
+                _btnMenuSteel.IsChecked = false;
+            if (_btnMenuTechno != null)
+                _btnMenuTechno.IsChecked = false;
+        }
+
+
+        private void LoadNewSkin(string relativeSkinName)
+        {
+            ResourceDictionary newDictionary = new ResourceDictionary();
+            newDictionary.Source = new Uri(relativeSkinName, UriKind.Relative);
+            this.Resources.MergedDictionaries[0] = newDictionary;
+        }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
