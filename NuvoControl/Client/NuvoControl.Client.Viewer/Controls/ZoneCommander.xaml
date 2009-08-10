@@ -8,11 +8,13 @@
         <converters:QualityConverter x:Key="QualityConverter"></converters:QualityConverter>
         <converters:AcknowledgedConverter x:Key="AcknowledgedConverter"></converters:AcknowledgedConverter>
     </UserControl.Resources>
-    <Grid>
+    <Grid >
         <StackPanel Name="_stackPanel">
             <Grid Name="_gridZone">
-                <Button Name="_btn_Close" Tag="ClosePopupButton" HorizontalAlignment="Left" Margin="1" MinWidth="20">-</Button>
-                <Label Name="_lblZone" Content="{Binding Path=ZoneName}" Margin="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center"></Label>
+                <Button Name="_btn_Close" Tag="ClosePopupButton" HorizontalAlignment="Left" Margin="1" MinWidth="20"
+                        Style="{DynamicResource ZoneCommanderStyle}">-</Button>
+                <Label Name="_lblZone" Content="{Binding Path=ZoneName}" Margin="1" HorizontalContentAlignment="Center" HorizontalAlignment="Center"
+                       Style="{DynamicResource ZoneCommanderStyle}"></Label>
             </Grid>
             <Grid Name="_gridControl">
                 <Grid.ColumnDefinitions>
@@ -23,16 +25,18 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <ToggleButton Name="_btnPower" Grid.Column="0" IsChecked="{Binding Path=PowerZoneState}" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center"
-                              Command="commands:CustomCommands.Power" Content="{Binding ElementName=_btnPower, Path=Command.Text}"></ToggleButton>
+                              Command="commands:CustomCommands.Power" Content="{Binding ElementName=_btnPower, Path=Command.Text}"
+                              Style="{DynamicResource ZoneCommanderStyle}"></ToggleButton>
                 <ComboBox Name="_cbxSource" Grid.Column="1" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" MinWidth="100"
-                          ItemsSource="{Binding Path=ViewSources}" SelectedItem="{Binding Path=SelectedSource}" IsSynchronizedWithCurrentItem="True">
+                          ItemsSource="{Binding Path=ViewSources}" SelectedItem="{Binding Path=SelectedSource}" IsSynchronizedWithCurrentItem="True"
+                           Style="{DynamicResource ZoneCommanderStyle}">
                 </ComboBox>
                 <RepeatButton Name="_btnDown" Grid.Column="2" Margin="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="23"
-                              Command="commands:CustomCommands.VolumeDown">-</RepeatButton>
+                              Command="commands:CustomCommands.VolumeDown" Style="{DynamicResource ZoneCommanderStyle}">-</RepeatButton>
                 <ProgressBar Name="_prgVolume" Grid.Column="3" Margin="1"  VerticalAlignment="Stretch" Orientation="Horizontal"
-                             Value="{Binding Mode=OneWay, Path=Volume}" HorizontalAlignment="Center" Width="80" />
+                             Value="{Binding Mode=OneWay, Path=Volume}" HorizontalAlignment="Center" Width="80"  Style="{DynamicResource ZoneCommanderStyle}"/>
                 <RepeatButton Name="_btnUp" Grid.Column="4" Margin="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="23"
-                              Command="commands:CustomCommands.VolumeUp">+</RepeatButton>
+                              Command="commands:CustomCommands.VolumeUp"  Style="{DynamicResource ZoneCommanderStyle}">+</RepeatButton>
             </Grid>
             <Grid Name="_gridState">
                 <Grid.ColumnDefinitions>
@@ -40,9 +44,11 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Label Name="lblQuality" Margin="1" HorizontalAlignment="Left" HorizontalContentAlignment="Left" VerticalContentAlignment="Center"
-                       Content="{Binding Path=QualityZoneState, Converter={StaticResource QualityConverter}}"></Label>
+                       Content="{Binding Path=QualityZoneState, Converter={StaticResource QualityConverter}}"
+                       Style="{DynamicResource ZoneCommanderStyle}"></Label>
                 <Label Name="lblAck" Margin="1" Grid.Column="1" HorizontalAlignment="Right" VerticalContentAlignment="Center"
-                       Content="{Binding Path=UnackZoneState, Converter={StaticResource AcknowledgedConverter}}"></Label>
+                       Content="{Binding Path=UnackZoneState, Converter={StaticResource AcknowledgedConverter}}"
+                       Style="{DynamicResource ZoneCommanderStyle}"></Label>
             </Grid>
         </StackPanel>
     </Grid>

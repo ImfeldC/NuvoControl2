@@ -8,12 +8,6 @@
         <converters:SourceConverter x:Key="SourceConverter"></converters:SourceConverter>
         <converters:QualityConverter x:Key="QualityConverter"></converters:QualityConverter>
         <converters:AcknowledgedConverter x:Key="AcknowledgedConverter"></converters:AcknowledgedConverter>
-        <Style x:Key="ZoneInfoFontLabelStyle">
-            <Setter Property="Control.FontFamily" Value="Tahoma"></Setter>
-            <Setter Property="Control.FontSize" Value="10"></Setter>
-            <Setter Property="Control.FontWeight" Value="Bold"></Setter>
-            <Setter Property="Control.Foreground" Value="Blue"></Setter>
-        </Style>
     </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
@@ -28,12 +22,12 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Label Name="_lblZone" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-               Content="{Binding Path=ZoneName}"  Style="{StaticResource ZoneInfoFontLabelStyle}" MinHeight="10"></Label>
+               Content="{Binding Path=ZoneName}" Style="{DynamicResource ZoneControlStyle}" MinHeight="10"></Label>
         <Label Name="_lblPower" Grid.Row="1" Grid.Column="1"  Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                Content="{Binding Path=PowerZoneState, Converter={StaticResource PowerConverter}}" 
-               Style="{StaticResource ZoneInfoFontLabelStyle}" MinHeight="10"></Label>
+               MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
         <Label Name="_lblAudio" Grid.Row="2"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-               Style="{StaticResource ZoneInfoFontLabelStyle}" MinHeight="10">
+               MinHeight="10" Style="{DynamicResource ZoneControlStyle}">
             <Label.Content>
                 <MultiBinding Converter="{StaticResource SourceConverter}">
                     <Binding Path="SourceZoneState"></Binding>
@@ -42,12 +36,12 @@
             </Label.Content>
         </Label>
         <Label Name="_lblVolume" Grid.Row="3"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-               Content="{Binding Path=VolumeZoneState}" Style="{StaticResource ZoneInfoFontLabelStyle}" MinHeight="10"></Label>
+               Content="{Binding Path=VolumeZoneState}" MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
         <Label Name="_lblAck" Grid.Row="4"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                Content="{Binding Path=UnackZoneState, Converter={StaticResource AcknowledgedConverter}}"
-               Style="{StaticResource ZoneInfoFontLabelStyle}" MinHeight="10"></Label>
+               MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
         <Label Name="_lblConnection" Grid.Row="5"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                Content="{Binding Path=QualityZoneState, Converter={StaticResource QualityConverter}}"
-               Style="{StaticResource ZoneInfoFontLabelStyle}" MinHeight="10"></Label>
+               MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
     </Grid>
 </UserControl>
