@@ -112,8 +112,8 @@ namespace NuvoControl.Server.ZoneServer
                 _protocolDriver.SetZoneState(_zoneId, zoneState);
                 _zoneState = new ZoneState(zoneState);
                 _zoneState.CommandUnacknowledged = true;
-                NotifySubscribedClients();
             }
+            NotifySubscribedClients();
         }
 
 
@@ -187,14 +187,14 @@ namespace NuvoControl.Server.ZoneServer
         /// <param name="e">Event Argument, contains the zone state.</param>
         void _protocolDriver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
-            lock (_zoneState)
+            lock (this)
             {
                 if (e.ZoneAddress.Equals(_zoneId))
                 {
                     UpdateZoneStateFromDriver(e.ZoneState);
-                    NotifySubscribedClients();
                 }
             }
+            NotifySubscribedClients();
         }
 
 
@@ -208,16 +208,17 @@ namespace NuvoControl.Server.ZoneServer
         private void _protocolDriver_onDeviceStatusUpdate(object sender, ProtocolDeviceUpdatedEventArgs e)
         {
             _log.Trace(m => m("Zone {0}: Device (with id {1}) state change received: {2}", _zoneId.ToString(), e.DeviceId, e.DeviceQuality.ToString()));
-            lock (_zoneState)
+            lock (this)
             {
                 if (e.DeviceId == _zoneId.DeviceId)
                 {
                     // update the device quality. Which in this case means, update the zone quality
                     _zoneState.ZoneQuality = e.DeviceQuality;
-                    NotifySubscribedClients();
                 }
             }
+            NotifySubscribedClients();
         }
+
 
         private void UpdateZoneStateFromDriver(ZoneState newState)
         {
