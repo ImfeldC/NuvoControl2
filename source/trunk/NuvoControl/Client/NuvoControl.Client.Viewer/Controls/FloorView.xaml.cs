@@ -97,7 +97,7 @@ namespace NuvoControl.Client.Viewer.Controls
             int yOffset;
             CalculateOffset(zone.FloorPlanCoordinates, out xOffset, out yOffset);
             List<Point> relativeCoordinates = ShiftCoordinates(zone.FloorPlanCoordinates, xOffset, yOffset);
-            Zone zoneMod = new Zone(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates);
+            Zone zoneMod = new Zone(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates, zone.ZoneControlCoordinate);
             ZoneControl zoneControl = new ZoneControl();
             ZoneState state = new ZoneState();
             List<Zone> zones = new List<Zone>();

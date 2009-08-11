@@ -64,6 +64,12 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private List<Point> _floorPlanCoordinates = new List<Point>();
 
+        /// <summary>
+        /// The coordinate of the zone control within the zone.
+        /// </summary>
+        [DataMember]
+        private Point _zoneControlCoordinate = new Point(0, 0);
+
         #endregion
 
         #region Constructors
@@ -83,13 +89,15 @@ namespace NuvoControl.Common.Configuration
         /// <param name="picturePath">The file name of the zone picture.</param>
         /// <param name="pictureType">The file type of the zone picture.</param>
         /// <param name="floorPlanCoordinates">The coordinates of the zone within the floor plan.</param>
-        public Zone(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates)
+        /// <param name="zoneControlCoordinate">The coordinatee of the zone control within the zone.</param>
+        public Zone(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates, Point zoneControlCoordinate)
         {
             this._id = id;
             this._name = name;
             this._picturePath = picturePath;
             this._pictureType = pictureType;
             this._floorPlanCoordinates = floorPlanCoordinates;
+            this._zoneControlCoordinate = zoneControlCoordinate;
         }
 
         #endregion
@@ -134,6 +142,15 @@ namespace NuvoControl.Common.Configuration
         public List<Point> FloorPlanCoordinates
         {
             get { return _floorPlanCoordinates; }
+        }
+
+
+        /// <summary>
+        /// The coordinate of the zone within the zone.
+        /// </summary>
+        public Point ZoneControlCoordinate
+        {
+            get { return _zoneControlCoordinate; }
         }
 
         #endregion

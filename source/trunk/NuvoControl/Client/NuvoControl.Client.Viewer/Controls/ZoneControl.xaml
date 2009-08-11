@@ -17,7 +17,7 @@
         <Polygon Name="_polygonArea" Tag="Zone" Canvas.Left="0" Canvas.Top="0" Points="{Binding Path=FloorPlanCoordinates}"
                  Focusable="True" Style="{DynamicResource ZonePolygonStyle}">  
         </Polygon>
-        <Grid Canvas.Left="5" Canvas.Top="15">
+        <Grid Canvas.Left="{Binding Path=ZoneControlCoordinateX}" Canvas.Top="{Binding Path=ZoneControlCoordinateY}">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />

@@ -185,7 +185,8 @@ namespace NuvoControl.Server.Dal
                         (string)zone.Element("Picture").Attribute("RelativePath"),
                         (string)zone.Element("Picture").Attribute("PictureType"),
                         (from pt in zone.Element("FloorPlanCoordinates").Elements("Point")
-                         select new Point((int)pt.Attribute("x"), (int)pt.Attribute("y"))).ToList<Point>())).ToList<Zone>()
+                         select new Point((int)pt.Attribute("x"), (int)pt.Attribute("y"))).ToList<Point>(),
+                         new Point((double)zone.Element("ZoneControlCoordinate").Attribute("x"), (double)zone.Element("ZoneControlCoordinate").Attribute("y")))).ToList<Zone>()
                      );
 
             return floors.ToList<Floor>();

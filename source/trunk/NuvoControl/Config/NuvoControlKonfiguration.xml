@@ -45,6 +45,7 @@
                 <Point x="485" y="325" />
                 <Point x="285" y="325" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="60" y="10" />
             </Zone>
             <Zone Id="100.2" Name="Wohnzimmer">
               <Picture RelativePath=".\Images\Wohnzimmer.jpg" PictureType="jpg" />
@@ -54,6 +55,7 @@
                 <Point x="260" y="500" />
                 <Point x="60" y="500" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="60" y="80" />
             </Zone>
             <Zone Id="100.3" Name="Schlafzimmer">
               <Picture RelativePath=".\Images\Schlafzimmer.jpg" PictureType="jpg" />
@@ -63,6 +65,7 @@
                 <Point x="720" y="220" />
                 <Point x="515" y="220" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="60" y="40" />
             </Zone>
             <Zone Id="100.4" Name="Bad/WC">
               <Picture RelativePath=".\Images\BadWC.jpg" PictureType="jpg" />
@@ -72,6 +75,7 @@
                 <Point x="220" y="185" />
                 <Point x="175" y="185" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="0" y="20" />
             </Zone>
             <Zone Id="100.5" Name="Küche">
               <Picture RelativePath=".\Images\Küche.jpg" PictureType="jpg" />
@@ -81,6 +85,7 @@
                 <Point x="380" y="185" />
                 <Point x="240" y="185" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="40" y="20" />
             </Zone>
             <Zone Id="100.6" Name="Dusche">
               <Picture RelativePath=".\Images\Dusche.jpg" PictureType="jpg" />
@@ -90,6 +95,7 @@
                 <Point x="490" y="185" />
                 <Point x="400" y="185" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="20" />
             </Zone>
             <Zone Id="100.7" Name="Büro Christian">
               <Picture RelativePath=".\Images\BüroChristian.jpg" PictureType="jpg" />
@@ -99,6 +105,7 @@
                 <Point x="610" y="500" />
                 <Point x="520" y="500" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="30" />
             </Zone>
             <Zone Id="100.8" Name="Hasenzimmer">
               <Picture RelativePath=".\Images\Hasenzimmer.jpg" PictureType="jpg" />
@@ -108,6 +115,7 @@
                 <Point x="720" y="500" />
                 <Point x="630" y="500" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="30" />
             </Zone>
             <Zone Id="100.11" Name="Balkon">
               <Picture RelativePath=".\Images\Balkon.jpg" PictureType="jpg" />
@@ -117,6 +125,7 @@
                 <Point x="485" y="500" />
                 <Point x="285" y="500" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="60" y="20" />
             </Zone>
           </Zones>
         </Floor>
@@ -131,6 +140,7 @@
                 <Point x="1020" y="290" />
                 <Point x="740" y="290" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="10" />
             </Zone>
             <Zone Id="100.10" Name="Fernsehecke">
               <Picture RelativePath=".\Images\Fernsehecke.jpg" PictureType="jpg" />
@@ -140,6 +150,7 @@
                 <Point x="710" y="260" />
                 <Point x="600" y="260" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="10" />
             </Zone>
             <Zone Id="100.12" Name="Funk">
               <Picture RelativePath=".\Images\Funk.jpg" PictureType="jpg" />
@@ -149,6 +160,7 @@
                 <Point x="550" y="260" />
                 <Point x="440" y="260" />
               </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="10" />
             </Zone>
           </Zones>
         </Floor>
