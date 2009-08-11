@@ -313,6 +313,15 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
 
         /// <summary>
+        /// Returns the zone state (Offline/Online and Ack/Unack) as string.
+        /// </summary>
+        public string ZoneStateMixed
+        {
+            get { return String.Format("{0}; {1}", _zoneState.ZoneQuality.ToString(), (_zoneState.CommandUnacknowledged ? "Unack" : "Ack")); }
+        }
+
+
+        /// <summary>
         /// The volume of the active zone.
         /// </summary>
         public string VolumeZoneState
@@ -386,6 +395,24 @@ namespace NuvoControl.Client.Viewer.ViewModel
         public PointCollection FloorPlanCoordinates
         {
             get { return new PointCollection(_activeZone.FloorPlanCoordinates); }
+        }
+
+
+        /// <summary>
+        /// The left position of the zone control
+        /// </summary>
+        public int ZoneControlCoordinateX
+        {
+            get { return (int)_activeZone.ZoneControlCoordinate.X; }
+        }
+
+
+        /// <summary>
+        /// The top position of the zone control
+        /// </summary>
+        public int ZoneControlCoordinateY
+        {
+            get { return (int)_activeZone.ZoneControlCoordinate.Y; }
         }
 
 

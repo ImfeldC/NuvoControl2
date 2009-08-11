@@ -86,4 +86,26 @@
             </DataTrigger>
         </Style.Triggers>
     </Style>
+    <Style x:Key="LoudSpeakerStyle">
+        <Style.Triggers>
+            <DataTrigger Binding="{Binding Path=PowerZoneState}" Value="True">
+                <DataTrigger.EnterActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Width" To="30" AutoReverse="True" RepeatBehavior="Forever">
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.EnterActions>
+                <DataTrigger.ExitActions>
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Width">
+                            </DoubleAnimation>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </DataTrigger.ExitActions>
+            </DataTrigger>
+        </Style.Triggers>
+    </Style>
 </ResourceDictionary>

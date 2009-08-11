@@ -16,7 +16,6 @@
             <RowDefinition />
             <RowDefinition />
             <RowDefinition />
-            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -38,10 +37,7 @@
         <Label Name="_lblVolume" Grid.Row="3"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
                Content="{Binding Path=VolumeZoneState}" MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
         <Label Name="_lblAck" Grid.Row="4"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-               Content="{Binding Path=UnackZoneState, Converter={StaticResource AcknowledgedConverter}}"
-               MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
-        <Label Name="_lblConnection" Grid.Row="5"  Grid.Column="1" Margin="1" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"
-               Content="{Binding Path=QualityZoneState, Converter={StaticResource QualityConverter}}"
+               Content="{Binding Path=ZoneStateMixed}"
                MinHeight="10" Style="{DynamicResource ZoneControlStyle}"></Label>
     </Grid>
 </UserControl>

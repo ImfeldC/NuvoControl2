@@ -150,7 +150,7 @@ namespace NuvoControl.Client.ServiceAccess
         {
             lock (this)
             {
-                if (_disposed = false)
+                if (_disposed == false)
                 {
                     if (_cfgServiceProxy != null)
                     {
