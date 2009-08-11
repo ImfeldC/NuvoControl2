@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("SEI")]
 [assembly: AssemblyProduct("NuvoControl.UnitTest")]
-[assembly: AssemblyCopyright("Copyright © SEI 2009")]
+[assembly: AssemblyCopyright("Copyright © B.Limacher and Ch.Imfeld")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

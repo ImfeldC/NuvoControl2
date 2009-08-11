@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Siemens and Partners")]
 [assembly: AssemblyProduct("NuvoControl.Client.WcfTestConsole")]
-[assembly: AssemblyCopyright("Copyright © Siemens and Partners 2009")]
+[assembly: AssemblyCopyright("Copyright © B.Limacher and Ch.Imfeld")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

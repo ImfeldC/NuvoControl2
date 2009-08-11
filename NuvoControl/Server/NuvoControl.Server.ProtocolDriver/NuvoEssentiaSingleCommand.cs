@@ -395,7 +395,7 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 // If no filename is provided, it searches the defintions
                 // of the commong application xml file (e.g. nuvocontrol.server.protocoldriver.test.dll.config)
-                _profile = new Xml("NuvoEssentiaProfile.xml");
+                _profile = new Xml( Properties.Settings.Default.NuvoEssentiaProfileFile /* "NuvoEssentiaProfile.xml" */ );
             }
             catch (Exception ex)
             {
@@ -433,7 +433,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
         private static ENuvoEssentiaCommands searchNuvoEssentiaCommandWithIncomingCommand(string commandString)
         {
-            Profile profile = new Xml("NuvoEssentiaProfile.xml");
+            Profile profile = new Xml(Properties.Settings.Default.NuvoEssentiaProfileFile);
             string[] sectionNames = profile.GetSectionNames();
             foreach (string section in sectionNames)
             {
@@ -456,7 +456,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <returns>Enumeration of the found command. Returns NoCommand if command string isn't available.</returns>
         public static ENuvoEssentiaCommands searchNuvoEssentiaCommandWithOutgoingCommand(string command)
         {
-            Profile profile = new Xml("NuvoEssentiaProfile.xml");
+            Profile profile = new Xml(Properties.Settings.Default.NuvoEssentiaProfileFile);
             string[] sectionNames = profile.GetSectionNames();
             foreach (string section in sectionNames)
             {

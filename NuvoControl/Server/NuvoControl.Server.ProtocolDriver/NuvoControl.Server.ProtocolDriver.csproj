@@ -110,7 +110,7 @@
     <None Include="ProtocolDriverConfiguration.dox" />
     <None Include="ProtocolDriverOverview.cd" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
