@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9AD39785-4760-414B-942C-19A9129023E7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -190,7 +190,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
@@ -218,7 +218,8 @@
     <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\BackImage.png" />
+    <Resource Include="Images\BackImage.png">
+    </Resource>
     <Resource Include="Images\DownImage.png" />
     <Resource Include="Images\ForwardImage.png" />
     <Resource Include="Images\NextImage.png" />
@@ -236,4 +237,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PostBuildEvent>mkdir Images
+copy $(SolutionDir)\Images\*.* .\Images\
+copy $(ProjectDir)\Images\*.* .\Images\</PostBuildEvent>
+  </PropertyGroup>
 </Project>

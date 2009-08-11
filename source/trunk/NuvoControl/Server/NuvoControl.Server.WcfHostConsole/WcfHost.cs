@@ -76,12 +76,13 @@ namespace NuvoControl.Server.WcfHostConsole
 
             try
             {
-                LoadConfigurationService(@"..\..\..\..\Config\NuvoControlKonfiguration.xml");
+                LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile);
             }
             catch (Exception exc)
             {
                 _log.ErrorFormat("Failed to load the system configuration.", exc);
                 Console.WriteLine("Failed to load the system configuration. Exception message: {0}", exc.Message);
+                return;
             }
 
             try

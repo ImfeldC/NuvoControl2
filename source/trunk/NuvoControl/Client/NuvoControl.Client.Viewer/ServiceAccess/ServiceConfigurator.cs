@@ -39,7 +39,7 @@ namespace NuvoControl.Client.Viewer.ServiceAccess
         {
             if (test == true)
             {
-                ServiceProxy.Inject(new ConfigurationProxyMock(@"..\..\..\..\Config\NuvoControlKonfiguration.xml"));
+                ServiceProxy.Inject(new ConfigurationProxyMock(Properties.Settings.Default.NuvoControlKonfigurationFile));
                 MonitorAndControlProxyMock mcMock = new MonitorAndControlProxyMock();
                 ServiceProxy.Inject(mcMock);
                 mcMock.SetCallback(ServiceProxy.MonitorAndControlProxy);
