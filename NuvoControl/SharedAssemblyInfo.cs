@@ -28,7 +28,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyCompany("NuvoControl and Partners")]
+[assembly: AssemblyCompany("NuvoControl")]
 [assembly: AssemblyProduct("NuvoControl")]
 [assembly: AssemblyCopyright("Copyright © B.Limacher and Ch.Imfeld")]
 [assembly: AssemblyTrademark("")]

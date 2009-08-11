@@ -10,7 +10,7 @@ using System.Windows;
 [assembly: AssemblyTitle("NuvoControl.Client.TestViewer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Siemens and Partners")]
+[assembly: AssemblyCompany("NuvoControl")]
 [assembly: AssemblyProduct("NuvoControl.Client.TestViewer")]
 [assembly: AssemblyCopyright("Copyright © B.Limacher and Ch.Imfeld")]
 [assembly: AssemblyTrademark("")]

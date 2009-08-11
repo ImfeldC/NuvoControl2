@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NuvoControl.Server.MonitorAndControlService.UnitTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Siemens and Partners")]
+[assembly: AssemblyCompany("NuvoControl")]
 [assembly: AssemblyProduct("NuvoControl.Server.MonitorAndControlService.UnitTest")]
 [assembly: AssemblyCopyright("Copyright © B.Limacher and Ch.Imfeld")]
 [assembly: AssemblyTrademark("")]
