@@ -5,10 +5,10 @@
     MinWidth="300" MinHeight="300" Visibility="{Binding Path=ContextVisibility}" Focusable="True" FocusManager.IsFocusScope="True" ToolTip="{Binding Path=ToolTip}">
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Command="commands:CustomCommands.BrowseUp"></MenuItem>
-            <MenuItem Command="commands:CustomCommands.BrowseDown"></MenuItem>
-            <MenuItem Command="commands:CustomCommands.BrowsePrevious"></MenuItem>
-            <MenuItem Command="commands:CustomCommands.BrowseNext"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseUp" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseDown" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowsePrevious" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseNext" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Grid>

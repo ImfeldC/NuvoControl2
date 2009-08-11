@@ -1,19 +1,29 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
     <Style x:Key="BarStyle">
+        <Setter Property="Control.FontSize" Value="12"></Setter>
+        <Setter Property="Control.Foreground" Value="#FF504030"></Setter>
         <Setter Property="Control.Background" Value="#FFECE9D8"></Setter>
+    </Style>
+    <Style x:Key="SubMenuItemStyle">
+        <Setter Property="Control.FontSize" Value="12"></Setter>
+        <Setter Property="Control.Foreground" Value="#FF504030"></Setter>
+    </Style>
+    <Style x:Key="ToolbarItemStyle">
+        <Setter Property="Control.FontSize" Value="12"></Setter>
+        <Setter Property="Control.Foreground" Value="#FF504030"></Setter>
     </Style>
     <Style x:Key="ZoneControlStyle">
         <Setter Property="Control.FontFamily" Value="Tahoma"></Setter>
         <Setter Property="Control.FontSize" Value="10"></Setter>
-        <Setter Property="Control.Foreground" Value="#FF605040"></Setter>
+        <Setter Property="Control.Foreground" Value="#FF504030"></Setter>
         <Setter Property="Control.FontWeight" Value="Bold"></Setter>
         <Setter Property="Control.BorderBrush" Value="#FFACAC8C"></Setter>
     </Style>
     <Style x:Key="ZoneCommanderStyle">
         <Setter Property="Control.FontFamily" Value="Tahoma"></Setter>
         <Setter Property="Control.FontSize" Value="11"></Setter>
-        <Setter Property="Control.Foreground" Value="#FF605040"></Setter>
+        <Setter Property="Control.Foreground" Value="#FF504030"></Setter>
         <Setter Property="Control.FontWeight" Value="Bold"></Setter>
         <Setter Property="Control.BorderBrush" Value="#FFACAC8C"></Setter>
     </Style>
@@ -22,7 +32,7 @@
         <Setter Property="Control.Background" Value="#FFF8F8F4"></Setter>
     </Style>
     <Style x:Key="ZonePolygonStyle">
-        <Setter Property="Polygon.Stroke" Value="#FF605040"></Setter>
+        <Setter Property="Polygon.Stroke" Value="#FF504030"></Setter>
         <Setter Property="Polygon.StrokeThickness" Value="0"></Setter>
         <Setter Property="Polygon.Fill" Value="#FFACAC8C"></Setter>
         <Setter Property="Polygon.Opacity" Value="0"></Setter>

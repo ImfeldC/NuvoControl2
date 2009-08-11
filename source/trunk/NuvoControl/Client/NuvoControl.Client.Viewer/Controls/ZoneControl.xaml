@@ -7,17 +7,17 @@
     commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}">
     <UserControl.ContextMenu>
         <ContextMenu>
-            <MenuItem Command="commands:CustomCommands.BrowseUp"></MenuItem>
-            <MenuItem Command="commands:CustomCommands.BrowseDown" CommandParameter="{Binding Path=Id}"></MenuItem>
-            <MenuItem Command="commands:CustomCommands.BrowsePrevious"></MenuItem>
-            <MenuItem Command="commands:CustomCommands.BrowseNext"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseUp" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseDown" CommandParameter="{Binding Path=Id}" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowsePrevious" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
+            <MenuItem Command="commands:CustomCommands.BrowseNext" Style="{DynamicResource SubMenuItemStyle}"></MenuItem>
         </ContextMenu>
     </UserControl.ContextMenu>
     <Canvas Tag="Zone" MinHeight="10" MinWidth="10" MouseLeftButtonUp="_polygonArea_OnMouseLeftButtonUp">
         <Polygon Name="_polygonArea" Tag="Zone" Canvas.Left="0" Canvas.Top="0" Points="{Binding Path=FloorPlanCoordinates}"
                  Focusable="True" Style="{DynamicResource ZonePolygonStyle}">  
         </Polygon>
-        <Grid Canvas.Left="10" Canvas.Top="10">
+        <Grid Canvas.Left="5" Canvas.Top="15">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
