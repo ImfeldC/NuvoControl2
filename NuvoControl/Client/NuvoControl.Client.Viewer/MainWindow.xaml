@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:commands="clr-namespace:NuvoControl.Client.Viewer.Commands"
     Title="Nuvo Control" Height="600" Width="800"
-    commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}" Name="_mainWindow">
+    commands:CreateCommandBindingCollection.CommandBindingsDynamic="{Binding Path=CommandBindingsDynamic}" Name="_mainWindow" Icon="/NuvoControl.Client.Viewer;component/Images/Loudspeaker.PNG">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

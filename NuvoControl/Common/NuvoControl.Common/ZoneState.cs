@@ -98,7 +98,7 @@ namespace NuvoControl.Common
         private Guid _guid;
 
         [DataMember]
-        private ZoneQuality _zoneQuality = ZoneQuality.Online;
+        private ZoneQuality _zoneQuality = ZoneQuality.Offline;
 
         [DataMember]
         private bool _commandUnacknowledged = false;
@@ -125,7 +125,7 @@ namespace NuvoControl.Common
         {
             _guid = Guid.NewGuid();
             _lastUpdate = DateTime.Now;
-            _zoneQuality = ZoneQuality.Online;  // Default Value
+            _zoneQuality = ZoneQuality.Offline;  // Default Value
         }
 
 
@@ -155,7 +155,7 @@ namespace NuvoControl.Common
             {
                 _guid = Guid.NewGuid();
                 _lastUpdate = DateTime.Now;
-                _zoneQuality = ZoneQuality.Online;  // Default Value
+                _zoneQuality = ZoneQuality.Offline;  // Default Value
             }
             else
             {

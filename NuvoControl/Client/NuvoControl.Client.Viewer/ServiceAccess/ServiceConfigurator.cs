@@ -43,7 +43,8 @@ namespace NuvoControl.Client.Viewer.ServiceAccess
                 MonitorAndControlProxyMock mcMock = new MonitorAndControlProxyMock();
                 ServiceProxy.Inject(mcMock);
                 mcMock.SetCallback(ServiceProxy.MonitorAndControlProxy);
-            }
+            }                
+
         }
     }
 }
