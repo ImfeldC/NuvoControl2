@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		NuvoControl6.vsmdi = NuvoControl6.vsmdi
 		NuvoControl7.vsmdi = NuvoControl7.vsmdi
 		NuvoControl8.vsmdi = NuvoControl8.vsmdi
+		NuvoControl9.vsmdi = NuvoControl9.vsmdi
 		READ-ME.txt = READ-ME.txt
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
@@ -83,7 +84,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Client.ServiceA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Client.ServiceMock", "Client\NuvoControl.Client.ServiceMock\NuvoControl.Client.ServiceMock.csproj", "{3BE5E7EF-2946-4989-96A3-D70B3338236E}"
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NuvoControlSetup", "NuvoControlSetup\NuvoControlSetup.vdproj", "{C8685BE1-3312-4D21-8342-365FE40E9AE9}"
+EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = NuvoControl9.vsmdi
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -185,6 +195,8 @@ Global
 		{3BE5E7EF-2946-4989-96A3-D70B3338236E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3BE5E7EF-2946-4989-96A3-D70B3338236E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3BE5E7EF-2946-4989-96A3-D70B3338236E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C8685BE1-3312-4D21-8342-365FE40E9AE9}.Debug|Any CPU.ActiveCfg = Debug
+		{C8685BE1-3312-4D21-8342-365FE40E9AE9}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -192,9 +204,5 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{482B5795-E159-4968-9BB4-85E8CAC6E0C2} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
 		{3B6640D6-D2CA-4048-B143-4DA380D5C590} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
-	EndGlobalSection
-	GlobalSection(SubversionScc) = preSolution
-		Svn-Managed = True
-		Manager = AnkhSVN - Subversion Support for Visual Studio
 	EndGlobalSection
 EndGlobal
