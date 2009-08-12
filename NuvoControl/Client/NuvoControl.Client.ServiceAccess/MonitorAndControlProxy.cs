@@ -344,7 +344,8 @@ namespace NuvoControl.Client.ServiceAccess
                 {
                     if (_mcServiceProxy != null)
                     {
-                        _mcServiceProxy.Disconnect();
+                        if (_mcServiceProxy != null)
+                            _mcServiceProxy.Disconnect();
                     }
                     if (_timerRenewLease != null)
                     {

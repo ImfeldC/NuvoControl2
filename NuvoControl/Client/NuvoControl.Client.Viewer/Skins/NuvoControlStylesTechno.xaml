@@ -54,9 +54,9 @@
                 <DataTrigger.EnterActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:2" Storyboard.TargetProperty="Opacity" From="0" To="1" AutoReverse="True" RepeatBehavior="Forever">
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" From="0" To="1" AutoReverse="True" RepeatBehavior="Forever">
                             </DoubleAnimation>
-                            <DoubleAnimation Duration="0:0:2" Storyboard.TargetProperty="StrokeThickness" From="0" To="5" AutoReverse="True" RepeatBehavior="Forever">
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="StrokeThickness" From="0" To="5" AutoReverse="True" RepeatBehavior="Forever">
                             </DoubleAnimation>
                         </Storyboard>
                     </BeginStoryboard>

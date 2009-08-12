@@ -34,7 +34,7 @@
             </MenuItem>
             <MenuItem Header="_Help"  Style="{DynamicResource BarStyle}"></MenuItem>
         </Menu>
-        <ToolBar Height="48" Name="toolBar1" HorizontalAlignment="Stretch" VerticalAlignment="Top" DockPanel.Dock="Top" Style="{DynamicResource ToolbarStyle}">
+        <ToolBar Height="40" Name="toolBar1" HorizontalAlignment="Stretch" VerticalAlignment="Top" DockPanel.Dock="Top" Style="{DynamicResource ToolbarStyle}">
             <Button Name="_btnBack" Padding="0" Command="NavigationCommands.BrowseBack" ToolTip="{Binding Path=BackToolTip}">
                 <Grid>
                     <Grid.ColumnDefinitions>

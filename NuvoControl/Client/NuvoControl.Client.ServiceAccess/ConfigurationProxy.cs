@@ -155,7 +155,8 @@ namespace NuvoControl.Client.ServiceAccess
                     if (_cfgServiceProxy != null)
                     {
                         // TODO: how to close connection? abort?
-                        (_cfgServiceProxy as ConfigureClient).Close();
+                        if ((_cfgServiceProxy != null) && (_cfgServiceProxy is ConfigureClient))
+                            (_cfgServiceProxy as ConfigureClient).Close();
                     }
                     if (_timerRenewLease != null)
                     {
