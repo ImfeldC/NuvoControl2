@@ -25,6 +25,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using Common.Logging;
 using System.Collections;
 using AMS.Profile;
+using System.Threading;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -33,6 +34,10 @@ namespace NuvoControl.Server.ProtocolDriver
     /// 
     /// Based on the interface \ref INuvoEssentiaProtocol this class implements
     /// the concrete protocol used to communicate with the Nuvo Essentia system.
+    /// 
+    /// As example it ensures also the required delay between two commands.
+    /// According to the specification, it is required to wait at least 50[ms] before 
+    /// sending the next command.
     /// </summary>
     public class NuvoEssentiaProtocol : INuvoEssentiaProtocol
     {
@@ -46,6 +51,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private int _deviceId;
         private INuvoTelegram _serialPort;
+        private DateTime _lastTimeACommandHasBeenSent = DateTime.Now;
 
         private Queue<INuvoEssentiaSingleCommand> _runningCommands = new Queue<INuvoEssentiaSingleCommand>();
         private NuvoEssentiaSingleCommand _errorNuvoEssentiaCommand = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ErrorInCommand);
@@ -193,11 +199,18 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="command">Command to send.</param>
         private void Send(INuvoEssentiaSingleCommand command)
         {
+            int delaySinceLastCommand = 0;
+            while ((delaySinceLastCommand=(DateTime.Now - _lastTimeACommandHasBeenSent).Milliseconds) < 50)
+            {
+                _log.Debug(m => m("Wait with command '{0}' execution, because the delay of {1}[ms] is too small.", command, delaySinceLastCommand));
+                Thread.Sleep(50 - delaySinceLastCommand);
+            }
             if (command.Command != ENuvoEssentiaCommands.NoCommand)
             {
                 command.SendDateTime = DateTime.Now;
                 _runningCommands.Enqueue(command);
                 _serialPort.SendTelegram(command.OutgoingCommand);
+                _lastTimeACommandHasBeenSent = DateTime.Now;
             }
             else
             {

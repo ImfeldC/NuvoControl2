@@ -1803,7 +1803,14 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
 
-
+        /// <summary>
+        /// Public override for the <c>ToString</c> method.
+        /// </summary>
+        /// <returns>String representing the content of this object.</returns>
+        public override string ToString()
+        {
+            return String.Format("Command={0}, ZoneId={1}, PowerStatus={2}, Valid={3}, Finished={4}, Guid={5}.",Command, ZoneId, PowerStatus, Valid, Finished, Guid);
+        }
     }
 
 }
