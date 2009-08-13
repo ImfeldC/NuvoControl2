@@ -196,7 +196,7 @@ namespace NuvoControl.Server.ZoneServer
             {
                 if (e.ZoneAddress.Equals(_zoneId))
                 {
-                    Debug.WriteLine(String.Format("ZC.onZoneStatusUpdate: Address={0}, Command={1}", _zoneId.ToString(), _zoneState.ToString()));
+                    Debug.WriteLine(String.Format("ZC.onZoneStatusUpdate: Address={0}, Command={1}", _zoneId.ToString(), e.ZoneState.ToString()));
                     UpdateZoneStateFromDriver(e.ZoneState);
                 }
             }
