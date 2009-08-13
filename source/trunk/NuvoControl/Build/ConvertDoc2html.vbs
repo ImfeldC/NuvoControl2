@@ -2,7 +2,7 @@
 
 	wdFormatHTML    = 8
 	wordFilePath = "E:\NuvoControl_Documentation\"
-	htmlFilePath = "E:\Documentation\"
+	htmlFilePath = "E:\doxygen\Documentation\"
 	
 	Set WSHShell = WScript.CreateObject("WScript.Shell") 
 	set args = WScript.Arguments
