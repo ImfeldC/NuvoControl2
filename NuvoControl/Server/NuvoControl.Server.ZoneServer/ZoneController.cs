@@ -28,6 +28,7 @@ using Common.Logging;
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ProtocolDriver.Interface;
+using System.Diagnostics;
 
 namespace NuvoControl.Server.ZoneServer
 {
@@ -109,6 +110,7 @@ namespace NuvoControl.Server.ZoneServer
         {
             lock (this)
             {
+                Debug.WriteLine(String.Format("ZC.SetZoneState: Address={0}, Command={1}", _zoneId.ToString(), _zoneState.ToString()));
                 _protocolDriver.SetZoneState(_zoneId, zoneState);
                 _zoneState = new ZoneState(zoneState);
                 _zoneState.CommandUnacknowledged = true;
@@ -173,7 +175,10 @@ namespace NuvoControl.Server.ZoneServer
         public void NotifySubscribedClients()
         {
             if (_zoneNotification != null)
+            {
+                Debug.WriteLine(String.Format("ZC.NotifySubscribers: Address={0}, Command={1}",_zoneId.ToString(), _zoneState.ToString()));
                 _zoneNotification(this, new ZoneStateEventArgs(_zoneState));
+            }
         }
 
         #endregion
@@ -191,6 +196,7 @@ namespace NuvoControl.Server.ZoneServer
             {
                 if (e.ZoneAddress.Equals(_zoneId))
                 {
+                    Debug.WriteLine(String.Format("ZC.onZoneStatusUpdate: Address={0}, Command={1}", _zoneId.ToString(), _zoneState.ToString()));
                     UpdateZoneStateFromDriver(e.ZoneState);
                 }
             }
@@ -212,6 +218,7 @@ namespace NuvoControl.Server.ZoneServer
             {
                 if (e.DeviceId == _zoneId.DeviceId)
                 {
+                    Debug.WriteLine(String.Format("ZC.onDeviceStatusUpdate: Address={0}, Command={1}", _zoneId.ToString(), _zoneState.ToString()));
                     // update the device quality. Which in this case means, update the zone quality
                     _zoneState.ZoneQuality = e.DeviceQuality;
                 }

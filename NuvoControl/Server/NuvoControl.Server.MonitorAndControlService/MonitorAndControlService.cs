@@ -131,6 +131,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="stateCommand"></param>
         public void SetZoneState(Address zoneId, ZoneState stateCommand)
         {
+            Debug.WriteLine(String.Format("SetZoneState: Address={0}, Command={1}", zoneId.ToString(), stateCommand.ToString()));
             _zoneServer.SetZoneState(zoneId, stateCommand);
         }
 
@@ -252,8 +253,11 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="zoneState">The zone state.</param>
         private void NotifySubscribers(Address zoneId, ZoneState zoneState)
         {
-            if (_zoneSubscriptions.Contains(zoneId) && _subscriber!= null)
+            if (_zoneSubscriptions.Contains(zoneId) && _subscriber != null)
+            {
+                Debug.WriteLine(String.Format("NotifySubscribers: Address={0}, Command={1}", zoneId.ToString(), zoneState.ToString()));
                 _subscriber.OnZoneStateChanged(zoneId, zoneState);
+            }
         }
 
 
