@@ -1778,6 +1778,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 {
                     try
                     {
+                        //TODO handle case if the command is "?" (in case of an error)
                         result = command.Substring(startindex, placeholder.Length);
                     }
                     catch (System.ArgumentOutOfRangeException)

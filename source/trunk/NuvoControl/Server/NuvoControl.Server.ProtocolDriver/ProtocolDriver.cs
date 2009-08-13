@@ -121,13 +121,22 @@ namespace NuvoControl.Server.ProtocolDriver
         /// Constructor for <c>NuvoEssentiaProtocolDriver</c>.
         /// It uses the application setting <c>PingIntervall</c>. This intervall specifies in [s] the
         /// intervall which is used to send the ping command. The minimum is 2 [s].
+        /// If the value is set to 0 for the intervall time, the ping command is disabled.
         /// </summary>
         public NuvoEssentiaProtocolDriver()
         {
             _log.Trace(m=>m("Protocol Driver instantiated!"));
-            _timerPing.Interval = (Properties.Settings.Default.PingIntervall<2?2:Properties.Settings.Default.PingIntervall)*1000;
-            _timerPing.Elapsed += new ElapsedEventHandler(_timerPing_Elapsed);
-            _timerPing.Start();
+            if (Properties.Settings.Default.PingIntervall <= 0)
+            {
+                _log.Trace(m => m("Ping timer started, each {0}[s]", Properties.Settings.Default.PingIntervall));
+                _timerPing.Interval = (Properties.Settings.Default.PingIntervall < 2 ? 2 : Properties.Settings.Default.PingIntervall) * 1000;
+                _timerPing.Elapsed += new ElapsedEventHandler(_timerPing_Elapsed);
+                _timerPing.Start();
+            }
+            else
+            {
+                _log.Warn(m => m("Ping timer is disabled !!! ({0}[s])", Properties.Settings.Default.PingIntervall));
+            }
         }
 
         /// <summary>
