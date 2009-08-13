@@ -48,6 +48,7 @@ namespace NuvoControl.Server.Simulator
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NuvoControlSimulator));
             this.rtbCOM = new System.Windows.Forms.RichTextBox();
             this.grpZone = new System.Windows.Forms.GroupBox();
             this.ucZoneManual = new NuvoControl.Server.Simulator.ZoneUserControl();
@@ -302,6 +303,7 @@ namespace NuvoControl.Server.Simulator
             this.Controls.Add(this.cmbSimModeSelect);
             this.Controls.Add(this.grpZone);
             this.Controls.Add(this.rtbCOM);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NuvoControlSimulator";
             this.Text = "NuvoControl Simulator";
             this.Load += new System.EventHandler(this.NuvoControlSimulator_Load);
