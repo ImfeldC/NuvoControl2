@@ -484,18 +484,6 @@
         "Entry"
         {
         "MsmKey" = "8:_E13F50512FB07CA3C88BFD56B52636D6"
-        "OwnerKey" = "8:_E92723C109BE48B9BA40A20857D9DB1F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E13F50512FB07CA3C88BFD56B52636D6"
-        "OwnerKey" = "8:_E3A93413D5C642CC885ABEEA9060216A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E13F50512FB07CA3C88BFD56B52636D6"
         "OwnerKey" = "8:_A439F05FADCBE710B9030965B4F760F4"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -658,12 +646,6 @@
         "Entry"
         {
         "MsmKey" = "8:_E369F21771B3B956798176794225107E"
-        "OwnerKey" = "8:_E92723C109BE48B9BA40A20857D9DB1F"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E369F21771B3B956798176794225107E"
         "OwnerKey" = "8:_A439F05FADCBE710B9030965B4F760F4"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -789,18 +771,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_E3A93413D5C642CC885ABEEA9060216A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_E92723C109BE48B9BA40A20857D9DB1F"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_EEE63B13092949199F34619A5EF49E7E"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -820,12 +790,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E3A93413D5C642CC885ABEEA9060216A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_FA0508CD505A474C86287A90C4D7B1D8"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -833,12 +797,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EFF1634925F74FBF97C615C711388FEF"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E92723C109BE48B9BA40A20857D9DB1F"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -2219,6 +2177,28 @@
             "Property" = "8:DesktopFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_48991777E1D744E19726118962B22D69"
+                    {
+                    "Name" = "8:Nuvo"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_A181523465E147269D87757081D1D315"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_EB08D33335454F5BA20859F210B497C0"
+                            {
+                            "Name" = "8:Test"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_64B289644FFF40DCAC1D2B89AEB2BF16"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
                 }
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_3B96844451F24341ADD5A59C0C4E45D0"
@@ -2275,6 +2255,17 @@
             "Property" = "8:ProgramMenuFolder"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_FD289314877F4F2BAD5A5231334F7A9B"
+                    {
+                    "Name" = "8:Nuvo"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_605E2D60EDD74842A200745D253F6E76"
+                        "Folders"
+                        {
+                        }
+                    }
                 }
             }
         }
@@ -2294,7 +2285,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NuvoControl"
         "ProductCode" = "8:{80482C82-7AEF-46B0-9E3A-B87C224FB45E}"
-        "PackageCode" = "8:{FDA3F8E9-63DE-42A3-A9B4-9B2AA523C2C3}"
+        "PackageCode" = "8:{B5049454-61A7-4136-8850-C1FF2B52FE81}"
         "UpgradeCode" = "8:{6994827F-3DA8-4DF9-9211-41E3BB6A0A56}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
@@ -2413,6 +2404,104 @@
         }
         "Shortcut"
         {
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_12FB909445D44FCBBC3237D1D759C37F"
+            {
+            "Name" = "8:NuvoControl.Test.NuvoClient"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_1B7474B19D49484E8434E2D0D3E77252"
+            "Folder" = "8:_EB08D33335454F5BA20859F210B497C0"
+            "WorkingFolder" = "8:_5D1722C92CE34B3E941288B913553264"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_51F114ACE5664DE99B170BD8B4924B7B"
+            {
+            "Name" = "8:NuvoControl.Client.Viewer"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_9B5AB0AC813043C493FE0F8744B34A39"
+            "Folder" = "8:_FD289314877F4F2BAD5A5231334F7A9B"
+            "WorkingFolder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_9662984C8EBF433EBEED9ED438215C41"
+            {
+            "Name" = "8:NuvoControl.Client.Viewer"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_9B5AB0AC813043C493FE0F8744B34A39"
+            "Folder" = "8:_48991777E1D744E19726118962B22D69"
+            "WorkingFolder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Icon" = "8:_EEE63B13092949199F34619A5EF49E7E"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B530A3B234E94589BBBD04BDB27A91FA"
+            {
+            "Name" = "8:NuvoControl.Test.COMListener"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_2E84DB43833043778228E469D8FE34F7"
+            "Folder" = "8:_EB08D33335454F5BA20859F210B497C0"
+            "WorkingFolder" = "8:_5D1722C92CE34B3E941288B913553264"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_B5ECE9FD277640B5B53B38017CE54F75"
+            {
+            "Name" = "8:NuvoControl.Server.Simulator"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_635C0973A7D04F8297763C09BD52654F"
+            "Folder" = "8:_EB08D33335454F5BA20859F210B497C0"
+            "WorkingFolder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Icon" = "8:_EEE63B13092949199F34619A5EF49E7E"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_E7AF3DC0791A4DD6B12390D7CCE0C7B2"
+            {
+            "Name" = "8:NuvoControl.Server.WcfHostConsole"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_0D40EC34FEE24E4F88EEE45E20DA3D15"
+            "Folder" = "8:_48991777E1D744E19726118962B22D69"
+            "WorkingFolder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Icon" = "8:_EEE63B13092949199F34619A5EF49E7E"
+            "Feature" = "8:"
+            }
+            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_F8DC98EA18594ED48ACB8AE09B13712E"
+            {
+            "Name" = "8:NuvoControl.Test.RS232"
+            "Arguments" = "8:"
+            "Description" = "8:"
+            "ShowCmd" = "3:1"
+            "IconIndex" = "3:0"
+            "Transitive" = "11:FALSE"
+            "Target" = "8:_88F035134C7D42D8B62E4BEB11CE99AC"
+            "Folder" = "8:_EB08D33335454F5BA20859F210B497C0"
+            "WorkingFolder" = "8:_5D1722C92CE34B3E941288B913553264"
+            "Icon" = "8:"
+            "Feature" = "8:"
+            }
         }
         "UserInterface"
         {
@@ -3143,62 +3232,6 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E3A93413D5C642CC885ABEEA9060216A"
-            {
-            "SourcePath" = "8:..\\Common\\NuvoControl.Common\\obj\\Debug\\NuvoControl.Common.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_32828E70F1E243B98483BBF175CA3329"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_E92723C109BE48B9BA40A20857D9DB1F"
-            {
-            "SourcePath" = "8:..\\Server\\NuvoControl.Server.Dal\\obj\\Debug\\NuvoControl.Server.Dal.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_32828E70F1E243B98483BBF175CA3329"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{295025FA-7870-4A53-996F-2CDCE2AFBAFF}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {
