@@ -126,7 +126,7 @@ namespace NuvoControl.Server.ProtocolDriver
         public NuvoEssentiaProtocolDriver()
         {
             _log.Trace(m=>m("Protocol Driver instantiated!"));
-            if (Properties.Settings.Default.PingIntervall <= 0)
+            if (Properties.Settings.Default.PingIntervall > 0)
             {
                 _log.Trace(m => m("Ping timer started, each {0}[s]", Properties.Settings.Default.PingIntervall));
                 _timerPing.Interval = (Properties.Settings.Default.PingIntervall < 2 ? 2 : Properties.Settings.Default.PingIntervall) * 1000;
