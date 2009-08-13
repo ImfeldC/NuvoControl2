@@ -47,15 +47,15 @@
               </FloorPlanCoordinates>
               <ZoneControlCoordinate x="60" y="10" />
             </Zone>
-            <Zone Id="100.2" Name="Wohnzimmer">
-              <Picture RelativePath=".\Images\Wohnzimmer.jpg" PictureType="jpg" />
+            <Zone Id="100.2" Name="Büro Christian">
+              <Picture RelativePath=".\Images\BüroChristian.jpg" PictureType="jpg" />
               <FloorPlanCoordinates>
-                <Point x="60" y="210" />
-                <Point x="260" y="210" />
-                <Point x="260" y="500" />
-                <Point x="60" y="500" />
+                <Point x="520" y="290" />
+                <Point x="610" y="290" />
+                <Point x="610" y="500" />
+                <Point x="520" y="500" />
               </FloorPlanCoordinates>
-              <ZoneControlCoordinate x="60" y="80" />
+              <ZoneControlCoordinate x="10" y="30" />
             </Zone>
             <Zone Id="100.3" Name="Schlafzimmer">
               <Picture RelativePath=".\Images\Schlafzimmer.jpg" PictureType="jpg" />
@@ -67,15 +67,15 @@
               </FloorPlanCoordinates>
               <ZoneControlCoordinate x="60" y="40" />
             </Zone>
-            <Zone Id="100.4" Name="Bad/WC">
-              <Picture RelativePath=".\Images\BadWC.jpg" PictureType="jpg" />
+            <Zone Id="100.4" Name="Wohnzimmer">
+              <Picture RelativePath=".\Images\Wohnzimmer.jpg" PictureType="jpg" />
               <FloorPlanCoordinates>
-                <Point x="175" y="60" />
-                <Point x="220" y="60" />
-                <Point x="220" y="185" />
-                <Point x="175" y="185" />
+                <Point x="60" y="210" />
+                <Point x="260" y="210" />
+                <Point x="260" y="500" />
+                <Point x="60" y="500" />
               </FloorPlanCoordinates>
-              <ZoneControlCoordinate x="0" y="20" />
+              <ZoneControlCoordinate x="60" y="80" />
             </Zone>
             <Zone Id="100.5" Name="Küche">
               <Picture RelativePath=".\Images\Küche.jpg" PictureType="jpg" />
@@ -97,15 +97,15 @@
               </FloorPlanCoordinates>
               <ZoneControlCoordinate x="10" y="20" />
             </Zone>
-            <Zone Id="100.7" Name="Büro Christian">
-              <Picture RelativePath=".\Images\BüroChristian.jpg" PictureType="jpg" />
+            <Zone Id="100.7" Name="Bad/WC">
+              <Picture RelativePath=".\Images\BadWC.jpg" PictureType="jpg" />
               <FloorPlanCoordinates>
-                <Point x="520" y="290" />
-                <Point x="610" y="290" />
-                <Point x="610" y="500" />
-                <Point x="520" y="500" />
+                <Point x="175" y="60" />
+                <Point x="220" y="60" />
+                <Point x="220" y="185" />
+                <Point x="175" y="185" />
               </FloorPlanCoordinates>
-              <ZoneControlCoordinate x="10" y="30" />
+              <ZoneControlCoordinate x="0" y="20" />
             </Zone>
             <Zone Id="100.8" Name="Hasenzimmer">
               <Picture RelativePath=".\Images\Hasenzimmer.jpg" PictureType="jpg" />
@@ -132,23 +132,23 @@
         <Floor Name="Galerie" Id="1000.2">
           <FloorPlan RelativePath=".\Images\Galerie.bmp" PictureType="bmp" />
           <Zones>
-            <Zone Id="100.9" Name="Büro Anita">
-              <Picture RelativePath=".\Images\BüroAnita.jpg" PictureType="jpg" />
-              <FloorPlanCoordinates>
-                <Point x="740" y="120" />
-                <Point x="1020" y="120" />
-                <Point x="1020" y="290" />
-                <Point x="740" y="290" />
-              </FloorPlanCoordinates>
-              <ZoneControlCoordinate x="10" y="10" />
-            </Zone>
-            <Zone Id="100.10" Name="Fernsehecke">
+            <Zone Id="100.9" Name="Fernsehecke">
               <Picture RelativePath=".\Images\Fernsehecke.jpg" PictureType="jpg" />
               <FloorPlanCoordinates>
                 <Point x="600" y="130" />
                 <Point x="710" y="130" />
                 <Point x="710" y="260" />
                 <Point x="600" y="260" />
+              </FloorPlanCoordinates>
+              <ZoneControlCoordinate x="10" y="10" />
+            </Zone>
+            <Zone Id="100.10" Name="Büro Anita">
+              <Picture RelativePath=".\Images\BüroAnita.jpg" PictureType="jpg" />
+              <FloorPlanCoordinates>
+                <Point x="740" y="120" />
+                <Point x="1020" y="120" />
+                <Point x="1020" y="290" />
+                <Point x="740" y="290" />
               </FloorPlanCoordinates>
               <ZoneControlCoordinate x="10" y="10" />
             </Zone>
