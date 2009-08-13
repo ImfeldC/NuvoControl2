@@ -25,7 +25,7 @@ namespace NuvoControl.Server.ProtocolDriver.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
         public ulong PingIntervall {
             get {
                 return ((ulong)(this["PingIntervall"]));
