@@ -1,9 +1,10 @@
 @echo off
 echo Cleanup ..
 e:
-cd E:\
+cd E:\doxygen\
 rmdir /s /q Documentation
 echo Create directory ...
+cd E:\doxygen\
 mkdir Documentation
 echo Start converting word file ....
 cscript E:\NuvoControl_Trunk\Build\ConvertDoc2html.vbs UserDocumentation NuvoControl_8100_ProjektKurzbeschreibung.doc 
