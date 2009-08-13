@@ -1,13 +1,9 @@
 'Wscript.Echo "Conversion Marco"
 
 wdFormatHTML    = 8
-wdColorBlue = 16711680
 
 
 Set WSHShell = WScript.CreateObject("WScript.Shell") 
-Set appWord = Wscript.CreateObject("Word.Application") 
-
-
 set args = WScript.Arguments
 num = args.Count
 
@@ -16,6 +12,8 @@ if num <> 2 Then
    WScript.Quit 1
 end if
 
+
+Set appWord = Wscript.CreateObject("Word.Application") 
 
 wordFileName = args.Item(0)
 htmlFileName = args.Item(1)
