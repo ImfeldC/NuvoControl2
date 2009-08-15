@@ -42,14 +42,14 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     public class ProtocolCommandReceivedEventArgs : EventArgs
     {
         private Address _zoneAddress;
-        private NuvoEssentiaProtocolEventArgs _innerEventArgs;
+        private ConreteProtocolEventArgs _innerEventArgs;
 
         /// <summary>
         /// Constructor for the argument class.
         /// </summary>
         /// <param name="zoneAddress">Zone address, where the associated event belongs to.</param>
         /// <param name="innerEventArgs">Inner argument class, provided by the underlying protocol layer.</param>
-        public ProtocolCommandReceivedEventArgs(Address zoneAddress, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        public ProtocolCommandReceivedEventArgs(Address zoneAddress, ConreteProtocolEventArgs innerEventArgs)
         {
             _zoneAddress = zoneAddress;
             _innerEventArgs = innerEventArgs;
@@ -99,7 +99,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         private Address _zoneAddress;
         private ZoneState _zoneState;
-        private NuvoEssentiaProtocolEventArgs _innerEventArgs;
+        private ConreteProtocolEventArgs _innerEventArgs;
 
         /// <summary>
         /// Public constructor for the protocol zone update event argument.
@@ -107,7 +107,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <param name="zoneAddress">Zone Address, containing Device Id and Zone Id</param>
         /// <param name="zoneState">Current Zone State.</param>
         /// <param name="innerEventArgs">Inner Event Argument.</param>
-        public ProtocolZoneUpdatedEventArgs(Address zoneAddress, ZoneState zoneState, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        public ProtocolZoneUpdatedEventArgs(Address zoneAddress, ZoneState zoneState, ConreteProtocolEventArgs innerEventArgs)
         {
             _zoneAddress = zoneAddress;
             _zoneState = zoneState;
@@ -161,7 +161,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         private int _deviceId;
         private ZoneQuality _deviceQuality;
-        private NuvoEssentiaProtocolEventArgs _innerEventArgs;
+        private ConreteProtocolEventArgs _innerEventArgs;
 
         /// <summary>
         /// Public constructor for the protocol device updates event argument.
@@ -169,7 +169,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <param name="deviceId">Device Id, where the update belongs to.</param>
         /// <param name="deviceQuality">Device quality, of the device where the update belongs to.</param>
         /// <param name="innerEventArgs">Event argument, of the inner event.</param>
-        public ProtocolDeviceUpdatedEventArgs(int deviceId, ZoneQuality deviceQuality, NuvoEssentiaProtocolEventArgs innerEventArgs)
+        public ProtocolDeviceUpdatedEventArgs(int deviceId, ZoneQuality deviceQuality, ConreteProtocolEventArgs innerEventArgs)
         {
             _deviceId = deviceId;
             _deviceQuality = deviceQuality;

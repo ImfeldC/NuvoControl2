@@ -62,7 +62,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private class DictEntry
         {
             private int _deviceId = -1;
-            private INuvoEssentiaProtocol _protocolStack = null;
+            private IConcreteProtocol _protocolStack = null;
             public Boolean DeviceMarkedAsOffline = false;
             public DateTime LastTimeCommandReceived = new DateTime(1970, 1, 1);
 
@@ -72,7 +72,7 @@ namespace NuvoControl.Server.ProtocolDriver
             /// </summary>
             /// <param name="deviceId">Device Id.</param>
             /// <param name="protocolStack">Protocol Stack</param>
-            public DictEntry(int deviceId, INuvoEssentiaProtocol protocolStack)
+            public DictEntry(int deviceId, IConcreteProtocol protocolStack)
             {
                 _deviceId = deviceId;
                 _protocolStack = protocolStack;
@@ -81,7 +81,7 @@ namespace NuvoControl.Server.ProtocolDriver
             /// <summary>
             /// Get the protocol stack.
             /// </summary>
-            public INuvoEssentiaProtocol ProtocolStack
+            public IConcreteProtocol ProtocolStack
             {
                 get { return _protocolStack; }
             }
@@ -234,7 +234,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="sender">This pointer, to the sender of this event.</param>
         /// <param name="e">Event argument, containing the Nuvo Essentia command.</param>
-        void _essentiaProtocol_onCommandReceived(object sender, NuvoEssentiaProtocolEventArgs e)
+        void _essentiaProtocol_onCommandReceived(object sender, ConreteProtocolEventArgs e)
         {
             if (_deviceList.ContainsKey(e.DeviceId))
             {
@@ -467,7 +467,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="deviceId">Device Id, to connect to</param>
         /// <param name="communicationConfiguration">Communication Configuration, used to connect to the device.</param>
         /// <param name="essentiaProtocol">Optional protocol layer object, used in case of test environment. Pass <c>null</c> in case of productive system.</param>
-        public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol)
+        public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, IConcreteProtocol essentiaProtocol)
         {
             if (system != ENuvoSystem.NuVoEssentia)
             {
@@ -482,7 +482,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _deviceList.Add(deviceId, new DictEntry(deviceId, ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId, null) : essentiaProtocol)));
 
             // register for events from protocol layer
-            _deviceList[deviceId].ProtocolStack.onCommandReceived += new NuvoEssentiaProtocolEventHandler(_essentiaProtocol_onCommandReceived);
+            _deviceList[deviceId].ProtocolStack.onCommandReceived += new ConcreteProtocolEventHandler(_essentiaProtocol_onCommandReceived);
 
             // open connection to the protocol layer
             _deviceList[deviceId].ProtocolStack.Open(new SerialPortConnectInformation(

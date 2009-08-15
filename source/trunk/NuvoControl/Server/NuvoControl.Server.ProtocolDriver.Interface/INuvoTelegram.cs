@@ -44,7 +44,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     }
 
-
+    /// <summary>
+    /// 
+    /// </summary>
     public interface INuvoTelegram
     {
 
