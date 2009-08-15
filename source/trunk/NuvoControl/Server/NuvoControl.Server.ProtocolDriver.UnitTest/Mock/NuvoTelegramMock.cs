@@ -43,7 +43,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
         private List<string> _telegramList = new List<string>();
 
 
-        #region INuvoTelegram Members
+        #region ITelegram Members
 
         public event TelegramEventHandler onTelegramReceived;
 

@@ -7,11 +7,11 @@
       <FileName>IProtocol.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoTelegramEventArgs">
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.TelegramEventArgs">
     <Position X="2.25" Y="0.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAIAAAAAA=</HashCode>
-      <FileName>INuvoTelegram.cs</FileName>
+      <FileName>ITelegram.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.Interface.SerialPortEventArgs">
@@ -43,11 +43,11 @@
       <FileName>IConcreteProtocol.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoTelegram">
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.ITelegram">
     <Position X="2.25" Y="3.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAACAAAIAAAAAAAAAAAAAAAAAAAAAAAAACAABA=</HashCode>
-      <FileName>INuvoTelegram.cs</FileName>
+      <FileName>ITelegram.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.IProtocol">
@@ -148,18 +148,18 @@
       <FileName>IConcreteProtocol.cs</FileName>
     </TypeIdentifier>
   </Delegate>
-  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoTelegramEventHandler">
-    <Position X="0.5" Y="14.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>INuvoTelegram.cs</FileName>
-    </TypeIdentifier>
-  </Delegate>
   <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.SerialPortEventHandler">
     <Position X="0.5" Y="13.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAEA=</HashCode>
       <FileName>ISerialPort.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.TelegramEventHandler" Collapsed="true">
+    <Position X="0.5" Y="14.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>ITelegram.cs</FileName>
     </TypeIdentifier>
   </Delegate>
   <Font Name="Tahoma" Size="8.25" />
