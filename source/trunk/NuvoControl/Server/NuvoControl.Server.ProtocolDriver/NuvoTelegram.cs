@@ -28,7 +28,7 @@ using NuvoControl.Server.ProtocolDriver.Simulator;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
-    class NuvoTelegram : INuvoTelegram
+    class NuvoTelegram : ITelegram
     {
         #region Common Logger
         /// <summary>
@@ -51,7 +51,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #region INuvoTelegram Members
 
-        public event NuvoTelegramEventHandler onTelegramReceived;
+        public event TelegramEventHandler onTelegramReceived;
 
         public void Open(SerialPortConnectInformation serialPortConnectInformation)
         {
@@ -216,7 +216,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     if (onTelegramReceived != null)
                     {
                         onTelegramReceived(this,
-                          new NuvoTelegramEventArgs(telegramFound));
+                          new TelegramEventArgs(telegramFound));
                     }
                 }
 
