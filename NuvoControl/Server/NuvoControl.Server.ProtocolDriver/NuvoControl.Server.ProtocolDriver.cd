@@ -3,15 +3,15 @@
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand" BaseTypeListCollapsed="true">
     <Position X="4.5" Y="0.5" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>ECxwIARiAADkAkcoAIhAFBBAhBAYHMy0k0gkRNDCigE=</HashCode>
+      <HashCode>ECxwAARiBIDkCkcsIIxAFBBAhFAYHMy8k0glRNDCigE=</HashCode>
       <FileName>NuvoEssentiaSingleCommand.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocol" BaseTypeListCollapsed="true">
-    <Position X="0.5" Y="8.75" Width="3.25" />
+    <Position X="0.5" Y="9.75" Width="3.25" />
     <TypeIdentifier>
-      <HashCode>EAIAIAAAAACAIEAAAEAgIQAAAAAAAEAACQAAAADAAAA=</HashCode>
+      <HashCode>EAIAAAAABAAAIEAAAEAgIQAAAAAAAEAACQAEAACAAAA=</HashCode>
       <FileName>NuvoEssentiaProtocol.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -19,7 +19,7 @@
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoTelegram" BaseTypeListCollapsed="true">
     <Position X="0.5" Y="4.25" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAACAAAKGCIAAAAIAAAAAAAAQAAAAAAAACAgBA=</HashCode>
+      <HashCode>AAAAAAAACAAAKWCYEgAAIAAAAAAAAQEAAgAAAACAgBA=</HashCode>
       <FileName>NuvoTelegram.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -27,7 +27,7 @@
   <Class Name="NuvoControl.Server.ProtocolDriver.SerialPort" BaseTypeListCollapsed="true">
     <Position X="0.5" Y="0.5" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>IAAQAAAAAAAAIAAAEAAgAAAAAgAAAAIAAAAAAAGAAAA=</HashCode>
+      <HashCode>IAAQAAAAAAAAIEAAEAAgAAAAAgAAAAIAAAAAAAGAAAA=</HashCode>
       <FileName>SerialPort.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
