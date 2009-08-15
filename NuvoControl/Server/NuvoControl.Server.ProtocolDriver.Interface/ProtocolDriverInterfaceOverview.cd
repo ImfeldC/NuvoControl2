@@ -60,6 +60,13 @@
       <FileName>IProtocol.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolDeviceUpdatedEventArgs" Collapsed="true">
+    <Position X="11.25" Y="2" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAABBAAAAAAAAAAAAAAAAAAAAgAAEAAAAgAAAAA=</HashCode>
+      <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.ISerialPort" Collapsed="true">
     <Position X="3.5" Y="8" Width="1.5" />
     <TypeIdentifier>
@@ -128,6 +135,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAAA=</HashCode>
       <FileName>ITelegram.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.ProtocolDeviceUpdatedEventHandler" Collapsed="true">
+    <Position X="11.25" Y="2.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>IProtocol.cs</FileName>
     </TypeIdentifier>
   </Delegate>
   <Font Name="Tahoma" Size="8.25" />

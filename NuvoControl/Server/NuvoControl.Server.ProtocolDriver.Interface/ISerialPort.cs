@@ -26,6 +26,11 @@ using System.IO.Ports;
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
 
+    /// <summary>
+    /// Event which is issued in case data has been received.
+    /// </summary>
+    /// <param name="sender">This pointer to the underlaying object.</param>
+    /// <param name="e">Serial port event argument, containing the received text.</param>
     public delegate void SerialPortEventHandler(
               object sender, SerialPortEventArgs e);
 
@@ -218,83 +223,98 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     /// by a serial port driver. It’s the ‘lowest’ level interface in the hierarchy. 
     /// Any serial port driver – or similar drivers, like mock or simulator – which implement 
     /// this interface can be easily integrated in NuvoControl.
+    /// The event onDataReceived is issued in case data has been received.
     /// </summary>
     public interface ISerialPort
     {
 
+        /// <summary>
+        /// Event issued in case data arrives.
+        /// </summary>
         event SerialPortEventHandler onDataReceived;
 
-        //
-        // Summary:
-        //     Opens a new serial port connection.
-        //
-        // Exceptions:
-        //   System.InvalidOperationException:
-        //     The specified port is open.
-        //
-        //   System.ArgumentOutOfRangeException:
-        //     One or more of the properties for this instance are invalid. For example,
-        //     the System.IO.Ports.SerialPort.Parity, System.IO.Ports.SerialPort.DataBits,
-        //     or System.IO.Ports.SerialPort.Handshake properties are not valid values;
-        //     the System.IO.Ports.SerialPort.BaudRate is less than or equal to zero; the
-        //     System.IO.Ports.SerialPort.ReadTimeout or System.IO.Ports.SerialPort.WriteTimeout
-        //     property is less than zero and is not System.IO.Ports.SerialPort.InfiniteTimeout.
-        //
-        //   System.ArgumentException:
-        //     The port name does not begin with "COM". - or - The file type of the port
-        //     is not supported.
-        //
-        //   System.IO.IOException:
-        //     The port is in an invalid state. - or - An attempt to set the state of the
-        //     underlying port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
-        //     object were invalid.
-        //
-        //   System.UnauthorizedAccessException:
-        //     Access is denied to the port.
+
+        /// <summary>
+        ///
+        /// Summary:
+        ///     Opens a new serial port connection.
+        ///
+        /// Exceptions:
+        ///   System.InvalidOperationException:
+        ///     The specified port is open.
+        ///
+        ///   System.ArgumentOutOfRangeException:
+        ///     One or more of the properties for this instance are invalid. For example,
+        ///     the System.IO.Ports.SerialPort.Parity, System.IO.Ports.SerialPort.DataBits,
+        ///     or System.IO.Ports.SerialPort.Handshake properties are not valid values;
+        ///     the System.IO.Ports.SerialPort.BaudRate is less than or equal to zero; the
+        ///     System.IO.Ports.SerialPort.ReadTimeout or System.IO.Ports.SerialPort.WriteTimeout
+        ///     property is less than zero and is not System.IO.Ports.SerialPort.InfiniteTimeout.
+        ///
+        ///   System.ArgumentException:
+        ///     The port name does not begin with "COM". - or - The file type of the port
+        ///     is not supported.
+        ///
+        ///   System.IO.IOException:
+        ///     The port is in an invalid state. - or - An attempt to set the state of the
+        ///     underlying port failed. For example, the parameters passed from this System.IO.Ports.SerialPort
+        ///     object were invalid.
+        ///
+        ///   System.UnauthorizedAccessException:
+        ///     Access is denied to the port.
+        /// </summary>
+        /// <param name="serialPortConnectInformation">Connection infromation for the serial port, like baud rate, etc.</param>
         void Open( SerialPortConnectInformation serialPortConnectInformation );
 
-        // Summary:
-        //     Closes the port connection, sets the System.IO.Ports.SerialPort.IsOpen property
-        //     to false, and disposes of the internal System.IO.Stream object.
-        //
-        // Exceptions:
-        //   System.InvalidOperationException:
-        //     The specified port is not open.
+        /// <summary>
+        /// Summary:
+        ///     Closes the port connection, sets the System.IO.Ports.SerialPort.IsOpen property
+        ///     to false, and disposes of the internal System.IO.Stream object.
+        ///
+        /// Exceptions:
+        ///   System.InvalidOperationException:
+        ///     The specified port is not open.
+        /// </summary>
         void Close();
 
-        //
-        // Summary:
-        //     Gets a value indicating the open or closed status of the System.IO.Ports.SerialPort
-        //     object.
-        //
-        // Returns:
-        //     true if the serial port is open; otherwise, false. The default is false.
-        //
-        // Exceptions:
-        //   System.ArgumentNullException:
-        //     The System.IO.Ports.SerialPort.IsOpen value passed is null.
-        //
-        //   System.ArgumentException:
-        //     The System.IO.Ports.SerialPort.IsOpen value passed is an empty string ("").
+        /// <summary>
+        ///
+        /// Summary:
+        ///     Gets a value indicating the open or closed status of the System.IO.Ports.SerialPort
+        ///     object.
+        ///
+        /// Returns:
+        ///     true if the serial port is open; otherwise, false. The default is false.
+        ///
+        /// Exceptions:
+        ///   System.ArgumentNullException:
+        ///     The System.IO.Ports.SerialPort.IsOpen value passed is null.
+        ///
+        ///   System.ArgumentException:
+        ///     The System.IO.Ports.SerialPort.IsOpen value passed is an empty string ("").
+        /// </summary>
         bool IsOpen { get; }
 
-        //
-        // Summary:
-        //     Writes the specified string to the serial port.
-        //
-        // Parameters:
-        //   text:
-        //     The string for output.
-        //
-        // Exceptions:
-        //   System.InvalidOperationException:
-        //     The specified port is not open.
-        //
-        //   System.ArgumentNullException:
-        //     str is null.
-        //
-        //   System.ServiceProcess.TimeoutException:
-        //     The operation did not complete before the time-out period ended.
+        /// <summary>
+        ///
+        /// Summary:
+        ///     Writes the specified string to the serial port.
+        ///
+        /// Parameters:
+        ///   text:
+        ///     The string for output.
+        ///
+        /// Exceptions:
+        ///   System.InvalidOperationException:
+        ///     The specified port is not open.
+        ///
+        ///   System.ArgumentNullException:
+        ///     str is null.
+        ///
+        ///   System.ServiceProcess.TimeoutException:
+        ///     The operation did not complete before the time-out period ended.
+        /// </summary>
+        /// <param name="text">Message as string, which shall be written to the serial port.</param>
         void Write(string text);
     }
 }
