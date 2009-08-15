@@ -39,11 +39,11 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         private TestContext testContextInstance;
         bool _eventRaised = false;
         int _eventRaisedCount = 0;
-        NuvoTelegramEventArgs _nuvoTelegramEventArgs = null;
+        TelegramEventArgs _nuvoTelegramEventArgs = null;
         string _eventMessageString = "";
 
         // callback function for receiving data from telegram layer
-        void serialPort_TelegramReceived(object sender, NuvoTelegramEventArgs e)
+        void serialPort_TelegramReceived(object sender, TelegramEventArgs e)
         {
             _eventRaised = true;
             _eventRaisedCount++;
@@ -121,7 +121,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("#RET\r");
             Assert.IsTrue(_eventRaised);                                        // event has been raised
@@ -141,7 +141,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#COMAND\r");
             Assert.IsTrue(_eventRaised);                                                // event has been raised
@@ -161,7 +161,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#COMANDAAAA\r...#COMANDBB\r");
             Assert.IsTrue(_eventRaised);                                                // event has been raised
@@ -180,7 +180,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#COMAND1\r#COM");
             Assert.IsTrue(_eventRaisedCount == 1);                                      // event has been raised 1 times
@@ -206,7 +206,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...#\r...");
             Assert.IsTrue(_eventRaisedCount == 1);                      // event has been raised 1 times
@@ -243,7 +243,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...\r..#COMAND\r.");
             Assert.IsTrue(_eventRaisedCount == 1);                                   // event has been raised 1 times
@@ -262,7 +262,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             SerialPortMock serialPort = new SerialPortMock();
             NuvoTelegram target = new NuvoTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
-            target.onTelegramReceived += new NuvoTelegramEventHandler(serialPort_TelegramReceived);
+            target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
             serialPort.passDataToTestClass("...\r...#....#COMAND\r.");
             Assert.IsTrue(_eventRaisedCount == 1);                                   // event has been raised 1 times

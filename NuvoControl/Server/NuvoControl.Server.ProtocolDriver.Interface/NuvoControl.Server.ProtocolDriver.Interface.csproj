@@ -64,7 +64,7 @@
     <Compile Include="INuvoEssentiaCommand.cs" />
     <Compile Include="INuvoEssentiaSingleCommand.cs" />
     <Compile Include="IConcreteProtocol.cs" />
-    <Compile Include="INuvoTelegram.cs" />
+    <Compile Include="ITelegram.cs" />
     <Compile Include="IProtocol.cs" />
     <Compile Include="ISerialPort.cs" />
     <Compile Include="NuvoEnumerations.cs" />

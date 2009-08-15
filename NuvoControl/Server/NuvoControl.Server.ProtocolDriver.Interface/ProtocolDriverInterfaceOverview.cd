@@ -9,7 +9,7 @@
   <Comment CommentText="The interface IConcreteProtocol defines the interface a concrete protocol driver needs to implement.">
     <Position X="0.625" Y="4" Height="0.594" Width="2.262" />
   </Comment>
-  <Comment CommentText="The interface INuvoTelegram defines the interface any Nuvo device telegram driver needs to implement.">
+  <Comment CommentText="The interface ITelegram defines the interface any device telegram driver needs to implement.">
     <Position X="1.51" Y="6.018" Height="0.75" Width="1.7" />
   </Comment>
   <Comment CommentText="The interface ISerialPort defines the interface a serial port driver needs to implement.">
@@ -32,11 +32,11 @@
       <FileName>ISerialPort.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoTelegramEventArgs" Collapsed="true">
+  <Class Name="NuvoControl.Server.ProtocolDriver.Interface.TelegramEventArgs" Collapsed="true">
     <Position X="5.25" Y="6" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAAAAIAAAAAA=</HashCode>
-      <FileName>INuvoTelegram.cs</FileName>
+      <FileName>ITelegram.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.Interface.ConreteProtocolEventArgs" Collapsed="true">
@@ -67,11 +67,11 @@
       <FileName>ISerialPort.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoTelegram" Collapsed="true">
+  <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.ITelegram" Collapsed="true">
     <Position X="3.5" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAACAAAIAAAAAAAAAAAAAAAAAAAAAAAAACAABA=</HashCode>
-      <FileName>INuvoTelegram.cs</FileName>
+      <FileName>ITelegram.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="NuvoControl.Server.ProtocolDriver.Interface.INuvoProtocol" Collapsed="true">
@@ -102,13 +102,6 @@
       <FileName>ISerialPort.cs</FileName>
     </TypeIdentifier>
   </Delegate>
-  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.NuvoTelegramEventHandler" Collapsed="true">
-    <Position X="5.25" Y="6.75" Width="2.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAACAAAAAAQAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>INuvoTelegram.cs</FileName>
-    </TypeIdentifier>
-  </Delegate>
   <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.ConcreteProtocolEventHandler" Collapsed="true">
     <Position X="5.25" Y="4.75" Width="2.5" />
     <TypeIdentifier>
@@ -128,6 +121,13 @@
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAABAQAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>IProtocol.cs</FileName>
+    </TypeIdentifier>
+  </Delegate>
+  <Delegate Name="NuvoControl.Server.ProtocolDriver.Interface.TelegramEventHandler" Collapsed="true">
+    <Position X="5.25" Y="6.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAAA=</HashCode>
+      <FileName>ITelegram.cs</FileName>
     </TypeIdentifier>
   </Delegate>
   <Font Name="Tahoma" Size="8.25" />

@@ -26,7 +26,7 @@ using Common.Logging;
 
 namespace NuvoControl.Server.ProtocolDriver.Test.Mock
 {
-    class NuvoTelegramMock : INuvoTelegram
+    class NuvoTelegramMock : ITelegram
     {
         #region Common Logger
         /// <summary>
@@ -45,7 +45,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
 
         #region INuvoTelegram Members
 
-        public event NuvoTelegramEventHandler onTelegramReceived;
+        public event TelegramEventHandler onTelegramReceived;
 
         public void Close()
         {
@@ -80,7 +80,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test.Mock
             if (onTelegramReceived != null)
             {
                 onTelegramReceived(this,
-                  new NuvoTelegramEventArgs(msg));
+                  new TelegramEventArgs(msg));
             }
             _telegramList.Add(msg);
         }

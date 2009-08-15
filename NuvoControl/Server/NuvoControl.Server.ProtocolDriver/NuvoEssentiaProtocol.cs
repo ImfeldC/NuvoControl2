@@ -32,7 +32,7 @@ namespace NuvoControl.Server.ProtocolDriver
     /// <summary>
     /// This class implements the Nuvo Essentia protocol.
     /// 
-    /// Based on the interface \ref INuvoEssentiaProtocol this class implements
+    /// Based on the interface \ref IConcreteProtocol this class implements
     /// the concrete protocol used to communicate with the Nuvo Essentia system.
     /// 
     /// As example it ensures also the required delay between two commands.
@@ -50,7 +50,7 @@ namespace NuvoControl.Server.ProtocolDriver
         #endregion
 
         private int _deviceId;
-        private INuvoTelegram _serialPort;
+        private ITelegram _serialPort;
         private DateTime _lastTimeACommandHasBeenSent = DateTime.Now;
 
         private Queue<INuvoEssentiaSingleCommand> _runningCommands = new Queue<INuvoEssentiaSingleCommand>();
@@ -61,12 +61,12 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="deviceId">Device Id.</param>
         /// <param name="nuvoTelegram">Optional. Used in case of unit test to pass a mock telegram object.</param>
-        public NuvoEssentiaProtocol(int deviceId, INuvoTelegram nuvoTelegram)
+        public NuvoEssentiaProtocol(int deviceId, ITelegram nuvoTelegram)
         {
             _deviceId = deviceId;
 
             _serialPort = ((nuvoTelegram == null)?new NuvoTelegram(null):nuvoTelegram);
-            _serialPort.onTelegramReceived += new NuvoTelegramEventHandler(_serialPort_onTelegramReceived);
+            _serialPort.onTelegramReceived += new TelegramEventHandler(_serialPort_onTelegramReceived);
         }
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="sender">This point to the sender of this event.</param>
         /// <param name="e">Event parameters, passed by the sender.</param>
-        void _serialPort_onTelegramReceived(object sender, NuvoTelegramEventArgs e)
+        void _serialPort_onTelegramReceived(object sender, TelegramEventArgs e)
         {
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(e.Message);
             command.IncomingCommand = e.Message;
@@ -134,7 +134,7 @@ namespace NuvoControl.Server.ProtocolDriver
             return command;
         }
 
-        #region INuvoEssentiaProtocol Members
+        #region IConcreteProtocol Members
 
         /// <summary>
         /// Public event, used in case a command answer is received from Nuvo Essentia.

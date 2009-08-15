@@ -25,10 +25,10 @@ using System.Text;
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
 
-    public delegate void NuvoTelegramEventHandler(
-              object sender, NuvoTelegramEventArgs e);
+    public delegate void TelegramEventHandler(
+              object sender, TelegramEventArgs e);
 
-    public class NuvoTelegramEventArgs : EventArgs
+    public class TelegramEventArgs : EventArgs
     {
         string _msg;
 
@@ -37,7 +37,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _msg; }
         }
 
-        public NuvoTelegramEventArgs(string msg)
+        public TelegramEventArgs(string msg)
         {
             _msg = msg;
         }
@@ -47,10 +47,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     /// <summary>
     /// 
     /// </summary>
-    public interface INuvoTelegram
+    public interface ITelegram
     {
 
-        event NuvoTelegramEventHandler onTelegramReceived;
+        event TelegramEventHandler onTelegramReceived;
 
         void Open(SerialPortConnectInformation serialPortConnectInformation);
 
