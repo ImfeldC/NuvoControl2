@@ -199,7 +199,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     /// <summary>
     /// This is the main interface used by the NuvoControl Monitor and Control Service.
     /// 
-    /// All systems - which would like to be monitored and controlled - by NuvoControl
+    /// All systems which would like to be monitored and controlled by NuvoControl
     /// are required to implement this interface.
     /// 
     /// The following class diagram shows the interface hirarchy: 
@@ -207,6 +207,12 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     /// 
     /// The following class diagram shows the protocol stack: 
     /// \image html ProtocolDriverOverview.jpg "Protocol Driver Overview"
+    /// 
+    /// There are three events in this interface:
+    /// * onCommandReceived: is issued in case a command has been received.
+    /// * onZoneStatusUpdate: is issued in case the status of a zone has changed
+    /// * onDeviceStatusUpdate: is issued in case the status of a device has changed.
+    /// 
     /// </summary>
     public interface IProtocol
     {
