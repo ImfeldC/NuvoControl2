@@ -49,7 +49,7 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
 
-        #region INuvoTelegram Members
+        #region ITelegram Members
 
         public event TelegramEventHandler onTelegramReceived;
 
