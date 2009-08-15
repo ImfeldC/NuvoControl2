@@ -214,8 +214,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     }
 
     /// <summary>
-    /// Public interface, that defines the interface which needs to be implemented by a serial port
-    /// driver.
+    /// Public interface, that defines the methods and events which need to be implemented 
+    /// by a serial port driver. It’s the ‘lowest’ level interface in the hierarchy. 
+    /// Any serial port driver – or similar drivers, like mock or simulator – which implement 
+    /// this interface can be easily integrated in NuvoControl.
     /// </summary>
     public interface ISerialPort
     {

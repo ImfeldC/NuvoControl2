@@ -51,38 +51,25 @@
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocol" Collapsed="true">
     <Position X="2.25" Y="1.75" Width="3.25" />
-    <AssociationLine Name="NuvoTelegram" Type="NuvoControl.Server.ProtocolDriver.NuvoTelegram" FixedToPoint="true">
-      <Path>
-        <Point X="3.875" Y="2.259" />
-        <Point X="3.875" Y="3" />
-      </Path>
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.098" Y="0.143" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>EAIABAAABAAAIEAAAEAgIQAAAAAAAEAACQAAAACAAAA=</HashCode>
+      <HashCode>EAIAAAAABAAAIEAAAEAgIQAAAAAAAEAACQAEAACAAAA=</HashCode>
       <FileName>NuvoEssentiaProtocol.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="NuvoTelegram" />
-    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" Collapsed="true">
     <Position X="2.25" Y="0.5" Width="3.25" />
-    <AssociationLine Name="NuvoEssentiaProtocol" Type="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocol">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.463" Y="0.247" />
-      </MemberNameLabel>
-    </AssociationLine>
+    <NestedTypes>
+      <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver.DictEntry" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ProtocolDriver.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>ACABAIQAAAAAIEAAgAAAAAEEAgIIAEAACAACAACAAAE=</HashCode>
+      <HashCode>QCABAIQABCAAIEAAgAAAAAGEAgIJBEAgCAAAAACAAAE=</HashCode>
       <FileName>ProtocolDriver.cs</FileName>
     </TypeIdentifier>
-    <ShowAsAssociation>
-      <Property Name="NuvoEssentiaProtocol" />
-    </ShowAsAssociation>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="NuvoControl.Server.ProtocolDriver.ProtocolDriverException" Collapsed="true">
@@ -111,7 +98,7 @@
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaSingleCommand" Collapsed="true">
     <Position X="6.5" Y="3" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>ECxwAARiBIDkCkcoAIhAFBBAhFAYHMy0k0glRNDCigE=</HashCode>
+      <HashCode>ECxwAARiBIDkCkcsIIxAFBBAhFAYHMy8k0glRNDCigE=</HashCode>
       <FileName>NuvoEssentiaSingleCommand.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -119,7 +106,7 @@
   <Class Name="NuvoControl.Server.ProtocolDriver.NuvoEssentiaCommand" Collapsed="true">
     <Position X="6.5" Y="2" Width="2.25" />
     <TypeIdentifier>
-      <HashCode>AAgABAAAAAIEAAAAAIAAAAAAAAAAAAQEAAAAAACAABA=</HashCode>
+      <HashCode>AAgABAAAAAIEASAAAIQAAAAAAAAAAAQEIAAAAACAABA=</HashCode>
       <FileName>NuvoEssentiaCommand.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />

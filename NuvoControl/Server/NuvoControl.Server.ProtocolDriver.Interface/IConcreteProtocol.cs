@@ -24,10 +24,10 @@ using System.Text;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
-    public delegate void NuvoEssentiaProtocolEventHandler(
-              object sender, NuvoEssentiaProtocolEventArgs e);
+    public delegate void ConcreteProtocolEventHandler(
+              object sender, ConreteProtocolEventArgs e);
 
-    public class NuvoEssentiaProtocolEventArgs : EventArgs
+    public class ConreteProtocolEventArgs : EventArgs
     {
         private int _deviceId;
         private INuvoEssentiaSingleCommand _command;
@@ -41,7 +41,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _command; }
         }
 
-        public NuvoEssentiaProtocolEventArgs(int deviceId, INuvoEssentiaSingleCommand command)
+        public ConreteProtocolEventArgs(int deviceId, INuvoEssentiaSingleCommand command)
         {
             _deviceId = deviceId;
             _command = command;
@@ -49,10 +49,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     }
 
-    public interface INuvoEssentiaProtocol
+    public interface IConcreteProtocol
     {
 
-        event NuvoEssentiaProtocolEventHandler onCommandReceived;
+        event ConcreteProtocolEventHandler onCommandReceived;
 
         void Open(SerialPortConnectInformation serialPortConnectInformation);
 

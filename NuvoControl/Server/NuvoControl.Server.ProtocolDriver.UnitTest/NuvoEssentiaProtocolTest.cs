@@ -35,10 +35,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
     public class NuvoEssentiaProtocolTest
     {
         int _eventRaisedCount = 0;
-        NuvoEssentiaProtocolEventArgs _nuvoProtocolEventArgs = null;
+        ConreteProtocolEventArgs _nuvoProtocolEventArgs = null;
 
         // callback function for receiving data from telegram layer
-        void serialPort_CommandReceived(object sender, NuvoEssentiaProtocolEventArgs e)
+        void serialPort_CommandReceived(object sender, ConreteProtocolEventArgs e)
         {
             _eventRaisedCount++;
             _nuvoProtocolEventArgs = e;
@@ -109,14 +109,14 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1,nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
 
             Assert.IsTrue(_eventRaisedCount == 2);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event1.Command.Command);
@@ -132,7 +132,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
             target.SendCommand(command);
@@ -152,7 +152,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             target.SendCommand("VER");
             nuvoTelegram.passDataToTestClass("MPU_E6Dvx.yy");
@@ -171,7 +171,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             target.SendCommand("VER");
             nuvoTelegram.passDataToTestClass("MPU_E6Dv1.23");
@@ -190,7 +190,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Command: ReadVersion
             {
@@ -242,7 +242,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Command: ReadVersion
             {
@@ -323,7 +323,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Command: SetSOURCEIR56
             {
@@ -388,7 +388,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             NuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus,ENuvoEssentiaZones.Zone4,ENuvoEssentiaSources.Source4,-50);
             target.SendCommand(command);
@@ -439,7 +439,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
             NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
@@ -449,10 +449,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             target.SendCommand(command2);
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("Z02OR0,BASS-00,TREB+00,GRP0,VRST0");
-            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
 
             Assert.IsTrue(_eventRaisedCount == 2);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
@@ -473,7 +473,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
             NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
@@ -490,16 +490,16 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("Z02OR0,BASS-00,TREB+00,GRP0,VRST0");
-            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("Z03OR0,BASS-00,TREB+00,GRP0,VRST0");
-            NuvoEssentiaProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
 
             Assert.IsTrue(_eventRaisedCount == 4);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
@@ -526,7 +526,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
             NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
@@ -543,16 +543,16 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("?");  // ERROR
-            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("Z03OR0,BASS-00,TREB+00,GRP0,VRST0");
-            NuvoEssentiaProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
 
             Assert.IsTrue(_eventRaisedCount == 4);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
@@ -579,7 +579,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
             NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
@@ -596,19 +596,19 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("Z02OR0,BASS-00,TREB+00,GRP0,VRST0");
-            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event3 = _nuvoProtocolEventArgs;  // save return argument
             // Additional command 
             nuvoTelegram.passDataToTestClass("Z06PWRON,SRC6,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs eventx = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs eventx = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusZONE
             nuvoTelegram.passDataToTestClass("Z03OR0,BASS-00,TREB+00,GRP0,VRST0");
-            NuvoEssentiaProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event4 = _nuvoProtocolEventArgs;  // save return argument
 
             Assert.IsTrue(_eventRaisedCount == 5);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);
@@ -638,7 +638,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
-            target.onCommandReceived += new NuvoEssentiaProtocolEventHandler(serialPort_CommandReceived);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
 
             // Send ReadStatusCONNECT
             NuvoEssentiaSingleCommand command1 = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadStatusCONNECT, ENuvoEssentiaZones.Zone2);
@@ -649,13 +649,13 @@ namespace NuvoControl.Server.ProtocolDriver.Test
 
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z02PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
             // Additional command 
             nuvoTelegram.passDataToTestClass("Z06PWRON,SRC6,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs eventx = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs eventx = _nuvoProtocolEventArgs;  // save return argument
             // Return command for ReadStatusCONNECT
             nuvoTelegram.passDataToTestClass("Z03PWRON,SRC3,GRP0,VOL-50");
-            NuvoEssentiaProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
+            ConreteProtocolEventArgs event2 = _nuvoProtocolEventArgs;  // save return argument
 
             Assert.IsTrue(_eventRaisedCount == 3);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, command1.Command);

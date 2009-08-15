@@ -39,7 +39,7 @@ namespace NuvoControl.Server.ProtocolDriver
     /// According to the specification, it is required to wait at least 50[ms] before 
     /// sending the next command.
     /// </summary>
-    public class NuvoEssentiaProtocol : INuvoEssentiaProtocol
+    public class NuvoEssentiaProtocol : IConcreteProtocol
     {
         #region Common Logger
         /// <summary>
@@ -86,7 +86,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 if (onCommandReceived != null)
                 {
                     onCommandReceived(this,
-                      new NuvoEssentiaProtocolEventArgs(_deviceId,command));
+                      new ConreteProtocolEventArgs(_deviceId,command));
                 }
             }
         }
@@ -139,7 +139,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// Public event, used in case a command answer is received from Nuvo Essentia.
         /// </summary>
-        public event NuvoEssentiaProtocolEventHandler onCommandReceived;
+        public event ConcreteProtocolEventHandler onCommandReceived;
 
         /// <summary>
         /// Open method, to open a connection to the serial port.

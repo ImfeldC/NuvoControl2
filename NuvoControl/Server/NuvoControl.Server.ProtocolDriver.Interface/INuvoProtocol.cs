@@ -27,7 +27,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <param name="deviceId">Device Id, for this device.</param>
         /// <param name="communicationConfiguration">Comminucation Configuration required to establish a connection.</param>
         /// <param name="essentiaProtocol">Protocol stack, mainly used for mock test objects.</param>
-        void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol);
+        void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, IConcreteProtocol essentiaProtocol);
 
         /// <summary>
         /// Sends a single command to the underlying device.

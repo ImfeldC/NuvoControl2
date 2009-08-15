@@ -320,7 +320,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
             throw new System.NotImplementedException();
         }
 
-        public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, INuvoEssentiaProtocol essentiaProtocol)
+        public void Open(ENuvoSystem system, int deviceId, Communication communicationConfiguration, IConcreteProtocol essentiaProtocol)
         {
             throw new System.NotImplementedException();
         }
