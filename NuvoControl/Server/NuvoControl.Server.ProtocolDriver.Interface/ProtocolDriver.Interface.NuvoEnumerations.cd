@@ -1,0 +1,74 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoEssentiaCommands">
+    <Position X="0.5" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>hWIIAACFCAQQAAASMAAAAQSIIQCAAIDxABAABAQIACA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoEssentiaSources">
+    <Position X="2.75" Y="4.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAA4BwAAAA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoEssentiaZones">
+    <Position X="2.75" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAAQAAAAAAAAgQAAAAAAUAAAAAAAoEAgAAAAA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoSystem">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ENuvoTunerT2Commands">
+    <Position X="5.5" Y="1.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>KhEAABMIAAAAAgAACCAIoABiwgQAGAAAAEIAAgAAAAE=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.ESourceGroupStatus">
+    <Position X="2.75" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAACAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.EVolumeResetStatus">
+    <Position X="0.5" Y="8.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAAAAAI=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.EZonePowerStatus">
+    <Position X="2.75" Y="7" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAAAAAAAAAAAABAAAAAAAAAAAAE=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.EDIPSwitchOverrideStatus">
+    <Position X="2.75" Y="10" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAEAAAAAAAAA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="NuvoControl.Server.ProtocolDriver.Interface.EIRCarrierFrequency">
+    <Position X="0.5" Y="10" Width="2" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
+      <FileName>NuvoEnumerations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
