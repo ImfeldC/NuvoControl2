@@ -74,6 +74,7 @@
   <ItemGroup>
     <None Include="NamespaceDoc.dox" />
     <None Include="NuvoControl.Server.ProtocolDriver.Interface.cd" />
+    <None Include="ProtocolDriver.Interface.NuvoEnumerations.cd" />
     <None Include="ProtocolDriverInterfaceOverview.cd" />
   </ItemGroup>
   <ItemGroup>
