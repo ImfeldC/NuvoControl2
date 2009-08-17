@@ -1,0 +1,46 @@
+/*!
+
+\page pageWordDocuments Word Documents
+
+This page gives an overview of the available word documents embedded in the 
+HTML source code description and how they have been created.
+
+\section secWordDocumentsList List of available Word documents
+
+The following word documents are available:
+
+- NuvoControl_8100_ProjektKurzbeschreibung.doc
+
+- NuvoControl_8600_SetupGuideNuvoControl.docx
+
+- NuvoControl_0110_Projektantrag.doc
+
+- NuvoControl_1202_Anforderungsspezifikation.doc
+
+- NuvoControl_1300_Software_Architektur_und_Design.doc
+
+- NuvoControl_0010_StundenNachweis.doc
+
+- NuvoControl_0040_FeatureList_TaskList.doc
+
+- NuvoControl_0100_ProjektHandbuch.doc
+
+- NuvoControl_0103_Glossary.doc
+
+- NuvoControl_0105_DocumentStatusList.doc
+
+- NuvoControl_0001_Pendenzenliste.doc
+
+
+\section secWordDocumentsBuild How are the word documents build
+
+The word documents are build automatically as an additonal task together with the source code description.
+The source code description is build with doxygen. For the word documents we used a small visual basic
+script which uses word to convert the word document into html.
+
+The script is ConvertDoc2html.vbs and is called within the batch file ConvertWordFiles.bat.
+
+<BR>
+Back to \ref main "main page"
+
+*/
