@@ -51,7 +51,7 @@ On Error Resume Next
 	appWord.ActiveDocument.ExportAsFixedFormat pdfFullPath, wdExportFormatPDF, False, _
         wdExportOptimizeForOnScreen, wdExportAllDocument, _
         0, 0, wdExportDocumentWithMarkup, true, true, _
-        wdExportCreateWordBookmarks, true, true, False, 0
+        wdExportCreateWordBookmarks, true, true, False
 
 	' Save as HTML
 	WScript.Echo "HTML Ouptut: " & htmlFullPath & " !"
