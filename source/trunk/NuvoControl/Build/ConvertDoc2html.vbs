@@ -1,6 +1,11 @@
 'Wscript.Echo "Conversion Marco"
 
 	wdFormatHTML    = 8
+	wdExportFormatPDF = 17
+	wdExportOptimizeForOnScreen = 1
+	wdExportAllDocument = 0
+	wdExportDocumentWithMarkup = 7 			' or wdExportDocumentContent = 0
+	wdExportCreateWordBookmarks = 2			' or wdExportCreateNoBookmarks = 0
 	wordFilePath = "E:\NuvoControl_Documentation\"
 	htmlFilePath = "E:\doxygen\html\"
 	pdfFilePath  = "E:\doxygen\pdf\"
@@ -42,12 +47,11 @@ On Error Resume Next
 	appWord.Documents.Open wordFullPath
 	
 	' Export as PDF
-'	WScript.Echo "PDF Ouptut: " & pdfFullPath & " !"
-'	appWord.ActiveDocument.ExportAsFixedFormat pdfFullPath, Word.WdExportFormat.wdExportFormatPDF, False, _
-'        Word.WdExportOptimizeFor.wdExportOptimizeForOnScreen, _
-'        Word.WdExportRange.wdExportAllDocument, _
-'        0, 0, Word.WdExportItem.wdExportDocumentWithMarkup, true, true, _
-'        Word.WdExportCreateBookmarks.wdExportCreateWordBookmarks, true, true, False, 0
+	WScript.Echo "PDF Ouptut: " & pdfFullPath & " !"
+	appWord.ActiveDocument.ExportAsFixedFormat pdfFullPath, wdExportFormatPDF, False, _
+        wdExportOptimizeForOnScreen, wdExportAllDocument, _
+        0, 0, wdExportDocumentWithMarkup, true, true, _
+        wdExportCreateWordBookmarks, true, true, False, 0
 
 	' Save as HTML
 	WScript.Echo "HTML Ouptut: " & htmlFullPath & " !"
