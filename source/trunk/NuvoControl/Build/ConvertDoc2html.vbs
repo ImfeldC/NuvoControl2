@@ -2,7 +2,8 @@
 
 	wdFormatHTML    = 8
 	wordFilePath = "E:\NuvoControl_Documentation\"
-	htmlFilePath = "E:\doxygen\Documentation\"
+	htmlFilePath = "E:\doxygen\html\"
+	pdfFilePath  = "E:\doxygen\pdf\"
 	
 	Set WSHShell = WScript.CreateObject("WScript.Shell") 
 	set args = WScript.Arguments
@@ -16,26 +17,40 @@
 	sourcePath = args.Item(0)
 	wordFileName = args.Item(1)
 	
+	' Create Word Filename
 	If (num = 2) Then
 		 htmlFileName = wordFileName & ".html"
 	Else
 		 htmlFileName = args.Item(2)
 	End If
 	
-	WScript.Echo "Convert " & wordFileName & " to HTML file " & htmlFileName & " !"
+	' Create PDF Filename
+	pdfFileName = wordFileName & ".pdf"
+	
+	WScript.Echo "Convert " & wordFileName & " to HTML file " & htmlFileName & " and PDf file " & pdfFileName & " !"
 	
 On Error Resume Next
 	Set appWord = Wscript.CreateObject("Word.Application") 
 	
 	wordFullPath = (wordFilePath & sourcePath & "\" & wordFileName)
-	htmlFullPath = (htmlFilePath & htmlFileName)
 	WScript.Echo "Input: " & wordFullPath & " !"
-	WScript.Echo "Ouptut: " & htmlFullPath & " !"
+	htmlFullPath = (htmlFilePath & htmlFileName)
+	pdfFullPath = (pdfFilePath & pdfFileName)
 	
 	'Opening File
 	appWord.Visible = FALSE   
 	appWord.Documents.Open wordFullPath
 	
+	' Export as PDF
+'	WScript.Echo "PDF Ouptut: " & pdfFullPath & " !"
+'	appWord.ActiveDocument.ExportAsFixedFormat pdfFullPath, Word.WdExportFormat.wdExportFormatPDF, False, _
+'        Word.WdExportOptimizeFor.wdExportOptimizeForOnScreen, _
+'        Word.WdExportRange.wdExportAllDocument, _
+'        0, 0, Word.WdExportItem.wdExportDocumentWithMarkup, true, true, _
+'        Word.WdExportCreateBookmarks.wdExportCreateWordBookmarks, true, true, False, 0
+
+	' Save as HTML
+	WScript.Echo "HTML Ouptut: " & htmlFullPath & " !"
 	appWord.ActiveDocument.SaveAs htmlFullPath,wdFormatHTML,,,FALSE
 
 Handler:
