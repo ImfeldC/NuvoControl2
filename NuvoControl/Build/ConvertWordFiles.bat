@@ -1,4 +1,10 @@
 @echo off
+rem 
+rem ****************************************
+rem If you add a new file here, please add them also to the index page
+rem "WordDocumentation.dox"
+rem ****************************************
+rem
 echo Start converting word file ....
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs UserDocumentation NuvoControl_8100_ProjektKurzbeschreibung.doc 
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs UserDocumentation NuvoControl_8600_SetupGuideNuvoControl.docx
