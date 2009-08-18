@@ -9,9 +9,12 @@ This page describes the used deployment startegy.
 The possible deployment strategies within Visual Studio 2008 are described in the
 following <a href="http://msdn.microsoft.com/en-us/library/wtzawcsz.aspx">link</a> .
 
-We use the "Windows Installer Deployment" deployment strategy for NuvoControl.
+We use for NuvoControl the deployment strategy called "Windows Installer Deployment" .
 
 In <a href="http://msdn.microsoft.com/en-us/library/fyh6k4k4.aspx">How to: Create or Add Deployment Projects</a> 
-is explained hot to setup a deployment project in Visual Studio.
+is explained how to setup a deployment project in Visual Studio.
 
+<BR>
+Back to \ref main "main page"
+	
 */
