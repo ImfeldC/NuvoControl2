@@ -2,53 +2,30 @@
  
   \section intro Introduction
  
-  Bei dem Projekt NuvoControl handelt es sich um eine Software zu Ansteuerung und Visualisierung einer Audio Multiraum Anlage von Nuvo Systems.
+  Bei dem Projekt NuvoControl handelt es sich um eine Software zu Ansteuerung und Visualisierung einer Audio Multiraum Anlage 
+  von Nuvo Systems.
+  
+  Eine kurze Projektbeschreibung ist im Dokument <a href="./NuvoControl_8100_ProjektKurzbeschreibung.doc.html">NuvoControl_8100_ProjektKurzbeschreibung.doc</a>
 
-Das Bild zeigt eine Übersicht der NuvoControl Software mit der zu steuernden Multiraum Anlage.
-
-Das Multiraum System hat zwölf Zonen. Jede Zone verfügt über ein Keypad zur Steuerung der dazugehörigen Zone und zwei Lautsprechern. Das Keypad erlaubt mit seinen Tasten die direkte Wahl der gewünschten Audio-Source (im Bild blau eingezeichnet).
-Das Nuvo System erlaubt die Integration von bis zu sechs beliebigen HiFi Geräten (diese Verbindung ist grün eingezeichnet).
-Zusätzlich besitzt der Verstärker eine RS232 Schnittstelle über die die Multiraum Anlage gesteuert werden kann. Es können sämtliche Funktionen ausgeführt sowie alle Zustände der Zonen abgefragt werden (diese Verbindung ist rot eingezeichnet).
-
-Die Visualisierungs- und Steuersoftware NuvoControl der Audio-Multiraum-Anlage steuert die Multiraum Anlage über die RS232 Schnittstelle und visualisiert den Zustand des ganzen Systems. Die Software erweitert die existierenden Möglichkeiten der Anlage um weitere Funktionalität, wie Sleep- und Weckfunktion.
-
-Die Software NuvoControl basiert auf einer Client-Server Architektur, welche mehrere Clients unterstützt.
-•	Erste Kernkomponente ist der Monitor & Control - Service welcher die Steuerung von NuvoEssentia erlaubt sowie den Zustand von NuvoEssentia abfragt und für eine Visualisierung zu Verfügung stellt.
-•	Zweite Kernkomponente ist ein GUI, welches den Zustand von NuvoEssentia graphisch darstellt und Bedienoperationen unterstützt.
-•	Dritte Kernkomponente ist der NuvoEssentia Treiber, welcher das eigentliche Protokoll zu NuvoEssentia implementiert.
-•	Vierte Kernkomponente ist der Function - Service, welcher die Sleep- und Weckfunktion implementiert.
-•	Die gesamte Software ist mittels XML Files konfigurierbar. Anzahl Zonen, Adressierung der Zonen, Visualisierung der Zonen, verwendete Kommunikationstreiber und weitere Einstellungen sind dynamisch änderbar.
-•	Sämtliche Softwareteile sind eventbasiert (Subscription Pattern).
-
-Für die Projektrealisierung haben wir die folgenden Technologien und Methoden eingesetzt:
-•	Implementation mit C#
-•	Client-Server Kommunikation mit Web Services, implementiert mit WCF
-•	Server zu Multiraum-Simulator Kommunikation mit Queues (MSMQ)
-•	GUI Implementation mit Windows Presentation Foundation (WPF)
-•	Visual Studio 2008 mit dem Unit Test Framework von Microsoft (VSTS)
-•	Continuous-Build Integration mit CruiseControl.NET
-•	Dokumentation erstellt mit Hilfe von Microsoft Sandcastle (NDoc) und Doxygen
-•	UML Modellierung mittels Enterprise Architect (EA)
-•	Use-Case basiertes Requirements Engineering (nach Cockburn / Bianchi)
-•	Requirements Driven Development (RDD) (gemäss Wirfs-Brock / Tobler)
-•	Agiler Entwicklungsprozess gemäss SCRUM
-
-
- 
   \section content Inhalt
  
   Die Dokumentation ist wie folgt aufgebaut.
  
     - Hauptseite\n 
-      Diese Startseite ist der Einstiegpunkt bzw. die Hauptseite der Dokumentation.
+      Diese \ref main "Startseite" ist der Einstiegpunkt bzw. die Hauptseite der Dokumentation.
+  
+  	- Projekt Dokumentation
+  	  Sämtliche Word Dokumente die während der Projektabwicklung erstellt wurden, sind ebenfalls Teil dieser HTML Dokumentation.
+  	  Auf der Seite \ref pageWordDocuments "Project Documentation" ist einer Liste mit desen Links aufgeführt.
   
     - Modules\n
       Neben der - aus dem Sourcode generierten Dokumentation - sind noch verschiedene Themen zusätzlich beschrieben, als eigene Module.
       Diese Module sind einzelne Themen die als ganzes in einem Kapitel (bzw. Seite) beschrieben werden.
-      Eine Übersicht der verfügbaren Module ist unter dem Tab 'Modules' zu finden, siehe dazu <a href="modules.html">Modules</a>.
+      Eine Übersicht der verfügbaren <a href="modules.html">Module</a> ist unter dem Tab 'Modules' zu finden.
  
-    - Beschreibung\n
-      Die weiteren Tabs - wie 'Namespaces', 'Classes' und 'Files' - enthält die generierte Dokumentation aus dem Sourcecode.
+    - Source Code Beschreibung\n
+      Die mit Doxygen genereirte Dokumentation (zu welcher diese Startseite auch gehört) beschreibt in 
+      weiteren Tabs - wie 'Namespaces', 'Classes' und 'Files' - die generierte Dokumentation aus dem Sourcecode.
  
  */
 
