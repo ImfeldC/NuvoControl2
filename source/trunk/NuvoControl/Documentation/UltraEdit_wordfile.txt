@@ -1439,7 +1439,7 @@ yellow
 @hideinitializer @htmlonly @if 
 @image @include @ingroup @internal @invariant @latexonly @li @line @link
 @mainpage @name 
-@namespace @nosubgrouping @note @overload @p @page @par @param @post
+@namespace @nosubgrouping @note @overload @p @page @subpage @par @param @post
 @pre @ref @relates @remarks 
 @return @retval @sa @section @showinitializer @since @skip @skipline
 @struct @subsection @test 
@@ -1454,7 +1454,7 @@ yellow
 \hideinitializer \htmlonly 
 \if \image \include \ingroup \internal \invariant \latexonly \li \line
 \link \mainpage 
-\name \namespace \nosubgrouping \note \overload \p \page \par \param
+\name \namespace \nosubgrouping \note \overload \p \page \subpage \par \param
 \post \pre \ref \relates 
 \remarks \return \retval \sa \section \showinitializer \since \skip
 \skipline \struct \subsection 

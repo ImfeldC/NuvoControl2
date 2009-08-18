@@ -43,14 +43,4 @@ The configuration of the protocol driver is explained on the page \ref pageProto
 Back to \ref main "main page"
 
 
-\defgroup moduletools Tools
-This module contains information and documentation about the used tools.
-	
-The tools used during development are described on the page \ref pageDevTools "Development Tools"
-
-All tools used to build to system are described on the page \ref pageBuildTools "Build Tools"
-
-<BR>
-Back to \ref main "main page"
-	
  */

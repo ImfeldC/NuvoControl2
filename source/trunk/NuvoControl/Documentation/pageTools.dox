@@ -1,0 +1,15 @@
+/*!
+
+\page pageTools Tools
+This page contains information and documentation about the tools used in our development, build and documentation environment.
+
+The tools used during development are described on the page \subpage pageDevTools "Development Tools"
+
+All tools used to build to system are described on the page \subpage pageBuildTools "Build Tools"
+
+All tools used for project management and documentation are described on the page \subpage pagePMDocTools "PM & Documentation Tool"
+
+<BR>
+Back to \ref main "main page"
+	
+*/
