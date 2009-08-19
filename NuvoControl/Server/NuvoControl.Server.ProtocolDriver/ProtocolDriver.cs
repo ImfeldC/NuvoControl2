@@ -27,6 +27,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 using System.Timers;
+using System.Threading;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -114,7 +115,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// Private member to hold the timer used to send a 'ping' to the device.
         /// </summary>
-        private Timer _timerPing = new Timer();
+        private System.Timers.Timer _timerPing = new System.Timers.Timer();
 
 
         /// <summary>
@@ -152,79 +153,82 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="e"></param>
         private void _timerPing_Elapsed(object sender, ElapsedEventArgs e)
         {
-            if (_deviceList != null)
+            lock (_deviceList)
             {
-                _log.Trace(m => m("Ping ... check {0} device(s)", _deviceList.Count));
-
-                DateTime _newestUpdate = new DateTime(2000, 1, 1);
-                DateTime _oldestUpdate = new DateTime(3000, 1, 1);
-                foreach (DictEntry entry in _deviceList.Values)
+                if (_deviceList != null)
                 {
-                    // Check, if we need to send a ping
-                    if ((DateTime.Now - entry.LastTimeCommandReceived) > Properties.Settings.Default.SendPingTimeSpan)
-                    {
-                        // The last update is behind the allowed time span.
-                        // Send a 'ping' command (read version) to the device
-                        entry.ProtocolStack.SendCommand(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion));
-                        _log.Info(m => m("Update of device with id {0} is behind, send ping! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
-                    }
+                    _log.Trace(m => m("Ping ... check {0} device(s)", _deviceList.Count));
 
-                    // Check, if we need to set the device offline
-                    if ((DateTime.Now - entry.LastTimeCommandReceived) > Properties.Settings.Default.MarkAsOfflineTimeSpan)
+                    DateTime _newestUpdate = new DateTime(2000, 1, 1);
+                    DateTime _oldestUpdate = new DateTime(3000, 1, 1);
+                    foreach (DictEntry entry in _deviceList.Values)
                     {
-                        if (entry.DeviceMarkedAsOffline == false)
+                        // Check, if we need to send a ping
+                        if ((DateTime.Now - entry.LastTimeCommandReceived) > Properties.Settings.Default.SendPingTimeSpan)
                         {
-                            // The last update is behind the allowed time span and it wasn't marked
-                            // as offline till now.
-                            // Set the device offline, notify the subscribers
-                            if (onDeviceStatusUpdate != null)
+                            // The last update is behind the allowed time span.
+                            // Send a 'ping' command (read version) to the device
+                            entry.ProtocolStack.SendCommand(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion));
+                            _log.Info(m => m("Update of device with id {0} is behind, send ping! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                        }
+
+                        // Check, if we need to set the device offline
+                        if ((DateTime.Now - entry.LastTimeCommandReceived) > Properties.Settings.Default.MarkAsOfflineTimeSpan)
+                        {
+                            if (entry.DeviceMarkedAsOffline == false)
                             {
-                                try
+                                // The last update is behind the allowed time span and it wasn't marked
+                                // as offline till now.
+                                // Set the device offline, notify the subscribers
+                                if (onDeviceStatusUpdate != null)
                                 {
-                                    onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Offline, null));
+                                    try
+                                    {
+                                        onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Offline, null));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
+                                    }
                                 }
-                                catch (Exception ex)
-                                {
-                                    _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString())); 
-                                }
+                                entry.DeviceMarkedAsOffline = true;
+                                _log.Warn(m => m("Off-line! Update of device with id {0} is outdated, set device offline! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
                             }
-                            entry.DeviceMarkedAsOffline = true;
-                            _log.Warn(m => m("Off-line! Update of device with id {0} is outdated, set device offline! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                        }
+                        else
+                        {
+                            if (entry.DeviceMarkedAsOffline == true)
+                            {
+                                // The device is working again, set them back to online
+                                if (onDeviceStatusUpdate != null)
+                                {
+                                    try
+                                    {
+                                        onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Online, null));
+                                    }
+                                    catch (Exception ex)
+                                    {
+                                        _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
+                                    }
+                                }
+                                entry.DeviceMarkedAsOffline = false;
+                                _log.Warn(m => m("Update of device with id {0} is back, set device online! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                            }
+                        }
+
+                        // Determine the newest update
+                        if (_newestUpdate < entry.LastTimeCommandReceived)
+                        {
+                            _newestUpdate = entry.LastTimeCommandReceived;
+                        }
+                        // Determine the oldest update 
+                        if (_oldestUpdate > entry.LastTimeCommandReceived)
+                        {
+                            _oldestUpdate = entry.LastTimeCommandReceived;
                         }
                     }
-                    else
-                    {
-                        if (entry.DeviceMarkedAsOffline == true)
-                        {
-                            // The device is working again, set them back to online
-                            if (onDeviceStatusUpdate != null)
-                            {
-                                try
-                                {
-                                    onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Online, null));
-                                }
-                                catch (Exception ex)
-                                {
-                                    _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
-                                }
-                            }
-                            entry.DeviceMarkedAsOffline = false;
-                            _log.Warn(m => m("Update of device with id {0} is back, set device online! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
-                        }
-                    }
-
-                    // Determine the newest update
-                    if (_newestUpdate < entry.LastTimeCommandReceived)
-                    {
-                        _newestUpdate = entry.LastTimeCommandReceived;
-                    }
-                    // Determine the oldest update 
-                    if (_oldestUpdate > entry.LastTimeCommandReceived)
-                    {
-                        _oldestUpdate = entry.LastTimeCommandReceived;
-                    }
+                    //_log.Trace(m => m("Update(s) are between {0} and {1}", _oldestUpdate.ToString(), _newestUpdate.ToString()));
                 }
-                //_log.Trace(m => m("Update(s) are between {0} and {1}", _oldestUpdate.ToString(), _newestUpdate.ToString()));
             }
         }
 
@@ -236,49 +240,52 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="e">Event argument, containing the Nuvo Essentia command.</param>
         void _essentiaProtocol_onCommandReceived(object sender, ConreteProtocolEventArgs e)
         {
-            if (_deviceList.ContainsKey(e.DeviceId))
+            lock (_deviceList)
             {
-                // Update 'LastUpdated' marker for this device
-                _deviceList[e.DeviceId].LastTimeCommandReceived = DateTime.Now;
-
-                //raise the command received event, and pass data to next layer
-                if (onCommandReceived != null)
+                if (_deviceList.ContainsKey(e.DeviceId))
                 {
-                    try
-                    {
-                        onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), e));
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Fatal(m=>m("Exception occured at forwarding event 'onCommandReceived' to Device {0} and Zone {1}! Exception={2}", e.DeviceId, e.Command.ZoneId, ex.ToString())); 
-                    }
-                }
+                    // Update 'LastUpdated' marker for this device
+                    _deviceList[e.DeviceId].LastTimeCommandReceived = DateTime.Now;
 
-                //raise the zone status changed event, and pass data to next layer
-                if (e.Command.ZoneId != ENuvoEssentiaZones.NoZone &&
-                    e.Command.PowerStatus != EZonePowerStatus.ZoneStatusUnknown &&
-                    e.Command.VolumeLevel != ZoneState.VALUE_UNDEFINED &&
-                    e.Command.SourceId != ENuvoEssentiaSources.NoSource &&
-                    checkRunningCommands(e.Command))
-                {
-                    if (onZoneStatusUpdate != null)
+                    //raise the command received event, and pass data to next layer
+                    if (onCommandReceived != null)
                     {
                         try
                         {
-                            ZoneState zoneState = new ZoneState(new Address(e.DeviceId,(int)e.Command.SourceId),(e.Command.PowerStatus==EZonePowerStatus.ZoneStatusON?true:false),
-                                NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel), ZoneQuality.Online );
-                            onZoneStatusUpdate(this,new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId,(int)e.Command.ZoneId), zoneState,e));
+                            onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), e));
                         }
                         catch (Exception ex)
                         {
-                            _log.Fatal(m=>m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString())); 
+                            _log.Fatal(m => m("Exception occured at forwarding event 'onCommandReceived' to Device {0} and Zone {1}! Exception={2}", e.DeviceId, e.Command.ZoneId, ex.ToString()));
+                        }
+                    }
+
+                    //raise the zone status changed event, and pass data to next layer
+                    if (e.Command.ZoneId != ENuvoEssentiaZones.NoZone &&
+                        e.Command.PowerStatus != EZonePowerStatus.ZoneStatusUnknown &&
+                        e.Command.VolumeLevel != ZoneState.VALUE_UNDEFINED &&
+                        e.Command.SourceId != ENuvoEssentiaSources.NoSource &&
+                        checkRunningCommands(e.Command))
+                    {
+                        if (onZoneStatusUpdate != null)
+                        {
+                            try
+                            {
+                                ZoneState zoneState = new ZoneState(new Address(e.DeviceId, (int)e.Command.SourceId), (e.Command.PowerStatus == EZonePowerStatus.ZoneStatusON ? true : false),
+                                    NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel), ZoneQuality.Online);
+                                onZoneStatusUpdate(this, new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), zoneState, e));
+                            }
+                            catch (Exception ex)
+                            {
+                                _log.Fatal(m => m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString()));
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                _log.Warn(m => m("Cannot find corresponding protocol layer associated to this device id {0}", e.DeviceId));
+                else
+                {
+                    _log.Warn(m => m("Cannot find corresponding protocol layer associated to this device id {0}", e.DeviceId));
+                }
             }
         }
 
@@ -357,8 +364,11 @@ namespace NuvoControl.Server.ProtocolDriver
         public void Close(int deviceId)
         {
             checkZoneDeviceId(deviceId);
-            _deviceList[deviceId].ProtocolStack.Close();
-            _deviceList.Remove(deviceId);
+            lock (_deviceList)
+            {
+                _deviceList[deviceId].ProtocolStack.Close();
+                _deviceList.Remove(deviceId);
+            }
         }
 
         /// <summary>
@@ -371,7 +381,7 @@ namespace NuvoControl.Server.ProtocolDriver
             INuvoEssentiaCommand command = new NuvoEssentiaCommand(
                 ENuvoEssentiaCommands.GetZoneStatus,
                 convertAddressZone2EssentiaZone(zoneAddress));
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress, command);
         }
 
         /// <summary>
@@ -388,14 +398,14 @@ namespace NuvoControl.Server.ProtocolDriver
                     convertAddressZone2EssentiaZone(zoneAddress),
                     convertAddressSource2EssentiaSource(zoneState.Source), 
                     NuvoEssentiaCommand.calcVolume2NuvoEssentia(zoneState.Volume) );
-                _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+                sendCommandToDevice(zoneAddress, command);
             }
             else
             {
                 INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                     ENuvoEssentiaCommands.TurnZoneOFF,
                     convertAddressZone2EssentiaZone(zoneAddress));
-                _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+                sendCommandToDevice(zoneAddress, command);
             }
         }
 
@@ -409,7 +419,7 @@ namespace NuvoControl.Server.ProtocolDriver
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                 ENuvoEssentiaCommands.TurnZoneON,
                 convertAddressZone2EssentiaZone(zoneAddress));
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress, command);
         }
 
         /// <summary>
@@ -422,7 +432,7 @@ namespace NuvoControl.Server.ProtocolDriver
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
                 ENuvoEssentiaCommands.TurnZoneOFF,
                 convertAddressZone2EssentiaZone(zoneAddress));
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress, command);
         }
 
         /// <summary>
@@ -437,7 +447,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 ENuvoEssentiaCommands.SetSource,
                 convertAddressZone2EssentiaZone(zoneAddress),
                 convertAddressSource2EssentiaSource(sourceAddress));
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress, command);
         }
 
         /// <summary>
@@ -452,7 +462,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 ENuvoEssentiaCommands.SetVolume,
                 convertAddressZone2EssentiaZone(zoneAddress),
                 NuvoEssentiaCommand.calcVolume2NuvoEssentia(volumeLevel));
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress, command);
         }
 
         #endregion
@@ -473,24 +483,27 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 throw new ProtocolDriverException(string.Format("This system type is not supported! Cannot connect! '{0}'", system));
             }
-            if (_deviceList.ContainsKey(deviceId))
+            lock (_deviceList)
             {
-                throw new ProtocolDriverException(string.Format("A device with the id {0} is already registered. Cannot add a device with the same id!", deviceId));
+                if (_deviceList.ContainsKey(deviceId))
+                {
+                    throw new ProtocolDriverException(string.Format("A device with the id {0} is already registered. Cannot add a device with the same id!", deviceId));
+                }
+
+                // if not null, use the protocol object passed by the caller (e.g. as mock object for unit test)
+                _deviceList.Add(deviceId, new DictEntry(deviceId, ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId, null) : essentiaProtocol)));
+
+                // register for events from protocol layer
+                _deviceList[deviceId].ProtocolStack.onCommandReceived += new ConcreteProtocolEventHandler(_essentiaProtocol_onCommandReceived);
+
+                // open connection to the protocol layer
+                _deviceList[deviceId].ProtocolStack.Open(new SerialPortConnectInformation(
+                    communicationConfiguration.Port,                                            // e.g. "COM1"
+                    communicationConfiguration.BaudRate,                                        // e.g. 9600
+                    (Parity)Enum.Parse(typeof(Parity), communicationConfiguration.ParityMode),  // e.g. None
+                    communicationConfiguration.DataBits,                                        // e.g. 8
+                    (StopBits)communicationConfiguration.ParityBit));                           // e.g. 1 = StopBits
             }
-
-            // if not null, use the protocol object passed by the caller (e.g. as mock object for unit test)
-            _deviceList.Add(deviceId, new DictEntry(deviceId, ((essentiaProtocol == null) ? new NuvoEssentiaProtocol(deviceId, null) : essentiaProtocol)));
-
-            // register for events from protocol layer
-            _deviceList[deviceId].ProtocolStack.onCommandReceived += new ConcreteProtocolEventHandler(_essentiaProtocol_onCommandReceived);
-
-            // open connection to the protocol layer
-            _deviceList[deviceId].ProtocolStack.Open(new SerialPortConnectInformation(
-                communicationConfiguration.Port,                                            // e.g. "COM1"
-                communicationConfiguration.BaudRate,                                        // e.g. 9600
-                (Parity)Enum.Parse(typeof(Parity), communicationConfiguration.ParityMode),  // e.g. None
-                communicationConfiguration.DataBits,                                        // e.g. 8
-                (StopBits)communicationConfiguration.ParityBit));                           // e.g. 1 = StopBits
         }
 
         /// <summary>
@@ -509,7 +522,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 new ProtocolDriverException(string.Format("The Zone Address doesn't fit the zone used in the command. Cannot send this command!"));
             }
 
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress, command);
             _runningSingleCommands.Add(command);
         }
 
@@ -522,11 +535,37 @@ namespace NuvoControl.Server.ProtocolDriver
         public void SendCommand(Address zoneAddress, INuvoEssentiaCommand command)
         {
             checkZoneDeviceId(zoneAddress.DeviceId);
-            _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+            sendCommandToDevice(zoneAddress,command);
             _runningCombinedCommands.Add(command);
         }
 
         #endregion
+
+
+        private void sendCommandToDevice(Address zoneAddress, INuvoEssentiaCommand command)
+        {
+            ThreadPool.QueueUserWorkItem(
+                delegate(object obj)
+                {
+                    lock (_deviceList)
+                    {
+                        _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+                    }
+                }, null);
+        }
+
+        private void sendCommandToDevice(Address zoneAddress, INuvoEssentiaSingleCommand command)
+        {
+            ThreadPool.QueueUserWorkItem(
+                delegate(object obj)
+                {
+                    lock (_deviceList)
+                    {
+                        _deviceList[zoneAddress.DeviceId].ProtocolStack.SendCommand(command);
+                    }
+                }, null);
+        }
+
 
         /// <summary>
         /// Method checks the zone address. If the device id is not available 
@@ -535,12 +574,15 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="deviceId">Device id to check.</param>
         private void checkZoneDeviceId( int deviceId )
         {
-            if (!_deviceList.ContainsKey(deviceId))
+            lock (_deviceList)
             {
-                // Device id is not available
-                string message = string.Format("A device with the id {0} is not available. Cannot close device with this id!", deviceId);
-                _log.Warn(m => m(message));
-                throw new ProtocolDriverException(message);
+                if (!_deviceList.ContainsKey(deviceId))
+                {
+                    // Device id is not available
+                    string message = string.Format("A device with the id {0} is not available. Cannot close device with this id!", deviceId);
+                    _log.Warn(m => m(message));
+                    throw new ProtocolDriverException(message);
+                }
             }
         }
 
