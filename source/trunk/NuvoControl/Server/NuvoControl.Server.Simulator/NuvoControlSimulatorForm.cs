@@ -793,7 +793,10 @@ namespace NuvoControl.Server.Simulator
         }
 
         /// <summary>
-        /// Private Event handler for the Input Zone User Control
+        /// Private Event handler for the Input Zone User Control.
+        /// This event is raised in case of an incoming command, which is displayed in this control.
+        /// This ensures that the data of this zoen is loaded and displayed into this user control.
+        /// (If this event is missing, an incorrect simulation (answre) is generated as out-going command)
         /// </summary>
         /// <param name="sender">This pointer, to the zone user control.</param>
         /// <param name="e">Event argument, send from zone user control.</param>
