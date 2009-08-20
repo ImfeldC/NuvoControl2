@@ -320,6 +320,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="e">Event argument, containing the Nuvo Essentia command.</param>
         void _essentiaProtocol_onCommandReceived(object sender, ConreteProtocolEventArgs e)
         {
+            bool bNotifyCommandReceived = false;
+            bool bNotifyZoneStatusUpdate = false;
+
             lock (_deviceList)
             {
                 if (_deviceList.ContainsKey(e.DeviceId))
@@ -327,18 +330,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     // Update 'LastUpdated' marker for this device
                     _deviceList[e.DeviceId].LastTimeCommandReceived = DateTime.Now;
 
-                    //raise the command received event, and pass data to next layer
-                    if (onCommandReceived != null)
-                    {
-                        try
-                        {
-                            onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), e));
-                        }
-                        catch (Exception ex)
-                        {
-                            _log.Fatal(m => m("Exception occured at forwarding event 'onCommandReceived' to Device {0} and Zone {1}! Exception={2}", e.DeviceId, e.Command.ZoneId, ex.ToString()));
-                        }
-                    }
+                    bNotifyCommandReceived = true;
 
                     //raise the zone status changed event, and pass data to next layer
                     if (e.Command.ZoneId != ENuvoEssentiaZones.NoZone &&
@@ -347,24 +339,47 @@ namespace NuvoControl.Server.ProtocolDriver
                         e.Command.SourceId != ENuvoEssentiaSources.NoSource &&
                         checkRunningCommands(e.Command))
                     {
-                        if (onZoneStatusUpdate != null)
-                        {
-                            try
-                            {
-                                ZoneState zoneState = new ZoneState(new Address(e.DeviceId, (int)e.Command.SourceId), (e.Command.PowerStatus == EZonePowerStatus.ZoneStatusON ? true : false),
-                                    NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel), ZoneQuality.Online);
-                                onZoneStatusUpdate(this, new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), zoneState, e));
-                            }
-                            catch (Exception ex)
-                            {
-                                _log.Fatal(m => m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString()));
-                            }
-                        }
+                        bNotifyZoneStatusUpdate = true;
                     }
                 }
                 else
                 {
                     _log.Warn(m => m("Cannot find corresponding protocol layer associated to this device id {0}", e.DeviceId));
+                }
+            } // release lock
+
+            // Notify 'Command Received' ...
+            if (bNotifyCommandReceived)
+            {
+                //raise the command received event, and pass data to next layer
+                if (onCommandReceived != null)
+                {
+                    try
+                    {
+                        onCommandReceived(this, new ProtocolCommandReceivedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), e));
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Fatal(m => m("Exception occured at forwarding event 'onCommandReceived' to Device {0} and Zone {1}! Exception={2}", e.DeviceId, e.Command.ZoneId, ex.ToString()));
+                    }
+                }
+            }
+
+            // Notify 'Zone Status Update' ...
+            if (bNotifyZoneStatusUpdate)
+            {
+                if (onZoneStatusUpdate != null)
+                {
+                    try
+                    {
+                        ZoneState zoneState = new ZoneState(new Address(e.DeviceId, (int)e.Command.SourceId), (e.Command.PowerStatus == EZonePowerStatus.ZoneStatusON ? true : false),
+                            NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel), ZoneQuality.Online);
+                        onZoneStatusUpdate(this, new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), zoneState, e));
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Fatal(m => m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString()));
+                    }
                 }
             }
         }
