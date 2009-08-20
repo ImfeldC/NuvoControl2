@@ -80,6 +80,18 @@ namespace NuvoControl.Server.ProtocolDriver
             }
 
             /// <summary>
+            /// Copy constructor, to create a copy of the existing DictEntry object.
+            /// </summary>
+            /// <param name="copyEntry">DictEntry object, which shall be copied.</param>
+            public DictEntry(DictEntry copyEntry)
+            {
+                _deviceId = copyEntry._deviceId;
+                _protocolStack = copyEntry._protocolStack;
+                DeviceMarkedAsOffline = copyEntry.DeviceMarkedAsOffline;
+                LastTimeCommandReceived = copyEntry.LastTimeCommandReceived;
+            }
+
+            /// <summary>
             /// Get the protocol stack.
             /// </summary>
             public IConcreteProtocol ProtocolStack
@@ -153,14 +165,27 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="e"></param>
         private void _timerPing_Elapsed(object sender, ElapsedEventArgs e)
         {
+            // Local list to hold devices, which needs to be notified.
+            // We need firt to search in the list the devices which needs to be notified,
+            // during that time we are holding the lock on this resource.
+            // Before notifying the clinet, we release the lock, preventing from possibe
+            // dead-locks.
+            // See chapter "Multithreading" in the NuvoControl_1300_Software_Architektur_und_Design.doc 
+            // document.
+            List<DictEntry> _markOfflineDeviceList = new List<DictEntry>();
+            List<DictEntry> _markOnlineDeviceList = new List<DictEntry>();
+
+            //
+            // (1) Go through the list holding the lock on it and search all out-dated devices
+            //     The ping down to the underlying system is done directly.
+            //     The notification of the upper layer is done in stage (2)
+            //
             lock (_deviceList)
             {
                 if (_deviceList != null)
                 {
                     _log.Trace(m => m("Ping ... check {0} device(s)", _deviceList.Count));
 
-                    DateTime _newestUpdate = new DateTime(2000, 1, 1);
-                    DateTime _oldestUpdate = new DateTime(3000, 1, 1);
                     foreach (DictEntry entry in _deviceList.Values)
                     {
                         // Check, if we need to send a ping
@@ -168,6 +193,7 @@ namespace NuvoControl.Server.ProtocolDriver
                         {
                             // The last update is behind the allowed time span.
                             // Send a 'ping' command (read version) to the device
+                            // Downwards it is allowed to send, keeping the lock!
                             entry.ProtocolStack.SendCommand(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion));
                             _log.Info(m => m("Update of device with id {0} is behind, send ping! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
                         }
@@ -177,59 +203,113 @@ namespace NuvoControl.Server.ProtocolDriver
                         {
                             if (entry.DeviceMarkedAsOffline == false)
                             {
-                                // The last update is behind the allowed time span and it wasn't marked
-                                // as offline till now.
-                                // Set the device offline, notify the subscribers
-                                if (onDeviceStatusUpdate != null)
-                                {
-                                    try
-                                    {
-                                        onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Offline, null));
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
-                                    }
-                                }
-                                entry.DeviceMarkedAsOffline = true;
-                                _log.Warn(m => m("Off-line! Update of device with id {0} is outdated, set device offline! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                                // remember thsi device to set them off-line
+                                _markOfflineDeviceList.Add(new DictEntry(entry));
                             }
                         }
                         else
                         {
                             if (entry.DeviceMarkedAsOffline == true)
                             {
-                                // The device is working again, set them back to online
-                                if (onDeviceStatusUpdate != null)
-                                {
-                                    try
-                                    {
-                                        onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Online, null));
-                                    }
-                                    catch (Exception ex)
-                                    {
-                                        _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
-                                    }
-                                }
-                                entry.DeviceMarkedAsOffline = false;
-                                _log.Warn(m => m("Update of device with id {0} is back, set device online! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                                // remember thsi device to set them on-line
+                                _markOnlineDeviceList.Add(new DictEntry(entry));
                             }
                         }
-
-                        // Determine the newest update
-                        if (_newestUpdate < entry.LastTimeCommandReceived)
-                        {
-                            _newestUpdate = entry.LastTimeCommandReceived;
-                        }
-                        // Determine the oldest update 
-                        if (_oldestUpdate > entry.LastTimeCommandReceived)
-                        {
-                            _oldestUpdate = entry.LastTimeCommandReceived;
-                        }
                     }
-                    //_log.Trace(m => m("Update(s) are between {0} and {1}", _oldestUpdate.ToString(), _newestUpdate.ToString()));
+                }
+            }   // release lock
+
+
+            //
+            // (2) Go through the list of devices which have changed
+            //     either to off-line or back to on-line and notify the 
+            //     sunscribers.
+            //
+
+            // process list of devices to set them off-line
+            foreach (DictEntry entry in _markOfflineDeviceList)
+            {
+                // The last update is behind the allowed time span and it wasn't marked
+                // as offline till now.
+                // Set the device offline, notify the subscribers
+                if (onDeviceStatusUpdate != null)
+                {
+                    try
+                    {
+                        onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Offline, null));
+                        entry.DeviceMarkedAsOffline = true; // local marker
+                        _log.Warn(m => m("Off-line! Update of device with id {0} is outdated, set device offline! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
+                    }
                 }
             }
+
+            // process list of devices to set them on-line
+            foreach (DictEntry entry in _markOnlineDeviceList)
+            {
+                // The device is working again, set them back to online
+                if (onDeviceStatusUpdate != null)
+                {
+                    try
+                    {
+                        onDeviceStatusUpdate(this, new ProtocolDeviceUpdatedEventArgs(entry.DeviceId, ZoneQuality.Online, null));
+                        entry.DeviceMarkedAsOffline = false;    // local marker
+                        _log.Warn(m => m("Update of device with id {0} is back, set device online! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                    }
+                    catch (Exception ex)
+                    {
+                        _log.Fatal(m => m("Exception occured at forwarding event 'onDeviceStatusUpdate' to Device {0}! Exception={1}", entry.DeviceId, ex.ToString()));
+                    }
+                }
+            }
+
+            //
+            // (3) Update the list with the status of each device
+            //     This requires the lock again
+            //
+            lock (_deviceList)
+            {
+                DateTime _newestUpdate = new DateTime(2000, 1, 1);
+                DateTime _oldestUpdate = new DateTime(3000, 1, 1);
+                foreach (DictEntry entry in _deviceList.Values)
+                {
+                    // process list of devices to set them off-line
+                    foreach (DictEntry offlineEntry in _markOfflineDeviceList)
+                    {
+                        if ( (offlineEntry.DeviceMarkedAsOffline == true) &&
+                             (entry.DeviceId == offlineEntry.DeviceId) )
+                        {
+                            entry.DeviceMarkedAsOffline = true;
+                        }
+                    }
+
+                    // process list of devices to set them on-line
+                    foreach (DictEntry onlineEntry in _markOnlineDeviceList)
+                    {
+                        if ((onlineEntry.DeviceMarkedAsOffline == false) &&
+                             (entry.DeviceId == onlineEntry.DeviceId))
+                        {
+                            entry.DeviceMarkedAsOffline = false;
+                        }
+                    }
+
+
+                    // Determine the newest update
+                    if (_newestUpdate < entry.LastTimeCommandReceived)
+                    {
+                        _newestUpdate = entry.LastTimeCommandReceived;
+                    }
+                    // Determine the oldest update 
+                    if (_oldestUpdate > entry.LastTimeCommandReceived)
+                    {
+                        _oldestUpdate = entry.LastTimeCommandReceived;
+                    }
+                }
+            } // release lock
+
         }
 
         /// <summary>
