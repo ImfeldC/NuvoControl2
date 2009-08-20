@@ -1,0 +1,14 @@
+/*!
+
+\page pageDocumentation Documentation
+
+This page contains an overview about the available documentation and its structure.
+
+The whole project documentation (mainly done in word) is available as HTML and/or PDF, \subpage pageWordDocuments
+
+
+
+<BR>
+Back to \ref main "main page"
+	
+*/
