@@ -98,6 +98,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         private SynchronizationContext _synchronizationContext = null;
 
+        private IDisposable _deferHandle = null;
+
         #endregion
 
         #region Constructors
@@ -117,6 +119,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
             this._sources = sources.ToArray().ToList();
             _viewSources = (ListCollectionView)CollectionViewSource.GetDefaultView(this._sources);
             _viewSources.CurrentChanged += new EventHandler(_viewSources_CurrentChanged);
+
+            // defer update on creation in order not to get notifications form the source list
+            _deferHandle = _viewSources.DeferRefresh();
 
             CommandBinding binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
             _bindings.Add(binding);
@@ -421,7 +426,17 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         public void ZoneLoaded()
         {
+            _ignoreViewSelectionChange = true;
+
             Subscribe(_activeZone.Id);
+            NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+            //if (_deferHandle != null)
+            //{
+            //    _deferHandle.Dispose();
+            //    _viewSources.Refresh();
+            //}
+
+            _ignoreViewSelectionChange = false;
         }
 
 
@@ -441,6 +456,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
 
         private void NotifyPropertyChanged(PropertyChangedEventArgs e)
         {
+            if (_deferHandle != null)
+            {
+                _deferHandle.Dispose();
+            } 
+            
             if (PropertyChanged != null)
                 PropertyChanged(this, e);
         }        
@@ -647,6 +667,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <param name="unsubscribePreviousZone">Set to true, if previous zone must be unsubscribed first.</param>
         private void Navigate(Address id, bool unsubscribePreviousZone)
         {
+            _ignoreViewSelectionChange = true;
+
             Zone tempZone = FindZone(id);
             if (tempZone == null)
                 tempZone = _zones[0];
@@ -656,6 +678,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
             _activeZone = tempZone;
             Subscribe(_activeZone.Id);
             NotifyPropertyChanged(new PropertyChangedEventArgs(""));
+
+            _ignoreViewSelectionChange = false;
         }
 
 
@@ -709,12 +733,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         private void Subscribe(Address id)
         {
-            _ignoreViewSelectionChange = true;
-
             _zoneState = ServiceProxy.MonitorAndControlProxy.GetZoneState(id);
             ServiceProxy.MonitorAndControlProxy.Monitor(id, ZoneUpdateNotification);
-
-            _ignoreViewSelectionChange = false;
 
         }
 
