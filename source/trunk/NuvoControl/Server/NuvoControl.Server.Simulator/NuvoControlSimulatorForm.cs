@@ -361,15 +361,23 @@ namespace NuvoControl.Server.Simulator
             {
                 if (rtbCOM != null)
                 {
-                    rtbCOM.Invoke(new EventHandler(delegate
+                    if (rtbCOM.Created)
                     {
-                        rtbCOM.SelectedText = string.Empty;
-                        rtbCOM.SelectionFont = new Font(rtbCOM.SelectionFont, FontStyle.Bold);
-                        rtbCOM.SelectionColor = _MessageColor[(int)type];
-                        rtbCOM.AppendText(msg);
-                        rtbCOM.ScrollToCaret();
-                    }));
-                    _log.Trace(m => m(string.Format("Output on UI: {0}", msg)));
+                        rtbCOM.Invoke(new EventHandler(delegate
+                        {
+                            rtbCOM.SelectedText = string.Empty;
+                            rtbCOM.SelectionFont = new Font(rtbCOM.SelectionFont, FontStyle.Bold);
+                            rtbCOM.SelectionColor = _MessageColor[(int)type];
+                            rtbCOM.AppendText(msg);
+                            rtbCOM.ScrollToCaret();
+                        }));
+                        _log.Trace(m => m(string.Format("Output on UI: {0}", msg)));
+                    }
+                    else
+                    {
+                        // Output on window not possible yet
+                        _log.Trace(m => m(string.Format("Output: {0}", msg)));
+                    }
                 }
             }
             catch( Exception )
