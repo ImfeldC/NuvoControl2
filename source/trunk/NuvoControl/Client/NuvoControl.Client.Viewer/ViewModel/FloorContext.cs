@@ -343,6 +343,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
             if (unloadPreviousFloor)
                 _floorView.UnloadFloorZones();
             _floorView.LoadFloorZones(_activeFloor, _sources);
+
         }
 
 
