@@ -450,7 +450,7 @@ namespace NuvoControl.Server.Simulator
 
         /// <summary>
         /// Sends a command back to the system. It puts the outgoing commands on the outgoing
-        /// commands queue. In case a delay of more than 500 [ms] is defined a message
+        /// commands queue. If a delay of more than 500 [ms] is defined a message
         /// is shown at the UI, to inform the user that the message will be send out delayed.
         /// </summary>
         /// <param name="uc">Zone User Control, which shall be used as source for the command.</param>
@@ -465,19 +465,11 @@ namespace NuvoControl.Server.Simulator
                     try
                     {
                         NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                            commandType, zone, (ENuvoEssentiaSources)_zoneSateController[zone].Source.ObjectId,
-                            NuvoEssentiaCommand.calcVolume2NuvoEssentia(_zoneSateController[zone].Volume),
-                            0, 0, (_zoneSateController[zone].PowerStatus?EZonePowerStatus.ZoneStatusON:EZonePowerStatus.ZoneStatusOFF),
+                            commandType, zone, uc.GetSelectedSource(),
+                            NuvoEssentiaCommand.calcVolume2NuvoEssentia(uc.GetSelectedVolumeLevel()),
+                            0, 0, uc.GetSelectedPowerStatus(),
                             new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                             EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
-
-                        // don't use the user control
-                        //NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                        //    commandType, zone, uc.GetSelectedSource(),
-                        //    NuvoEssentiaCommand.calcVolume2NuvoEssentia(uc.GetSelectedVolumeLevel()),
-                        //    0, 0, uc.GetSelectedPowerStatus(),
-                        //    new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
-                        //    EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
 
                         string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
                         _outgoingCommands.Enqueue(incomingCommand);
@@ -598,6 +590,12 @@ namespace NuvoControl.Server.Simulator
 
         #region onSelectionChanged Event Handler
 
+        /// <summary>
+        /// Event handler in case a selection has been done in the manual user control.
+        /// It initiates the required commands - depending on the changes.
+        /// </summary>
+        /// <param name="sender">This pointer to teh sender of the event.</param>
+        /// <param name="e">Zone User Control event argument.</param>
         void ucZoneManual_onSelectionChanged(object sender, ZoneUserControl.ZoneUserControlEventArgs e)
         {
             // handle only selection changes for the manual zone user control
@@ -658,7 +656,9 @@ namespace NuvoControl.Server.Simulator
             }
         }
 
-
+        /// <summary>
+        /// Send command 'TurnZoneON' or 'TurnZoneOff'
+        /// </summary>
         private void PowerStatusSelect_sendCommandForManualChanges()
         {
             EZonePowerStatus zonePowerStatus = ucZoneManual.GetSelectedPowerStatus();
@@ -676,6 +676,9 @@ namespace NuvoControl.Server.Simulator
             }
         }
 
+        /// <summary>
+        /// Send command 'SetSource'
+        /// </summary>
         private void SourceSelect_sendCommandForManualChanges()
         {
             ENuvoEssentiaSources source = ucZoneManual.GetSelectedSource();
@@ -689,16 +692,29 @@ namespace NuvoControl.Server.Simulator
             }
         }
 
+        /// <summary>
+        /// Send command 'SetVolume'
+        /// </summary>
         private void Volume_sendCommandForManualChanges()
         {
             sendCommandForManualChanges(ENuvoEssentiaCommands.SetVolume);
         }
 
+        /// <summary>
+        /// Send command 'SetBassLevel'
+        /// </summary>
+        /// <param name="sender">This pointer of the event sender</param>
+        /// <param name="e">Event argumnet.</param>
         private void trackBass_Scroll(object sender, EventArgs e)
         {
             sendCommandForManualChanges(ENuvoEssentiaCommands.SetBassLevel);
         }
 
+        /// <summary>
+        /// Send command 'SetTrebleLevel'
+        /// </summary>
+        /// <param name="sender">This pointer of the event sender</param>
+        /// <param name="e">Event argumnet.</param>
         private void trackTreble_Scroll(object sender, EventArgs e)
         {
             sendCommandForManualChanges(ENuvoEssentiaCommands.SetTrebleLevel);
@@ -774,6 +790,16 @@ namespace NuvoControl.Server.Simulator
         {
             Zonex_onZoneChanged(ucZoneManual, e);
             DisplayData(MessageType.Normal, string.Format("--- Changed to Zone '{0}' ---", ucZoneManual.GetSelectedZone().ToString()));
+        }
+
+        /// <summary>
+        /// Private Event handler for the Input Zone User Control
+        /// </summary>
+        /// <param name="sender">This pointer, to the zone user control.</param>
+        /// <param name="e">Event argument, send from zone user control.</param>
+        private void ucZoneInput_onZoneChanged(object sender, ZoneUserControl.ZoneUserControlEventArgs e)
+        {
+            Zonex_onZoneChanged(ucZoneInput, e);
         }
 
         #endregion

@@ -184,7 +184,7 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 if (_deviceList != null)
                 {
-                    _log.Trace(m => m("Ping ... check {0} device(s)", _deviceList.Count));
+                    //_log.Trace(m => m("Ping ... check {0} device(s)", _deviceList.Count));
 
                     foreach (DictEntry entry in _deviceList.Values)
                     {

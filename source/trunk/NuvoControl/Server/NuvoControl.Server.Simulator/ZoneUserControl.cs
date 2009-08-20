@@ -152,10 +152,8 @@ namespace NuvoControl.Server.Simulator
 
         /// <summary>
         /// Private member to store the zone state, set by the external application.
-        /// This zone state is used to set the values of teh different controls on this
+        /// This zone state is used to set the values of the different controls on this
         /// zone user control.
-        /// It is used to pass changes back to the application. So we don't need to extract the
-        /// zone state from the controls within the zone user control.
         /// </summary>
         private ZoneState _zoneState = null;
 
@@ -277,6 +275,9 @@ namespace NuvoControl.Server.Simulator
                         // do nothing
                         break;
 
+                    case ENuvoEssentiaCommands.ReadStatusCONNECT:
+                    case ENuvoEssentiaCommands.ReadStatusZONE:
+                        break;
                 }
             }
         }
@@ -313,7 +314,8 @@ namespace NuvoControl.Server.Simulator
 
         /// <summary>
         /// Changes the selected zone.
-        /// This raises the changed event, and sets the state of this user control, according to the selected zone.
+        /// This raises the changed event, and sets the state of this user control, 
+        /// according to the selected zone.
         /// </summary>
         /// <param name="zone">Zone, which shall be selected</param>
         public void SetSelectedZone(ENuvoEssentiaZones zone)

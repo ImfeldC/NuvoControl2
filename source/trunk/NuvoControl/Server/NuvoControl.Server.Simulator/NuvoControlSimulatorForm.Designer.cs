@@ -255,6 +255,7 @@ namespace NuvoControl.Server.Simulator
             this.ucZoneInput.ReadOnly = true;
             this.ucZoneInput.Size = new System.Drawing.Size(172, 93);
             this.ucZoneInput.TabIndex = 22;
+            this.ucZoneInput.onZoneChanged += new NuvoControl.Server.Simulator.ZoneUserControl.ZoneUserControlEventHandler(this.ucZoneInput_onZoneChanged);
             // 
             // label2
             // 
