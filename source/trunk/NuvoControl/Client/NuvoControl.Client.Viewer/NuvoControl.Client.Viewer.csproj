@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9AD39785-4760-414B-942C-19A9129023E7}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -14,7 +14,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <ApplicationIcon>NuVo.ico</ApplicationIcon>
+    <ApplicationIcon>NuvoControl.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -238,10 +238,10 @@
     <Resource Include="Images\Loudspeaker.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="NuVo.ico" />
+    <Resource Include="Images\LoudspeakerOff.PNG" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\LoudspeakerOff.PNG" />
+    <Resource Include="NuvoControl.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
