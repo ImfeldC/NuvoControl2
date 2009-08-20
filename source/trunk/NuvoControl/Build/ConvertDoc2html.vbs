@@ -4,8 +4,13 @@
 	wdExportFormatPDF = 17
 	wdExportOptimizeForOnScreen = 1
 	wdExportAllDocument = 0
+	
 	wdExportDocumentWithMarkup = 7 			' or wdExportDocumentContent = 0
+	wdExportDocumentContent = 0
+	
 	wdExportCreateWordBookmarks = 2			' or wdExportCreateNoBookmarks = 0
+	wdExportCreateNoBookmarks = 0
+	
 	wordFilePath = "E:\NuvoControl_Documentation\"
 	htmlFilePath = "E:\doxygen\html\"
 	pdfFilePath  = "E:\doxygen\pdf\"
@@ -41,17 +46,25 @@ On Error Resume Next
 	WScript.Echo "Input: " & wordFullPath & " !"
 	htmlFullPath = (htmlFilePath & htmlFileName)
 	pdfFullPath = (pdfFilePath & pdfFileName)
+	pdfFullhtmlPath = (htmlFilePath & pdfFileName)
 	
 	'Opening File
 	appWord.Visible = FALSE   
 	appWord.Documents.Open wordFullPath
 	
-	' Export as PDF
+	' Export as PDF (to PDF path)
 	WScript.Echo "PDF Ouptut: " & pdfFullPath & " !"
 	appWord.ActiveDocument.ExportAsFixedFormat pdfFullPath, wdExportFormatPDF, False, _
         wdExportOptimizeForOnScreen, wdExportAllDocument, _
         0, 0, wdExportDocumentWithMarkup, true, true, _
         wdExportCreateWordBookmarks, true, true, False
+
+	' Export as PDF (to HTML path)
+	WScript.Echo "PDF Ouptut: " & pdfFullhtmlPath & " !"
+	appWord.ActiveDocument.ExportAsFixedFormat pdfFullhtmlPath, wdExportFormatPDF, False, _
+        wdExportOptimizeForOnScreen, wdExportAllDocument, _
+        0, 0, wdExportDocumentContent, true, true, _
+        wdExportCreateNoBookmarks, true, true, False
 
 	' Save as HTML
 	WScript.Echo "HTML Ouptut: " & htmlFullPath & " !"
