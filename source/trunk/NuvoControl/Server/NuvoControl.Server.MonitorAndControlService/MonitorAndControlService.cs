@@ -93,7 +93,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         public void Connect()
         {
-            Debug.WriteLine("M&C Service; Connect.");
+            Debug.WriteLine("M&C; Connect.");
 
             IMonitorAndControlNotification callback = OperationContext.Current.GetCallbackChannel<IMonitorAndControlNotification>();
             this._subscriber = callback;
@@ -108,7 +108,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         public void Disconnect()
         {
-            Debug.WriteLine("M&C Service; Disconnect.");
+            Debug.WriteLine("M&C; Disconnect.");
 
             this._subscriber = null;
             Cleanup();
@@ -120,7 +120,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// </summary>
         public void RenewLease()
         {
-            Debug.WriteLine("M&C Service; RenewLease.");
+            Debug.WriteLine("M&C; RenewLease.");
         }
 
 
@@ -131,7 +131,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="stateCommand"></param>
         public void SetZoneState(Address zoneId, ZoneState stateCommand)
         {
-            Debug.WriteLine(String.Format("SetZoneState: Address={0}, Command={1}", zoneId.ToString(), stateCommand.ToString()));
+            Debug.WriteLine(String.Format("M&C: SetZoneState: Address={0}, Command={1}", zoneId.ToString(), stateCommand.ToString()));
             _zoneServer.SetZoneState(zoneId, stateCommand);
         }
 
@@ -143,7 +143,9 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <returns></returns>
         public ZoneState GetZoneState(Address zoneId)
         {
-            return _zoneServer.GetZoneState(zoneId);
+            ZoneState currentZoneState = _zoneServer.GetZoneState(zoneId);
+            Debug.WriteLine(String.Format("M&C: GetZoneState: Address={0}, State={1}", zoneId.ToString(), currentZoneState.ToString()));
+            return currentZoneState;
         }
 
 
@@ -153,7 +155,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="zoneId"></param>
         public void Monitor(Address zoneId)
         {
-            Debug.WriteLine(String.Format("M&C Service; Monitor; Address: {0}", zoneId));
+            Debug.WriteLine(String.Format("M&C; Monitor; Address: {0}", zoneId));
 
             _zoneServer.Monitor(zoneId, OnZoneNotification);
             StoreSubscribedZoneId(zoneId);
@@ -179,7 +181,7 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="zoneId"></param>
         public void RemoveMonitor(Address zoneId)
         {
-            Debug.WriteLine(String.Format("M&C Service; RemoveMonitor; Address: {0}", zoneId));
+            Debug.WriteLine(String.Format("M&C; RemoveMonitor; Address: {0}", zoneId));
 
             _zoneServer.RemoveMonitor(zoneId, OnZoneNotification);
             RemoveSubscribedZoneId(zoneId);
@@ -253,9 +255,11 @@ namespace NuvoControl.Server.MonitorAndControlService
         /// <param name="zoneState">The zone state.</param>
         private void NotifySubscribers(Address zoneId, ZoneState zoneState)
         {
+            Debug.WriteLine(String.Format("M&C: TryNotifySubscribers, Address={0}, Command={1}", zoneId.ToString(), zoneState.ToString()));
+
             if (_zoneSubscriptions.Contains(zoneId) && _subscriber != null)
             {
-                Debug.WriteLine(String.Format("NotifySubscribers: Address={0}, Command={1}", zoneId.ToString(), zoneState.ToString()));
+                Debug.WriteLine(String.Format("M&C: NotifySubscribers, Address={0}, Command={1}", zoneId.ToString(), zoneState.ToString()));
                 _subscriber.OnZoneStateChanged(zoneId, zoneState);
             }
         }
