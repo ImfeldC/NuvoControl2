@@ -465,11 +465,20 @@ namespace NuvoControl.Server.Simulator
                     try
                     {
                         NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
-                            commandType, zone, uc.GetSelectedSource(),
-                            NuvoEssentiaCommand.calcVolume2NuvoEssentia(uc.GetSelectedVolumeLevel()),
-                            0, 0, uc.GetSelectedPowerStatus(),
+                            commandType, zone, (ENuvoEssentiaSources)_zoneSateController[zone].Source.ObjectId,
+                            NuvoEssentiaCommand.calcVolume2NuvoEssentia(_zoneSateController[zone].Volume),
+                            0, 0, (_zoneSateController[zone].PowerStatus?EZonePowerStatus.ZoneStatusON:EZonePowerStatus.ZoneStatusOFF),
                             new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                             EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
+
+                        // don't use the user control
+                        //NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                        //    commandType, zone, uc.GetSelectedSource(),
+                        //    NuvoEssentiaCommand.calcVolume2NuvoEssentia(uc.GetSelectedVolumeLevel()),
+                        //    0, 0, uc.GetSelectedPowerStatus(),
+                        //    new EIRCarrierFrequency[6], EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
+                        //    EVolumeResetStatus.VolumeResetOFF, ESourceGroupStatus.SourceGroupOFF, "v1.23");
+
                         string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
                         _outgoingCommands.Enqueue(incomingCommand);
                         if (numDelay.Value > 500)   // announce only delays higher than 500[ms]
