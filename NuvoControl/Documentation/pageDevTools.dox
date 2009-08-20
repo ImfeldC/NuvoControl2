@@ -32,6 +32,8 @@ The following list shows the tools we used during development:
 
 - <b>UltraEdit plugin</b> for doxygen syntax highlighting, see \ref secDevToolUltraEditPlugin 
 
+- <b>Convert Icon</b> on online service to convert picture into icons, see \ref seDevToolConvertIcon
+
 
 
 \section secDevToolsDetail Development Tools Details
@@ -271,6 +273,20 @@ http://www.stack.nl/~dimitri/doxygen/dl/ultraedit_syntax.txt
 
 Another plugin providing syntax highlighting is available for the doxygen project file itself. It can be downloaded
 at http://www.ultraedit.com/downloads/extras.html ( http://www.ultraedit.com/files/wf/doxygen.uew )
+
+
+\subsection seDevToolConvertIcon Convert Icon (Online Service)
+Converticon is a simple icon utility.  It can import ICO, PNG, GIF, and JPEG formats and export to high-quality PNG or ICO files.  
+There is no software to download and it is 100% free.
+
+The service is available at http://converticon.com/
+
+How to use:
+- Open the URL in the web browser
+- Skip the start page by pressing the 'Get Started' button
+- Select the source picture to convert
+- Press 'Export' and select the sizes 16x16, 24x24, 32x32, 48x48 and 64x64
+- Press 'Save As' and you are done
 
 
 <BR>
