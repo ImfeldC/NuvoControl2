@@ -185,7 +185,20 @@ namespace NuvoControl.Client.ServiceAccess
         /// </summary>
         public MonitorAndControlProxy()
         {
-            Initialize();
+            Initialize("localhost");
+        }
+
+
+        /// <summary>
+        /// Constructor, instantiates the M&C service proxy.
+        /// </summary>
+        /// <param name="clientIpOrName">The IP address or the name of the machine.</param>
+        public MonitorAndControlProxy(string clientIpOrName)
+        {
+            if ((clientIpOrName == null) || (clientIpOrName == String.Empty))
+                Initialize("localhost");
+            else
+                Initialize(clientIpOrName);
         }
 
         #endregion
@@ -278,7 +291,8 @@ namespace NuvoControl.Client.ServiceAccess
         /// Initializes the connection to the service.
         /// Starts the timer to periodically renew the lease.
         /// </summary>
-        private void Initialize()
+        /// <param name="clientIpOrName">The IP address or the name of the machine.</param>
+        private void Initialize(string clientIpOrName)
         {
             try
             {
@@ -286,7 +300,7 @@ namespace NuvoControl.Client.ServiceAccess
 
                 IMonitorAndControlCallback serverCallback = this;
                 _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-                (_mcServiceProxy as MonitorAndControlClient).SetClientBaseAddress();
+                (_mcServiceProxy as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
                 _mcServiceProxy.Connect();
 
                 _timerRenewLease = new Timer(OnRenewLeaseCallback);
@@ -308,8 +322,15 @@ namespace NuvoControl.Client.ServiceAccess
         /// <param name="obj"></param>
         private void OnRenewLeaseCallback(object obj)
         {
-            _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
-            _mcServiceProxy.RenewLease();
+            try
+            {
+                _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+                _mcServiceProxy.RenewLease();
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Renew lease for M&C failed. Exception message: " + exc.Message);
+            }
         }
 
         #endregion

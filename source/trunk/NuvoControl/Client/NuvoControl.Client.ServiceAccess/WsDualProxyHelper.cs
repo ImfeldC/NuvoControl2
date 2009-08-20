@@ -28,22 +28,31 @@ namespace NuvoControl.Client.ServiceAccess
 {
     public static class WsDualProxyHelper
     {
-        public static void SetClientBaseAddress<T>(this DuplexClientBase<T> proxy, int port) where T : class
+        public static void SetClientBaseAddress<T>(this DuplexClientBase<T> proxy, int port, string machineIpOrName) where T : class
         {
             WSDualHttpBinding binding = proxy.Endpoint.Binding as WSDualHttpBinding;
             Debug.Assert(binding != null);
-            binding.ClientBaseAddress = new Uri("http://localhost:" + port + "/");
+            binding.ClientBaseAddress = new Uri("http://" + machineIpOrName  + ":" + port + "/");
         }
 
+        public static void SetClientBaseAddress<T>(this DuplexClientBase<T> proxy, int port) where T : class
+        {
+            SetClientBaseAddress(proxy, port, "localhost");
+        }
 
-        public static void SetClientBaseAddress<T>(this DuplexClientBase<T> proxy) where T : class
+        public static void SetClientBaseAddress<T>(this DuplexClientBase<T> proxy, string machineIpOrName) where T : class
         {
             lock (typeof(WsDualProxyHelper))
             {
                 int portNumber = FindPort();
-                SetClientBaseAddress(proxy, portNumber);
+                SetClientBaseAddress(proxy, portNumber, machineIpOrName);
                 proxy.Open();
             }
+        }
+
+        public static void SetClientBaseAddress<T>(this DuplexClientBase<T> proxy) where T : class
+        {
+            SetClientBaseAddress(proxy, "localhost");
         }
 
         internal static int FindPort()

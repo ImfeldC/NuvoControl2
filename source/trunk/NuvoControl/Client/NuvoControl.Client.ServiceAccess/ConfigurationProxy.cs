@@ -124,6 +124,7 @@ namespace NuvoControl.Client.ServiceAccess
             {
                 _log.Error("Creating connection to the service failed.", exc);
                 (_cfgServiceProxy as ConfigureClient).Abort();
+                throw exc;
             }
         }
 
@@ -134,8 +135,15 @@ namespace NuvoControl.Client.ServiceAccess
         /// <param name="obj"></param>
         private void OnRenewLeaseCallback(object obj)
         {
-            _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
-            _cfgServiceProxy.RenewLease();
+            try
+            {
+                _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+                _cfgServiceProxy.RenewLease();
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Renew lease for Cfg service failed. Exception message: " + exc.Message);
+            }
         }
 
 

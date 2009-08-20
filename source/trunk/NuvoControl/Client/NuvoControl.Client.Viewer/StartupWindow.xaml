@@ -1,0 +1,10 @@
+﻿<Window x:Class="NuvoControl.Client.Viewer.StartupWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Nuvo Control" Height="100" Width="300" Icon="/NuvoControl.Client.Viewer;component/Images/Loudspeaker.PNG" ResizeMode="NoResize" WindowStyle="SingleBorderWindow" WindowStartupLocation="CenterScreen">
+    <Grid>
+        <Label HorizontalAlignment="Center" VerticalAlignment="Center">
+            Starting up Nuvo Control viewer...
+        </Label>
+    </Grid>
+</Window>
