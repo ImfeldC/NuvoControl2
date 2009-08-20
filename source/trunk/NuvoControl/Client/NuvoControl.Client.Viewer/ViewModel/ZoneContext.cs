@@ -298,6 +298,25 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
 
+        public BitmapImage PowerImage
+        {
+            get
+            {
+                if (_zoneState.PowerStatus)
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), @"./Images/Loudspeaker.PNG");
+                    return new BitmapImage(new Uri(path));
+                }
+                else
+                {
+                    string path = Path.Combine(Directory.GetCurrentDirectory(), @"./Images/LoudspeakerOff.PNG");
+                    return new BitmapImage(new Uri(path));
+                }
+                //return new BitmapImage(new Uri(@"/NuvoControl.Client.Viewer;component/Images/Loudspeaker.PNG"));
+            }
+        }
+
+
         /// <summary>
         /// The quality of the active zone
         /// </summary>
