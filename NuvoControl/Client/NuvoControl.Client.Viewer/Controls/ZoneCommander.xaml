@@ -29,14 +29,17 @@
                               Style="{DynamicResource ZoneCommanderStyle}"></ToggleButton>
                 <ComboBox Name="_cbxSource" Grid.Column="1" Margin="1" VerticalAlignment="Center" HorizontalAlignment="Stretch" MinWidth="100"
                           ItemsSource="{Binding Path=ViewSources}" SelectedItem="{Binding Path=SelectedSource}" IsSynchronizedWithCurrentItem="True"
-                           Style="{DynamicResource ZoneCommanderStyle}">
+                           Style="{DynamicResource ZoneCommanderStyle}" IsEnabled="{Binding ElementName=_btnPower, Path=IsChecked}">
                 </ComboBox>
                 <RepeatButton Name="_btnDown" Grid.Column="2" Margin="1" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="23"
-                              Command="commands:CustomCommands.VolumeDown" Style="{DynamicResource ZoneCommanderStyle}">-</RepeatButton>
+                              Command="commands:CustomCommands.VolumeDown" Style="{DynamicResource ZoneCommanderStyle}"
+                              IsEnabled="{Binding ElementName=_btnPower, Path=IsChecked}">-</RepeatButton>
                 <ProgressBar Name="_prgVolume" Grid.Column="3" Margin="1"  VerticalAlignment="Stretch" Orientation="Horizontal"
-                             Value="{Binding Mode=OneWay, Path=Volume}" HorizontalAlignment="Center" Width="80"  Style="{DynamicResource ZoneCommanderStyle}"/>
+                             Value="{Binding Mode=OneWay, Path=Volume}" HorizontalAlignment="Center" Width="80"  Style="{DynamicResource ZoneCommanderStyle}"
+                             IsEnabled="{Binding ElementName=_btnPower, Path=IsChecked}"/>
                 <RepeatButton Name="_btnUp" Grid.Column="4" Margin="1" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="23"
-                              Command="commands:CustomCommands.VolumeUp"  Style="{DynamicResource ZoneCommanderStyle}">+</RepeatButton>
+                              Command="commands:CustomCommands.VolumeUp"  Style="{DynamicResource ZoneCommanderStyle}"
+                              IsEnabled="{Binding ElementName=_btnPower, Path=IsChecked}">+</RepeatButton>
             </Grid>
             <Grid Name="_gridState">
                 <Grid.ColumnDefinitions>
