@@ -18,7 +18,7 @@
     <SccLocalPath>Rational ClearCase</SccLocalPath>
     <SccAuxPath>Rational ClearCase</SccAuxPath>
     <SccProvider>Rational ClearCase</SccProvider>
-    <ApplicationIcon>NuVo.ico</ApplicationIcon>
+    <ApplicationIcon>NuvoControl.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -84,7 +84,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NuVo.ico" />
+    <Content Include="NuvoControl.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
