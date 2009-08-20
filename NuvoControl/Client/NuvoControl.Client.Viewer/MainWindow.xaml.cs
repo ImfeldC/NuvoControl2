@@ -19,6 +19,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -82,10 +84,37 @@ namespace NuvoControl.Client.Viewer
         {
             InitializeComponent();
 
-            ServiceConfigurator.Configure(false);   // set true in case of 'test' mode
-            ReadConfiguration();
-            InitializeViews();
-            InitializeViewModel();
+            //MessageBox.Show("Starting up the client...", "NuvoControl");
+            StartupWindow startupWindow = new StartupWindow();
+            startupWindow.Show();
+            Thread.Sleep(1000);
+
+            bool configRead = false;
+            try
+            {
+                ServiceConfigurator.Configure(Properties.Settings.Default.TestMode);   // set true in case of 'test' mode
+                ReadConfiguration();
+                configRead = true;
+            }
+            catch (Exception exc)
+            {
+                StringBuilder message = new StringBuilder("Failed to start up the viewer.\nThe viewer could not retrieve the configuration from the service.\n\n");
+                message.Append("Shut down the viewer and check following points:");
+                message.Append("\n- The service is running.");
+                message.Append("\n- The configured service address and port is proper.");
+                message.Append("\n- The configured viewer IP or name is proper.");
+                message.Append("\n\nException message:\n");
+                message.Append(exc.Message);
+                MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+            if (configRead)
+            {
+                InitializeViews();
+                InitializeViewModel();
+            }
+
+            startupWindow.Close();
         }
 
         #endregion
@@ -141,6 +170,11 @@ namespace NuvoControl.Client.Viewer
         }
 
 
+        /// <summary>
+        /// Handler for Classic style selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _btnMenuClassic_Checked(object sender, RoutedEventArgs e)
         {
             LoadNewSkin(@"../Skins/NuvoControlStylesClassic.xaml");
@@ -155,6 +189,11 @@ namespace NuvoControl.Client.Viewer
         }
 
 
+        /// <summary>
+        /// Handler for Smooth style selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _btnMenuSmooth_Checked(object sender, RoutedEventArgs e)
         {
             LoadNewSkin(@"../Skins/NuvoControlStylesSmooth.xaml");
@@ -169,6 +208,11 @@ namespace NuvoControl.Client.Viewer
         }
 
 
+        /// <summary>
+        /// Handler for Techno style selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _btnMenuTechno_Checked(object sender, RoutedEventArgs e)
         {
             LoadNewSkin(@"../Skins/NuvoControlStylesTechno.xaml");
@@ -183,6 +227,11 @@ namespace NuvoControl.Client.Viewer
         }
 
 
+        /// <summary>
+        /// Handler for Steel style selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _btnMenuSteel_Checked(object sender, RoutedEventArgs e)
         {
             LoadNewSkin(@"../Skins/NuvoControlStylesSteel.xaml");
@@ -197,6 +246,11 @@ namespace NuvoControl.Client.Viewer
         }
 
 
+        /// <summary>
+        /// Handler for Freak style selected.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void _btnMenuFreak_Checked(object sender, RoutedEventArgs e)
         {
             LoadNewSkin(@"../Skins/NuvoControlStylesFreak.xaml");
@@ -211,6 +265,10 @@ namespace NuvoControl.Client.Viewer
         }
 
 
+        /// <summary>
+        /// Laods the new skin into the resources.
+        /// </summary>
+        /// <param name="relativeSkinName"></param>
         private void LoadNewSkin(string relativeSkinName)
         {
             ResourceDictionary newDictionary = new ResourceDictionary();
@@ -218,10 +276,22 @@ namespace NuvoControl.Client.Viewer
             this.Resources.MergedDictionaries[0] = newDictionary;
         }
 
+
+        /// <summary>
+        /// The window is about to close. Disposes the service proxies.
+        /// </summary>
+        /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            ServiceProxy.MonitorAndControlProxy.Dispose();
-            ServiceProxy.ConfigurationProxy.Dispose();
+            try
+            {
+                ServiceProxy.MonitorAndControlProxy.Dispose();
+                ServiceProxy.ConfigurationProxy.Dispose();
+            }
+            catch (Exception exc)
+            {
+                Debug.WriteLine("Exception in OnClosing: " + exc.Message);
+            }
             base.OnClosing(e);
         }
 

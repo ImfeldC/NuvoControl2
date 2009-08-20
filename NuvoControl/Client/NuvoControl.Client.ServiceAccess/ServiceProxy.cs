@@ -42,6 +42,11 @@ namespace NuvoControl.Client.ServiceAccess
         /// </summary>
         public static ConfigurationProxy _configurationProxy = null;
 
+        /// <summary>
+        /// The ip or name of the client.
+        /// </summary>
+        public static string _clientIpOrName = "localhost";
+
         #endregion
 
         #region Public Interface
@@ -55,7 +60,7 @@ namespace NuvoControl.Client.ServiceAccess
             get
             {
                 if (_monitorAndControlProxy == null)
-                    _monitorAndControlProxy = new MonitorAndControlProxy();
+                    _monitorAndControlProxy = new MonitorAndControlProxy(_clientIpOrName);
                 
                 return _monitorAndControlProxy;
             }
@@ -93,6 +98,15 @@ namespace NuvoControl.Client.ServiceAccess
         public static void Inject(IMonitorAndControl mAndCProxy)
         {
             _monitorAndControlProxy = new MonitorAndControlProxy(mAndCProxy);
+        }
+
+
+        /// <summary>
+        /// Sets the ip or the name of the client.
+        /// </summary>
+        public static string ClientIpOrName
+        {
+            set { _clientIpOrName = value; }
         }
 
         #endregion
