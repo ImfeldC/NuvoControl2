@@ -4,7 +4,13 @@
 
 This page contains an overview about the available documentation and its structure.
 
-The whole project documentation (mainly done in word) is available as HTML and/or PDF, \subpage pageWordDocuments
+The main page and entry point is at page \ref main "Startseite"
+
+The whole project documentation (mainly done in word) is available as HTML and/or PDF, see page \subpage pageWordDocuments
+
+The architecture and design is described in NuvoControl_1300_Software_Architektur_und_Design.doc 
+see <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.html">here</a>, or as <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.pdf">PDF</a>
+
 
 
 
