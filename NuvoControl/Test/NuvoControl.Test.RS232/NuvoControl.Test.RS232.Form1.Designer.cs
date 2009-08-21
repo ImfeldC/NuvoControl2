@@ -51,6 +51,7 @@ namespace NuvoControl.Test.RS232
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fclsRS232Tester));
             this.txtIn = new System.Windows.Forms.TextBox();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.stsStatus = new System.Windows.Forms.ToolStripStatusLabel();
@@ -182,6 +183,7 @@ namespace NuvoControl.Test.RS232
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.txtIn);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(200, 200);
             this.Name = "fclsRS232Tester";
             this.Text = "NuvoControl.Test.RS232 Tester";

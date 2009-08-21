@@ -58,6 +58,7 @@ namespace NuvoControl.Test.COMListener
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(COMListener));
             this.rtbCOM = new System.Windows.Forms.RichTextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnSend = new System.Windows.Forms.Button();
@@ -120,6 +121,7 @@ namespace NuvoControl.Test.COMListener
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.rtbCOM);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "COMListener";
             this.Text = "NuvoControl.Test.COMListener";
             this.Load += new System.EventHandler(this.COMListener_Load);
