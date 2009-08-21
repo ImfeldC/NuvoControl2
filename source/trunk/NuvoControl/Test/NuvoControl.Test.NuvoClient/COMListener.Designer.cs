@@ -60,6 +60,7 @@ namespace NuvoControl.Test.NuvoClient
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NuvoClient));
             this.rtbCOM = new System.Windows.Forms.RichTextBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.cmbComSelect = new System.Windows.Forms.ComboBox();
@@ -296,6 +297,7 @@ namespace NuvoControl.Test.NuvoClient
             this.Controls.Add(this.cmbComSelect);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.rtbCOM);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "NuvoClient";
             this.Text = "NuvoControl.Test.NuvoClient";
             this.Load += new System.EventHandler(this.COMListener_Load);

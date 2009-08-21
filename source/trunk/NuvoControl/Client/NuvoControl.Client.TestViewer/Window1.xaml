@@ -1,7 +1,7 @@
 ﻿<Window x:Class="NuvoControl.Client.TestViewer.Window1"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    Title="Test Viewer" Height="805.161" Width="803.964" Background="#FFECE9D8" WindowStartupLocation="CenterScreen">
+    Title="Test Viewer" Height="805.161" Width="803.964" Background="#FFECE9D8" WindowStartupLocation="CenterScreen" Icon="/NuvoControl.Client.TestViewer;component/NuvoControl.ico">
     <DockPanel Name="dockMain" LastChildFill="True">
         <Menu DockPanel.Dock="Top"  Height="22" Name="menuMain" HorizontalAlignment="Left" Width="100" BorderBrush="Black">
             <MenuItem Header="_File" />
