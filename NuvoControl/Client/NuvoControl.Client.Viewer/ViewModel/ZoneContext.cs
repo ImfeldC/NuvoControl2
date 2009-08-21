@@ -298,6 +298,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
         }
 
 
+        /// <summary>
+        /// Returns the image, dependent on the power state.
+        /// </summary>
         public BitmapImage PowerImage
         {
             get
@@ -312,7 +315,23 @@ namespace NuvoControl.Client.Viewer.ViewModel
                     string path = Path.Combine(Directory.GetCurrentDirectory(), @"./Images/LoudspeakerOff.PNG");
                     return new BitmapImage(new Uri(path));
                 }
-                //return new BitmapImage(new Uri(@"/NuvoControl.Client.Viewer;component/Images/Loudspeaker.PNG"));
+            }
+        }
+
+
+        /// <summary>
+        /// Retruns the image, dependent on zone quality and if the command is acklowleded or not.
+        /// </summary>
+        public BitmapImage NetworkState
+        {
+            get
+            {
+                string path = Path.Combine(Directory.GetCurrentDirectory(), @"./Images/OnlineAcknowledged.PNG");
+                if (_zoneState.ZoneQuality == ZoneQuality.Offline)
+                    path = Path.Combine(Directory.GetCurrentDirectory(), @"./Images/Offline.PNG");
+                else if (_zoneState.CommandUnacknowledged)
+                    path = Path.Combine(Directory.GetCurrentDirectory(), @"./Images/OnlineUnacknowledged.PNG");
+                return new BitmapImage(new Uri(path));
             }
         }
 
