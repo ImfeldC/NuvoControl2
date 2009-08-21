@@ -14,7 +14,7 @@
  * 
  * Revisions:
  * 1) 21.05.2009, Bernhard Limacher: Initial implementation.
- * 2) 18.06.2009, Christian Imfeld: Add description
+ * 2) 18.06.2009, Christian Imfeld: Add description/copy constructor/equality operations
  * 
  **************************************************************************************************/
 
