@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="NuvoControlKonfigurationFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">..\..\..\..\Config\NuvoControlKonfiguration.xml</Value>
+      <Value Profile="(Default)">.\NuvoControlKonfiguration.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>
