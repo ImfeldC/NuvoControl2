@@ -25,6 +25,7 @@ using NuvoControl.Server.ProtocolDriver.Test.Mock;
 using Common.Logging;
 using NuvoControl.Common;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace NuvoControl.Server.ProtocolDriver.Test
 {
@@ -124,9 +125,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.MuteALLZoneOFF);
             Address zoneAddress = new Address(_deviceId, 0);    // Zone x -> not used
             _protDriver.SendCommand(zoneAddress, command);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("ALLMOFF", _nuvoTelegramMock.TelegramList[0]);
-            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 1);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("ALLMOFF"));
         }
 
         /// <summary>
@@ -138,11 +140,12 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone4, ENuvoEssentiaSources.Source5, -22);
             Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
             _protDriver.SendCommand(zoneAddress, command);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual("Z04ON", _nuvoTelegramMock.TelegramList[0]);
-            Assert.AreEqual("Z04VOL22", _nuvoTelegramMock.TelegramList[1]);
-            Assert.AreEqual("Z04SRC5", _nuvoTelegramMock.TelegramList[2]);
-            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 3);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z04ON"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z04VOL22"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z04SRC5"));
         }
 
         /// <summary>
@@ -162,6 +165,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             _protDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protDriver_onDeviceStatusUpdate);
             _protDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protDriver_onZoneStatusUpdate);
             _protDriver.SendCommand(_zoneAddress, command);
+            Thread.Sleep(2000); // give control to worker thread
 
             _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-50"); // as answer to "Z05ON" (TurnZoneOn)
             _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-30"); // as answer to "Z05VOL30" (SetVolume)
@@ -191,6 +195,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             _protDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protDriver_onZoneStatusUpdate);
             _protDriver.SendCommand(_zoneAddress, command1);
             _protDriver.SendCommand(_zoneAddress, command2);
+            Thread.Sleep(2000); // give control to worker thread
 
             // return the answer of the first command
             _nuvoTelegramMock.passDataToTestClass("Z05PWRON,SRC3,GRP0,VOL-50");
@@ -250,10 +255,11 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             Address zoneAddress = new Address(_deviceId, 4);    // Zone 4
             _protDriver.ReadZoneState(zoneAddress);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual(2, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z04CONSR", _nuvoTelegramMock.TelegramList[0]);
-            Assert.AreEqual("Z04SETSR", _nuvoTelegramMock.TelegramList[1]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 2);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z04CONSR"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z04SETSR"));
         }
 
         /// <summary>
@@ -267,10 +273,12 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 2);                     // Zone 2
             ZoneState zoneState = new ZoneState(new Address(_deviceId, 5), true, 30, ZoneQuality.Online);    // Source 5, Power On, Volume=30
             _protDriver.SetZoneState(zoneAddress, zoneState);
-            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z02ON", _nuvoTelegramMock.TelegramList[0]);
-            Assert.AreEqual("Z02VOL55", _nuvoTelegramMock.TelegramList[1]);
-            Assert.AreEqual("Z02SRC5", _nuvoTelegramMock.TelegramList[2]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 3);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z02ON"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z02VOL55"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z02SRC5"));
         }
 
         /// <summary>
@@ -283,8 +291,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 4);
             ZoneState zoneState = new ZoneState(new Address(_deviceId, 3), false, 30, ZoneQuality.Online);
             _protDriver.SetZoneState(zoneAddress, zoneState);
-            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z04OFF", _nuvoTelegramMock.TelegramList[0]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 1);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z04OFF"));
         }
 
         /// <summary>
@@ -298,10 +308,12 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Address zoneAddress = new Address(_deviceId, 12);
             ZoneState zoneState = new ZoneState(new Address(_deviceId, 6), true, 20, ZoneQuality.Online);
             _protDriver.SetZoneState(zoneAddress, zoneState);
-            Assert.AreEqual(3, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z12ON", _nuvoTelegramMock.TelegramList[0]);
-            Assert.AreEqual("Z12VOL63", _nuvoTelegramMock.TelegramList[1]);
-            Assert.AreEqual("Z12SRC6", _nuvoTelegramMock.TelegramList[2]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 3);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z12ON"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z12VOL63"));
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z12SRC6"));
         }
 
         /// <summary>
@@ -312,9 +324,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             Address zoneAddress = new Address(_deviceId, 7);    // Zone 7
             _protDriver.CommandSwitchZoneON(zoneAddress);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z07ON", _nuvoTelegramMock.TelegramList[0]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 1);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z07ON"));
         }
 
         /// <summary>
@@ -325,9 +338,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             Address zoneAddress = new Address(_deviceId, 12);    // Zone 12
             _protDriver.CommandSwitchZoneOFF(zoneAddress);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z12OFF", _nuvoTelegramMock.TelegramList[0]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 1);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z12OFF"));
         }
 
         /// <summary>
@@ -339,9 +353,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             Address zoneAddress = new Address(_deviceId, 8);    // Zone 8
             _protDriver.CommandSetVolume(zoneAddress,50);
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z08VOL39", _nuvoTelegramMock.TelegramList[0]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue(_nuvoTelegramMock.TelegramList.Count >= 1);
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z08VOL39"));
         }
 
         /// <summary>
@@ -352,9 +367,10 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         {
             Address zoneAddress = new Address(_deviceId, 2);                        // Zone 2
             _protDriver.CommandSetSource(zoneAddress, new Address(_deviceId,5));    // Source 5
-            string strMessage = _nuvoTelegramMock.Telegram;
-            Assert.AreEqual(1, _nuvoTelegramMock.TelegramList.Count);
-            Assert.AreEqual("Z02SRC5", _nuvoTelegramMock.TelegramList[0]);
+            Thread.Sleep(2000); // give control to worker thread
+
+            Assert.IsTrue( _nuvoTelegramMock.TelegramList.Count >= 1 );
+            Assert.AreEqual(true, _nuvoTelegramMock.TelegramList.Contains("Z02SRC5"));
         }
 
         /// <summary>
@@ -464,5 +480,45 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             _protCommandReceivedEventArgs.Add(e);
         }
 
+
+
+        /// <summary>
+        /// Test method for the private method removeReadVersionCommandFromList
+        /// </summary>
+        [TestMethod()]
+        public void testRemoveReadVersionCommandFromList()
+        {
+            List<string> _testList = new List<string>();
+
+            _testList.Add("String1");
+            _testList.Add("String2");
+            _testList.Add("VER");
+            _testList.Add("VER");
+            _testList.Add("String3");
+            _testList.Add("VER");
+            _testList.Add("VER");
+            _testList.Add("String4");
+
+            removeReadVersionCommandFromList(_testList, "VER");
+
+            Assert.AreEqual(4, _testList.Count);
+            Assert.AreEqual("String1", _testList[0]);
+            Assert.AreEqual("String2", _testList[1]);
+            Assert.AreEqual("String3", _testList[2]);
+            Assert.AreEqual("String4", _testList[3]);
+
+        }
+
+        /// <summary>
+        /// Private method to remove several items form a string list.
+        /// </summary>
+        /// <param name="cmdList">List, where to remove all occurences of the string strToRemove</param>
+        /// <param name="strToRemove">String to remove from the list cmdList</param>
+        private void removeReadVersionCommandFromList(List<string> cmdList, string strToRemove)
+        {
+            while (cmdList.Remove(strToRemove))
+            {
+            }
+        }
     }
 }
