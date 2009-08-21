@@ -249,6 +249,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_696B308C36A94A47A91E70F4A773D082"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_6F3A4D4E204E4B3D9D396E41161F8AF0"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -699,6 +705,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_ADEFF357D5D84F28AA1479DA91AB7AC9"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B0C9D2AEAF824941963AB0B4C11F4AD7"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -742,6 +754,12 @@
         "Entry"
         {
         "MsmKey" = "8:_CD61359C312D4F6ABA7372A116518136"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_CE162B5F37204201A819835B39041D78"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1605,6 +1623,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_696B308C36A94A47A91E70F4A773D082"
+            {
+            "SourcePath" = "8:..\\Client\\NuvoControl.Client.Viewer\\Images\\Offline.PNG"
+            "TargetName" = "8:Offline.PNG"
+            "Tag" = "8:"
+            "Folder" = "8:_87EDCD1093CE4841832C7C46E82BEA86"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6F3A4D4E204E4B3D9D396E41161F8AF0"
             {
             "SourcePath" = "8:..\\Images\\Galerie.bmp"
@@ -1969,6 +2007,26 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_ADEFF357D5D84F28AA1479DA91AB7AC9"
+            {
+            "SourcePath" = "8:..\\Client\\NuvoControl.Client.Viewer\\Images\\OnlineAcknowledged.png"
+            "TargetName" = "8:OnlineAcknowledged.png"
+            "Tag" = "8:"
+            "Folder" = "8:_87EDCD1093CE4841832C7C46E82BEA86"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B66D9F1457191240680F4F01916A46B7"
             {
             "AssemblyRegister" = "3:1"
@@ -2095,6 +2153,26 @@
             {
             "SourcePath" = "8:..\\Images\\Dusche.jpg"
             "TargetName" = "8:Dusche.jpg"
+            "Tag" = "8:"
+            "Folder" = "8:_87EDCD1093CE4841832C7C46E82BEA86"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CE162B5F37204201A819835B39041D78"
+            {
+            "SourcePath" = "8:..\\Client\\NuvoControl.Client.Viewer\\Images\\OnlineUnacknowledged.PNG"
+            "TargetName" = "8:OnlineUnacknowledged.PNG"
             "Tag" = "8:"
             "Folder" = "8:_87EDCD1093CE4841832C7C46E82BEA86"
             "Condition" = "8:"
