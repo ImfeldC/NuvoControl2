@@ -144,7 +144,7 @@ namespace NuvoControl.Server.Dal
         private List<Device> ReadDevices()
         {
             IEnumerable<Device> nuvoDevices =
-                from device in _configuration.Root.Element("Configuration").Element("Hardware").Elements("NuvoEssentia")
+                from device in _configuration.Root.Element("Configuration").Element("Hardware").Elements("Device")
                 select new Device(
                     (int)device.Attribute("Id"),
                     new Communication((string)device.Element("Communication").Attribute("Port"),

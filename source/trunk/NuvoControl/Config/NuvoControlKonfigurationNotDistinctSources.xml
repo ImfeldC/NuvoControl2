@@ -4,7 +4,7 @@
 <NuvoControl>
   <Configuration Version="1.0">
     <Hardware>
-      <NuvoEssentia Id="100">
+      <Device Id="100">
         <ProtocolDriver Name="Nuvo Essentia Protkoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
         <Communication Port="QUEUE" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <Zones>
@@ -29,7 +29,7 @@
           <Source Id="1" />
           <Source Id="6" />
         </Sources>
-      </NuvoEssentia>
+      </Device>
     </Hardware>
     <Graphic>
       <Building Name="Anita &amp; Christian's Heim" Id="10000.1">
