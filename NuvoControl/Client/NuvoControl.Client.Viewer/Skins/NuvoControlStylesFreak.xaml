@@ -76,9 +76,9 @@
                 <DataTrigger.ExitActions>
                     <BeginStoryboard>
                         <Storyboard>
-                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity" To="0" >
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="Opacity">
                             </DoubleAnimation>
-                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="StrokeThickness" To="0" >
+                            <DoubleAnimation Duration="0:0:1" Storyboard.TargetProperty="StrokeThickness">
                             </DoubleAnimation>
                         </Storyboard>
                     </BeginStoryboard>
