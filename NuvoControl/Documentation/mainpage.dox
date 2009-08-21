@@ -27,7 +27,7 @@
       Die mit Doxygen genereirte Dokumentation (zu welcher diese Startseite auch gehört) beschreibt in 
       weiteren Tabs - wie 'Namespaces', 'Classes' und 'Files' - die generierte Dokumentation aus dem Sourcecode.
  
- Mehr zur Dokumentation ist auf der Seite \ref pageDocumentation Documentation zu finden.
+ Mehr zur Dokumentation ist auf der Seite \ref pageDocumentation "Documentation" zu finden.
  
  */
 
