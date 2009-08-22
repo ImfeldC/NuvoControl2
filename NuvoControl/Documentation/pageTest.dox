@@ -1,0 +1,27 @@
+/*!
+
+\page pageTest Test
+
+This page contains information about the different types of tests done for NuvoControl.
+
+We differenciate between Unit-, Integration and Systemtest.
+
+\section secTestUnit Unit Test
+
+As explained in the section \ref secDevToolVS "Visual Studio 2008" we are used the unit test
+framework provided by Microsoft together with Visual Studio.
+
+Further information about this unit test framework, are available on page \subpage pageAuthoringTests "Authoring Tests".
+
+
+\section secTestIntegration Integration and System Test
+
+The integration- and systemtest are described see <a href="./NuvoControl_1400_Testplan.doc.html">here</a>.
+
+
+
+
+<BR>
+Back to \ref main "main page"
+	
+*/

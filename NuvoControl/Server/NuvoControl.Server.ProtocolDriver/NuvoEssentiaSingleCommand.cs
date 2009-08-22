@@ -27,10 +27,14 @@ using Common.Logging;
 using NuvoControl.Common;
 
 /*! 
- * \page pagePlaceHolders Placeholders
- * This page explains the placeholders used to identify values in the command templates. <br>
- * The command templates are configured in the file \ref NuvoEssentiaProfile.xml <br> 
+ * \page pagePlaceHolders Protocol Driver Configuration Placeholders
+ *
+ * This page explains the placeholders used to identify values in the command templates.
+ *
+ * The command templates are configured in the file \ref NuvoEssentiaProfile.xml
+ *
  * The following placeholders are known, either in incoming (=I) and/or outgoing (=O) commands:
+ *
  * <table>
  * <tr> 
  *     <th><b> I </b></th> 
