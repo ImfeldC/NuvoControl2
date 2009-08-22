@@ -10,7 +10,7 @@ configuration of NuvoControl.
 
 \subsection secSetupMain Setup and Distributions
 
-The setup and the available distributions are described on the page \subpage pageSetup
+The setup and the available distributions are described on the page \subpage pageSetup "Setup"
 
 
 \subsection secSetupDeployment Setup Deployment Strategy
@@ -23,11 +23,11 @@ described on the page \subpage pageDeployment "Deployment"
 
 \section secConfig Configuration
 
-\subsection secConfig Protocol Driver Configuration
+\subsection secConfigProtocolDriver Protocol Driver Configuration
 
-The existing protocol driver is configurable. This is descibed on the page \subpage pageProtocolDriverConfiguration
+The existing protocol driver is configurable. This is descibed on the page \subpage pageProtocolDriverConfiguration "Protocol Driver Configuration"
 
-The supported placeholders are described in an own page \ref pagePlaceHolders
+The supported placeholders are described in an own page \ref pagePlaceHolders "Protocol Driver Configuration Placeholders"
 
 
 
