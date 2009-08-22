@@ -5,7 +5,7 @@
   <Configuration Version="1.0">
     <Hardware>
       <Device Id="100">
-        <ProtocolDriver Name="Nuvo Essentia Protkoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
+        <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
         <Communication Port="QUEUE" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <Zones>
           <Zone Id="1" />
@@ -32,7 +32,7 @@
       </Device>
     </Hardware>
     <Graphic>
-      <Building Name="Anita &amp; Christian's Heim" Id="10000.1">
+      <Building Name="Unser Heim" Id="10000.1">
         <Picture RelativePath=".\Images\Building.jpg" PictureType="jpg"></Picture>
         <Floor Name="Wohnbereich" Id="1000.1">
           <FloorPlan RelativePath=".\Images\Wohnbereich.bmp" PictureType="bmp" />
@@ -47,7 +47,7 @@
               </FloorPlanCoordinates>
               <ZoneControlCoordinate x="60" y="10" />
             </Zone>
-            <Zone Id="100.2" Name="Büro Christian">
+            <Zone Id="100.2" Name="Büro (EG)">
               <Picture RelativePath=".\Images\BüroChristian.jpg" PictureType="jpg" />
               <FloorPlanCoordinates>
                 <Point x="630" y="290" />
@@ -142,7 +142,7 @@
               </FloorPlanCoordinates>
               <ZoneControlCoordinate x="10" y="10" />
             </Zone>
-            <Zone Id="100.10" Name="Büro Anita">
+            <Zone Id="100.10" Name="Büro (Dach)">
               <Picture RelativePath=".\Images\BüroAnita.jpg" PictureType="jpg" />
               <FloorPlanCoordinates>
                 <Point x="740" y="120" />
