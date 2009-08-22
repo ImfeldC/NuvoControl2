@@ -25,7 +25,7 @@
                     <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
-                <ToggleButton Name="_btnPower" Grid.Column="0" IsChecked="{Binding Path=PowerZoneState}" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center"
+                <ToggleButton Name="_btnPower" Grid.Column="0" IsChecked="{Binding Mode=OneWay, Path=PowerZoneState}" HorizontalAlignment="Center" Margin="1" VerticalAlignment="Center"
                               Command="commands:CustomCommands.Power" Content="{Binding ElementName=_btnPower, Path=Command.Text}"
                               Style="{DynamicResource ZoneCommanderStyle}"></ToggleButton>
                 <Image Grid.Row="0" Grid.Column="1" Source="{Binding Path=PowerImage}" Margin="5,0,5,0"></Image>

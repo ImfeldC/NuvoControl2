@@ -118,10 +118,6 @@ namespace NuvoControl.Client.Viewer.ViewModel
             this._zoneState = new ZoneState();
             this._sources = sources.ToArray().ToList();
             _viewSources = (ListCollectionView)CollectionViewSource.GetDefaultView(this._sources);
-            _viewSources.CurrentChanged += new EventHandler(_viewSources_CurrentChanged);
-
-            // defer update on creation in order not to get notifications form the source list
-            //_deferHandle = _viewSources.DeferRefresh();
 
             CommandBinding binding = new CommandBinding(CustomCommands.VolumeUp, VolumeUpCommand_Executed, VolumeUpCommand_CanExecute);
             _bindings.Add(binding);
@@ -291,10 +287,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         public bool PowerZoneState
         {
-            get { return _zoneState.PowerStatus; }
-            set 
-            {
-            }        
+            get { return _zoneState.PowerStatus; }       
         }
 
 
@@ -774,8 +767,8 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         private void Subscribe(Address id)
         {
-            _zoneState = ServiceProxy.MonitorAndControlProxy.GetZoneState(id);
             ServiceProxy.MonitorAndControlProxy.Monitor(id, ZoneUpdateNotification);
+            _zoneState = ServiceProxy.MonitorAndControlProxy.GetZoneState(id);
         }
 
 
@@ -785,30 +778,6 @@ namespace NuvoControl.Client.Viewer.ViewModel
         private void Unsubscribe(Address id)
         {
             ServiceProxy.MonitorAndControlProxy.RemoveMonitor(id, ZoneUpdateNotification);
-        }
-
-
-        /// <summary>
-        /// Selection change handler for the source selection list.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _viewSources_CurrentChanged(object sender, EventArgs e)
-        {
-            lock (this)
-            {
-                ListCollectionView view = sender as ListCollectionView;
-                if (view != null && view.CurrentItem != null && _ignoreViewSelectionChange == false)
-                {
-                    if (_zoneState.Source.Equals((view.CurrentItem as Source).Id))
-                        return;
-
-                    //_zoneState.CommandUnacknowledged = true;
-                    //ZoneState cmdState = new ZoneState(_zoneState);
-                    //cmdState.Source = (view.CurrentItem as Source).Id;
-                    //ServiceProxy.MonitorAndControlProxy.SetZoneState(_activeZone.Id, cmdState);
-                }
-            }
         }
 
         #endregion
