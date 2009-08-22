@@ -1,0 +1,16 @@
+/*!
+
+\page pageSetupAndConfiguration Setup and Configuration
+
+This page contains an overview about the available information regarding the setup and
+configuration of NuvoControl.
+
+The setup and the available distributions are described on the page \subpage pageSetup
+
+Further information about the possible deployment and its integration into Visual Studio are 
+described on the page \subpage pageDeployment "Deployment" 
+
+<BR>
+Back to \ref main "main page"
+	
+*/
