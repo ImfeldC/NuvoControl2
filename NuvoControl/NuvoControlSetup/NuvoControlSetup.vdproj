@@ -567,6 +567,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_766B6840305948DF98D8F5AEA575A055"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_77B9F80587A44A4ABC263391C61069AA"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -1745,6 +1751,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_766B6840305948DF98D8F5AEA575A055"
+            {
+            "SourcePath" = "8:..\\Logo\\NuvoControl.ico"
+            "TargetName" = "8:NuvoControl.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_77B9F80587A44A4ABC263391C61069AA"
             {
             "SourcePath" = "8:..\\Images\\BadWc.jpg"
@@ -2363,7 +2389,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NuvoControl"
         "ProductCode" = "8:{80482C82-7AEF-46B0-9E3A-B87C224FB45E}"
-        "PackageCode" = "8:{2824A69E-57CC-4660-913C-F918BC390589}"
+        "PackageCode" = "8:{59EFAEBD-3A78-4A7B-9B9C-834ECD2B0E85}"
         "UpgradeCode" = "8:{6994827F-3DA8-4DF9-9211-41E3BB6A0A56}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
