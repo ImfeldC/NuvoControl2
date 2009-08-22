@@ -11,15 +11,18 @@ The build output is copied at the end of the build process to this HTML site.
 
 The setup images are available as debug and release version:
 
-- Get the Release Version MSI installer <a href="./setup/release/NuvoControlSetup.msi">here</a>
-  And <a href="./setup/release/setup.exe">here</a> you get the installer for this setup image.
+- Get the <b>Release</b> Version MSI installer <a href="./setup/release/NuvoControlSetup.msi">here</a>.
+  If required you can get <a href="./setup/release/setup.exe">here</a> the installer excutable for this setup image.
 
-- Get the Debug Version MSI installer <a href="./setup/debug/NuvoControlSetup.msi">here</a>.
-  And <a href="./setup/debug/setup.exe">here</a> you get the installer for this setup image.
+- Get the <b>Debug</b> Version MSI installer <a href="./setup/debug/NuvoControlSetup.msi">here</a>.
+  If required you can get <a href="./setup/debug/setup.exe">here</a> the installer excutable for this setup image.
 
-An installation guide - which explains how to install and configure NuvoControl - is available <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.html">here</a>
+Note: The installer executable <b>setup.exe</b> is usually not required. If you download the MSI installer file,
+windows automatically starts the setup process.
 
-Further information about the possible deployment and its integration into Visual Studio are described on the page \subpage pageDeployment "Deployment" 
+An installation guide - which explains how to install and configure NuvoControl - is 
+available <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.html">here</a>
+
 
 <BR>
 Back to \ref main "main page"
