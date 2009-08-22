@@ -5,10 +5,31 @@
 This page contains an overview about the available information regarding the setup and
 configuration of NuvoControl.
 
+\section secSetup Setup
+
+
+\subsection secSetupMain Setup and Distributions
+
 The setup and the available distributions are described on the page \subpage pageSetup
+
+
+\subsection secSetupDeployment Setup Deployment Strategy
 
 Further information about the possible deployment and its integration into Visual Studio are 
 described on the page \subpage pageDeployment "Deployment" 
+
+
+
+
+\section secConfig Configuration
+
+\subsection secConfig Protocol Driver Configuration
+
+The existing protocol driver is configurable. This is descibed on the page \subpage pageProtocolDriverConfiguration
+
+The supported placeholders are described in an own page \ref pagePlaceHolders
+
+
 
 <BR>
 Back to \ref main "main page"
