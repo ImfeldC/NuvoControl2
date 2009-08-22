@@ -34,6 +34,8 @@ The following list shows the tools we used during development:
 
 - <b>Convert Icon</b> on online service to convert picture into icons, see \ref seDevToolConvertIcon
 
+- <b>Image Resizer</b> as part of the Powertoy for Windows XP, see \ref seDevToolImageResize
+
 
 
 \section secDevToolsDetail Development Tools Details
@@ -287,6 +289,28 @@ How to use:
 - Select the source picture to convert
 - Press 'Export' and select the sizes 16x16, 24x24, 32x32, 48x48 and 64x64
 - Press 'Save As' and you are done
+
+
+\subsection seDevToolImageResize Image Resizer 
+
+This tool is part of the Microsoft PowerToys for Windows XP
+
+PowerToys add fun and functionality to the Windows experience. What are they? PowerToys are additional 
+programs that developers work on after a product has been released.
+
+We used the <b>Image Resizer</b> to adjust the size of the picture used in the NuvoControl Viewer.
+
+This PowerToy enables you to resize one or many image files with a right-click.
+
+Download is available at http://www.microsoft.com/windowsxp/downloads/powertoys/xppowertoys.mspx 
+
+How to use:
+- After you have installed the Image Resizer
+- Select the picture you like to resize
+- Click the right-mouse button, to open the context menu
+- Select 'Resize Picture'
+- Select the size you like to convert the images
+- Press the Ok button to start
 
 
 <BR>
