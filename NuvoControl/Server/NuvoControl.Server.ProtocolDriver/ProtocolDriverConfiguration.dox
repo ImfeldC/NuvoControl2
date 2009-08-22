@@ -1,17 +1,21 @@
 /*!
- * \page pageProtocolDriverConfiguration Protocol Driver Configuration
- * 
- * \section secCommandTemplate Protocol Driver Command Templates
- * 
- * The NuvoEssentia protocol driver supports the ability to configure the commands
- * send and received by the driver.
- * 
- * The command strings are configured in the XML profile file \ref NuvoEssentiaProfile.xml
- * 
- * The command templates specified in the XML file are used for either parse the incoming
- * command string to retrieve the values or on outgoing commands to replace the placeholders
- * with the values passed by the application.
- * 
- * The supported placeholders are explained on the page \ref pagePlaceHolders "Placeholders"
- * 
+\page pageProtocolDriverConfiguration Protocol Driver Configuration
+
+\section secCommandTemplate Protocol Driver Command Templates
+
+The NuvoEssentia protocol driver supports the ability to configure the commands
+send and received by the driver.
+
+The command strings are configured in the XML profile file \ref NuvoEssentiaProfile.xml
+
+The command templates specified in the XML file are used for either parse the incoming
+command string to retrieve the values or on outgoing commands to replace the placeholders
+with the values passed by the application.
+
+The supported placeholders are explained on the page \subpage pagePlaceHolders "Placeholders"
+
+
+<BR>
+Back to \ref main "main page"
+	
  */
