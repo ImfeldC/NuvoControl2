@@ -99,7 +99,11 @@ namespace NuvoControl.Server.ZoneServer
         /// </summary>
         public ZoneState ZoneState
         {
-            get { return this._zoneState; }
+            get
+            {
+                ReadZoneState();
+                return this._zoneState;
+            }
         }
 
         /// <summary>
