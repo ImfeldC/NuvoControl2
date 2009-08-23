@@ -4,10 +4,10 @@
 
 This page describes the used deployment strategy.
 
-The NuvoControl installer (MSI setup image file) is build as ouptut of the Visual Studio project called NuvoControlSetup, as part
+The NuvoControl installer (MSI setup image file) is build as ouptut of the Visual Studio project called \b NuvoControlSetup, as part
 of the whole solution NuvoControl.
 
-The output of this project is copied to the CD image. We distribute at the moment both build kind (relase and debug.
+The output of this project is copied to the CD image. We distribute at the moment both build kind (relase and debug).
 
 \section secDeploymentLinks External Links
 
