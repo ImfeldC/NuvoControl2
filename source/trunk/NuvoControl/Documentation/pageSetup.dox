@@ -1,6 +1,6 @@
 /*!
 
-\page pageSetup Setup
+\page pageSetup Setup Distribution
 This page contains information about the setup and the binary distributions available on this site.
 
 The current build process is setup to continous build the NuvoControl system. 
@@ -8,6 +8,9 @@ Periodically the build server checks on the source control system if new changes
 As soon new changes have been detected, a build is started.
 
 The build output is copied at the end of the build process to this HTML site.
+
+
+\section secSetupDistribution Setup Distribution
 
 The setup images are available as debug and release version:
 
@@ -20,8 +23,17 @@ The setup images are available as debug and release version:
 Note: The installer executable <b>setup.exe</b> is usually not required. If you download the MSI installer file,
 windows automatically starts the setup process.
 
+
+\section secSetupInstGuide Setup Guide / Installation Guide
+
 An installation guide - which explains how to install and configure NuvoControl - is 
 available <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.html">here</a>
+
+
+\section secSetupDeployment Setup Deployment Strategy
+
+Further information about the possible deployment and its integration into Visual Studio are 
+described on the page \subpage pageDeployment "Deployment" 
 
 
 <BR>
