@@ -21,3 +21,5 @@ svn export https://svn2.xp-dev.com/svn/ImfeldC-NuvoControl/documentation e:\Nuvo
 echo export setup image (release) ...
 mkdir e:\NuvoControl\setup\
 robocopy E:\ccnet\NuvoControl\NuvoControl\NuvoControlSetup\Release\ e:\NuvoControl\setup\ /E
+
+echoc NuvoCOntrol CD Image has been build at e:\NuvoControl
