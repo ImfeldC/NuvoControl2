@@ -110,14 +110,14 @@ namespace NuvoControl.Client.ServiceAccess
         {
             try
             {
-                Debug.WriteLine("Configuration Proxy; Initialize()");
+                Console.WriteLine("Configuration Proxy; Initialize()");
 
                 _cfgServiceProxy = new ConfigureClient();
 
                 _timerRenewLease = new Timer(OnRenewLeaseCallback);
                 _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
 
-                Debug.WriteLine("Configuration Proxy; Initialize() done.");
+                Console.WriteLine("Configuration Proxy; Initialize() done.");
 
             }
             catch (Exception exc)
@@ -142,7 +142,7 @@ namespace NuvoControl.Client.ServiceAccess
             }
             catch (Exception exc)
             {
-                Debug.WriteLine("Renew lease for Cfg service failed. Exception message: " + exc.Message);
+                Console.WriteLine("Renew lease for Cfg service failed. Exception message: " + exc.Message);
             }
         }
 

@@ -290,7 +290,7 @@ namespace NuvoControl.Client.Viewer
             }
             catch (Exception exc)
             {
-                Debug.WriteLine("Exception in OnClosing: " + exc.Message);
+                Console.WriteLine("Exception in OnClosing: " + exc.Message);
             }
             base.OnClosing(e);
         }
