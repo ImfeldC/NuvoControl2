@@ -26,5 +26,6 @@ robocopy E:\NuvoControl_Documentation\Design\NuvoControl_1203_SystemDesign.eap_h
 mkdir E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\
 robocopy E:\NuvoControl_Documentation\Design\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\ E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\ /E
 
+rem This last command is required beacause robocopy is setting the exit code <> 0
 echo finish with success ....
 exit /B 0
