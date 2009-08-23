@@ -23,3 +23,7 @@ mkdir e:\NuvoControl\setup\
 robocopy E:\ccnet\NuvoControl\NuvoControl\NuvoControlSetup\Release\ e:\NuvoControl\setup\ /E
 
 echoc NuvoCOntrol CD Image has been build at e:\NuvoControl
+
+rem This last command is required beacause robocopy is setting the exit code <> 0
+echo finish with success ....
+exit /B 0
