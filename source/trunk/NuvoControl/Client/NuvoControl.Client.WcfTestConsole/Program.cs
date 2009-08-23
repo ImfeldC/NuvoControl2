@@ -80,10 +80,10 @@ namespace NuvoControl.Client.WcfTestConsole
 
                 cfgIfc.Close();
             }
-            catch (FaultException<ArgumentException> exception)
+            catch (FaultException<ArgumentException>)
             {
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
                 cfgIfc.Abort();

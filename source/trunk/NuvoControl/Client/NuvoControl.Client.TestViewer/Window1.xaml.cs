@@ -71,7 +71,7 @@ namespace NuvoControl.Client.TestViewer
                 _monitorAndControlProxy.SetClientBaseAddress();
                 _monitorAndControlProxy.Connect();
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 _monitorAndControlProxy.Abort();
             }
@@ -84,7 +84,7 @@ namespace NuvoControl.Client.TestViewer
             {
                 _configurationProxy = new ConfigureClient();
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 _configurationProxy.Abort();
             }
@@ -97,7 +97,7 @@ namespace NuvoControl.Client.TestViewer
             {
                 _graphicConfiguration = _configurationProxy.GetGraphicConfiguration();
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 _configurationProxy.Abort();
             }
@@ -142,7 +142,7 @@ namespace NuvoControl.Client.TestViewer
                     _monitorAndControlProxy.SetZoneState(zoneCtrl.Zone.Id, zoneCtrl.ZoneStateCmd);
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 _monitorAndControlProxy.Abort();
             }
@@ -160,7 +160,7 @@ namespace NuvoControl.Client.TestViewer
                     zoneCtrl.ZoneState = zoneState;
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 _monitorAndControlProxy.Abort();
             }
@@ -176,7 +176,7 @@ namespace NuvoControl.Client.TestViewer
                     _monitorAndControlProxy.Monitor(zoneCtrl.Zone.Id);
                 }
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 _monitorAndControlProxy.Abort();
             }
