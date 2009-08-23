@@ -19,3 +19,9 @@ cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs ProjektManage
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs ProjektManagement NuvoControl_0104_DocumentTemplate.doc
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs ProjektManagement NuvoControl_0105_DocumentStatusList.doc
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs Test   NuvoControl_1400_Testplan.doc
+
+echo Start copying EA files ...
+mkdir E:\doxygen\html\NuvoControl_1203_SystemDesign.eap_htmlexport\
+robocopy E:\NuvoControl_Documentation\Design\NuvoControl_1203_SystemDesign.eap_htmlexport\ E:\doxygen\html\NuvoControl_1203_SystemDesign.eap_htmlexport\ /E
+mkdir E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\
+robocopy E:\NuvoControl_Documentation\Design\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\ E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\ /E
