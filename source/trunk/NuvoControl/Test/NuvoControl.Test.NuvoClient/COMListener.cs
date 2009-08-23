@@ -34,6 +34,9 @@ using NuvoControl.Server.ProtocolDriver.Simulator;
 
 namespace NuvoControl.Test.NuvoClient
 {
+    /// <summary>
+    /// Partial form class for the NuvoClient.
+    /// </summary>
     public partial class NuvoClient : Form
     {
         //global manager variables
@@ -43,11 +46,34 @@ namespace NuvoControl.Test.NuvoClient
         /// <summary>
         /// enumeration to hold our message types
         /// </summary>
-        public enum MessageType { Incoming, Outgoing, Normal, Warning, Error };
+        public enum MessageType { 
+            /// <summary>
+            /// Indicates an incoming message.
+            /// </summary>
+            Incoming, 
+            /// <summary>
+            /// Indicates an outgoing message.
+            /// </summary>
+            Outgoing, 
+            /// <summary>
+            /// Indicates a normal (debug) message.
+            /// </summary>
+            Normal, 
+            /// <summary>
+            /// Indicates a warning message.
+            /// </summary>
+            Warning, 
+            /// <summary>
+            /// Indicates an error message.
+            /// </summary>
+            Error };
 
 
         private Address _address = new Address(1, 1);
 
+        /// <summary>
+        /// Constructor for the NuvoClient class
+        /// </summary>
         public NuvoClient()
         {
             InitializeComponent();
@@ -198,7 +224,7 @@ namespace NuvoControl.Test.NuvoClient
 
         #region DisplayData
         /// <summary>
-        /// method to display the data to & from the port
+        /// method to display the data to and from the port
         /// on the screen
         /// </summary>
         /// <param name="type">MessageType of the message</param>

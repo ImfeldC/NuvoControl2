@@ -320,7 +320,7 @@ namespace NuvoControl.Test.NuvoClient
 
         #region DisplayData
         /// <summary>
-        /// method to display the data to & from the port
+        /// method to display the data to and from the port
         /// on the screen
         /// </summary>
         /// <param name="type">MessageType of the message</param>
