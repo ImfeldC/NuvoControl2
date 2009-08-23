@@ -70,7 +70,9 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
         //
         #endregion
 
-
+/*
+ * The SetZoneState method ha snot been implemented in the ProtocolDriverStub
+ * 
         /// <summary>
         ///A test for SetZoneState
         /// </summary>
@@ -83,6 +85,7 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
             target.SetZoneState(zoneId, stateCommand);
             Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
+*/
 
 /*
         /// <summary>

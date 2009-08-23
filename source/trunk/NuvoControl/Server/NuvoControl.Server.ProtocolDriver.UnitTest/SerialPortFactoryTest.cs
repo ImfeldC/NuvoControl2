@@ -81,7 +81,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         //
         #endregion
 
-
+/*
         /// <summary>
         ///A test for LoadDriver
         /// </summary>
@@ -89,13 +89,16 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void LoadDriverTest()
         {
             //TODO: Implement Unit test for Serial Port Factory
-            string assemblyName = "E:\\NuvoControl_Trunk\\NuvoControl\\Server\\NuvoControl.Server.ProtocolDriver.Simulator\\bin\\Debug\\NuvoControl.Server.ProtocolDriver.Simulator.dll";
-            string className = "NuvoControl.Server.ProtocolDriver.Simulator.ProtocolDriverSimulator";
+            //string assemblyName = @"E:\ccnet\NuvoControl\NuvoControl\Server\NuvoControl.Server.ProtocolDriver\bin\Debug\NuvoControl.Server.ProtocolDriver.dll";
+            string assemblyName = @"NuvoControl.Server.ProtocolDriver.dll";
+            string className = "NuvoControl.Server.ProtocolDriver.SerialPort";
             ISerialPort expected = null;
             ISerialPort actual;
             actual = SerialPortFactory.LoadDriver(assemblyName, className);
             Assert.AreEqual(expected, actual);
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
+ */ 
+
     }
 }
