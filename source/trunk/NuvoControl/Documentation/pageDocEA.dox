@@ -2,6 +2,9 @@
 
 \page pageDocEA Enterprise Architect Documentation
 
+
+\section secDocEAIntro Entrprise Architect Overview
+
 We used \ref secDevToolEA "Enterprise Architect" as UML modelling tool. Once during the requiremnts analysis phase and later during the architecture and
 design phase. The model files of enterprise architect are also part of the HTML documentation.
 
@@ -22,6 +25,35 @@ The <b>architecture and design</b> of NuvoControl is described in <b>NuvoControl
 see <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.html">here</a>, or as <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.pdf">PDF</a>
 
 This word file contains also parts of the Enterprise Architect model.
+
+
+\section secDocEAExport Enterprise Architect HTML Export
+
+The export of the HTML report of the Enterprise Architect files is not automated yet. If you change/modify the content of the enterprise architect
+files, you need also to export a new HTML report.
+
+How this is done, is described on this <a href="./HowToExportEnterpriseArchtitectFiles.doc.html">page</a>
+
+\todo Automaute the export of the EA file.
+
+How an automatic export can be done, is described on the page http://stackoverflow.com/questions/221654/how-to-automate-the-generation-of-html-output-in-enterprise-architect
+
+The following code shows an example how to do that in Java.
+
+\code
+class EADump
+{
+	    public static void main(String[] args)
+	    {
+	         org.sparx.Repository r = new org.sparx.Repository();     
+	         System.out.println("Repository: " + args[0]);     
+	         System.out.println("Package:    " + args[1]);     
+	         System.out.println("Output:     " + args[2]);     
+	         r.OpenFile(args[0]);     
+	         r.GetProjectInterface().RunHTMLReport(args[1], args[2], "GIF", "<default>", ".html");     r.CloseFile();    
+	    }
+}
+\endcode
 
 
 <BR>
