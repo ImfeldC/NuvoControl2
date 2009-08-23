@@ -81,7 +81,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         //
         #endregion
 
-
+/*
         /// <summary>
         ///A test for LoadDriver
         /// </summary>
@@ -97,5 +97,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.AreEqual(expected, actual);
             Assert.Inconclusive("Verify the correctness of this test method.");
         }
+ */ 
+ 
     }
 }
