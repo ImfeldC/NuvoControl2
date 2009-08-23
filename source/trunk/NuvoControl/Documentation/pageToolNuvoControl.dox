@@ -1,0 +1,36 @@
+/*!
+
+\page pageToolNuvoControl NuvoControl Helper Tools
+
+This page summarizes the available helper tool, as part of the NuvoControl distribution.
+
+\section secToolNC_System
+
+\todo Describe (or link) the Simulator
+
+\todo Describe (or link) the WcfConsole
+
+\todo Describe (or link) the Viewer 
+
+\section secToolNC_Helper
+
+There are several helper tools available, which were used during the development. They may still
+helpful in case of an error or exception to analyze the problem.
+
+The \b NuvoClient is a tool to connect to any serial port and to send and/or receive data.
+It is described on the page \subpage pageTool_NuvoClient "NuvoClient"
+
+The \b COMListener is a tool to connect to a serial COM port and to send and receive data.
+It is described on the page \subpage pageTool_COMListener "COM Listener"
+
+The \b RS232-Tester is a tool to connect to a serial COM port and to send and receive data.
+It is described on the page \subpage pageTool_RS232Tester "RS232 Tester"
+
+\todo Describe (or link) the TestViewer (part of the Client)
+
+\todo Describe (or link) the WcfTestConsole (part of the Client)
+
+<BR>
+Back to \ref main "main page"
+
+*/
