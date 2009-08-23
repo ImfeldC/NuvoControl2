@@ -1,0 +1,32 @@
+/*!
+
+\page pageDocEA Enterprise Architect Documentation
+
+We used \ref secDevToolEA "Enterprise Architect" as UML modelling tool. Once during the requiremnts analysis phase and later during the architecture and
+design phase. The model files of enterprise architect are also part of the HTML documentation.
+
+
+The file <b>NuvoControl_1201_SystemUMLSpecification</b> contains the result of the requirements engineering phase, and it has not been 
+updated later during the implementation phase.
+
+The file NuvoControl_1201_SystemUMLSpecification.eap can be found <a href="./NuvoControl_1201_SystemUMLSpecification.eap_htmlexport/index.htm" target="_blank">here</a>.
+
+
+The file <b>NuvoControl_1203_SystemDesign.eap<b> contains the result of the architecture and design phase. It has been updated during implementation
+to reflect the most important changes.
+
+The file NuvoControl_1203_SystemDesign.eap can be found <a href="./NuvoControl_1203_SystemDesign.eap_htmlexport/index.htm" target="_blank">here</a>.
+
+
+The <b>architecture and design</b> of NuvoControl is described in <b>NuvoControl_1300_Software_Architektur_und_Design.doc</b> 
+see <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.html">here</a>, or as <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.pdf">PDF</a>
+
+This word file contains also parts of the Enterprise Architect model.
+
+
+<BR>
+Back to \ref main "main page"
+	
+*/
+
+
