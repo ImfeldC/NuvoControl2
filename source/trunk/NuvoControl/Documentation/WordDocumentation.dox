@@ -2,7 +2,7 @@
 
 \page pageWordDocuments Project Documentation
 
-This page gives an overview of the available word documents embedded in the 
+This page gives an overview of the available project documents embedded in the 
 HTML source code description and how they have been created.
 
 \section secWordDocumentsList List of available Word documents
@@ -40,13 +40,18 @@ The following word documents are available:
 - NuvoControl_8600_SetupGuideNuvoControl.docx see <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.html">here</a>, or as <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.pdf">PDF</a>
 
 
-\section secWordDocumentsBuild How are the word documents build
+\section secWordDocumentsBuild Word Document Conversion
 
-The word documents are build automatically as an additonal task together with the source code description.
+The word documents are build automatically as an additional task together with the source code description.
 The source code description is build with doxygen. For the word documents we used a small visual basic
-script which uses word to convert the word document into html.
+script which uses word to convert the word documents into html.
 
-The script is ConvertDoc2html.vbs and is called within the batch file ConvertWordFiles.bat.
+The script is <b>ConvertDoc2html.vbs</b> and is called within the batch file <b>ConvertWordFiles.bat</b>.
+
+\section secWordDocumentsEA Enterprise Architect Conversion
+
+The conversion of the enterprise architect files is described on the page \ref pageDocEA "Enterprise Architect Documentation"
+
 
 <BR>
 Back to \ref main "main page"
