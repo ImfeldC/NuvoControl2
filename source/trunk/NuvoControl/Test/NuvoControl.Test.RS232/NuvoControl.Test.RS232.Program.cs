@@ -15,9 +15,6 @@
  * 1) 6/12/2009 11:02:29 PM, Ch.Imfeld: Initial implementation.
  * 
  **************************************************************************************************/
-//
-// http://www.codeproject.com/KB/system/rs232ThreadSafe.aspx
-//
 
 /*!
 
@@ -39,6 +36,8 @@
  To send any text, enter the text in the text field and press the 'Send' button. 
 
  Any incoming data is automatically written to the text box. 
+
+ This tool has been downloaded from http://www.codeproject.com/KB/system/rs232ThreadSafe.aspx
 
  <BR>
  Back to \ref main "main page"
