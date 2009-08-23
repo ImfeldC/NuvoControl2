@@ -1,0 +1,37 @@
+/*!
+
+\page pageProjectPhases Project Phases
+
+This pages describes the different project phases and links to the relevant artefacts.
+
+\section secProjectPhaseReqEng Requirements Engineering
+
+
+
+\section secProjectPhaseAnalysisDesign Analysis and Design (Architecture and Design)
+
+The analysis and design phase - also called architecture and design phase - is described on page \subpage pageProjectPhaseArchDesign "Architecture and Design"
+
+
+\section secProjectPhaseImplementation Implementation
+
+
+\section secProjectPhaseTest Test
+
+The test phase is described on page \subpage pageTest "Test"
+
+
+\section secProjectPhaseRollout Roll-Out
+
+
+
+\section secProjectPhasePM Project Management
+
+The issues related to the project mamangement, which is a task beside all other phases during the whole project duration, 
+are described on page \subpage pageProjectPhasePM "Project Management"
+
+
+<BR>
+Back to \ref main "main page"
+
+*/

@@ -5,7 +5,12 @@
 This page contains an overview about the available information regarding the setup and
 configuration of NuvoControl.
 
+
 \section secSetup Setup
+
+\subsection secSetupIntro Setup Introduction
+
+A short introduction and the first steps are described on the page \subpage pageSetupIntroduction "Setup Introduction"
 
 
 \subsection secSetupMain Setup and Distributions
@@ -22,6 +27,11 @@ described on the page \subpage pageDeployment "Deployment"
 
 
 \section secConfig Configuration
+
+\subsection secConfigIntro Configuration Introduction
+
+The main steps required to configure a system are described on page \subpage pageSetupConfiguration "Configuration Introduction"
+
 
 \subsection secConfigProtocolDriver Protocol Driver Configuration
 

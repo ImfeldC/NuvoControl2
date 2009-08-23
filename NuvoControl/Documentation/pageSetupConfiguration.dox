@@ -1,0 +1,18 @@
+/*!
+
+\page pageSetupConfiguration Configuration Introduction
+
+This page explains the different configuration files. There are several places where NuvoControl can be customized and configured. 
+
+If you are not familiar yet with the project, read first the module \ref pageSetupIntroduction "Introduction".
+
+\section secNuvoControlConfiguration NuvoControl Configuration
+\todo Describe NuvoControl Configuration (like the XML files, etc.). Explain also the possible settings done via the 'settings' (properties).
+
+\section secProtocolDriverConfiguration Protocol Driver Configuration
+The configuration of the protocol driver is explained on the page \ref pageProtocolDriverConfiguration "Protocol Driver Configuration"
+
+<BR>
+Back to \ref main "main page"
+
+*/
