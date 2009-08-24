@@ -24,6 +24,12 @@ Note: The installer executable <b>setup.exe</b> is usually not required. If you 
 windows automatically starts the setup process.
 
 
+\section secSetupDistributionContent Setup Distribution Content
+
+The content of the Distribution CD is explained on this \subpage pageSetupCDContent "page".
+
+
+
 \section secSetupInstGuide Setup Guide / Installation Guide
 
 An installation guide - which explains how to install and configure NuvoControl - is 

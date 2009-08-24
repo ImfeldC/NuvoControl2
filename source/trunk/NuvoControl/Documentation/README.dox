@@ -1,0 +1,29 @@
+/*!
+
+\page pageSetupCDContent  NuvoCOntrol V1.0 Distribution CD
+
+\section secSetupCDContent Distribution CD Content
+
+The CD distributed by NuvoControl contains the following content:
+
+- This README file, which explains the content of the CD.
+
+- A subfolder .\documentation wich contains a subversion export of the whole project documentation
+
+- A subfolder .\source which contains a subversion export of the whole source repository (incl. solution files, etc.)
+
+- A subfolder .\setup which contains the release setup image to install NuvoControl. Start NuvoControl.msi to start the installation
+
+- A subfolder .\pdf which contains the exported project documentation as PDF
+
+- A subfolder .\html which contains the HTML source code documentation (incl. the exported HTML files of the word, enterprise architect, excel, etc. files)
+
+\section secSetupCDCopyright Copyright
+
+<b> The copyright of the content on this CD is by Bernhard Limacher and Christian Imfeld. </b>
+
+24-Aug-2009 / Zug, Switzerland
+
+Contact: NuvoControl@imfeld.net
+
+*/
