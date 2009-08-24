@@ -40,6 +40,10 @@ copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7100_ProjektPräse
 copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7101_ProjektPräsentation_Demo.pdf E:\doxygen\html\
 copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7101_ProjektPräsentation_Demo.pdf E:\doxygen\pdf\
 
+echo Start copying PDF files (project documentation) ....
+copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0030_MeetingHandNotes_20090224.pdf E:\doxygen\html\
+copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0030_MeetingHandNotes_20090224.pdf E:\doxygen\pdf\
+
 
 echo Start converting word file ....
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs Design   HowToExportEnterpriseArchtitectFiles.doc
