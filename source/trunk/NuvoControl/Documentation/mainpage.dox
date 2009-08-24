@@ -7,9 +7,9 @@
   Bei dem Projekt NuvoControl handelt es sich um eine Software zu Ansteuerung und Visualisierung einer Audio Multiraum Anlage 
   von Nuvo Systems.
   
-  Eine kurze Projektbeschreibung ist im Dokument <a href="./NuvoControl_8100_ProjektKurzbeschreibung.doc.html">NuvoControl_8100_ProjektKurzbeschreibung.doc</a>
+  Eine kurze <b>Projektbeschreibung</b> ist im Dokument <a href="./NuvoControl_8100_ProjektKurzbeschreibung.doc.html">NuvoControl_8100_ProjektKurzbeschreibung.doc</a>
   
-  Ein kurzer persönlicher Erfahrungsbericht von den beiden Diplomanden ist ebenfalls Teil dieser Dokumentation. 
+  Ein kurzer <b>persönlicher Erfahrungsbericht</b> von den beiden Diplomanden ist ebenfalls Teil dieser Dokumentation. 
   Der Bericht von Bernhard Limacher ist \subpage pagePersBerichtBL "hier" zu finden, derjenige von Christian Imfeld \subpage pagePersBerichtCI "hier".
 
 
@@ -17,23 +17,25 @@
  
   Die Dokumentation ist wie folgt aufgebaut.
  
-    - Hauptseite\n 
-      Diese \ref main "Startseite" ist der Einstiegpunkt bzw. die Hauptseite der Dokumentation.
+    - Hauptseite \n 
+      Diese \ref main "Startseite" ist der Einstiegspunkt bzw. die Hauptseite der Dokumentation.
   
-  	- Projekt Dokumentation
+  	- Projekt Dokumentation \n
   	  Sämtliche Word Dokumente die während der Projektabwicklung erstellt wurden, sind ebenfalls Teil dieser HTML Dokumentation.
   	  Auf der Seite \ref pageWordDocuments "Project Documentation" ist einer Liste mit desen Links aufgeführt.
   
-    - Modules\n
-      Neben der - aus dem Sourcode generierten Dokumentation - sind noch verschiedene Themen zusätzlich beschrieben, als eigene Module.
+    - Diverse Themen (Related Pages)\n
+      Neben der - aus dem Sourcode generierten Dokumentation - sind noch verschiedene Themen zusätzlich beschrieben, als eigene Seiten (bzw. Module).
       Diese Module sind einzelne Themen die als ganzes in einem Kapitel (bzw. Seite) beschrieben werden.
-      Eine Übersicht der verfügbaren <a href="modules.html">Module</a> ist unter dem Tab 'Modules' zu finden.
+      Eine Übersicht der verfügbaren <a href="pages.html">Seiten</a> ist unter dem Tab 'Related Pages' zu finden.
  
-    - Source Code Beschreibung\n
+    - Source Code Beschreibung \n
       Die mit Doxygen genereirte Dokumentation (zu welcher diese Startseite auch gehört) beschreibt in 
       weiteren Tabs - wie 'Namespaces', 'Classes' und 'Files' - die generierte Dokumentation aus dem Sourcecode.
  
  Mehr zur Dokumentation ist auf der Seite \ref pageDocumentation "Documentation" zu finden.
+ \n
+ \n
  
  */
 
