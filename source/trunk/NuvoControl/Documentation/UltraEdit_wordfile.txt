@@ -1459,7 +1459,7 @@ yellow
 \remarks \return \retval \sa \section \showinitializer \since \skip
 \skipline \struct \subsection 
 \test \throw \todo \typedef \union \until \var \verbatim \verbinclude
-\version \warning \$ \@ \\ \& \< \> \# 
+\version \warning \$ \@ \\ \& \< \> \# \n 
 /C3"Group markers"
 //@{ //@} 
 /C4"Documentation markers"

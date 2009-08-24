@@ -39,8 +39,7 @@ XML Kommentaren war zwar ok. Das Tool erlaubte aber keine weiterführende Integra
 das Tool nur gerade darauf die XML Kommentare zu extrahieren und in eine schöne Form zu bringen. Für mich ist dies ganz klar zu wenig für ein automatisches Tool. 
 Schlussendlich haben wir <b>doxygen</b> eingesetzt. Dieses Tool hat zwar (per Default) ein eigenes Format für die XML Kommentare, unterstützt aber 
 auch den Visual Studio Style. Zudem erstellt es automatisch Grafiken, welche die Klassenhierarchie, die benutzten Methoden innerhalb einer Methode 
-und die Verwendung der Methode von aussen aufzeigt. 
-
+und die Verwendung der Methode von aussen aufzeigt. \n
 Zwar ist dieses Tool auch nicht das „Gelbe vom Ei“, aber für unsere Zwecke genügend. Ich wünschte mit einer besseren Editiermöglichkeit 
 von zusätzlichen Artikeln. Diese müssen jetzt als Textdateien eingebunden werden. Hier wäre zum Beispiel die Integration von Word Dokumenten hilfreich.
 
