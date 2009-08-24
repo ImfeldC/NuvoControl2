@@ -22,10 +22,17 @@ cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs UserDocumenta
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs UserDocumentation NuvoControl_8610_ConfigurationGuideNuvoControl.doc
 
 echo Start copying EA files (project documentation) ...
-mkdir E:\doxygen\html\NuvoControl_1203_SystemDesign.eap_htmlexport\
+rem -- not needed with Robocopy -- mkdir E:\doxygen\html\NuvoControl_1203_SystemDesign.eap_htmlexport\
 robocopy E:\NuvoControl_Documentation\Design\NuvoControl_1203_SystemDesign.eap_htmlexport\ E:\doxygen\html\NuvoControl_1203_SystemDesign.eap_htmlexport\ /E
-mkdir E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\
+rem -- not needed with Robocopy -- mkdir E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\
 robocopy E:\NuvoControl_Documentation\Design\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\ E:\doxygen\html\NuvoControl_1201_SystemUMLSpecification.eap_htmlexport\ /E
+
+echo Start copying Excel files (project documentation) ...
+rem -- not needed with Robocopy -- mkdir E:\doxygen\html\NuvoControl_0011_StundenNachweis_Grafisch_files\
+robocopy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNachweis_Grafisch_files\ E:\doxygen\html\NuvoControl_0011_StundenNachweis_Grafisch_files\ /E
+copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNachweis_Grafisch.htm E:\doxygen\html\ 
+copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNachweis_Grafisch.pdf E:\doxygen\html\
+copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNachweis_Grafisch.pdf E:\doxygen\pdf\
 
 
 echo Start converting word file ....
