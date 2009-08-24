@@ -5,10 +5,19 @@
 This module contains several topics as introduction. It is a good start-point if you are new in the project.
 
 \section secInstallation Installation
-\todo Describe installation process
+
+The setup and installation process is described in the document NuvoControl_8600_SetupGuideNuvoControl.docx see <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.html">here</a>, or as <a href="./NuvoControl_8600_SetupGuideNuvoControl.docx.pdf">PDF</a>
+
 
 \section secFirstSteps First Steps
-\todo Describe first steps
+
+After you have succesfull installed NuvoControl, you need to configure it.
+
+The configuration process is described in the document NuvoControl_8610_ConfigurationGuideNuvoControl.doc see <a href="./NuvoControl_8610_ConfigurationGuideNuvoControl.doc.html">here</a>, or as <a href="./NuvoControl_8610_ConfigurationGuideNuvoControl.doc.pdf">PDF</a>
+
+Further the test plan may help you to start working with the system. The test plan is described in the document NuvoControl_1400_Testplan.doc see <a href="./NuvoControl_1400_Testplan.doc.html">here</a>, or as <a href="./NuvoControl_1400_Testplan.doc.pdf">PDF</a>
+
+
 
 <BR>
 Back to \ref main "main page"

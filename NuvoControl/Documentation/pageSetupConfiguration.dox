@@ -6,10 +6,14 @@ This page explains the different configuration files. There are several places w
 
 If you are not familiar yet with the project, read first the module \ref pageSetupIntroduction "Introduction".
 
+
 \section secNuvoControlConfiguration NuvoControl Configuration
-\todo Describe NuvoControl Configuration (like the XML files, etc.). Explain also the possible settings done via the 'settings' (properties).
+
+The configuration process is described in the document NuvoControl_8610_ConfigurationGuideNuvoControl.doc see <a href="./NuvoControl_8610_ConfigurationGuideNuvoControl.doc.html">here</a>, or as <a href="./NuvoControl_8610_ConfigurationGuideNuvoControl.doc.pdf">PDF</a>
+
 
 \section secProtocolDriverConfiguration Protocol Driver Configuration
+
 The configuration of the protocol driver is explained on the page \subpage pageProtocolDriverConfiguration "Protocol Driver Configuration"
 
 <BR>
