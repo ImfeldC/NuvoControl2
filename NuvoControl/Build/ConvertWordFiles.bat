@@ -34,6 +34,12 @@ copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNach
 copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNachweis_Grafisch.pdf E:\doxygen\html\
 copy E:\NuvoControl_Documentation\ProjektManagement\NuvoControl_0011_StundenNachweis_Grafisch.pdf E:\doxygen\pdf\
 
+echo Start copying PowerPoint files (project documentation) ...
+copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7100_ProjektPräsentation.pdf E:\doxygen\html\
+copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7100_ProjektPräsentation.pdf E:\doxygen\pdf\
+copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7101_ProjektPräsentation_Demo.pdf E:\doxygen\html\
+copy E:\NuvoControl_Documentation\UserDocumentation\NuvoContro_7101_ProjektPräsentation_Demo.pdf E:\doxygen\pdf\
+
 
 echo Start converting word file ....
 cscript E:\ccnet\NuvoControl\NuvoControl\Build\ConvertDoc2html.vbs Design   HowToExportEnterpriseArchtitectFiles.doc
