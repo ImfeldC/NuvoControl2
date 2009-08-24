@@ -1,0 +1,30 @@
+/*!
+
+\page pagePersBerichtBL Erfahrungsbericht von Bernhard Limacher
+
+Mir hat die Diplomarbeit vor allem sehr viel Spass gemacht und neue Kenntnisse gebracht.
+
+Die Diplomarbeit in einer zweier Gruppe zu machen kann ich nur empfehlen. Wir haben uns gegenseitig gut ergänzt, motiviert, inspiriert 
+und viele interessante Stunden verbracht.
+
+Unser Projekt ist mit geringen Ausnahmen wie am Schnürchen gelaufen. 
+
+Speziell gut gefallen hat mir, dass wir einige an der Schule 
+gelernten Methoden und Konzepte in der Diplomarbeit zur Anwendung gebracht haben 
+(z. B. Requirements Engineering nach Bianchi oder Responsibility Driven Design, gelernt bei Tobler). 
+Wir haben aber auch eigene Vorstellungen dazu eingebracht, z. B. Uses Case nach Cockburn.
+
+Aus technologischer Sicht gesehen, waren WCF (Windows Communication Framework) und WPF (Windows Presentation Foundation) neu für mich.
+
+Bei WCF hat mich vor allem begeistert, dass so viele verschiedene Kommunikations-Pattern unter einem Framework elegant 
+und konsolidiert gekapselt sind. Die Lernkurve ist wirklich sehr flach. Nach ein paar Stunden einlesen, kann man bereits 
+einen einfachen WebService implementieren.
+
+WPF hat da schon eine steilere Lernkurve. Will man die Technologie im Sinne des Erfinders anwenden, muss man einige neue 
+Konzepte studieren. Dafür ist der Toolkit aber auch sehr mächtig und man kann Applikationen mit moderner User-Experience bauen.
+
+Continuous Integration hat dem ganzen Projekt noch mehr Professionalität verliehen. Es ist erstaunlich wie effizient es 
+sich aufsetzen lässt (wenn man wie Christian weiss wie), und wie effizient es den Entwickler in seiner Arbeit unterstützt.
+
+
+*/

@@ -1,4 +1,6 @@
-/*! \mainpage NuvoControl Start Page
+/*! 
+
+  \mainpage NuvoControl Start Page
  
   \section intro Introduction
  
@@ -6,6 +8,10 @@
   von Nuvo Systems.
   
   Eine kurze Projektbeschreibung ist im Dokument <a href="./NuvoControl_8100_ProjektKurzbeschreibung.doc.html">NuvoControl_8100_ProjektKurzbeschreibung.doc</a>
+  
+  Ein kurzer persönlicher Erfahrungsbericht von den beiden Diplomanden ist ebenfalls Teil dieser Dokumentation. 
+  Der Bericht von Bernhard Limacher ist \subpage pagePersBerichtBL "hier" zu finden, derjenige von Christian Imfeld \subpage pagePersBerichtCI "hier".
+
 
   \section content Inhalt
  
