@@ -31,6 +31,7 @@ using NuvoControl.Server.ConfigurationService;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ZoneServer;
 using NuvoControl.Server.FunctionService;
+using NuvoControl.Server.FunctionServer;
 
 
 namespace NuvoControl.Server.WcfHostConsole
@@ -57,9 +58,9 @@ namespace NuvoControl.Server.WcfHostConsole
         private static IZoneServer _zoneServer = null;
 
         /// <summary>
-        /// Holds a reference to the function service.
+        /// Holds a reference to the function server.
         /// </summary>
-        private static IFunction _functionService = null;
+        private static FunctionServer.FunctionServer _functionServer = null;
 
         #endregion
 
@@ -104,6 +105,17 @@ namespace NuvoControl.Server.WcfHostConsole
                 _log.ErrorFormat("Failed to create the zone server.", exc);
                 Console.WriteLine("Failed to create the zone server. Exception message: {0}", exc.Message);
             }
+
+            try
+            {
+                InstantiateFunctionServer();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to create the function server.", exc);
+                Console.WriteLine("Failed to create the function server. Exception message: {0}", exc.Message);
+            }
+
             Console.WriteLine();
 
             HostAllServices();
@@ -186,7 +198,7 @@ namespace NuvoControl.Server.WcfHostConsole
 
         
         /// <summary>
-        /// Instantiates the the zone server. This object holds all zone controllers.
+        /// Instantiates the zone server. This object holds all zone controllers.
         /// </summary>
         private static void InstantiateZoneServer()
         {
@@ -205,6 +217,18 @@ namespace NuvoControl.Server.WcfHostConsole
             _zoneServer.StartUp();
         }
 
+
+        /// <summary>
+        /// Instantiates the function server. This object holds all functions.
+        /// </summary>
+        private static void InstantiateFunctionServer()
+        {
+            _log.Info("Instantiating the function server...");
+            Console.WriteLine(">>> Instantiating the function server...");
+
+            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
+            //_functionServer.StartUp();
+        }
 
         #endregion
     }
