@@ -109,6 +109,15 @@ namespace NuvoControl.Common.Configuration
             get { return _validTo; }
         }
 
+        /// <summary>
+        /// Public override of ToString() method.
+        /// </summary>
+        /// <returns>Returns string representative.</returns>
+        public override string ToString()
+        {
+            return String.Format("SleepFunction: Duration={0}, Valid from={1} to={2}, {3}", SleepDuration, ValidFrom, ValidTo, base.ToString());
+        }
+
         #endregion
     }
 }
