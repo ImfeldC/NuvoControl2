@@ -9,9 +9,6 @@
   
   Eine kurze <b>Projektbeschreibung</b> ist im Dokument <a href="./NuvoControl_8100_ProjektKurzbeschreibung.doc.html">NuvoControl_8100_ProjektKurzbeschreibung.doc</a>
   
-  Ein kurzer <b>persönlicher Erfahrungsbericht</b> von den beiden Diplomanden ist ebenfalls Teil dieser Dokumentation. \n
-  Der Bericht von Bernhard Limacher ist \subpage pagePersBerichtBL "hier" zu finden, derjenige von Christian Imfeld \subpage pagePersBerichtCI "hier".
-
   Die Architektur und Design wird im Dokument NuvoControl_1300_Software_Architektur_und_Design.doc beschrieben, siehe <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.html">hier</a>, oder als <a href="./NuvoControl_1300_Software_Architektur_und_Design.doc.pdf">PDF</a> \n
   Das dazugehörige Enterprise Architect File ist NuvoControl_1203_SystemDesign.eap, siehe <a href="./NuvoControl_1203_SystemDesign.eap_htmlexport/index.htm" target="_blank">hier</a>
 
