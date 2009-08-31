@@ -125,6 +125,15 @@ namespace NuvoControl.Common.Configuration
             get { return _validOnDays; }
         }
 
+        /// <summary>
+        /// Public override of ToString() method.
+        /// </summary>
+        /// <returns>Returns string representative.</returns>
+        public override string ToString()
+        {
+            return String.Format("AlarmFunction: Time={0}, Duration={1}, Source={2}, {3}", AlarmTime, AlarmDuration, SourceId, base.ToString());
+        }
+
         #endregion
     }
 }

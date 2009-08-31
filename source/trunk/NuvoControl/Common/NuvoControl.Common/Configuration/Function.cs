@@ -92,6 +92,15 @@ namespace NuvoControl.Common.Configuration
             get { return _zoneId; }
         }
 
+        /// <summary>
+        /// Public override of ToString() method.
+        /// </summary>
+        /// <returns>Returns string representative.</returns>
+        public override string ToString()
+        {
+            return String.Format("Zone={0}, Guid={1}", ZoneId, Id);
+        }
+
         #endregion
     }
 }
