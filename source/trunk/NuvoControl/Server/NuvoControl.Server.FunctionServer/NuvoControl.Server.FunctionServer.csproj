@@ -49,7 +49,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConcreteAlarmFunction.cs" />
+    <Compile Include="ConcreteFunction.cs" />
+    <Compile Include="ConcreteFunctionFactory.cs" />
+    <Compile Include="ConcreteSleepFunction.cs" />
     <Compile Include="FunctionServer.cs" />
+    <Compile Include="IConcreteFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
