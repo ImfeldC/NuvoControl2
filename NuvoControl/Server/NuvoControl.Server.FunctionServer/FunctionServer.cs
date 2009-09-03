@@ -8,7 +8,7 @@ using Common.Logging;
 
 namespace NuvoControl.Server.FunctionServer
 {
-    public class FunctionServer
+    public class FunctionServer : IDisposable
     {
         #region Fields
 
@@ -24,6 +24,12 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         private List<IConcreteFunction> _concreteFunctions = new List<IConcreteFunction>();
 
+        /// <summary>
+        /// Private member to hold the timer used to periodically re-calculate the functions
+        /// </summary>
+        private System.Timers.Timer _timerFunction = new System.Timers.Timer();
+
+
         #endregion
 
         /// <summary>
@@ -38,13 +44,33 @@ namespace NuvoControl.Server.FunctionServer
             instantiateFunctions(functions);
 
             traceFunctions();
+
+            _log.Trace(m => m("Ping timer started, each {0}[s]", Properties.FunctionServer.Default.FunctionIntervall));
+            _timerFunction.Interval = (Properties.FunctionServer.Default.FunctionIntervall < 10 ? 10 : Properties.FunctionServer.Default.FunctionIntervall) * 1000;
+            _timerFunction.Elapsed += new System.Timers.ElapsedEventHandler(_timerFunction_Elapsed);
+            _timerFunction.Start();
         }
+
+        void _timerFunction_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            calculateFunctions();
+        }
+
+        public void calculateFunctions()
+        {
+            DateTime aktTime = DateTime.Now;
+            foreach (IConcreteFunction func in _concreteFunctions)
+            {
+                func.calculateFunction(aktTime);
+            }
+        }
+
 
         private void instantiateFunctions( List<Function> functions )
         {
             foreach( Function func in functions )
             {
-                _concreteFunctions.Add( ConcreteFunctionFactory.instantiateConcreteFuntion(func) );
+                _concreteFunctions.Add(ConcreteFunctionFactory.instantiateConcreteFuntion(func, _zoneServer));
             }
         }
 
@@ -74,5 +100,15 @@ namespace NuvoControl.Server.FunctionServer
 
             return strFunctions;
         }
+
+        #region IDisposable Members
+
+        public void Dispose()
+        {
+            _log.Trace(m => m("Function server disposed!"));
+            _timerFunction.Stop();
+        }
+
+        #endregion
     }
 }
