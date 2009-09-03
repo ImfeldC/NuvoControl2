@@ -14,6 +14,11 @@ namespace NuvoControl.Server.FunctionServer
         Function Function { get; }
 
         /// <summary>
+        /// Returns true, if the function is active.
+        /// </summary>
+        bool Active { get; }
+
+        /// <summary>
         /// This method is periodically called, to re-calculate the current function.
         /// If required, this method sends commands to the zones, to change their state.
         /// </summary>

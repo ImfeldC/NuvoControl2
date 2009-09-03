@@ -33,6 +33,10 @@ namespace NuvoControl.Server.FunctionServer
         public ConcreteAlarmFunction(AlarmFunction function, IZoneServer zoneServer)
             : base(zoneServer)
         {
+            if (function == null)
+            {
+                throw new FunctionServerException("Function configuration is null. This is not allowed");
+            }
             _function = function;
             subscribeZone(_function.ZoneId);
         }
@@ -61,7 +65,17 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
-        
+        /// <summary>
+        /// Returns true if the function is active.
+        /// </summary>
+        public override bool Active
+        {
+            get
+            {
+                return isFunctionActiveToday( DateTime.Now );
+            }
+        }
+
         public override void calculateFunction(DateTime aktTime)
         {
             _log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));

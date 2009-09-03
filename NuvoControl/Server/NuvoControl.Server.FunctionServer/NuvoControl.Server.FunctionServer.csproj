@@ -54,6 +54,7 @@
     <Compile Include="ConcreteFunctionFactory.cs" />
     <Compile Include="ConcreteSleepFunction.cs" />
     <Compile Include="FunctionServer.cs" />
+    <Compile Include="FunctionServerException.cs" />
     <Compile Include="Properties\FunctionServer.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
