@@ -19,19 +19,33 @@ namespace NuvoControl.Server.FunctionServer
         public ConcreteFunction(IZoneServer zoneServer)
         {
             _zoneServer = zoneServer;
+            if (_zoneServer == null)
+            {
+                _log.Warn(m => m("Zone Server not available, cannot monitor any zone ..."));
+            }
         }
 
 
         protected void subscribeZone(Address zoneId)
         {
-            _log.Trace(m => m("ConcreteFunction: monitor the zone {0} ...", zoneId.ToString()));
-            _zoneServer.Monitor(zoneId, OnZoneNotification);
+            if (_zoneServer != null)
+            {
+                _log.Trace(m => m("ConcreteFunction: monitor the zone {0} ...", zoneId.ToString()));
+                _zoneServer.Monitor(zoneId, OnZoneNotification);
+            }
+            else
+            {
+                _log.Error(m => m("Zone Server not available, cannot monitor the zone {0} ...", zoneId.ToString()));
+            }
         }
 
         protected void unsubscribeZone(Address zoneId)
         {
-            _log.Trace(m => m("ConcreteFunction: remove monitor for zone {0} ...", zoneId.ToString()));
-            _zoneServer.RemoveMonitor(zoneId, OnZoneNotification);
+            if (_zoneServer != null)
+            {
+                _log.Trace(m => m("ConcreteFunction: remove monitor for zone {0} ...", zoneId.ToString()));
+                _zoneServer.RemoveMonitor(zoneId, OnZoneNotification);
+            }
         }
 
         /// <summary>
@@ -57,6 +71,8 @@ namespace NuvoControl.Server.FunctionServer
         #region IConcreteFunction Members
 
         public abstract Function Function { get; }
+
+        public abstract bool Active { get; }
 
         public abstract void calculateFunction(DateTime aktTime);
 
