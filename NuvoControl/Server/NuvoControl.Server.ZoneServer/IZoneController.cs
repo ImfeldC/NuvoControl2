@@ -64,6 +64,15 @@ namespace NuvoControl.Server.ZoneServer
         {
             _zoneState = zoneState;
         }
+
+        /// <summary>
+        /// Returns string represantitive of this object.
+        /// </summary>
+        /// <returns>String, representing this object.</returns>
+        public override string ToString()
+        {
+            return String.Format("[ZoneState={0}]", _zoneState.ToString());
+        }
     }
 
 
