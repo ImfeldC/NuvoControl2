@@ -78,7 +78,7 @@ namespace NuvoControl.Server.FunctionServer
 
         public override void calculateFunction(DateTime aktTime)
         {
-            _log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
+            //_log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
         }
 
 

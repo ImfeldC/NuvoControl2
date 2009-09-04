@@ -55,13 +55,8 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="e">State change event arguments.</param>
         private void OnZoneNotification(object sender, ZoneStateEventArgs e)
         {
-            ZoneController zoneController = sender as ZoneController;
-            if (zoneController != null)
-            {
-                _log.Trace(m => m("ConcreteFunction: OnZoneNotification() EventArgs={0} ...", e.ToString()));
-                notifyOnZoneUpdate(e);
-            }
-                
+            _log.Trace(m => m("ConcreteFunction: OnZoneNotification() EventArgs={0} ...", e.ToString()));
+            notifyOnZoneUpdate(e);
         }
 
 
