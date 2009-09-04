@@ -13,7 +13,6 @@
 	
 	wordFilePath = "E:\NuvoControl_Documentation\"
 	htmlFilePath = "E:\doxygen\html\"
-	pdfFilePath  = "E:\doxygen\pdf\"
 	
 	Set WSHShell = WScript.CreateObject("WScript.Shell") 
 	set args = WScript.Arguments
@@ -45,20 +44,12 @@ On Error Resume Next
 	wordFullPath = (wordFilePath & sourcePath & "\" & wordFileName)
 	WScript.Echo "Input: " & wordFullPath & " !"
 	htmlFullPath = (htmlFilePath & htmlFileName)
-	pdfFullPath = (pdfFilePath & pdfFileName)
 	pdfFullhtmlPath = (htmlFilePath & pdfFileName)
 	
 	'Opening File
 	appWord.Visible = FALSE   
 	appWord.Documents.Open wordFullPath
 	
-	' Export as PDF (to PDF path)
-	WScript.Echo "PDF Ouptut: " & pdfFullPath & " !"
-	appWord.ActiveDocument.ExportAsFixedFormat pdfFullPath, wdExportFormatPDF, False, _
-        wdExportOptimizeForOnScreen, wdExportAllDocument, _
-        0, 0, wdExportDocumentWithMarkup, true, true, _
-        wdExportCreateWordBookmarks, true, true, False
-
 	' Export as PDF (to HTML path)
 	WScript.Echo "PDF Ouptut: " & pdfFullhtmlPath & " !"
 	appWord.ActiveDocument.ExportAsFixedFormat pdfFullhtmlPath, wdExportFormatPDF, False, _
