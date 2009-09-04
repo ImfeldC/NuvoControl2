@@ -12,7 +12,26 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
     {
         public bool _started = false;
         public Dictionary<Address, ZoneState> _zoneStates = new Dictionary<Address, ZoneState>();
-        public List<Address> _monitoredZones = new List<Address>();
+        public Dictionary<Address, ZoneNotification> _monitoredZones = new Dictionary<Address, ZoneNotification>();
+
+
+        public void distributeZoneState( ZoneState zoneState )
+        {
+            foreach (ZoneNotification zoneNotification in _monitoredZones.Values )
+            {
+                zoneNotification(this, new ZoneStateEventArgs(zoneState));
+            }
+        }
+
+        public void RemoveFromZoneStateList(Address zoneId)
+        {
+            _zoneStates.Remove(zoneId);
+        }
+
+        public void ClearZoneStateList()
+        {
+            _zoneStates.Clear();
+        }
 
         #region IZoneServer Members
 
@@ -33,7 +52,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
         public void Monitor(Address zoneId, ZoneNotification subscriber)
         {
-            _monitoredZones.Add(zoneId);
+            _monitoredZones.Add(zoneId,subscriber);
         }
 
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)

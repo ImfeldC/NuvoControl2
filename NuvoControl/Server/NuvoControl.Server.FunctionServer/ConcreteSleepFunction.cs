@@ -85,7 +85,7 @@ namespace NuvoControl.Server.FunctionServer
                     _lastZoneChangeToON = e.ZoneState.LastUpdate;
                 }
             }
-            _zoneState = e.ZoneState;
+            _zoneState = new ZoneState(e.ZoneState);
         }
 
         /// <summary>
@@ -112,7 +112,7 @@ namespace NuvoControl.Server.FunctionServer
 
         public override void calculateFunction(DateTime aktTime)
         {
-            _log.Trace(m => m("ConcreteSleepFunction: calculateFunction at {0}: Active={1}, ZoneState={2}", aktTime, isFunctionActiveRightNow(aktTime), _zoneState));
+            _log.Trace(m => m("calc sleep function at {0}: Active={1}, lastZoneChangeToON={2}, ZoneState={3}", aktTime, isFunctionActiveRightNow(aktTime), _lastZoneChangeToON, _zoneState));
             if (isFunctionActiveRightNow(aktTime))
             {
                 if (aktTime < _lastZoneChangeToON)
@@ -121,16 +121,21 @@ namespace NuvoControl.Server.FunctionServer
                     _log.Fatal(strMessage);
                     throw new FunctionServerException(strMessage);
                 }
-                if ((_zoneState.PowerStatus == true) && (aktTime-_lastZoneChangeToON > _function.SleepDuration))
+                TimeSpan onTime = aktTime-_lastZoneChangeToON;
+                if ((_zoneState.PowerStatus == true) && (onTime >= _function.SleepDuration))
                 {
                     // Zone power status is ON  and the sleep duration has been reached, switch off zone
-                    _log.Trace(m=>m("Switch off zone! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON));
+                    _log.Trace(m => m("Switch off zone! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON));
                     if (_zoneServer != null)
                     {
-                        ZoneState newState = new ZoneState( _zoneState );
+                        ZoneState newState = new ZoneState(_zoneState);
                         newState.PowerStatus = false;
                         _zoneServer.SetZoneState(_function.ZoneId, newState);
                     }
+                }
+                else
+                {
+                    _log.Trace(m => m("Don't switch off zone! PowerStatus={0}, onTime={1}, AkTime={2}, LastChangeToON={3}", _zoneState.PowerStatus, onTime, aktTime, _lastZoneChangeToON));
                 }
             }
         }
