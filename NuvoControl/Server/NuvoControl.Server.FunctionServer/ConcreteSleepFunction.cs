@@ -66,25 +66,8 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="e">Event argument, passed by the notification event.</param>
         protected override void notifyOnZoneUpdate(ZoneStateEventArgs e)
         {
-            _log.Trace(m => m("ConcreteSleepFunction: notifyOnZoneUpdate() EventArgs={0} ...", e.ToString()));
-
-            if (_zoneState != null)
-            {
-                if (_zoneState.PowerStatus == false && e.ZoneState.PowerStatus == true)
-                {
-                    // The state has changed from OFF to ON, store the update time
-                    _lastZoneChangeToON = e.ZoneState.LastUpdate;
-                }
-            }
-            else
-            {
-                if (e.ZoneState.PowerStatus == true)
-                {
-                    // we just started and got the first zone state. Store this time as
-                    // start time (it's not correct, but better than doing nothing)
-                    _lastZoneChangeToON = e.ZoneState.LastUpdate;
-                }
-            }
+            //_log.Trace(m => m("ConcreteSleepFunction: notifyOnZoneUpdate() EventArgs={0} ...", e.ToString()));
+            _lastZoneChangeToON = calculateZoneChangeToON(_lastZoneChangeToON, _zoneState, e.ZoneState);
             _zoneState = new ZoneState(e.ZoneState);
         }
 
@@ -110,9 +93,15 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
+        /// <summary>
+        /// This method calculates (checks) if the function is active and if an action
+        /// is required.
+        /// The method is called periodically.
+        /// </summary>
+        /// <param name="aktTime">Time, used for the calculation.</param>
         public override void calculateFunction(DateTime aktTime)
         {
-            _log.Trace(m => m("calc sleep function at {0}: Active={1}, lastZoneChangeToON={2}, ZoneState={3}", aktTime, isFunctionActiveRightNow(aktTime), _lastZoneChangeToON, _zoneState));
+            //_log.Trace(m => m("calc sleep function at {0}: Active={1}, lastZoneChangeToON={2}, ZoneState={3}", aktTime, isFunctionActiveRightNow(aktTime), _lastZoneChangeToON, _zoneState));
             if (isFunctionActiveRightNow(aktTime))
             {
                 if (aktTime < _lastZoneChangeToON)
@@ -125,7 +114,7 @@ namespace NuvoControl.Server.FunctionServer
                 if ((_zoneState.PowerStatus == true) && (onTime >= _function.SleepDuration))
                 {
                     // Zone power status is ON  and the sleep duration has been reached, switch off zone
-                    _log.Trace(m => m("Switch off zone! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON));
+                    _log.Trace(m => m("Switch zone OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON));
                     if (_zoneServer != null)
                     {
                         ZoneState newState = new ZoneState(_zoneState);

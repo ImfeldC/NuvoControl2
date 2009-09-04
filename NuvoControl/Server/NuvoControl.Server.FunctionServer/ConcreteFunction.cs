@@ -5,6 +5,7 @@ using System.Text;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
 using Common.Logging;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.FunctionServer
 {
@@ -49,13 +50,42 @@ namespace NuvoControl.Server.FunctionServer
         }
 
         /// <summary>
+        /// Calculates the last zone change to ON.
+        /// </summary>
+        /// <param name="lastZoneChangeToOn">Previous calculated date/time of the last status change to on.</param>
+        /// <param name="oldState">Previous zone state.</param>
+        /// <param name="newState">New zone state.</param>
+        /// <returns></returns>
+        protected DateTime calculateZoneChangeToON(DateTime lastZoneChangeToOn, ZoneState oldState, ZoneState newState)
+        {
+            if (oldState != null)
+            {
+                if (oldState.PowerStatus == false && newState.PowerStatus == true)
+                {
+                    // The state has changed from OFF to ON, store the update time
+                    lastZoneChangeToOn = newState.LastUpdate;
+                }
+            }
+            else
+            {
+                if (newState.PowerStatus == true)
+                {
+                    // we just started and got the first zone state. Store this time as
+                    // start time (it's not correct, but better than doing nothing)
+                    lastZoneChangeToOn = newState.LastUpdate;
+                }
+            }
+            return lastZoneChangeToOn;
+        }
+
+        /// <summary>
         /// Notifcation handler, called from the zone server, which delivers zone state changes
         /// </summary>
         /// <param name="sender">The zone controller, for which the state change appened.</param>
         /// <param name="e">State change event arguments.</param>
         private void OnZoneNotification(object sender, ZoneStateEventArgs e)
         {
-            _log.Trace(m => m("ConcreteFunction: OnZoneNotification() EventArgs={0} ...", e.ToString()));
+            //_log.Trace(m => m("ConcreteFunction: OnZoneNotification() EventArgs={0} ...", e.ToString()));
             notifyOnZoneUpdate(e);
         }
 
