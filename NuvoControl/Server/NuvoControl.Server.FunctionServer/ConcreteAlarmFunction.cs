@@ -86,6 +86,11 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
+        /// <summary>
+        /// This method calculates (checks) based on the passed date/time, if
+        /// the alarm function is active and if an action needs to be done.
+        /// </summary>
+        /// <param name="aktTime"></param>
         public override void calculateFunction(DateTime aktTime)
         {
             _log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
