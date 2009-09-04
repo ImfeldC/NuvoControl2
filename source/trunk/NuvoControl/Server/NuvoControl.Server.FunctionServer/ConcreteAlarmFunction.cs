@@ -22,8 +22,17 @@ namespace NuvoControl.Server.FunctionServer
         /// <summary>
         /// The state of the zone.
         /// </summary>
-        private ZoneState _zoneState;
+        private ZoneState _zoneState = null;
 
+        /// <summary>
+        /// Private member to store the last zone change to ON
+        /// </summary>
+        private DateTime _lastZoneChangeToON = new DateTime(2000, 1, 1);
+
+        /// <summary>
+        /// True, if an alarm is running right now.
+        /// </summary>
+        private bool _alarmRunning = false;
 
         /// <summary>
         /// Constructor to instantiate a concrete alarm function.
@@ -50,7 +59,8 @@ namespace NuvoControl.Server.FunctionServer
         protected override void notifyOnZoneUpdate(ZoneStateEventArgs e)
         {
             _log.Trace(m => m("ConcreteAlarmFunction: notifyOnZoneUpdate() EventArgs={0} ...", e.ToString()));
-            _zoneState = e.ZoneState;
+            _lastZoneChangeToON = calculateZoneChangeToON(_lastZoneChangeToON, _zoneState, e.ZoneState);
+            _zoneState = new ZoneState(e.ZoneState);
         }
 
 
@@ -78,10 +88,57 @@ namespace NuvoControl.Server.FunctionServer
 
         public override void calculateFunction(DateTime aktTime)
         {
-            //_log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
+            _log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
+            if( isFunctionActiveToday( aktTime ) )
+            {
+                if( (aktTime.TimeOfDay >= _function.AlarmTime) &&
+                    (aktTime.TimeOfDay < (_function.AlarmTime + _function.AlarmDuration)) )
+                {
+                    // alarm 'window' is running, check if we need to switch the zone ...
+
+                    if ((_zoneState.PowerStatus == false) &&
+                        (_lastZoneChangeToON.TimeOfDay < _function.AlarmTime))
+                    {
+                        // the zone is off, and no switch 'on' command was issued since
+                        // the alarm window is active ...
+                        _log.Trace(m => m("Switch zone ON! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON));
+                        if (_zoneServer != null)
+                        {
+                            ZoneState newState = new ZoneState(_zoneState);
+                            newState.PowerStatus = true;
+                            newState.Source = _function.SourceId;
+                            _zoneServer.SetZoneState(_function.ZoneId, newState);
+                        }
+                        _alarmRunning = true;
+                    }
+                }
+
+                if ((aktTime.TimeOfDay > (_function.AlarmTime + _function.AlarmDuration)) &&
+                    (_alarmRunning == true))
+                {
+                    // alarm 'window' is past, and an alarm has been send ..
+
+                    if (_zoneState.PowerStatus == true)
+                    {
+                        // the zone is 'on' ...
+                        _log.Trace(m => m("Switch zone OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON));
+                        if (_zoneServer != null)
+                        {
+                            ZoneState newState = new ZoneState(_zoneState);
+                            newState.PowerStatus = false;
+                            _zoneServer.SetZoneState(_function.ZoneId, newState);
+                        }
+                    }
+                    _alarmRunning = false;
+                }
+            }
         }
 
-
+        /// <summary>
+        /// Method returns true, if the alarm function is active at the passed date/time
+        /// </summary>
+        /// <param name="aktTime">Date/time to check</param>
+        /// <returns>True, if function is active.</returns>
         public bool isFunctionActiveToday( DateTime aktTime )
         {
             return _function.ValidOnDays.Contains( aktTime.DayOfWeek);
