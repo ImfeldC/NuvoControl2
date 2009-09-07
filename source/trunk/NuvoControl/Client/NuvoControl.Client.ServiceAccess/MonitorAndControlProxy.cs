@@ -212,7 +212,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// <returns>The read zone state.</returns>
         public ZoneState GetZoneState(Address zoneId)
         {
-            Console.WriteLine(String.Format("M&C Proxy; GetZoneState(); Address: {0}", zoneId));
+            _log.Trace(m=>m(String.Format("M&C Proxy; GetZoneState(); Address: {0}", zoneId)));
 
             return _mcServiceProxy.GetZoneState(zoneId);
         }
@@ -225,7 +225,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// <param name="command">The new zone state.</param>
         public void SetZoneState(Address zoneId, ZoneState command)
         {
-            Console.WriteLine(String.Format("M&C Proxy; SetZoneState(); Address: {0}, Command: {1}", zoneId, command));
+            _log.Trace(m=>m(String.Format("M&C Proxy; SetZoneState(); Address: {0}, Command: {1}", zoneId, command)));
 
             _mcServiceProxy.SetZoneState(zoneId, command);
         }
@@ -238,7 +238,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// <param name="subscriber">The subscriber.</param>
         public void Monitor(Address zoneId, ZoneNotification subscriber)
         {
-            Console.WriteLine(String.Format("M&C Proxy; Monitor(); Address: {0}", zoneId));
+            _log.Trace(m=>m(String.Format("M&C Proxy; Monitor(); Address: {0}", zoneId)));
 
             try
             {
@@ -264,7 +264,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// <param name="subscriber">The subscriber.</param>
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)
         {
-            Console.WriteLine(String.Format("M&C Proxy; RemoveMonitor(); Address: {0}", zoneId));
+            _log.Trace(m=>m(String.Format("M&C Proxy; RemoveMonitor(); Address: {0}", zoneId)));
 
             try
             {
@@ -296,7 +296,7 @@ namespace NuvoControl.Client.ServiceAccess
         {
             try
             {
-                Console.WriteLine("M&C Proxy; Initialize()");
+                _log.Trace(m=>m("M&C Proxy; Initialize()"));
 
                 IMonitorAndControlCallback serverCallback = this;
                 _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
@@ -306,7 +306,7 @@ namespace NuvoControl.Client.ServiceAccess
                 _timerRenewLease = new Timer(OnRenewLeaseCallback);
                 _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
 
-                Console.WriteLine("M&C Proxy; Initialize() done.");
+                _log.Trace(m=>m("M&C Proxy; Initialize() done."));
             }
             catch (Exception exc)
             {
@@ -329,7 +329,7 @@ namespace NuvoControl.Client.ServiceAccess
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Renew lease for M&C failed. Exception message: " + exc.Message);
+                _log.Fatal(m=>m("Renew lease for M&C failed. Exception message: " + exc.Message));
             }
         }
 
@@ -344,7 +344,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// <param name="zoneState"></param>
         public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
-            Console.WriteLine(String.Format("M&C Proxy; OnZoneStateChanged(); Address: {0}, State: {1}", zoneId, zoneState));
+            _log.Trace(m=>m(String.Format("M&C Proxy; OnZoneStateChanged(); Address: {0}, State: {1}", zoneId, zoneState)));
 
             if (_zoneSubscriptions.ContainsKey(zoneId))
                 _zoneSubscriptions[zoneId].NotifyClients(zoneState);
