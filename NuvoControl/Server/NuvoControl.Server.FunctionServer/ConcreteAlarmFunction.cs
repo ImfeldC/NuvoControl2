@@ -58,7 +58,7 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="e">Event argument, passed by the notification event.</param>
         protected override void notifyOnZoneUpdate(ZoneStateEventArgs e)
         {
-            _log.Trace(m => m("ConcreteAlarmFunction: notifyOnZoneUpdate() EventArgs={0} ...", e.ToString()));
+            _log.Trace(m => m("notifyOnZoneUpdate() EventArgs={0} ...", e.ToString()));
             _lastZoneChangeToON = calculateZoneChangeToON(_lastZoneChangeToON, _zoneState, e.ZoneState);
             _zoneState = new ZoneState(e.ZoneState);
         }
@@ -93,12 +93,13 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="aktTime"></param>
         public override void calculateFunction(DateTime aktTime)
         {
-            _log.Trace(m => m("ConcreteAlarmFunction: calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
+            //_log.Trace(m => m("calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
             if( isFunctionActiveToday( aktTime ) )
             {
                 if( (aktTime.TimeOfDay >= _function.AlarmTime) &&
                     (aktTime.TimeOfDay < (_function.AlarmTime + _function.AlarmDuration)) )
                 {
+                    _log.Trace(m => m("calculateFunction at {0}: Function is in an active window. PowerStatus={0}, LastChangeToON={1}, Function={2}, Active={3}", aktTime, _zoneState.PowerStatus, _lastZoneChangeToON.TimeOfDay, Function, isFunctionActiveToday(aktTime)));
                     // alarm 'window' is running, check if we need to switch the zone ...
 
                     if ((_zoneState.PowerStatus == false) &&

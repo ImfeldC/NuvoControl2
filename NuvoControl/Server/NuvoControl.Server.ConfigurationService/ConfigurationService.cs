@@ -86,7 +86,7 @@ namespace NuvoControl.Server.ConfigurationService
         /// </summary>
         public void RenewLease()
         {
-            Console.WriteLine("Configuration Service; RenewLease().");
+            //_log.Trace(m=>m("Configuration Service; RenewLease()."));
         }
 
 
@@ -96,7 +96,7 @@ namespace NuvoControl.Server.ConfigurationService
         /// <returns></returns>
         public Graphic GetGraphicConfiguration()
         {
-            Console.WriteLine("Configuration Service; GetGraphicConfiguration().");
+            _log.Trace(m=>m("Configuration Service; GetGraphicConfiguration()."));
 
             return _systemConfiguration.Graphic;
         }

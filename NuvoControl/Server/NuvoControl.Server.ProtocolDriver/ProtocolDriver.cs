@@ -195,7 +195,7 @@ namespace NuvoControl.Server.ProtocolDriver
                             // Send a 'ping' command (read version) to the device
                             // Downwards it is allowed to send, keeping the lock!
                             entry.ProtocolStack.SendCommand(new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion));
-                            _log.Info(m => m("Update of device with id {0} is behind, send ping! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
+                            //_log.Info(m => m("Update of device with id {0} is behind, send ping! Last Update was at {1}", entry.DeviceId, entry.LastTimeCommandReceived.ToString()));
                         }
 
                         // Check, if we need to set the device offline
