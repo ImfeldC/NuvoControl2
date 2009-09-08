@@ -516,5 +516,84 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer1.ClearZoneStateList();
             zoneServer2.ClearZoneStateList();
         }
+
+
+        /// <summary>
+        /// A test for calculateFunction
+        /// The function has been initialized, with 
+        /// - 'Off' at 12.9.2009 23:00
+        /// -  'On' at 12.9.2009 23:05
+        /// - 'Off' at 12.9.2009 23:10
+        /// Expected result: Each function sends a command to switch on the zone.
+        /// </summary>
+        [TestMethod()]
+        public void calculateFunctionTest4()
+        {
+
+            // (1) Day list: Monday, Wednesday, Friday, Sunday
+            // (1) Function: AlarmTime=10:00, AlarmDuration=01:45
+            #region Function1
+            List<DayOfWeek> _dayOfWeeks1 = new List<DayOfWeek>();
+            _dayOfWeeks1.Add(DayOfWeek.Monday);
+            _dayOfWeeks1.Add(DayOfWeek.Wednesday);
+            _dayOfWeeks1.Add(DayOfWeek.Friday);
+            _dayOfWeeks1.Add(DayOfWeek.Sunday);
+            AlarmFunction function1 = new AlarmFunction(
+                Guid.NewGuid(),
+                new Address(100, 1), new Address(100, 3),
+                new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
+                _dayOfWeeks1);
+            ZoneServerMock zoneServer1 = new ZoneServerMock();
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1);
+            #endregion
+
+            // (2) Day list: Tuesday, Thursday, Saturday, Sunday
+            // (2) Function: AlarmTime=10:00, AlarmDuration=01:45
+            #region Function2
+            List<DayOfWeek> _dayOfWeeks2 = new List<DayOfWeek>();
+            _dayOfWeeks2.Add(DayOfWeek.Tuesday);
+            _dayOfWeeks2.Add(DayOfWeek.Thursday);
+            _dayOfWeeks2.Add(DayOfWeek.Saturday);
+            _dayOfWeeks2.Add(DayOfWeek.Sunday);
+            AlarmFunction function2 = new AlarmFunction(
+                Guid.NewGuid(),
+                new Address(100, 1), new Address(100, 6),
+                new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
+                _dayOfWeeks2);
+            ZoneServerMock zoneServer2 = new ZoneServerMock();
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2);
+            #endregion
+
+            ZoneState zoneStateOff1 = new ZoneState(new Address(100, 2), false, 20, ZoneQuality.Online);
+            zoneStateOff1.LastUpdate = new DateTime(2009, 9, 12, 23, 0, 0);
+            ZoneState zoneStateOn = new ZoneState(new Address(100, 2), true, 20, ZoneQuality.Online);
+            zoneStateOn.LastUpdate = new DateTime(2009, 9, 12, 23, 5, 0);
+            ZoneState zoneStateOff2 = new ZoneState(new Address(100, 2), false, 20, ZoneQuality.Online);
+            zoneStateOff2.LastUpdate = new DateTime(2009, 9, 12, 23, 10, 0);
+
+            // Sunday (13.9.2009 11:00)
+            zoneServer1.distributeZoneState(zoneStateOff1);
+            zoneServer1.distributeZoneState(zoneStateOn);    // sets the member LastChangeToON
+            zoneServer1.distributeZoneState(zoneStateOff2);
+            target1.calculateFunction(new DateTime(2009, 9, 13, 11, 0, 0));
+
+            zoneServer2.distributeZoneState(zoneStateOff1);
+            zoneServer2.distributeZoneState(zoneStateOn);    // sets the member LastChangeToON
+            zoneServer2.distributeZoneState(zoneStateOff2);
+            target2.calculateFunction(new DateTime(2009, 9, 13, 11, 44, 59));   // last change before functions ends
+
+            Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
+            Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
+            Assert.AreEqual(1, zoneServer1._zoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer1._zoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 3), zoneServer1._zoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer2._zoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer2._zoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 6), zoneServer2._zoneStates[new Address(100, 1)].Source);
+            zoneServer1.ClearZoneStateList();
+            zoneServer2.ClearZoneStateList();
+        }
+
+    
     }
 }

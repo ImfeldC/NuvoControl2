@@ -104,7 +104,7 @@ namespace NuvoControl.Server.FunctionServer
                     // alarm 'window' is running, check if we need to switch the zone ...
 
                     if ((_zoneState.PowerStatus == false) &&
-                        (_lastZoneChangeToON.TimeOfDay < _function.AlarmTime))
+                        (_lastZoneChangeToON < (aktTime.Date + _function.AlarmTime)))
                     {
                         // the zone is off, and no switch 'on' command was issued since
                         // the alarm window is active ...
