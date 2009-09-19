@@ -114,6 +114,7 @@ namespace NuvoControl.Server.FunctionServer
                             ZoneState newState = new ZoneState(_zoneState);
                             newState.PowerStatus = true;
                             newState.Source = _function.SourceId;
+                            newState.Volume = _function.Volume;
                             _zoneServer.SetZoneState(_function.ZoneId, newState);
                         }
                         _alarmRunning = true;
