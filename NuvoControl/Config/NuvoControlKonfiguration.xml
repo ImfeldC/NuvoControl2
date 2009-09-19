@@ -33,7 +33,7 @@
     </Hardware>
     <Graphic>
       <Building Name="Unser Heim" Id="10000.1">
-        <Picture RelativePath=".\Images\Building.png" PictureType="png"></Picture>
+        <Picture RelativePath=".\Images\Building.jpg" PictureType="jpg"></Picture>
         <Floor Name="Wohnbereich" Id="1000.1">
           <FloorPlan RelativePath=".\Images\Wohnbereich.bmp" PictureType="bmp" />
           <Zones>
