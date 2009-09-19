@@ -98,7 +98,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             List<DayOfWeek> _dayOfWeeks = new List<DayOfWeek>();
             AlarmFunction function = new AlarmFunction(
                 Guid.NewGuid(), 
-                new Address(100, 1), new Address(100, 1), 
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0), 
                 _dayOfWeeks);
             IZoneServer zoneServer = null;
@@ -116,7 +116,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             List<DayOfWeek> _dayOfWeeks = new List<DayOfWeek>();
             AlarmFunction function = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 1),
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks);
             IZoneServer zoneServer = null;
@@ -137,7 +137,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks.Add(DateTime.Now.DayOfWeek);
             AlarmFunction function = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 1),
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks);
             IZoneServer zoneServer = null;
@@ -160,7 +160,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             List<DayOfWeek> _dayOfWeeks1 = new List<DayOfWeek>();
             AlarmFunction function1 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 1),
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks1);
             ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer); 
@@ -176,7 +176,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 1),
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks2);
             ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer); 
@@ -227,7 +227,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 1),
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks1);
             ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer);
@@ -240,7 +240,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 1),
+                new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks2);
             ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer);
@@ -293,7 +293,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 3),
+                new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
@@ -310,7 +310,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 6),
+                new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
@@ -390,7 +390,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 3),
+                new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
@@ -407,7 +407,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 6),
+                new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
@@ -467,7 +467,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 3),
+                new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
@@ -484,7 +484,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 6),
+                new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
@@ -540,7 +540,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 3),
+                new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
@@ -557,7 +557,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
                 Guid.NewGuid(),
-                new Address(100, 1), new Address(100, 6),
+                new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();

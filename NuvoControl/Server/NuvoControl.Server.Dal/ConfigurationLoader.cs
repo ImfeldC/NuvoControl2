@@ -248,6 +248,7 @@ namespace NuvoControl.Server.Dal
                         int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                    int.Parse((string)function.Attribute("Volume")),
                     TimeSpan.Parse((string)function.Attribute("AlarmTime")),
                     new TimeSpan(0, (int)function.Attribute("AlarmDuration"), 0),
                     (from day in function.Element("Validity").Element("Days").Elements("Day")

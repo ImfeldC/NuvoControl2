@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <!--Authors: C. Imfeld, B. Limacher-->
-<!--Date: 05.05.2009-->
+<!--Date: 04.09.2009-->
 <NuvoControl>
   <Configuration Version="1.0">
     <Hardware>
@@ -33,7 +33,7 @@
     </Hardware>
     <Graphic>
       <Building Name="Unser Heim" Id="10000.1">
-        <Picture RelativePath=".\Images\Building.jpg" PictureType="jpg"></Picture>
+        <Picture RelativePath=".\Images\Building.png" PictureType="png"></Picture>
         <Floor Name="Wohnbereich" Id="1000.1">
           <FloorPlan RelativePath=".\Images\Wohnbereich.bmp" PictureType="bmp" />
           <Zones>
@@ -184,10 +184,24 @@
       </Sources>
     </Graphic>
     <Functions>
-      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.1" SleepDuration="60">
-        <Validity ActiveFrom="23:00" ActiveTo="02:00"></Validity>
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.3" SleepDuration="60">
+        <Validity ActiveFrom="23:15" ActiveTo="04:00"></Validity>
       </SleepFunction>
-      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c93" ZoneId="100.2" AlarmTime="07:00" AlarmDuration="10" SourceId="100.2">
+      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c94" ZoneId="100.3" Volume="25" AlarmTime="06:00" AlarmDuration="45" SourceId="100.2">
+        <Validity>
+          <Days>
+            <Day Name="Monday" />
+            <Day Name="Tuesday" />
+            <Day Name="Wednesday" />
+            <Day Name="Thursday" />
+            <Day Name="Friday" />
+          </Days>
+        </Validity>
+      </AlarmFunction>
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3787" ZoneId="100.2" SleepDuration="12">
+        <Validity ActiveFrom="16:00" ActiveTo="18:00"></Validity>
+      </SleepFunction>
+      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c93" ZoneId="100.2" Volume="25" AlarmTime="19:10" AlarmDuration="120" SourceId="100.2">
         <Validity>
           <Days>
             <Day Name="Monday" />
@@ -195,7 +209,7 @@
           </Days>
         </Validity>
       </AlarmFunction>
-      <AlarmFunction Id="9901106d-4811-48c3-a734-dab53f15d73d" ZoneId="100.2" AlarmTime="07:30" AlarmDuration="10" SourceId="100.2">
+      <AlarmFunction Id="9901106d-4811-48c3-a734-dab53f15d73d" ZoneId="100.2" Volume="25" AlarmTime="19:10" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Wednesday" />
