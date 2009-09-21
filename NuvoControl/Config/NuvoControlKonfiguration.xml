@@ -6,7 +6,7 @@
     <Hardware>
       <Device Id="100">
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
-        <Communication Port="QUEUE" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
+        <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <Zones>
           <Zone Id="1" />
           <Zone Id="2" />
