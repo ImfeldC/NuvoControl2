@@ -170,7 +170,7 @@ namespace NuvoControl.Server.WcfHostConsole
         /// <param name="configurationFile"></param>
         private static void LoadConfigurationService(string configurationFile)
         {
-            _log.Info("Loading the nuvo control configuration...");
+            _log.Info(m=>m("Loading the nuvo control configuration from '{0}' ...", configurationFile));
             Console.WriteLine(">>> Loading configuration...");
 
             _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile);
