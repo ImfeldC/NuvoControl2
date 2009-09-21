@@ -28,7 +28,7 @@
         "Entry"
         {
         "MsmKey" = "8:_1660437A26D3F18684FCCD674952EF81"
-        "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
+        "OwnerKey" = "8:_F86870823F5D1E92ACBCD1131F3452EE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -53,6 +53,12 @@
         {
         "MsmKey" = "8:_1660437A26D3F18684FCCD674952EF81"
         "OwnerKey" = "8:_2CD74FCCB92ACEF81E6F7214DCDE158B"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_1660437A26D3F18684FCCD674952EF81"
+        "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -388,6 +394,12 @@
         "Entry"
         {
         "MsmKey" = "8:_725C6618AD6581B63BAC973A5E9678C2"
+        "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_725C6618AD6581B63BAC973A5E9678C2"
         "OwnerKey" = "8:_8DEF38F641E847A1FBC31A16503BB8F7"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -400,7 +412,7 @@
         "Entry"
         {
         "MsmKey" = "8:_725C6618AD6581B63BAC973A5E9678C2"
-        "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
+        "OwnerKey" = "8:_F86870823F5D1E92ACBCD1131F3452EE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -538,6 +550,12 @@
         "Entry"
         {
         "MsmKey" = "8:_743EA5DF07D436C60716BA4D4D629F82"
+        "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_743EA5DF07D436C60716BA4D4D629F82"
         "OwnerKey" = "8:_8DEF38F641E847A1FBC31A16503BB8F7"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -550,7 +568,7 @@
         "Entry"
         {
         "MsmKey" = "8:_743EA5DF07D436C60716BA4D4D629F82"
-        "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
+        "OwnerKey" = "8:_F86870823F5D1E92ACBCD1131F3452EE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -801,6 +819,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_F86870823F5D1E92ACBCD1131F3452EE"
+        "OwnerKey" = "8:_0D40EC34FEE24E4F88EEE45E20DA3D15"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_FA0508CD505A474C86287A90C4D7B1D8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -965,6 +989,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_39F2217FADA57835E1E6749D7D86B566"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_F86870823F5D1E92ACBCD1131F3452EE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -1255,7 +1285,7 @@
             "SourcePath" = "8:..\\Config\\NuvoControlKonfiguration.xml"
             "TargetName" = "8:NuvoControlKonfiguration.xml"
             "Tag" = "8:"
-            "Folder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Folder" = "8:_C6C9989A067246769DC9695EEAD6901D"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -2235,6 +2265,37 @@
             "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F86870823F5D1E92ACBCD1131F3452EE"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:NuvoControl.Server.FunctionServer, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F86870823F5D1E92ACBCD1131F3452EE"
+                    {
+                    "Name" = "8:NuvoControl.Server.FunctionServer.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:NuvoControl.Server.FunctionServer.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_32828E70F1E243B98483BBF175CA3329"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_FE5BC4F10CBB1E21804DEA96A2310640"
             {
             "AssemblyRegister" = "3:1"
@@ -2335,6 +2396,17 @@
                                 {
                                 }
                             }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_C6C9989A067246769DC9695EEAD6901D"
+                            {
+                            "Name" = "8:Config"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_073856272491473195743F7DAE83E68B"
+                                "Folders"
+                                {
+                                }
+                            }
                         }
                     }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_5D1722C92CE34B3E941288B913553264"
@@ -2389,7 +2461,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NuvoControl"
         "ProductCode" = "8:{80482C82-7AEF-46B0-9E3A-B87C224FB45E}"
-        "PackageCode" = "8:{59EFAEBD-3A78-4A7B-9B9C-834ECD2B0E85}"
+        "PackageCode" = "8:{A7AFCCDB-24C4-4395-B939-F69E29D0AC92}"
         "UpgradeCode" = "8:{6994827F-3DA8-4DF9-9211-41E3BB6A0A56}"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
