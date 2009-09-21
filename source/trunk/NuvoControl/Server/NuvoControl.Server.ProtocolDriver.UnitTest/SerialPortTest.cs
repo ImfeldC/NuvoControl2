@@ -109,15 +109,39 @@ namespace NuvoControl.Server.ProtocolDriver.UnitTest
         }
 
         /// <summary>
-        ///A test for Write
+        /// A test for Write
+        /// The write fails, because fo the missing serial port information.
         /// </summary>
         [TestMethod()]
-        public void WriteTest()
+        public void WriteTest1()
         {
             try
             {
                 SerialPort target = new SerialPort();
                 string text = string.Empty;
+                target.Write(text);
+                bool actual = target.IsOpen;
+                Assert.AreEqual(false, actual);
+            }
+            catch (System.UnauthorizedAccessException)
+            {
+                // Ignore this exepotion
+                // The user used on the build server with the autoamtic build, has not the 
+                // access right to write to the serial port.
+            }
+        }
+
+        /// <summary>
+        ///A test for Write
+        /// </summary>
+        [TestMethod()]
+        public void WriteTest2()
+        {
+            try
+            {
+                SerialPort target = new SerialPort();
+                string text = "<Test text>";
+                target.Open(new SerialPortConnectInformation("COM1", 9600, System.IO.Ports.Parity.None, 8, System.IO.Ports.StopBits.One));
                 target.Write(text);
                 bool actual = target.IsOpen;
                 Assert.AreEqual(true, actual);
