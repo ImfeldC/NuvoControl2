@@ -687,12 +687,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_91C19B12000245EC8635B1D80CDE4D9C"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_976EA89F263E44B8A00E7CE33BA6BAD8"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -808,6 +802,12 @@
         "Entry"
         {
         "MsmKey" = "8:_E2932356B2DA4B9AA1B2E48494940809"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E4668CC1C6B94CC7BBE945C674F1FBA9"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1963,26 +1963,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_91C19B12000245EC8635B1D80CDE4D9C"
-            {
-            "SourcePath" = "8:..\\Server\\NuvoControl.Server.ProtocolDriver\\NuvoEssentiaProfile.xml"
-            "TargetName" = "8:NuvoEssentiaProfile.xml"
-            "Tag" = "8:"
-            "Folder" = "8:_32828E70F1E243B98483BBF175CA3329"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_976EA89F263E44B8A00E7CE33BA6BAD8"
             {
             "SourcePath" = "8:..\\Images\\Esszimmer.jpg"
@@ -2251,6 +2231,26 @@
             "TargetName" = "8:Küche.jpg"
             "Tag" = "8:"
             "Folder" = "8:_87EDCD1093CE4841832C7C46E82BEA86"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E4668CC1C6B94CC7BBE945C674F1FBA9"
+            {
+            "SourcePath" = "8:..\\Server\\NuvoControl.Server.ProtocolDriver\\Config\\NuvoEssentiaProfile.xml"
+            "TargetName" = "8:NuvoEssentiaProfile.xml"
+            "Tag" = "8:"
+            "Folder" = "8:_C6C9989A067246769DC9695EEAD6901D"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
