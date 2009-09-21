@@ -42,7 +42,6 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public SerialPort()
         {
-            _comPort = new System.IO.Ports.SerialPort();
         }
 
 
@@ -58,20 +57,31 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public void Close()
         {
-            if (_comPort.IsOpen == true) 
-                _comPort.Close();
-            _comPort = null;
+            ClosePort();
         }
 
         public bool IsOpen
         {
-            get { return _comPort.IsOpen; }
+            get 
+            {
+                if (_comPort == null)
+                    return false;
+                else
+                    return _comPort.IsOpen; 
+            }
         }
 
         public void Write(string text)
         {
-            if (!(_comPort.IsOpen == true)) _comPort.Open();
-            _comPort.Write(text);
+            if (IsOpen == false)
+            {
+                _log.Warn(m => m("Port is not open yet, open it before sending data!"));
+                OpenPort();
+            }
+            if (_comPort != null)
+                _comPort.Write(text);
+            else
+                _log.Error(m => m("Port is not open, cannot send data {0} to serial port.", text));
         }
 
         #endregion
@@ -95,11 +105,25 @@ namespace NuvoControl.Server.ProtocolDriver
         }
         #endregion
 
-        #region OpenPort
+        #region Open-/ClosePort
+
+        private void ClosePort()
+        {
+            if(_comPort != null) 
+            {
+                if (_comPort.IsOpen == true)
+                {
+                    _comPort.Close();
+                }
+                _comPort = null;
+            }
+        }
+
         private bool OpenPort()
         {
             if (_serialPortConnectInformation == null)
             {
+                _log.Error(m => m("No connection information available. Cannot open connection!"));
                 return false;
             }
 
@@ -107,17 +131,26 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 //first check if the port is already open
                 //if its open then close it
-                if (_comPort.IsOpen == true) _comPort.Close();
+                ClosePort();
+
+                _comPort = new System.IO.Ports.SerialPort();
 
                 //set the properties of our SerialPort Object
+                _comPort.PortName = _serialPortConnectInformation.PortName;    //PortName
                 _comPort.BaudRate = _serialPortConnectInformation.BaudRate;    //BaudRate
+                _comPort.Parity = _serialPortConnectInformation.Parity;        //Parity
                 _comPort.DataBits = _serialPortConnectInformation.DataBits;    //DataBits
                 _comPort.StopBits = _serialPortConnectInformation.StopBits;    //StopBits
-                _comPort.Parity = _serialPortConnectInformation.Parity;        //Parity
-                _comPort.PortName = _serialPortConnectInformation.PortName;    //PortName
-                //_comPort.ReadTimeout = 100;
+
+                _comPort.Handshake = Handshake.None;
+
+                // Set the read/write timeouts
+                _comPort.ReadTimeout = 500;
+                _comPort.WriteTimeout = 500;
 
                 //now open the port
+                _log.Trace(m=>m("Open serial port {0}", _serialPortConnectInformation.PortName ));
+                _log.Trace(m => m("--> {0}", this.ToString()));
                 _comPort.Open();
 
                 //add event handler
@@ -128,13 +161,48 @@ namespace NuvoControl.Server.ProtocolDriver
             }
             catch (Exception ex)
             {
-                _log.Fatal(m=>m("Exception occured opening the serial port {0}! SerialPortInformation='{1}' / Exception='{2}'", 
+                _log.Fatal(m=>m("Exception occured opening the serial port {0}! SerialPortInformation='{1}' / Exception='{2}'",
                     _serialPortConnectInformation.PortName, _serialPortConnectInformation, ex.ToString()));
                 return false;
             }
         }
+
         #endregion
 
+        public override string ToString()
+        {
+            string strSerialPort = "";
+
+            //strSerialPort += String.Format("BaseStream: {0} /", _comPort.BaseStream);
+            strSerialPort += String.Format("BaudRate: {0} /", _comPort.BaudRate);
+            //strSerialPort += String.Format("BreakState: {0} /", _comPort.BreakState);
+            //strSerialPort += String.Format("BytesToRead: {0} /", _comPort.BytesToRead);
+            //strSerialPort += String.Format("BytesToWrite: {0} /", _comPort.BytesToWrite);
+            //strSerialPort += String.Format("CDHolding: {0} /", _comPort.CDHolding);
+            //strSerialPort += String.Format("CtsHolding: {0} /", _comPort.CtsHolding);
+            strSerialPort += String.Format("DataBits: {0} /", _comPort.DataBits);
+            strSerialPort += String.Format("DiscardNull: {0} /", _comPort.DiscardNull);
+            //strSerialPort += String.Format("DsrHolding: {0} /", _comPort.DsrHolding);
+            strSerialPort += String.Format("DtrEnable: {0} /", _comPort.DtrEnable);
+            strSerialPort += String.Format("Encoding: {0} /", _comPort.Encoding);
+            strSerialPort += String.Format("Handshake: {0} /", _comPort.Handshake);
+            strSerialPort += String.Format("IsOpen: {0} /", _comPort.IsOpen);
+            strSerialPort += String.Format("NewLine: {0} /", _comPort.NewLine);
+            strSerialPort += String.Format("Parity: {0} /", _comPort.Parity);
+            strSerialPort += String.Format("ParityReplace: {0} /", _comPort.ParityReplace);
+            strSerialPort += String.Format("PortName: {0} /", _comPort.PortName);
+            strSerialPort += String.Format("ReadBufferSize: {0} /", _comPort.ReadBufferSize);
+            strSerialPort += String.Format("ReadTimeout: {0} /", _comPort.ReadTimeout);
+            strSerialPort += String.Format("ReceivedBytesThreshold: {0} /", _comPort.ReceivedBytesThreshold);
+            strSerialPort += String.Format("RtsEnable: {0} /", _comPort.RtsEnable);
+            strSerialPort += String.Format("StopBits: {0} /", _comPort.StopBits);
+            strSerialPort += String.Format("WriteBufferSize: {0} /", _comPort.WriteBufferSize);
+            strSerialPort += String.Format("WriteTimeout: {0} /", _comPort.WriteTimeout);
+
+            strSerialPort += String.Format("_serialPortConnectInformation: {0} /", _serialPortConnectInformation);
+
+            return strSerialPort;
+        }
     
     }
 }
