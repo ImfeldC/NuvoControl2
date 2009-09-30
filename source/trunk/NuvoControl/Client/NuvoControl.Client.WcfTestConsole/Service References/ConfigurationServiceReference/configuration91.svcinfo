@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="NwCnbFZOIrXuDb66fmpNf3Yr6zo=">
+<SavedWcfConfigurationInformation xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" Version="9.1" CheckSum="7dFiVAFXJSvL7bQrFNpW+dvUMdU=">
   <bindingConfigurations>
-    <bindingConfiguration bindingType="wsHttpBinding" name="WSHttpBinding_IConfigure1">
+    <bindingConfiguration bindingType="wsHttpBinding" name="WSHttpBinding_IConfigure">
       <properties>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSHttpBinding_IConfigure1</serializedValue>
+          <serializedValue>WSHttpBinding_IConfigure</serializedValue>
         </property>
         <property path="/closeTimeout" isComplexType="false" isExplicitlyDefined="true" clrType="System.TimeSpan, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>00:01:00</serializedValue>
@@ -115,7 +115,7 @@
     </bindingConfiguration>
   </bindingConfigurations>
   <endpoints>
-    <endpoint name="WSHttpBinding_IConfigure1" contract="ConfigurationServiceReference.IConfigure" bindingType="wsHttpBinding" address="http://localhost:8080/ConfigurationService" bindingConfiguration="WSHttpBinding_IConfigure1">
+    <endpoint name="WSHttpBinding_IConfigure" contract="ConfigurationServiceReference.IConfigure" bindingType="wsHttpBinding" address="http://localhost:8080/ConfigurationService" bindingConfiguration="WSHttpBinding_IConfigure">
       <properties>
         <property path="/address" isComplexType="false" isExplicitlyDefined="true" clrType="System.Uri, System, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>http://localhost:8080/ConfigurationService</serializedValue>
@@ -127,7 +127,7 @@
           <serializedValue>wsHttpBinding</serializedValue>
         </property>
         <property path="/bindingConfiguration" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSHttpBinding_IConfigure1</serializedValue>
+          <serializedValue>WSHttpBinding_IConfigure</serializedValue>
         </property>
         <property path="/contract" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
           <serializedValue>ConfigurationServiceReference.IConfigure</serializedValue>
@@ -190,7 +190,7 @@
           <serializedValue>False</serializedValue>
         </property>
         <property path="/name" isComplexType="false" isExplicitlyDefined="true" clrType="System.String, mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-          <serializedValue>WSHttpBinding_IConfigure1</serializedValue>
+          <serializedValue>WSHttpBinding_IConfigure</serializedValue>
         </property>
       </properties>
     </endpoint>
