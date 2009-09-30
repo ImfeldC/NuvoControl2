@@ -71,19 +71,25 @@ namespace NuvoControl.Client.WcfTestConsole
             Console.WriteLine("**** Console client started. *******");
             _log.Debug(m => m("**** Console client started. *******"));
 
-            //ConfigureClient cfgIfc = null;
-            IConfigure cfgIfc = null;
+            ConfigureClient cfgIfc = null;
+            //IConfigure cfgIfc = null;
             try
             {
+                int iZoneId = 4;
+
                 cfgIfc = new ConfigureClient();
-                Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, 4));
+
+                Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
+                Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
 
                 Console.WriteLine("Zone name: {0}", zone.Name);
                 Console.WriteLine("Picture type: {0}", zone.PictureType);
+                Console.WriteLine("All zone details: {0}", zone.ToString());
                 
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
+                Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                //cfgIfc.Close();
+                cfgIfc.Close();
             }
             catch (FaultException<ArgumentException> exc)
             {
@@ -96,12 +102,15 @@ namespace NuvoControl.Client.WcfTestConsole
 
             try
             {
+                int iSecTimeout = 60;
                 IMonitorAndControlCallback serverCallback = new ServerCallback();
                 MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
                 mcProxy.SetClientBaseAddress();
                 mcProxy.Connect();
                 mcProxy.Monitor(new Address(100, 1));
-                System.Threading.Thread.Sleep(10000);
+                Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
+                System.Threading.Thread.Sleep(iSecTimeout*1000);
+                Console.WriteLine("Stop listening ....");
                 mcProxy.RemoveMonitor(new Address(100, 1));
             }
             catch (FaultException<ArgumentException> exc)
