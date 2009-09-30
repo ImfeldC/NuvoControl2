@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ExternalLibraries\Common.Logging.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -74,10 +78,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ConfigurationServiceReference\" />
-    <WCFMetadataStorage Include="Service References\MonitorAndControlServiceReference\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Function.datasource" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Graphic.datasource" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Zone.datasource" />
@@ -89,46 +89,38 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
     <None Include="Service References\ConfigurationServiceReference\ConfigurationService.wsdl" />
     <None Include="Service References\ConfigurationServiceReference\ConfigurationService.xsd" />
     <None Include="Service References\ConfigurationServiceReference\ConfigurationService1.xsd" />
     <None Include="Service References\ConfigurationServiceReference\ConfigurationService2.xsd" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService.disco" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService3.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ConfigurationServiceReference\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\ConfigurationServiceReference\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.disco" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.wsdl" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Service References\MonitorAndControlServiceReference\configuration.svcinfo" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService1.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService11.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService12.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService2.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService3.xsd" />
+    <Content Include="NuvoControl.ico" />
     <None Include="Service References\MonitorAndControlServiceReference\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <None Include="Service References\MonitorAndControlServiceReference\configuration.svcinfo" />
+    <None Include="Service References\MonitorAndControlServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.disco" />
+    <None Include="Service References\ConfigurationServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\ConfigurationServiceReference\configuration.svcinfo" />
+    <None Include="Service References\ConfigurationServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\ConfigurationServiceReference\ConfigurationService.disco" />
+    <None Include="Service References\ConfigurationServiceReference\ConfigurationService3.xsd" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.wsdl" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.xsd" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService1.xsd" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService2.xsd" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService3.xsd" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="NuvoControl.ico" />
+    <WCFMetadataStorage Include="Service References\ConfigurationServiceReference\" />
+    <WCFMetadataStorage Include="Service References\MonitorAndControlServiceReference\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

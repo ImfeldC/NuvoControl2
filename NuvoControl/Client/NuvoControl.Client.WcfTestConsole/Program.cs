@@ -13,6 +13,7 @@ using NuvoControl.Common;
 
 using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
 using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
+using Common.Logging;
 
 namespace NuvoControl.Client.WcfTestConsole
 {
@@ -65,9 +66,13 @@ namespace NuvoControl.Client.WcfTestConsole
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("**** Console client started. *******");
+            ILog _log = LogManager.GetCurrentClassLogger();
 
-            ConfigureClient cfgIfc = null;
+            Console.WriteLine("**** Console client started. *******");
+            _log.Debug(m => m("**** Console client started. *******"));
+
+            //ConfigureClient cfgIfc = null;
+            IConfigure cfgIfc = null;
             try
             {
                 cfgIfc = new ConfigureClient();
@@ -78,24 +83,35 @@ namespace NuvoControl.Client.WcfTestConsole
                 
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
 
-                cfgIfc.Close();
+                //cfgIfc.Close();
             }
-            catch (FaultException<ArgumentException>)
+            catch (FaultException<ArgumentException> exc)
             {
+                _log.Fatal(m => m("FaultException: {0}", exc));
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                cfgIfc.Abort();
+                _log.Fatal(m => m("Exception: {0}", exc));
             }
 
-            IMonitorAndControlCallback serverCallback = new ServerCallback();
-            MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-            mcProxy.SetClientBaseAddress();
-            mcProxy.Connect();
-            mcProxy.Monitor(new Address(100, 1));
-            System.Threading.Thread.Sleep(10000);
-            mcProxy.RemoveMonitor(new Address(100, 1));
+            try
+            {
+                IMonitorAndControlCallback serverCallback = new ServerCallback();
+                MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                mcProxy.SetClientBaseAddress();
+                mcProxy.Connect();
+                mcProxy.Monitor(new Address(100, 1));
+                System.Threading.Thread.Sleep(10000);
+                mcProxy.RemoveMonitor(new Address(100, 1));
+            }
+            catch (FaultException<ArgumentException> exc)
+            {
+                _log.Fatal(m => m("FaultException: {0}", exc));
+            }
+            catch (Exception exc)
+            {
+                _log.Fatal(m => m("Exception: {0}", exc));
+            }
 
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();
