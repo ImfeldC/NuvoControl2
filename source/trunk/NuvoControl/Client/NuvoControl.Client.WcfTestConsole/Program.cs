@@ -71,8 +71,8 @@ namespace NuvoControl.Client.WcfTestConsole
             Console.WriteLine("**** Console client started. *******");
             _log.Debug(m => m("**** Console client started. *******"));
 
-            ConfigureClient cfgIfc = null;
-            //IConfigure cfgIfc = null;
+            //ConfigureClient cfgIfc = null;
+            IConfigure cfgIfc = null;
             try
             {
                 int iZoneId = 4;
@@ -89,7 +89,11 @@ namespace NuvoControl.Client.WcfTestConsole
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
                 Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                cfgIfc.Close();
+                NuvoImage img = cfgIfc.GetImage(graphic.Building.PicturePath);
+                Console.WriteLine("Image details: {0}", img.ToString());
+                img.Picture.Save("c:\\temp\\temp.jpg");
+
+                //cfgIfc.Close();
             }
             catch (FaultException<ArgumentException> exc)
             {
