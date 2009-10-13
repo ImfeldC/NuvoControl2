@@ -73,7 +73,7 @@ namespace NuvoControl.Common.Configuration
 
         #endregion
 
-        #region Private Members
+        #region Public Interface
 
         /// <summary>
         /// The building containing the NuvoControl system.
@@ -92,7 +92,18 @@ namespace NuvoControl.Common.Configuration
             get { return _sources; }
         }
 
+        /// <summary>
+        /// Returns a string that represents the graphic object.
+        /// </summary>
+        /// <returns>String representation of this Grpahic object.</returns>
+        public override string ToString()
+        {
+            return String.Format( "Building=[{0}], Sources=[{1}]", _building.ToString(), _sources.ToString() );
+        }
+
         #endregion
+
+
     }
 }
 

@@ -203,9 +203,9 @@ namespace NuvoControl.Common.Configuration
 
 
         /// <summary>
-        /// Returns a string that represents the current address.
+        /// Returns a string that represents the source object.
         /// </summary>
-        /// <returns>String representation of this address.</returns>
+        /// <returns>String representation of this source.</returns>
         public override string ToString()
         {
             return _name;
