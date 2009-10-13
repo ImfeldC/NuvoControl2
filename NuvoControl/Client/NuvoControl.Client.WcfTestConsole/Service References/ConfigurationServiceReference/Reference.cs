@@ -81,6 +81,9 @@ namespace NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference {
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetGraphicConfiguration", ReplyAction="http://tempuri.org/IConfigure/GetGraphicConfigurationResponse")]
         NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration();
         
+        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetImage", ReplyAction="http://tempuri.org/IConfigure/GetImageResponse")]
+        NuvoControl.Common.Configuration.NuvoImage GetImage(string picturePath);
+        
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetZoneKonfiguration", ReplyAction="http://tempuri.org/IConfigure/GetZoneKonfigurationResponse")]
         NuvoControl.Common.Configuration.Zone GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId);
         
@@ -127,6 +130,10 @@ namespace NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference {
         
         public NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration() {
             return base.Channel.GetGraphicConfiguration();
+        }
+        
+        public NuvoControl.Common.Configuration.NuvoImage GetImage(string picturePath) {
+            return base.Channel.GetImage(picturePath);
         }
         
         public NuvoControl.Common.Configuration.Zone GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId) {
