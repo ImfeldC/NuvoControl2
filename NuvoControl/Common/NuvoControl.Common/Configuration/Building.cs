@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
+
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
@@ -66,7 +67,6 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private string _pictureType = String.Empty;
 
-
         #endregion
 
         #region Constructors
@@ -98,7 +98,7 @@ namespace NuvoControl.Common.Configuration
 
         #endregion
 
-        #region Private Members
+        #region Public Interface
 
         /// <summary>
         /// The address of the buidling.
@@ -138,6 +138,15 @@ namespace NuvoControl.Common.Configuration
         public List<Floor> Floors
         {
             get { return _floors; }
+        }
+
+        /// <summary>
+        /// Returns a string that represents the building object.
+        /// </summary>
+        /// <returns>String representation of this building.</returns>
+        public override string ToString()
+        {
+            return String.Format("Id={0}, Name={1}, PicturePath={2}, PictureType={3}, Floors={4}", _id, _name, _picturePath, _pictureType, _floors);
         }
 
         #endregion

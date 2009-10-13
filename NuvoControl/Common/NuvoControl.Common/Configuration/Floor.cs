@@ -139,6 +139,15 @@ namespace NuvoControl.Common.Configuration
             get { return _zones; }
         }
 
+        /// <summary>
+        /// Returns a string that represents the floor object.
+        /// </summary>
+        /// <returns>String representation of this floor.</returns>
+        public override string ToString()
+        {
+            return String.Format("Name={0}, Id={1}, FloorPlanPath={2}, FloorPlanType={3}, Zones=[{4}]", _name, _id, _floorPlanPath, _floorPlanType, _zones);
+        }
+
         #endregion
     }
 }
