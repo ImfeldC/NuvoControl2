@@ -82,7 +82,7 @@ namespace NuvoControl.Server.ConfigurationService
         #region IConfigure Members
 
         /// <summary>
-        /// <see cref=">IMonitorAndControl"/>
+        /// <see cref="IConfigure"/>
         /// </summary>
         public void RenewLease()
         {
@@ -104,10 +104,26 @@ namespace NuvoControl.Server.ConfigurationService
         /// <summary>
         /// <see cref="IConfigure"/>
         /// </summary>
+        /// <param name="picturePath"></param>
+        /// <returns></returns>
+        public NuvoImage GetImage(string picturePath)
+        {
+            _log.Trace(m => m("Configuration Service; GetImage( {0} ).", picturePath));
+            NuvoImage img = new NuvoImage(picturePath);
+            _log.Trace(m => m("Configuration Service; return image {0}.", img.ToString()));
+            return img;
+        }
+
+
+        /// <summary>
+        /// <see cref="IConfigure"/>
+        /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>
         public Zone GetZoneKonfiguration(Address zoneId)
         {
+            _log.Trace(m => m("Configuration Service; GetZoneKonfiguration()."));
+
             List<Zone> zones = new List<Zone>();
             foreach (Floor floor in _systemConfiguration.Graphic.Building.Floors)
             {
@@ -430,8 +446,6 @@ namespace NuvoControl.Server.ConfigurationService
         }
 
         #endregion
-
-
     }
 }
 

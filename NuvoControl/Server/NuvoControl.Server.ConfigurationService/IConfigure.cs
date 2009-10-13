@@ -48,6 +48,14 @@ namespace NuvoControl.Server.ConfigurationService
         Graphic GetGraphicConfiguration();
 
         /// <summary>
+        /// Returns the underlying picture for the previous retrieved graphical configuration.
+        /// </summary>
+        /// <param name="picturePath">Path for the picture to retrieve.</param>
+        /// <returns>Retreived picture.</returns>
+        [OperationContract]
+        NuvoImage GetImage(string picturePath);
+
+        /// <summary>
         /// Returns the graphical configuration related to a zone.
         /// </summary>
         /// <param name="zoneId">The zone id.</param>
