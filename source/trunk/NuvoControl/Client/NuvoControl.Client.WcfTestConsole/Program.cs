@@ -89,9 +89,11 @@ namespace NuvoControl.Client.WcfTestConsole
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
                 Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                NuvoImage img = cfgIfc.GetImage(graphic.Building.PicturePath);
-                Console.WriteLine("Image details: {0}", img.ToString());
-                img.Picture.Save("c:\\temp\\temp.jpg");
+                GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
+                GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
+                GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
+                GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
+                GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
 
                 //cfgIfc.Close();
             }
@@ -130,5 +132,25 @@ namespace NuvoControl.Client.WcfTestConsole
             Console.ReadLine();
 
         }
+
+        private static void GetImage(IConfigure cfgIfc, string imageName, string imageSaveToName)
+        {
+            ILog _log = LogManager.GetCurrentClassLogger();
+            try
+            {
+                _log.Trace(m => m("Start getting image: {0}", imageName));
+                NuvoImage img = cfgIfc.GetImage(imageName);
+                Console.WriteLine("Image details: {0}", img.ToString());
+                _log.Trace(m => m("Image details: {0}", img.ToString()));
+                img.Picture.Save(imageSaveToName);
+                _log.Trace(m => m("Image saved to: {0}", imageSaveToName));
+            }
+            catch (Exception exc)
+            {
+                _log.Fatal(m => m("Exception getting image '{0}': {1}", imageName, exc));
+            }
+
+        }
+
     }
 }
