@@ -77,6 +77,7 @@
   <xs:element name="Source" nillable="true" type="tns:Source" />
   <xs:complexType name="NuvoImage">
     <xs:sequence>
+      <xs:element minOccurs="0" name="_path" nillable="true" type="xs:string" />
       <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/System.Drawing" minOccurs="0" name="_picture" nillable="true" type="q3:Bitmap" />
     </xs:sequence>
   </xs:complexType>
