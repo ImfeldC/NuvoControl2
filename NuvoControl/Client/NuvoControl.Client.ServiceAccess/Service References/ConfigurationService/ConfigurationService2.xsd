@@ -55,7 +55,6 @@
       <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="_picturePath" nillable="true" type="xs:string" />
       <xs:element minOccurs="0" name="_pictureType" nillable="true" type="xs:string" />
-      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/System.Windows" minOccurs="0" name="_zoneControlCoordinate" type="q2:Point" />
     </xs:sequence>
   </xs:complexType>
   <xs:element name="Zone" nillable="true" type="tns:Zone" />
