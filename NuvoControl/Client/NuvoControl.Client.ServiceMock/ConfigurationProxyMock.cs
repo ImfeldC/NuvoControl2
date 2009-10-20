@@ -48,6 +48,11 @@ namespace NuvoControl.Client.ServiceMock
             throw new NotImplementedException();
         }
 
+        public NuvoImage GetImage(string picturePath)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
     }
 }

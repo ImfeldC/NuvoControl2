@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="dbff1aa8-5e17-4b9c-9e0b-0fbdb8b6cb60" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://localhost:8080/MonitorAndControlService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MonitorAndControlService.xsd" MetadataType="Schema" ID="7810dd3b-099f-4887-aac8-e50e8fac5e18" SourceId="1" SourceUrl="http://localhost:8080/MonitorAndControlService?xsd=xsd0" />
+    <MetadataFile FileName="MonitorAndControlService1.xsd" MetadataType="Schema" ID="613563b2-bf34-45ee-8728-d9736e9ffbca" SourceId="1" SourceUrl="http://localhost:8080/MonitorAndControlService?xsd=xsd1" />
+    <MetadataFile FileName="MonitorAndControlService2.xsd" MetadataType="Schema" ID="e91d58e1-b0f0-4619-8443-80c2a8968b80" SourceId="1" SourceUrl="http://localhost:8080/MonitorAndControlService?xsd=xsd3" />
+    <MetadataFile FileName="MonitorAndControlService3.xsd" MetadataType="Schema" ID="d281103a-a3cd-4442-8411-f23c1c24353a" SourceId="1" SourceUrl="http://localhost:8080/MonitorAndControlService?xsd=xsd2" />
+    <MetadataFile FileName="MonitorAndControlService.disco" MetadataType="Disco" ID="d8bf4523-39e8-4f18-b467-8a88ece6cb9a" SourceId="1" SourceUrl="http://localhost:8080/MonitorAndControlService?disco" />
+    <MetadataFile FileName="MonitorAndControlService.wsdl" MetadataType="Wsdl" ID="6d652a35-c5b7-4316-b3d5-143bfaf90e88" SourceId="1" SourceUrl="http://localhost:8080/MonitorAndControlService?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>
