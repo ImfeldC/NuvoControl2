@@ -21,6 +21,8 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
+using System.Drawing;
+
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -37,6 +39,8 @@ using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 using NuvoControl.Client.Viewer.ServiceAccess;
 using NuvoControl.Client.ServiceAccess;
+using Common.Logging;
+using System.IO;
 
 namespace NuvoControl.Client.Viewer
 {
@@ -47,6 +51,11 @@ namespace NuvoControl.Client.Viewer
     public partial class MainWindow : Window
     {
         #region Fields
+
+        /// <summary>
+        /// Trace logger
+        /// </summary>
+        private static ILog _log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
         /// The main/top view.
@@ -127,9 +136,43 @@ namespace NuvoControl.Client.Viewer
         /// </summary>
         private void ReadConfiguration()
         {
+            _log.Debug(m => m("MainWindow.ReadConfiguration() ..."));
             _graphic = ServiceProxy.ConfigurationProxy.GetGraphicConfiguration();
+
+            ReadImages();
         }
 
+        private void ReadImages()
+        {
+            _log.Debug(m => m("MainWindow.ReadImages() ..."));
+            if (_graphic != null)
+            {
+                ReadImage(_graphic.Building.PicturePath);
+                foreach (Source src in _graphic.Sources)
+                {
+                    //ReadImage(src.PicturePath);
+                }
+                foreach (Floor floor in _graphic.Building.Floors)
+                {
+                    ReadImage(floor.FloorPlanPath);
+                    foreach (Zone zone in floor.Zones)
+                    {
+                        ReadImage(zone.PicturePath);
+                    }
+                }
+            }
+        }
+
+        private void ReadImage(string picturePath)
+        {
+            NuvoImage image;
+            string path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), picturePath);
+            _log.Debug(m => m("MainWindow.ReadImage( {0} ) ...", picturePath));
+            image = ServiceProxy.ConfigurationProxy.GetImage(picturePath);
+            _log.Debug(m => m("MainWindow.ReadImage( {0} ) ... loaded with Size={1}", picturePath, image.Picture.Size.ToString()));
+            image.Picture.Save(path);
+            _log.Debug(m => m("MainWindow.ReadImage( {0} ) ... saved to {1}", picturePath, path));
+        }
 
         /// <summary>
         /// Initializes all view.

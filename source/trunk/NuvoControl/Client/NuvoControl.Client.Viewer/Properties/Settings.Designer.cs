@@ -25,15 +25,6 @@ namespace NuvoControl.Client.Viewer.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".\\NuvoControlKonfiguration.xml")]
-        public string NuvoControlKonfigurationFile {
-            get {
-                return ((string)(this["NuvoControlKonfigurationFile"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool TestMode {
             get {
@@ -47,6 +38,15 @@ namespace NuvoControl.Client.Viewer.Properties {
         public string ClientIPOrName {
             get {
                 return ((string)(this["ClientIPOrName"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\..\\Config\\NuvoControlKonfiguration.xml")]
+        public string NuvoControlKonfigurationFile {
+            get {
+                return ((string)(this["NuvoControlKonfigurationFile"]));
             }
         }
     }
