@@ -136,54 +136,70 @@
     </Content>
     <Content Include="..\..\Images\BadWc.jpg">
       <Link>Images\BadWc.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Balkon.jpg">
       <Link>Images\Balkon.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Building.jpg">
       <Link>Images\Building.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Building.png">
       <Link>Images\Building.png</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\BüroAnita.jpg">
       <Link>Images\BüroAnita.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\BüroChristian.jpg">
       <Link>Images\BüroChristian.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Dusche.jpg">
       <Link>Images\Dusche.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Esszimmer.jpg">
       <Link>Images\Esszimmer.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Fernsehecke.jpg">
       <Link>Images\Fernsehecke.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Funk.jpg">
       <Link>Images\Funk.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Galerie-Original.bmp">
       <Link>Images\Galerie-Original.bmp</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Galerie.bmp">
       <Link>Images\Galerie.bmp</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Hasenzimmer.jpg">
       <Link>Images\Hasenzimmer.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Küche.jpg">
       <Link>Images\Küche.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Schlafzimmer.jpg">
       <Link>Images\Schlafzimmer.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Wohnbereich.bmp">
       <Link>Images\Wohnbereich.bmp</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\Wohnzimmer.jpg">
       <Link>Images\Wohnzimmer.jpg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\NuvoControl.Server.ProtocolDriver\Config\NuvoEssentiaProfile.xml">
       <Link>Config\NuvoEssentiaProfile.xml</Link>
