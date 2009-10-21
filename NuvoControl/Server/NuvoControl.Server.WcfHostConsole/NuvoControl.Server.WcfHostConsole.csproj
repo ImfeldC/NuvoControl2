@@ -30,7 +30,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>14</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -122,9 +122,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\..\Images\Thumbs.db">
-      <Link>Config\Thumbs.db</Link>
-    </None>
     <None Include="App.config" />
     <None Include="NuvoControl.Server.WcfHostConsole_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
@@ -138,55 +135,55 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="..\..\Images\BadWc.jpg">
-      <Link>Config\BadWc.jpg</Link>
+      <Link>Images\BadWc.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Balkon.jpg">
-      <Link>Config\Balkon.jpg</Link>
+      <Link>Images\Balkon.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Building.jpg">
-      <Link>Config\Building.jpg</Link>
+      <Link>Images\Building.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Building.png">
-      <Link>Config\Building.png</Link>
+      <Link>Images\Building.png</Link>
     </Content>
     <Content Include="..\..\Images\BüroAnita.jpg">
-      <Link>Config\BüroAnita.jpg</Link>
+      <Link>Images\BüroAnita.jpg</Link>
     </Content>
     <Content Include="..\..\Images\BüroChristian.jpg">
-      <Link>Config\BüroChristian.jpg</Link>
+      <Link>Images\BüroChristian.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Dusche.jpg">
-      <Link>Config\Dusche.jpg</Link>
+      <Link>Images\Dusche.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Esszimmer.jpg">
-      <Link>Config\Esszimmer.jpg</Link>
+      <Link>Images\Esszimmer.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Fernsehecke.jpg">
-      <Link>Config\Fernsehecke.jpg</Link>
+      <Link>Images\Fernsehecke.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Funk.jpg">
-      <Link>Config\Funk.jpg</Link>
+      <Link>Images\Funk.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Galerie-Original.bmp">
-      <Link>Config\Galerie-Original.bmp</Link>
+      <Link>Images\Galerie-Original.bmp</Link>
     </Content>
     <Content Include="..\..\Images\Galerie.bmp">
-      <Link>Config\Galerie.bmp</Link>
+      <Link>Images\Galerie.bmp</Link>
     </Content>
     <Content Include="..\..\Images\Hasenzimmer.jpg">
-      <Link>Config\Hasenzimmer.jpg</Link>
+      <Link>Images\Hasenzimmer.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Küche.jpg">
-      <Link>Config\Küche.jpg</Link>
+      <Link>Images\Küche.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Schlafzimmer.jpg">
-      <Link>Config\Schlafzimmer.jpg</Link>
+      <Link>Images\Schlafzimmer.jpg</Link>
     </Content>
     <Content Include="..\..\Images\Wohnbereich.bmp">
-      <Link>Config\Wohnbereich.bmp</Link>
+      <Link>Images\Wohnbereich.bmp</Link>
     </Content>
     <Content Include="..\..\Images\Wohnzimmer.jpg">
-      <Link>Config\Wohnzimmer.jpg</Link>
+      <Link>Images\Wohnzimmer.jpg</Link>
     </Content>
     <Content Include="..\NuvoControl.Server.ProtocolDriver\Config\NuvoEssentiaProfile.xml">
       <Link>Config\NuvoEssentiaProfile.xml</Link>
@@ -245,146 +242,6 @@
       <PublishState>Include</PublishState>
       <IncludeHash>True</IncludeHash>
       <FileType>Assembly</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\BadWc.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Balkon.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Building.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Building.png">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\BüroAnita.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\BüroChristian.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Dusche.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Esszimmer.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Fernsehecke.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Funk.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Galerie-Original.bmp">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Galerie.bmp">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Hasenzimmer.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
-    </PublishFile>
-    <PublishFile Include="Config\Küche.jpg">
-      <Visible>False</Visible>
-      <Group>
-      </Group>
-      <TargetPath>
-      </TargetPath>
-      <PublishState>Include</PublishState>
-      <IncludeHash>True</IncludeHash>
-      <FileType>File</FileType>
     </PublishFile>
     <PublishFile Include="Config\NuvoControlKonfiguration.xml">
       <Visible>False</Visible>
