@@ -36,7 +36,7 @@ namespace NuvoControl.Common.Configuration
 
         public override string ToString()
         {
-            return String.Format("Path={0}, Size={1}", _path, _picture.Size.ToString());
+            return String.Format("Path={0}, Size={1}", _path, (_picture==null)?"null":_picture.Size.ToString());
         }
     }
 }
