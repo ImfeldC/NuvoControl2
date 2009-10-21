@@ -36,6 +36,7 @@ namespace NuvoControl.Client.ServiceAccess
     /// </summary>
     public class ConfigurationProxy : IDisposable
     {
+
         #region Fields
 
         /// <summary>
@@ -95,8 +96,21 @@ namespace NuvoControl.Client.ServiceAccess
         /// <returns></returns>
         public Graphic GetGraphicConfiguration()
         {
+            _log.Debug(m => m("ConfigurationProxy.GetGraphicConfiguration() ...."));
             return _cfgServiceProxy.GetGraphicConfiguration();
         }
+
+        /// <summary>
+        /// Returns the image for the specified picture path.
+        /// </summary>
+        /// <param name="picturePath">Path to the image.</param>
+        /// <returns>Image object, containing the specified picture.</returns>
+        public NuvoImage GetImage(string picturePath)
+        {
+            _log.Debug(m => m("ConfigurationProxy.GetImage( {0} )", picturePath));
+            return _cfgServiceProxy.GetImage(picturePath);
+        }
+
 
         #endregion
 
