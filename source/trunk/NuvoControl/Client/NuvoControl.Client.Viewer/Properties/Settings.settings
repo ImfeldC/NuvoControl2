@@ -9,7 +9,7 @@
       <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="NuvoControlKonfigurationFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">..\..\..\..\Config\NuvoControlKonfiguration.xml</Value>
+      <Value Profile="(Default)">.\Config\NuvoControlKonfiguration.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

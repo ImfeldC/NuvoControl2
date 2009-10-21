@@ -168,10 +168,17 @@ namespace NuvoControl.Client.Viewer
             NuvoImage image;
             string path = System.IO.Path.Combine(Directory.GetCurrentDirectory(), picturePath);
             _log.Debug(m => m("MainWindow.ReadImage( {0} ) ...", picturePath));
-            image = ServiceProxy.ConfigurationProxy.GetImage(picturePath);
-            _log.Debug(m => m("MainWindow.ReadImage( {0} ) ... loaded with Size={1}", picturePath, image.Picture.Size.ToString()));
-            image.Picture.Save(path);
-            _log.Debug(m => m("MainWindow.ReadImage( {0} ) ... saved to {1}", picturePath, path));
+            try
+            {
+                image = ServiceProxy.ConfigurationProxy.GetImage(picturePath);
+                _log.Debug(m => m("MainWindow.ReadImage( {0} ) ... loaded with Size={1}", picturePath, image.Picture.Size.ToString()));
+                image.Picture.Save(path);
+                _log.Debug(m => m("MainWindow.ReadImage( {0} ) ... saved to {1}", picturePath, path));
+            }
+            catch (Exception exc)
+            {
+                _log.Error(m => m("MainWindow.ReadImage( {0} ) ... exception to load/save image! Exception={1}", picturePath, exc.ToString()));
+            }
         }
 
         /// <summary>
