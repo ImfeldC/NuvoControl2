@@ -95,6 +95,8 @@ namespace NuvoControl.Client.WcfTestConsole
                 GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
                 GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
 
+                GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
+
                 //cfgIfc.Close();
             }
             catch (FaultException<ArgumentException> exc)
@@ -140,10 +142,17 @@ namespace NuvoControl.Client.WcfTestConsole
             {
                 _log.Trace(m => m("Start getting image: {0}", imageName));
                 NuvoImage img = cfgIfc.GetImage(imageName);
-                Console.WriteLine("Image details: {0}", img.ToString());
-                _log.Trace(m => m("Image details: {0}", img.ToString()));
-                img.Picture.Save(imageSaveToName);
-                _log.Trace(m => m("Image saved to: {0}", imageSaveToName));
+                if (img == null)
+                {
+                    _log.Error(m => m("Cannot load Image: {0}", imageName));
+                }
+                else
+                {
+                    Console.WriteLine("Image details: {0}", img.ToString());
+                    _log.Trace(m => m("Image details: {0}", img.ToString()));
+                    img.Picture.Save(imageSaveToName);
+                    _log.Trace(m => m("Image saved to: {0}", imageSaveToName));
+                }
             }
             catch (Exception exc)
             {
