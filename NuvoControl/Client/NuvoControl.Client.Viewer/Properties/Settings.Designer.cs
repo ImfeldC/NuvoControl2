@@ -43,7 +43,7 @@ namespace NuvoControl.Client.Viewer.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("..\\..\\..\\..\\Config\\NuvoControlKonfiguration.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute(".\\Config\\NuvoControlKonfiguration.xml")]
         public string NuvoControlKonfigurationFile {
             get {
                 return ((string)(this["NuvoControlKonfigurationFile"]));
