@@ -109,8 +109,16 @@ namespace NuvoControl.Server.ConfigurationService
         public NuvoImage GetImage(string picturePath)
         {
             _log.Trace(m => m("Configuration Service; GetImage( {0} ).", picturePath));
-            NuvoImage img = new NuvoImage(picturePath);
-            _log.Trace(m => m("Configuration Service; return image {0}.", img.ToString()));
+            NuvoImage img = null;
+            try
+            {
+                img = new NuvoImage(picturePath);
+                _log.Trace(m => m("Configuration Service; return image {0}.", img.ToString()));
+            }
+            catch (ArgumentException exc)
+            {
+                _log.Fatal(m => m("Cannot load image {0}! Exception={1}", picturePath, exc));
+            }
             return img;
         }
 
