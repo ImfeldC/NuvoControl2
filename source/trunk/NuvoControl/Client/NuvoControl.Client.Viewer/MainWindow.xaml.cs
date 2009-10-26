@@ -339,6 +339,8 @@ namespace NuvoControl.Client.Viewer
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             ServiceProxy.ServerName = _textServerName.Text;
+            ServiceProxy.ClientIpOrName = System.Environment.MachineName;   //TODO make client name configurable
+            _log.Trace(m => m("Set server name to {0}. Set client name to {1}", ServiceProxy.ServerName, ServiceProxy.ClientIpOrName));
 
             try
             {
