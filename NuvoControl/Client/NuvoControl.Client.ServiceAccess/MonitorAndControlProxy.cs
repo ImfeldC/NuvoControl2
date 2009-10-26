@@ -299,7 +299,7 @@ namespace NuvoControl.Client.ServiceAccess
                 _log.Trace(m=>m("M&C Proxy; Initialize()"));
 
                 IMonitorAndControlCallback serverCallback = this;
-                _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback), "WSDualHttpBinding_IMonitorAndControl", ServiceProxy.buildEndpointAddress("WSDualHttpBinding_IMonitorAndControl"));
                 (_mcServiceProxy as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
                 _mcServiceProxy.Connect();
 
