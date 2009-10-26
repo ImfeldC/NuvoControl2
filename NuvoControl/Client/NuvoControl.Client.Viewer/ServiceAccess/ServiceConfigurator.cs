@@ -44,11 +44,6 @@ namespace NuvoControl.Client.Viewer.ServiceAccess
                 ServiceProxy.Inject(mcMock);
                 mcMock.SetCallback(ServiceProxy.MonitorAndControlProxy);
             }
-            else
-            {
-                ServiceProxy.ClientIpOrName = Properties.Settings.Default.ClientIPOrName;
-            }
-
         }
     }
 }
