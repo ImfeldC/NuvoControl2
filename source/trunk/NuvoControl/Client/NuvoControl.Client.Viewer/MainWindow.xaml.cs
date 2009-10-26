@@ -98,6 +98,8 @@ namespace NuvoControl.Client.Viewer
             startupWindow.Show();
             Thread.Sleep(1000);
 
+            _textServerName.Text = ServiceProxy.ServerName;
+
             bool configRead = false;
             try
             {
@@ -114,6 +116,9 @@ namespace NuvoControl.Client.Viewer
                 message.Append("\n- The configured viewer IP or name is proper.");
                 message.Append("\n\nException message:\n");
                 message.Append(exc.Message);
+
+                _log.Fatal(message.ToString());
+
                 MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
@@ -333,6 +338,8 @@ namespace NuvoControl.Client.Viewer
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            ServiceProxy.ServerName = _textServerName.Text;
+
             try
             {
                 ServiceProxy.MonitorAndControlProxy.Dispose();
@@ -346,6 +353,7 @@ namespace NuvoControl.Client.Viewer
         }
 
         #endregion
+
     }
 }
 

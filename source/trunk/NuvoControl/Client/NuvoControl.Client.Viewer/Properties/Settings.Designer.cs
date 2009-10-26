@@ -34,15 +34,6 @@ namespace NuvoControl.Client.Viewer.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
-        public string ClientIPOrName {
-            get {
-                return ((string)(this["ClientIPOrName"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute(".\\Config\\NuvoControlKonfiguration.xml")]
         public string NuvoControlKonfigurationFile {
             get {
