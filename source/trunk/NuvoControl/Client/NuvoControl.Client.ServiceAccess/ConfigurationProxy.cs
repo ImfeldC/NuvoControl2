@@ -27,6 +27,7 @@ using Common.Logging;
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Client.ServiceAccess.ConfigurationService;
+using System.Configuration;
 
 namespace NuvoControl.Client.ServiceAccess
 {
@@ -126,7 +127,7 @@ namespace NuvoControl.Client.ServiceAccess
             {
                 _log.Trace(m=>m("Configuration Proxy; Initialize()"));
 
-                _cfgServiceProxy = new ConfigureClient();
+                _cfgServiceProxy = new ConfigureClient("WSHttpBinding_IConfigure", ServiceProxy.buildEndpointAddress("WSHttpBinding_IConfigure"));
 
                 _timerRenewLease = new Timer(OnRenewLeaseCallback);
                 _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
