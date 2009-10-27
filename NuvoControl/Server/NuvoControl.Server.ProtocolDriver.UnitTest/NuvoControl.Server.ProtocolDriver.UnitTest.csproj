@@ -79,6 +79,9 @@
     <Compile Include="SerialPortTest.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\NuvoControl.Server.ProtocolDriver\Config\NuvoEssentiaProfile.xml">
+      <Link>Config\NuvoEssentiaProfile.xml</Link>
+    </Content>
     <Content Include="AuthoringTests.txt" />
     <Content Include="NuvoControl.ico" />
   </ItemGroup>

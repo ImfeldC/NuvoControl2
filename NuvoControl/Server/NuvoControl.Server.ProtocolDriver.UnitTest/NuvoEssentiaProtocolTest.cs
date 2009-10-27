@@ -105,7 +105,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         /// A test for receive command. 
         /// </summary>
         [TestMethod()]
-        public void ReceiveCommandTest()
+        public void ReceiveCommand1Test()
         {
             NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
             NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1,nuvoTelegram);
@@ -121,6 +121,25 @@ namespace NuvoControl.Server.ProtocolDriver.Test
             Assert.IsTrue(_eventRaisedCount == 2);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event1.Command.Command);
             Assert.AreEqual(ENuvoEssentiaCommands.ReadStatusCONNECT, event2.Command.Command);
+        }
+
+        /// <summary>
+        /// A test for receive command. 
+        /// The returned values in case of a 'ALLOFF' command are tested.
+        /// </summary>
+        [TestMethod()]
+        public void ReceiveCommand2Test()
+        {
+            NuvoTelegramMock nuvoTelegram = new NuvoTelegramMock();
+            NuvoEssentiaProtocol target = new NuvoEssentiaProtocol(1, nuvoTelegram);
+            target.onCommandReceived += new ConcreteProtocolEventHandler(serialPort_CommandReceived);
+
+            // Return command for ReadStatusCONNECT
+            nuvoTelegram.passDataToTestClass("ALLOFF");
+            ConreteProtocolEventArgs event1 = _nuvoProtocolEventArgs;  // save return argument
+
+            Assert.IsTrue(_eventRaisedCount == 1);
+            Assert.AreEqual(ENuvoEssentiaCommands.TurnALLZoneOFF, event1.Command.Command);
         }
 
         /// <summary>

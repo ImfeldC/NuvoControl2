@@ -217,6 +217,28 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         }
 
         /// <summary>
+        /// A test for SendCommand
+        /// This test is used to test the asnwer returned by the protocol driver
+        /// in case a 'ALLOFF' has been received.
+        /// In this case each zone needs to updated, because the new zone state (OFF)
+        /// is not automatically send for each zone.
+        /// </summary>
+        [TestMethod()]
+        public void SendCommandTest4()
+        {
+            INuvoEssentiaCommand command = new NuvoEssentiaCommand(ENuvoEssentiaCommands.SetZoneStatus, ENuvoEssentiaZones.Zone5, ENuvoEssentiaSources.Source4, -30);
+            _protDriver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_protDriver_onCommandReceived);
+            _protDriver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_protDriver_onDeviceStatusUpdate);
+            _protDriver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_protDriver_onZoneStatusUpdate);
+
+            _nuvoTelegramMock.passDataToTestClass("ALLOFF");    // receive spontaneous command
+
+            Assert.AreEqual(0, _protDeviceUpdatedEventArgs.Count);      // get ZERO device state update events
+            Assert.AreEqual(1, _protCommandReceivedEventArgs.Count);    // get ONE command events
+            Assert.AreEqual(12, _protZoneUpdatedEventArgs.Count);       // get TWELVE zone state update event
+        }
+
+        /// <summary>
         /// Event method used in SendCommandTest2
         /// </summary>
         /// <param name="sender">This pointer to the sender of the event.</param>
