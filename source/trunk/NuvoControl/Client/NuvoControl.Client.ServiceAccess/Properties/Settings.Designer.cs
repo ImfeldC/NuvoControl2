@@ -26,18 +26,6 @@ namespace NuvoControl.Client.ServiceAccess.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
-        public string ClientIPOrName {
-            get {
-                return ((string)(this["ClientIPOrName"]));
-            }
-            set {
-                this["ClientIPOrName"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string ServerName {
             get {
                 return ((string)(this["ServerName"]));
