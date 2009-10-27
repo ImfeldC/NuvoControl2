@@ -323,6 +323,8 @@ namespace NuvoControl.Server.ProtocolDriver
             bool bNotifyCommandReceived = false;
             bool bNotifyZoneStatusUpdate = false;
 
+            // first search the device list ...
+            // (with 'lock')
             lock (_deviceList)
             {
                 if (_deviceList.ContainsKey(e.DeviceId))
@@ -368,18 +370,51 @@ namespace NuvoControl.Server.ProtocolDriver
             // Notify 'Zone Status Update' ...
             if (bNotifyZoneStatusUpdate)
             {
-                if (onZoneStatusUpdate != null)
+                notifyZoneStatusUpdate(e);
+            }
+
+            // Notify all zones for this device, after 'ALLOFF' ...
+            if (bNotifyCommandReceived &&
+                (e.Command.Command == ENuvoEssentiaCommands.TurnALLZoneOFF))
+            {
+                notifyZoneStatusAllOff(e);
+            }
+        }
+
+        /// <summary>
+        /// Private method to send notification 'onZoneStatusUpdate'
+        /// </summary>
+        /// <param name="e">Parameters received from underlying layer.</param>
+        private void notifyZoneStatusUpdate(ConreteProtocolEventArgs e)
+        {
+            if (onZoneStatusUpdate != null)
+            {
+                try
                 {
-                    try
-                    {
-                        ZoneState zoneState = new ZoneState(new Address(e.DeviceId, (int)e.Command.SourceId), (e.Command.PowerStatus == EZonePowerStatus.ZoneStatusON ? true : false),
-                            NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel), ZoneQuality.Online);
-                        onZoneStatusUpdate(this, new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), zoneState, e));
-                    }
-                    catch (Exception ex)
-                    {
-                        _log.Fatal(m => m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString()));
-                    }
+                    ZoneState zoneState = new ZoneState(new Address(e.DeviceId, (int)e.Command.SourceId), (e.Command.PowerStatus == EZonePowerStatus.ZoneStatusON ? true : false),
+                        NuvoEssentiaCommand.calcVolume2NuvoControl(e.Command.VolumeLevel), ZoneQuality.Online);
+                    onZoneStatusUpdate(this, new ProtocolZoneUpdatedEventArgs(new Address(e.DeviceId, (int)e.Command.ZoneId), zoneState, e));
+                }
+                catch (Exception ex)
+                {
+                    _log.Fatal(m => m("Exception occured at forwarding event 'onZoneStatusUpdate' to Device {0} and Zone {1} (Command='{2}')! Exception={3}", e.DeviceId, e.Command.ZoneId, e.Command.ToString(), ex.ToString()));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Private method to send notifications to each zone.
+        /// </summary>
+        /// <param name="e">Parameters received from underlying layer.</param>
+        private void notifyZoneStatusAllOff(ConreteProtocolEventArgs e)
+        {
+            if (e.Command.Command == ENuvoEssentiaCommands.TurnALLZoneOFF)
+            {
+                for( int i=1; i<=12; i++)   // TODO replace hard-coded numbers ...
+                {
+                    NuvoEssentiaSingleCommand cmdZoneOff = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.TurnZoneOFF, (ENuvoEssentiaZones)i);
+                    ConreteProtocolEventArgs enew = new ConreteProtocolEventArgs(e.DeviceId, cmdZoneOff);
+                    notifyZoneStatusUpdate(enew);
                 }
             }
         }
