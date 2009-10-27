@@ -52,8 +52,9 @@ namespace NuvoControl.Client.ServiceAccess
 
         /// <summary>
         /// The ip or name of the client.
+        /// It is read from System.Environment.MachineName
         /// </summary>
-        private static string _clientIpOrName = Properties.Settings.Default.ClientIPOrName;
+        private static string _clientIpOrName = System.Environment.MachineName;
 
         /// <summary>
         /// The ip or name of the server.
@@ -115,20 +116,12 @@ namespace NuvoControl.Client.ServiceAccess
             _monitorAndControlProxy = new MonitorAndControlProxy(mAndCProxy);
         }
 
-
         /// <summary>
-        /// Get/Set the ip or the name of the client.
+        /// Get the ip or the name of the client.
         /// </summary>
         public static string ClientIpOrName
         {
             get { return _clientIpOrName; }
-            set 
-            {
-                _log.Trace(m => m("Save new client name! New address = '{0}' / Old name = '{1}'", value, _clientIpOrName));
-                _clientIpOrName = value;
-                Properties.Settings.Default.ClientIPOrName = _clientIpOrName;
-                Properties.Settings.Default.Save();
-            }
         }
 
         /// <summary>
