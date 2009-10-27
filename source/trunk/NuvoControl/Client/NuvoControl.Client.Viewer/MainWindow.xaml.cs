@@ -98,6 +98,9 @@ namespace NuvoControl.Client.Viewer
             startupWindow.Show();
             Thread.Sleep(1000);
 
+            System.Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            _log.Trace(m => m("*********** NuvoControl Viewer started *********** (Version={0})", version.ToString() ));
+
             _textServerName.Text = ServiceProxy.ServerName;
 
             bool configRead = false;
@@ -339,7 +342,6 @@ namespace NuvoControl.Client.Viewer
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             ServiceProxy.ServerName = _textServerName.Text;
-            ServiceProxy.ClientIpOrName = System.Environment.MachineName;   //TODO make client name configurable
             _log.Trace(m => m("Set server name to {0}. Set client name to {1}", ServiceProxy.ServerName, ServiceProxy.ClientIpOrName));
 
             try
