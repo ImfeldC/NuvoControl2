@@ -31,3 +31,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("1c1d88c3-9f0c-4374-9630-c0a73525276b")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("NuvoControl.Test")]
+[assembly: AssemblyCompanyAttribute("NuvoControl")]
+[assembly: AssemblyCopyrightAttribute("Copyright © B.Limacher and Ch.Imfeld")]
+[assembly: AssemblyVersionAttribute("2.0.0.0")]
+[assembly: AssemblyFileVersionAttribute("2.0.0.0")]
