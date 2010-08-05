@@ -32,6 +32,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ZoneServer;
 using NuvoControl.Server.FunctionService;
 using NuvoControl.Server.FunctionServer;
+using System.ServiceModel.Discovery;
 
 
 namespace NuvoControl.Server.WcfHostConsole
@@ -134,11 +135,11 @@ namespace NuvoControl.Server.WcfHostConsole
             {
                 // ** DISCOVERY ** //
                 // make the service discoverable by adding the discovery behavior
-      //          configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
 
                 // ** DISCOVERY ** //
                 // add the discovery endpoint that specifies where to publish the services
-      //          configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
     
                 configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
