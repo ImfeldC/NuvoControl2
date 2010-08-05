@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuvoControl.Client.Viewer</RootNamespace>
     <AssemblyName>NuvoControl.Client.Viewer</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -24,6 +24,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
     <PublishUrl>http://localhost/publish/NuvoControl.Client.Viewer/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -36,7 +37,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -76,6 +77,7 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
