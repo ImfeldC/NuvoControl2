@@ -78,7 +78,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 _log.Warn(m => m("Port is not open yet, open it before sending data!"));
                 OpenPort();
             }
-            if (_comPort != null)
+            if ( (_comPort != null) && (_comPort.IsOpen==true))
                 _comPort.Write(text);
             else
                 _log.Error(m => m("Port is not open, cannot send data {0} to serial port.", text));

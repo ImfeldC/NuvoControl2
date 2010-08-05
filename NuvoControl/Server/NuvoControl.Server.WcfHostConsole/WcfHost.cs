@@ -132,6 +132,14 @@ namespace NuvoControl.Server.WcfHostConsole
 
             try
             {
+                // ** DISCOVERY ** //
+                // make the service discoverable by adding the discovery behavior
+      //          configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+
+                // ** DISCOVERY ** //
+                // add the discovery endpoint that specifies where to publish the services
+      //          configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+    
                 configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
                 Console.WriteLine(">>> URI: {0}", configurationServiceHost.BaseAddresses[0].AbsoluteUri);
