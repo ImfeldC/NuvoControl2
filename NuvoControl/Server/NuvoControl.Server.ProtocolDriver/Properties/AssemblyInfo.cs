@@ -31,3 +31,7 @@ using System.Runtime.InteropServices;
 [assembly: Guid("02b39ce0-f52e-4ad8-b8b1-b2fb76e872eb")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("NuvoControl.Server.ProtocolDriver.Test")]
+[assembly: AssemblyVersionAttribute("2.0.0.0")]
+[assembly: AssemblyFileVersionAttribute("2.0.0.0")]
+[assembly: AssemblyCompanyAttribute("NuvoCOntrol")]
+[assembly: AssemblyCopyrightAttribute("Copyright © B.Limacher and Ch.Imfeld")]
