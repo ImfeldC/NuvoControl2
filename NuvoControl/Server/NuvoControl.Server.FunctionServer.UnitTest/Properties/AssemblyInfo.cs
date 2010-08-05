@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NuvoControl.Server.FunctionServer.UnitTest")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SEI")]
+[assembly: AssemblyCompany("NuvoControl")]
 [assembly: AssemblyProduct("NuvoControl.Server.FunctionServer.UnitTest")]
-[assembly: AssemblyCopyright("Copyright © SEI 2009")]
+[assembly: AssemblyCopyright("Copyright © B.Limacher and Ch.Imfeld")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +31,5 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]

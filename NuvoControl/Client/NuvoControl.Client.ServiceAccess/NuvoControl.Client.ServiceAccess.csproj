@@ -121,6 +121,7 @@
     <None Include="Service References\ConfigurationService\Reference.svcmap">
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </None>
     <None Include="Service References\MonitorAndControlService\MonitorAndControlService.xsd" />
     <None Include="Service References\MonitorAndControlService\MonitorAndControlService1.xsd" />

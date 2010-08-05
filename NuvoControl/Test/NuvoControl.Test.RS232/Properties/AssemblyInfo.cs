@@ -30,3 +30,7 @@ using System.Runtime.InteropServices;
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("5c405e2e-5a6d-4755-8ecb-d72797ade7b6")]
 
+[assembly: AssemblyCompanyAttribute("NuvoControl")]
+[assembly: AssemblyCopyrightAttribute("Copyright © B.Limacher and Ch.Imfeld")]
+[assembly: AssemblyVersionAttribute("2.0.0.0")]
+[assembly: AssemblyFileVersionAttribute("2.0.0.0")]
