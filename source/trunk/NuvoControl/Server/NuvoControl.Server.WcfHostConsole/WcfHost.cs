@@ -25,6 +25,8 @@ using System.ServiceModel;
 
 using Common.Logging;
 
+using System.ServiceModel.Discovery;
+
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.MonitorAndControlService;
 using NuvoControl.Server.ConfigurationService;
@@ -32,8 +34,6 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ZoneServer;
 using NuvoControl.Server.FunctionService;
 using NuvoControl.Server.FunctionServer;
-using System.ServiceModel.Discovery;
-
 
 namespace NuvoControl.Server.WcfHostConsole
 {
@@ -73,7 +73,7 @@ namespace NuvoControl.Server.WcfHostConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Console.WriteLine(">>> Starting WCF services (using .NET 4.0) ...");
+            Console.WriteLine(">>> Starting WCF services V2 Version={0} (using .NET 4.0) ... ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
             Console.WriteLine();
 
             try
