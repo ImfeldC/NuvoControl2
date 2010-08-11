@@ -8,12 +8,15 @@ using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
 
+using System.Collections.ObjectModel;
+
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 
 using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
 using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
 using Common.Logging;
+using System.ServiceModel.Discovery;
 
 namespace NuvoControl.Client.WcfTestConsole
 {
@@ -71,13 +74,29 @@ namespace NuvoControl.Client.WcfTestConsole
             Console.WriteLine("**** Console client started. *******");
             _log.Debug(m => m("**** Console client started. *******"));
 
-            //ConfigureClient cfgIfc = null;
-            IConfigure cfgIfc = null;
+            ConfigureClient cfgIfc = null;
+            //IConfigure cfgIfc = null;
             try
             {
+
+                // ------- DISCOVERY ----------
+
+                Console.WriteLine("Start discovering ...");
+
+                DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
+                FindCriteria criteria = new FindCriteria(typeof(IConfigure));
+                FindResponse discovered = discoveryClient.Find(criteria);
+                discoveryClient.Close();
+
+                Console.WriteLine("Discovery: {0} services found.", discovered.Endpoints.Count);
+                PrintEndPoints(discovered.Endpoints);
+                
+                // ----------------------------
+                
                 int iZoneId = 4;
 
                 cfgIfc = new ConfigureClient();
+                Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
 
                 Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
                 Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
@@ -89,13 +108,12 @@ namespace NuvoControl.Client.WcfTestConsole
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
                 Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
-                GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
-                GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
-                GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
-                GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
-
-                GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
+                //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
+                //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
+                //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
+                //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
+                //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
+                //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
 
                 //cfgIfc.Close();
             }
@@ -107,6 +125,9 @@ namespace NuvoControl.Client.WcfTestConsole
             {
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
+
+
+            /*
 
             try
             {
@@ -130,9 +151,27 @@ namespace NuvoControl.Client.WcfTestConsole
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
 
+             */
+
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();
 
+        }
+
+
+        private static void PrintEndPoints( Collection<EndpointDiscoveryMetadata> endpointCollection )
+        {
+            foreach( EndpointDiscoveryMetadata ep in endpointCollection )
+            {
+                Console.WriteLine("Address={0}", ep.Address.ToString());
+                foreach( Uri uri in ep.ListenUris )
+                {
+                    Console.WriteLine("  Uri.AbsolutePath={0}", uri.AbsolutePath);
+                    Console.WriteLine("  Uri.AbsoluteUri={0}", uri.AbsoluteUri);
+                    Console.WriteLine("  Uri.Host={0}", uri.Host);
+                }
+                Console.WriteLine("Version={0}", ep.Version);
+            }
         }
 
         private static void GetImage(IConfigure cfgIfc, string imageName, string imageSaveToName)

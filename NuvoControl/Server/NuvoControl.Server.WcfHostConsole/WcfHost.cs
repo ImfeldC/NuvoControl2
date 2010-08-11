@@ -136,10 +136,9 @@ namespace NuvoControl.Server.WcfHostConsole
                 // ** DISCOVERY ** //
                 // make the service discoverable by adding the discovery behavior
                 configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
-
-                // ** DISCOVERY ** //
                 // add the discovery endpoint that specifies where to publish the services
                 configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                Console.WriteLine(">>> Discovery Service started ....");
     
                 configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
