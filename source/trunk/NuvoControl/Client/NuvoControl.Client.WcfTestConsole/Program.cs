@@ -90,32 +90,40 @@ namespace NuvoControl.Client.WcfTestConsole
 
                 Console.WriteLine("Discovery: {0} services found.", discovered.Endpoints.Count);
                 PrintEndPoints(discovered.Endpoints);
-                
+
                 // ----------------------------
-                
-                int iZoneId = 4;
 
-                cfgIfc = new ConfigureClient();
-                Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
+                if (discovered.Endpoints.Count > 0)
+                {
+                    int iZoneId = 4;
 
-                Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
-                Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
+                    cfgIfc = new ConfigureClient();
+                    // Connect to the discovered service endpoint
+                    cfgIfc.Endpoint.Address = discovered.Endpoints[0].Address;
+                    Console.WriteLine("Invoking Service at {0}", discovered.Endpoints[0].Address);
 
-                Console.WriteLine("Zone name: {0}", zone.Name);
-                Console.WriteLine("Picture type: {0}", zone.PictureType);
-                Console.WriteLine("All zone details: {0}", zone.ToString());
-                
-                Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
-                //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
-                //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
-                //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
-                //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
-                //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
+                    Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
 
-                //cfgIfc.Close();
+                    Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
+                    Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
+
+                    Console.WriteLine("Zone name: {0}", zone.Name);
+                    Console.WriteLine("Picture type: {0}", zone.PictureType);
+                    Console.WriteLine("All zone details: {0}", zone.ToString());
+
+                    Graphic graphic = cfgIfc.GetGraphicConfiguration();
+                    Console.WriteLine("All graphic details: {0}", graphic.ToString());
+
+                    //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
+                    //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
+                    //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
+                    //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
+                    //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
+                    //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
+
+                    //cfgIfc.Close();
+                }
             }
             catch (FaultException<ArgumentException> exc)
             {
