@@ -22,6 +22,7 @@ using System.Text;
 using System.ServiceModel;
 using System.Diagnostics;
 using System.Threading;
+using System.ServiceModel.Discovery;
 
 using Common.Logging;
 using NuvoControl.Common;
@@ -145,6 +146,11 @@ namespace NuvoControl.Client.ServiceAccess
         /// The WCF service proxy.
         /// </summary>
         private IMonitorAndControl _mcServiceProxy;
+
+        /// <summary>
+        /// WCF discovery service response.
+        /// </summary>
+        private FindResponse _discovered;
 
         /// <summary>
         /// Track, whether Dispose has been called.
@@ -297,6 +303,7 @@ namespace NuvoControl.Client.ServiceAccess
             try
             {
                 _log.Trace(m=>m("M&C Proxy; Initialize()"));
+                _discovered = DiscoverService();
 
                 IMonitorAndControlCallback serverCallback = this;
                 _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback), "WSDualHttpBinding_IMonitorAndControl", ServiceProxy.buildEndpointAddress("WSDualHttpBinding_IMonitorAndControl"));
@@ -315,6 +322,29 @@ namespace NuvoControl.Client.ServiceAccess
             }     
         }
 
+
+        /// <summary>
+        /// Discovery method for the IMonitorAndControl service.
+        /// </summary>
+        /// <returns>Returns the discivered endpoints.</returns>
+        private FindResponse DiscoverService()
+        {
+            // ------- DISCOVERY ----------
+
+            _log.Trace(m => m("M&C Proxy; Start discovering ..."));
+
+            DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
+            FindCriteria criteria = new FindCriteria(typeof(IMonitorAndControl));
+            FindResponse discovered = discoveryClient.Find(criteria);
+            discoveryClient.Close();
+
+            _log.Trace(m => m("M&C Proxy; Discovery: {0} services found.", discovered.Endpoints.Count));
+            LogHelper.LogEndPoint(_log, discovered.Endpoints);
+
+            // ----------------------------
+
+            return discovered;
+        }
 
         /// <summary>
         /// Timer callback to renew the lease time.

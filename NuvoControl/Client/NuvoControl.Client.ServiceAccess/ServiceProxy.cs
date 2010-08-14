@@ -99,6 +99,22 @@ namespace NuvoControl.Client.ServiceAccess
 
 
         /// <summary>
+        /// Dispose the services. Using this method instead of Dispose() directly on the service,
+        /// avoids that it is instantiated because of the singleton pattern.
+        /// </summary>
+        public static void Dispose()
+        {
+            if (_monitorAndControlProxy != null)
+            {
+                _monitorAndControlProxy.Dispose();
+            }
+            if (_configurationProxy != null)
+            {
+                _configurationProxy.Dispose();
+            }
+        }
+
+        /// <summary>
         /// Injects a configuration service proxy
         /// </summary>
         /// <param name="configurationProxy"></param>
