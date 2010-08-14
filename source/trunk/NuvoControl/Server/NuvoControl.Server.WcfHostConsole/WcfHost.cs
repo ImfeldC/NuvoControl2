@@ -133,23 +133,31 @@ namespace NuvoControl.Server.WcfHostConsole
 
             try
             {
-                // ** DISCOVERY ** //
                 // make the service discoverable by adding the discovery behavior
                 configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
                 configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
-                Console.WriteLine(">>> Discovery Service started ....");
-    
+                Console.WriteLine(">>> Discovery for Configuration service started ....");
                 configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
                 Console.WriteLine(">>> URI: {0}", configurationServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
+                // make the service discoverable by adding the discovery behavior
+                mCServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                // add the discovery endpoint that specifies where to publish the services
+                mCServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                Console.WriteLine(">>> Discovery for Monitor and control service started ....");
                 mCServiceHost.Open();
                 Console.WriteLine(">>> Monitor and control service is running.");
                 Console.WriteLine(">>> URI: {0}", mCServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
+                // make the service discoverable by adding the discovery behavior
+                functionServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                // add the discovery endpoint that specifies where to publish the services
+                functionServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                Console.WriteLine(">>> Discovery for Function service started ....");
                 functionServiceHost.Open();
                 Console.WriteLine(">>> Function service is running.");
                 Console.WriteLine(">>> URI: {0}", functionServiceHost.BaseAddresses[0].AbsoluteUri);
