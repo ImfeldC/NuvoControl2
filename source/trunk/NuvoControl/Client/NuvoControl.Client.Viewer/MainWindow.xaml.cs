@@ -346,8 +346,7 @@ namespace NuvoControl.Client.Viewer
 
             try
             {
-                ServiceProxy.MonitorAndControlProxy.Dispose();
-                ServiceProxy.ConfigurationProxy.Dispose();
+                ServiceProxy.Dispose();
             }
             catch (Exception exc)
             {
