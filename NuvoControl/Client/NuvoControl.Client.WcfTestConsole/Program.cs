@@ -7,7 +7,7 @@ using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
-
+using System.ServiceModel.Discovery;
 using System.Collections.ObjectModel;
 
 using NuvoControl.Common.Configuration;
@@ -16,7 +16,6 @@ using NuvoControl.Common;
 using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
 using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
 using Common.Logging;
-using System.ServiceModel.Discovery;
 
 namespace NuvoControl.Client.WcfTestConsole
 {
@@ -89,7 +88,7 @@ namespace NuvoControl.Client.WcfTestConsole
                 discoveryClient.Close();
 
                 Console.WriteLine("Discovery: {0} services found.", discovered.Endpoints.Count);
-                PrintEndPoints(discovered.Endpoints);
+                LogHelper.PrintEndPoints(discovered.Endpoints);
 
                 // ----------------------------
 
@@ -166,21 +165,6 @@ namespace NuvoControl.Client.WcfTestConsole
 
         }
 
-
-        private static void PrintEndPoints( Collection<EndpointDiscoveryMetadata> endpointCollection )
-        {
-            foreach( EndpointDiscoveryMetadata ep in endpointCollection )
-            {
-                Console.WriteLine("Address={0}", ep.Address.ToString());
-                foreach( Uri uri in ep.ListenUris )
-                {
-                    Console.WriteLine("  Uri.AbsolutePath={0}", uri.AbsolutePath);
-                    Console.WriteLine("  Uri.AbsoluteUri={0}", uri.AbsoluteUri);
-                    Console.WriteLine("  Uri.Host={0}", uri.Host);
-                }
-                Console.WriteLine("Version={0}", ep.Version);
-            }
-        }
 
         private static void GetImage(IConfigure cfgIfc, string imageName, string imageSaveToName)
         {
