@@ -102,7 +102,7 @@ namespace NuvoControl.Client.Viewer
             _log.Trace(m => m("*********** NuvoControl Viewer started *********** (Version={0})", version.ToString() ));
 
             _textServerName.Text = ServiceProxy.ServerName;
-
+            _textServerName.LostFocus += new RoutedEventHandler(_textServerName_LostFocus);
 
             bool serviceDiscovered = false;
             try
@@ -151,6 +151,17 @@ namespace NuvoControl.Client.Viewer
             }
 
             startupWindow.Close();
+        }
+
+        /// <summary>
+        /// Lost focus handler for server name text field. It stores the new server name.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void _textServerName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            ServiceProxy.ServerName = _textServerName.Text;
+            _log.Trace(m => m("Set server name to {0}. Set client name to {1}", ServiceProxy.ServerName, ServiceProxy.ClientIpOrName));
         }
 
         #endregion
@@ -377,9 +388,6 @@ namespace NuvoControl.Client.Viewer
         /// <param name="e"></param>
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            ServiceProxy.ServerName = _textServerName.Text;
-            _log.Trace(m => m("Set server name to {0}. Set client name to {1}", ServiceProxy.ServerName, ServiceProxy.ClientIpOrName));
-
             try
             {
                 ServiceProxy.Dispose();
