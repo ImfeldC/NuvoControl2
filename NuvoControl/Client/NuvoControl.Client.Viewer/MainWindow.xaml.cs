@@ -103,6 +103,25 @@ namespace NuvoControl.Client.Viewer
 
             _textServerName.Text = ServiceProxy.ServerName;
 
+
+            bool serviceDiscovered = false;
+            try
+            {
+                DiscoverServices();
+                serviceDiscovered = true;
+            }
+            catch (Exception exc)
+            {
+                StringBuilder message = new StringBuilder("Failed to start up the viewer.\nThe viewer could not discover the service.\n\n");
+                message.Append("\n\nException message:\n");
+                message.Append(exc.Message);
+
+                _log.Fatal(message.ToString());
+
+                MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
             bool configRead = false;
             try
             {
@@ -125,7 +144,7 @@ namespace NuvoControl.Client.Viewer
                 MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-            if (configRead)
+            if (configRead && serviceDiscovered)
             {
                 InitializeViews();
                 InitializeViewModel();
@@ -137,6 +156,15 @@ namespace NuvoControl.Client.Viewer
         #endregion
 
         #region Non-Public Interface
+
+        /// <summary>
+        /// Method to discover the available services in the network.
+        /// </summary>
+        private void DiscoverServices()
+        {
+            _log.Debug(m => m("MainWindow.DiscoverServices() ..."));
+            ServiceProxy.DiscoverServices();
+        }
 
 
         /// <summary>
@@ -150,6 +178,10 @@ namespace NuvoControl.Client.Viewer
             ReadImages();
         }
 
+        /// <summary>
+        /// Private method to read all images specified in the configuration
+        /// from configuration service.
+        /// </summary>
         private void ReadImages()
         {
             _log.Debug(m => m("MainWindow.ReadImages() ..."));
@@ -171,6 +203,10 @@ namespace NuvoControl.Client.Viewer
             }
         }
 
+        /// <summary>
+        /// Private method to read an image from configuration service.
+        /// </summary>
+        /// <param name="picturePath">Image to read.</param>
         private void ReadImage(string picturePath)
         {
             NuvoImage image;

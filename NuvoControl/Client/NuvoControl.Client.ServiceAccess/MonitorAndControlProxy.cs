@@ -148,9 +148,15 @@ namespace NuvoControl.Client.ServiceAccess
         private IMonitorAndControl _mcServiceProxy;
 
         /// <summary>
-        /// WCF discovery service response.
+        /// True if the discovery for the service was executed.
+        /// Prevents from multiple discovery phases, which takes approx. 20s.
         /// </summary>
-        private FindResponse _discovered;
+        private bool _mcServiceDiscovered = false;
+
+        /// <summary>
+        /// WCF discovery service response, contains the available service endpoints.
+        /// </summary>
+        private FindResponse _mcDiscoveredServices;
 
         /// <summary>
         /// Track, whether Dispose has been called.
@@ -303,11 +309,9 @@ namespace NuvoControl.Client.ServiceAccess
             try
             {
                 _log.Trace(m=>m("M&C Proxy; Initialize()"));
-                _discovered = DiscoverService();
+                DiscoverService( false );   // execute discovery only, it it wasn't done before
 
-                IMonitorAndControlCallback serverCallback = this;
-                _mcServiceProxy = new MonitorAndControlClient(new InstanceContext(serverCallback), "WSDualHttpBinding_IMonitorAndControl", ServiceProxy.buildEndpointAddress("WSDualHttpBinding_IMonitorAndControl"));
-                (_mcServiceProxy as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
+                _mcServiceProxy = CreateMCClient(clientIpOrName);
                 _mcServiceProxy.Connect();
 
                 _timerRenewLease = new Timer(OnRenewLeaseCallback);
@@ -322,6 +326,18 @@ namespace NuvoControl.Client.ServiceAccess
             }     
         }
 
+        /// <summary>
+        /// Public discovery method for the IMonitorAndControl service.
+        /// </summary>
+        /// <param name="bEnforceDiscovery">If true, enforces a new discovery even if it was already executed.</param>
+        public void DiscoverService(bool bEnforceDiscovery)
+        {
+            if (!_mcServiceDiscovered || bEnforceDiscovery)
+            {
+                _mcDiscoveredServices = DiscoverService();
+                _mcServiceDiscovered = true;
+            }
+        }
 
         /// <summary>
         /// Discovery method for the IMonitorAndControl service.
@@ -362,6 +378,33 @@ namespace NuvoControl.Client.ServiceAccess
                 _log.Fatal(m=>m("Renew lease for M&C failed. Exception message: " + exc.Message));
             }
         }
+
+        /// <summary>
+        /// Create client for configuration service. Either use discovered service or configuration read from 
+        /// configuration file.
+        /// </summary>
+        /// <returns>Client to configure service.</returns>
+        private MonitorAndControlClient CreateMCClient(string clientIpOrName)
+        {
+            MonitorAndControlClient mcIfc = null;
+            IMonitorAndControlCallback serverCallback = this;
+            if (_mcServiceDiscovered && _mcDiscoveredServices.Endpoints.Count > 0)
+            {
+                mcIfc = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                // Connect to the discovered service endpoint
+                mcIfc.Endpoint.Address = _mcDiscoveredServices.Endpoints[0].Address;
+                (mcIfc as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
+                _log.Trace(m => m("Invoking discovered M&C service at {0}", _mcDiscoveredServices.Endpoints[0].Address));
+            }
+            else
+            {
+                mcIfc = new MonitorAndControlClient(new InstanceContext(serverCallback), "WSDualHttpBinding_IMonitorAndControl", ServiceProxy.buildEndpointAddress("WSDualHttpBinding_IMonitorAndControl"));
+                (mcIfc as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
+                _log.Trace(m => m("Invoking configured M&C service at {0}", ServiceProxy.buildEndpointAddress("WSDualHttpBinding_IMonitorAndControl")));
+            }
+            return mcIfc;
+        }
+
 
         #endregion
 

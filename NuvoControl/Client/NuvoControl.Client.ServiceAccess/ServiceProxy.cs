@@ -97,6 +97,15 @@ namespace NuvoControl.Client.ServiceAccess
             }
         }
 
+        /// <summary>
+        /// Public method to discover available services, like configuration service
+        /// and monitor&control service.
+        /// </summary>
+        public static void DiscoverServices()
+        {
+            ConfigurationProxy.DiscoverService(false);
+            MonitorAndControlProxy.DiscoverService(false);
+        }
 
         /// <summary>
         /// Dispose the services. Using this method instead of Dispose() directly on the service,
