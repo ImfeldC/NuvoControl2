@@ -57,9 +57,15 @@ namespace NuvoControl.Client.ServiceAccess
         IConfigure _cfgServiceProxy;
 
         /// <summary>
-        /// WCF discovery service response.
+        /// True if the discovery for the service was executed.
+        /// Prevents from multiple discovery phases, which takes approx. 20s.
         /// </summary>
-        private FindResponse _discovered;
+        private bool _cfgServiceDiscovered = false;
+
+        /// <summary>
+        /// WCF discovery service response, contains the available service endpoints.
+        /// </summary>
+        private FindResponse _cfgDiscoveredServices;
 
         /// <summary>
         /// Track, whether Dispose has been called.
@@ -98,6 +104,19 @@ namespace NuvoControl.Client.ServiceAccess
         #region Public Interface
 
         /// <summary>
+        /// Public discovery method for the IMonitorAndControl service.
+        /// </summary>
+        /// <param name="bEnforceDiscovery">If true, enforces a new discovery even if it was already executed.</param>
+        public void DiscoverService(bool bEnforceDiscovery)
+        {
+            if (!_cfgServiceDiscovered || bEnforceDiscovery)
+            {
+                _cfgDiscoveredServices = DiscoverService();
+                _cfgServiceDiscovered = true;
+            }
+        }
+
+        /// <summary>
         /// Reads the graphic configuration from the service.
         /// </summary>
         /// <returns></returns>
@@ -132,9 +151,9 @@ namespace NuvoControl.Client.ServiceAccess
             try
             {
                 _log.Trace(m=>m("Configuration Proxy; Initialize()"));
-                _discovered = DiscoverService();
+                DiscoverService(false);   // execute discovery only, it it wasn't done before
 
-                _cfgServiceProxy = new ConfigureClient("WSHttpBinding_IConfigure", ServiceProxy.buildEndpointAddress("WSHttpBinding_IConfigure"));
+                _cfgServiceProxy = CreateConfigureClient();
 
                 _timerRenewLease = new Timer(OnRenewLeaseCallback);
                 _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
@@ -191,6 +210,29 @@ namespace NuvoControl.Client.ServiceAccess
             }
         }
 
+
+        /// <summary>
+        /// Create client for configuration service. Either use discovered service or configuration read from 
+        /// configuration file.
+        /// </summary>
+        /// <returns>Client to configure service.</returns>
+        private ConfigureClient CreateConfigureClient()
+        {
+            ConfigureClient cfgIfc = null;
+            if (_cfgServiceDiscovered && _cfgDiscoveredServices.Endpoints.Count > 0)
+            {
+                cfgIfc = new ConfigureClient();
+                // Connect to the discovered service endpoint
+                cfgIfc.Endpoint.Address = _cfgDiscoveredServices.Endpoints[0].Address;
+                _log.Trace(m => m("Invoking discovered Configuration service at {0}", _cfgDiscoveredServices.Endpoints[0].Address));
+            }
+            else
+            {
+                cfgIfc = new ConfigureClient("WSHttpBinding_IConfigure", ServiceProxy.buildEndpointAddress("WSHttpBinding_IConfigure"));
+                _log.Trace(m => m("Invoking configured Configuration service at {0}", ServiceProxy.buildEndpointAddress("WSHttpBinding_IConfigure")));
+            }
+            return cfgIfc;
+        }
 
         #endregion
 
