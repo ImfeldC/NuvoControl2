@@ -22,11 +22,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.ServiceModel;
+using System.ServiceModel.Discovery;
 
 using Common.Logging;
 
-using System.ServiceModel.Discovery;
-
+using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.MonitorAndControlService;
 using NuvoControl.Server.ConfigurationService;
@@ -73,7 +73,8 @@ namespace NuvoControl.Server.WcfHostConsole
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            Console.WriteLine(">>> Starting WCF services V2 Version={0} (using .NET 4.0) ... ", System.Reflection.Assembly.GetExecutingAssembly().GetName().Version);
+            Console.WriteLine(">>> Starting WCF services V2  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
+                AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
 
             try
@@ -125,11 +126,14 @@ namespace NuvoControl.Server.WcfHostConsole
 
         private static void HostAllServices()
         {
-            ServiceHost configurationServiceHost = new ServiceHost(_configurationService);
+            ServiceHost configurationServiceHost = new ServiceHost(_configurationService,
+                new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/ConfigurationService")));
             ServiceHostMc mCServiceHost = new ServiceHostMc(
-                typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer);
+                typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer, 
+                new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/MonitorAndControlService")));
             ServiceHostFunction functionServiceHost = new ServiceHostFunction(
-                typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions);
+                typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions, 
+                new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/FunctionService")));
 
             try
             {
