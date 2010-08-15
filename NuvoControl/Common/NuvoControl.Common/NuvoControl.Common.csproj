@@ -50,6 +50,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
@@ -74,6 +75,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppInfoHelper.cs" />
     <Compile Include="Configuration\AlarmFunction.cs" />
     <Compile Include="Configuration\Building.cs" />
     <Compile Include="Configuration\Communication.cs" />
@@ -91,6 +93,7 @@
     <Compile Include="Configuration\Zone.cs" />
     <Compile Include="LogHelper.cs" />
     <Compile Include="NamespaceDoc.cs" />
+    <Compile Include="NetworkHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ZoneState.cs" />
   </ItemGroup>
