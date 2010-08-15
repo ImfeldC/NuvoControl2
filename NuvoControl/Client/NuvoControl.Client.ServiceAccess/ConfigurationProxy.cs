@@ -54,7 +54,12 @@ namespace NuvoControl.Client.ServiceAccess
         /// <summary>
         /// WCF service proxy.
         /// </summary>
-        IConfigure _cfgServiceProxy;
+        private IConfigure _cfgServiceProxy;
+
+        /// <summary>
+        /// Endpoint address.
+        /// </summary>
+        private EndpointAddress _endPointAddress = null;  
 
         /// <summary>
         /// True if the discovery for the service was executed.
@@ -102,6 +107,18 @@ namespace NuvoControl.Client.ServiceAccess
         #endregion
 
         #region Public Interface
+
+        /// <summary>
+        /// Returns the endpoitn address of the service.
+        /// </summary>
+        public EndpointAddress endPointAdress
+        {
+            get
+            {
+                return _endPointAddress;
+            }
+        }
+
 
         /// <summary>
         /// Public discovery method for the IMonitorAndControl service.
@@ -231,6 +248,7 @@ namespace NuvoControl.Client.ServiceAccess
                 cfgIfc = new ConfigureClient("WSHttpBinding_IConfigure", ServiceProxy.buildEndpointAddress("WSHttpBinding_IConfigure"));
                 _log.Trace(m => m("Invoking configured Configuration service at {0}", ServiceProxy.buildEndpointAddress("WSHttpBinding_IConfigure")));
             }
+            _endPointAddress = cfgIfc.Endpoint.Address;
             return cfgIfc;
         }
 

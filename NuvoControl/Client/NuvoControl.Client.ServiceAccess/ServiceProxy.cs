@@ -154,13 +154,21 @@ namespace NuvoControl.Client.ServiceAccess
         /// </summary>
         public static string ServerName
         {
-            get { return _serverName; }
+            get 
+            {
+                string serverName = "";
+                serverName = ConfigurationProxy.endPointAdress.Uri.Host;
+                return serverName; 
+            }
             set 
             {
-                _log.Trace(m => m("Save new server name! New address = '{0}' / Old name = '{1}'", value, _serverName));
-                _serverName = value;
-                Properties.Settings.Default.ServerName = _serverName;
-                Properties.Settings.Default.Save();
+                if (_serverName != value)
+                {
+                    _log.Trace(m => m("Save new server name! New address = '{0}' / Old name = '{1}'", value, _serverName));
+                    _serverName = value;
+                    Properties.Settings.Default.ServerName = _serverName;
+                    Properties.Settings.Default.Save();
+                }
             }
         }
 
