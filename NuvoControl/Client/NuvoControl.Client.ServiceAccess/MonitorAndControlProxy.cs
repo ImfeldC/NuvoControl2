@@ -148,17 +148,6 @@ namespace NuvoControl.Client.ServiceAccess
         private IMonitorAndControl _mcServiceProxy;
 
         /// <summary>
-        /// True if the discovery for the service was executed.
-        /// Prevents from multiple discovery phases, which takes approx. 20s.
-        /// </summary>
-        private bool _mcServiceDiscovered = false;
-
-        /// <summary>
-        /// WCF discovery service response, contains the available service endpoints.
-        /// </summary>
-        private FindResponse _mcDiscoveredServices;
-
-        /// <summary>
         /// Track, whether Dispose has been called.
         /// </summary>
         private bool _disposed = false;
@@ -309,7 +298,6 @@ namespace NuvoControl.Client.ServiceAccess
             try
             {
                 _log.Trace(m=>m("M&C Proxy; Initialize()"));
-                DiscoverService( false );   // execute discovery only, it it wasn't done before
 
                 _mcServiceProxy = CreateMCClient(clientIpOrName);
                 _mcServiceProxy.Connect();
@@ -324,42 +312,6 @@ namespace NuvoControl.Client.ServiceAccess
                 _log.Error("Creating connection to the service failed.", exc);
                 (_mcServiceProxy as MonitorAndControlClient).Abort();
             }     
-        }
-
-        /// <summary>
-        /// Public discovery method for the IMonitorAndControl service.
-        /// </summary>
-        /// <param name="bEnforceDiscovery">If true, enforces a new discovery even if it was already executed.</param>
-        public void DiscoverService(bool bEnforceDiscovery)
-        {
-            if (!_mcServiceDiscovered || bEnforceDiscovery)
-            {
-                _mcDiscoveredServices = DiscoverService();
-                _mcServiceDiscovered = true;
-            }
-        }
-
-        /// <summary>
-        /// Discovery method for the IMonitorAndControl service.
-        /// </summary>
-        /// <returns>Returns the discivered endpoints.</returns>
-        private FindResponse DiscoverService()
-        {
-            // ------- DISCOVERY ----------
-
-            _log.Trace(m => m("M&C Proxy; Start discovering ..."));
-
-            DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-            FindCriteria criteria = new FindCriteria(typeof(IMonitorAndControl));
-            FindResponse discovered = discoveryClient.Find(criteria);
-            discoveryClient.Close();
-
-            _log.Trace(m => m("M&C Proxy; Discovery: {0} services found.", discovered.Endpoints.Count));
-            LogHelper.LogEndPoint(_log, discovered.Endpoints);
-
-            // ----------------------------
-
-            return discovered;
         }
 
         /// <summary>
@@ -388,13 +340,14 @@ namespace NuvoControl.Client.ServiceAccess
         {
             MonitorAndControlClient mcIfc = null;
             IMonitorAndControlCallback serverCallback = this;
-            if (_mcServiceDiscovered && _mcDiscoveredServices.Endpoints.Count > 0)
+            if (ServiceProxy.ServiceDiscovery.isServiceDiscovered(typeof(IMonitorAndControl)) && 
+                ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IMonitorAndControl)).Endpoints.Count > 0)
             {
                 mcIfc = new MonitorAndControlClient(new InstanceContext(serverCallback));
                 // Connect to the discovered service endpoint
-                mcIfc.Endpoint.Address = _mcDiscoveredServices.Endpoints[0].Address;
+                mcIfc.Endpoint.Address = ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IMonitorAndControl)).Endpoints[0].Address;
                 (mcIfc as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
-                _log.Trace(m => m("Invoking discovered M&C service at {0}", _mcDiscoveredServices.Endpoints[0].Address));
+                _log.Trace(m => m("Invoking discovered M&C service at {0}", ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IMonitorAndControl)).Endpoints[0].Address));
             }
             else
             {

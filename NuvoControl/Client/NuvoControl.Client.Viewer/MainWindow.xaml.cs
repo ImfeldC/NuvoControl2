@@ -101,9 +101,6 @@ namespace NuvoControl.Client.Viewer
             System.Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             _log.Trace(m => m("*********** NuvoControl Viewer started *********** (Version={0})", version.ToString() ));
 
-            _textServerName.Text = ServiceProxy.ServerName;
-            _textServerName.LostFocus += new RoutedEventHandler(_textServerName_LostFocus);
-
             bool serviceDiscovered = false;
             try
             {
@@ -121,6 +118,9 @@ namespace NuvoControl.Client.Viewer
                 MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
+
+            _textServerName.Text = ServiceProxy.ServerName;
+            _textServerName.LostFocus += new RoutedEventHandler(_textServerName_LostFocus);
 
             bool configRead = false;
             try

@@ -81,6 +81,7 @@
     </Compile>
     <Compile Include="ConfigurationProxy.cs" />
     <Compile Include="MonitorAndControlProxy.cs" />
+    <Compile Include="ServiceDiscoveryProxy.cs" />
     <Compile Include="ServiceProxy.cs" />
     <Compile Include="WsDualProxyHelper.cs" />
   </ItemGroup>

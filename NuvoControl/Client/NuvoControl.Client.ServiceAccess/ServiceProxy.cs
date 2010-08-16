@@ -41,6 +41,12 @@ namespace NuvoControl.Client.ServiceAccess
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
+        /// Discovery service object.
+        /// Register types to discovery with the addService method, before executing the discover method.
+        /// </summary>
+        private static ServiceDiscoveryProxy _serviceDiscovery = null;
+
+        /// <summary>
         /// M&C proxy
         /// </summary>
         public static MonitorAndControlProxy _monitorAndControlProxy = null;
@@ -65,6 +71,22 @@ namespace NuvoControl.Client.ServiceAccess
 
         #region Public Interface
 
+        /// <summary>
+        /// Retruns Discovery Service object.
+        /// </summary>
+        public static ServiceDiscoveryProxy ServiceDiscovery
+        {
+            get 
+            {
+                if (_serviceDiscovery == null)
+                {
+                    _serviceDiscovery = new ServiceDiscoveryProxy();
+                    _serviceDiscovery.addService(typeof(IConfigure));
+                    _serviceDiscovery.addService(typeof(IMonitorAndControl));
+                }
+                return _serviceDiscovery; 
+            }
+        }
 
         /// <summary>
         /// Returns the M&C proxy.
@@ -103,8 +125,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// </summary>
         public static void DiscoverServices()
         {
-            ConfigurationProxy.DiscoverService(false);
-            MonitorAndControlProxy.DiscoverService(false);
+            ServiceDiscovery.DiscoverService(false);
         }
 
         /// <summary>

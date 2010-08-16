@@ -37,7 +37,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>

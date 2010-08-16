@@ -62,17 +62,6 @@ namespace NuvoControl.Client.ServiceAccess
         private EndpointAddress _endPointAddress = null;  
 
         /// <summary>
-        /// True if the discovery for the service was executed.
-        /// Prevents from multiple discovery phases, which takes approx. 20s.
-        /// </summary>
-        private bool _cfgServiceDiscovered = false;
-
-        /// <summary>
-        /// WCF discovery service response, contains the available service endpoints.
-        /// </summary>
-        private FindResponse _cfgDiscoveredServices;
-
-        /// <summary>
         /// Track, whether Dispose has been called.
         /// </summary>
         private bool _disposed = false;
@@ -121,19 +110,6 @@ namespace NuvoControl.Client.ServiceAccess
 
 
         /// <summary>
-        /// Public discovery method for the IMonitorAndControl service.
-        /// </summary>
-        /// <param name="bEnforceDiscovery">If true, enforces a new discovery even if it was already executed.</param>
-        public void DiscoverService(bool bEnforceDiscovery)
-        {
-            if (!_cfgServiceDiscovered || bEnforceDiscovery)
-            {
-                _cfgDiscoveredServices = DiscoverService();
-                _cfgServiceDiscovered = true;
-            }
-        }
-
-        /// <summary>
         /// Reads the graphic configuration from the service.
         /// </summary>
         /// <returns></returns>
@@ -168,7 +144,6 @@ namespace NuvoControl.Client.ServiceAccess
             try
             {
                 _log.Trace(m=>m("Configuration Proxy; Initialize()"));
-                DiscoverService(false);   // execute discovery only, it it wasn't done before
 
                 _cfgServiceProxy = CreateConfigureClient();
 
@@ -186,29 +161,6 @@ namespace NuvoControl.Client.ServiceAccess
             }
         }
 
-
-        /// <summary>
-        /// Discovery method for the IConfigure service.
-        /// </summary>
-        /// <returns>Returns the discivered endpoints.</returns>
-        private FindResponse DiscoverService()
-        {
-            // ------- DISCOVERY ----------
-
-            _log.Trace(m=>m("Start discovering ..."));
-
-            DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-            FindCriteria criteria = new FindCriteria(typeof(IConfigure));
-            FindResponse discovered = discoveryClient.Find(criteria);
-            discoveryClient.Close();
-
-            _log.Trace(m=>m("Discovery: {0} services found.", discovered.Endpoints.Count));
-            LogHelper.LogEndPoint(_log, discovered.Endpoints);
-
-            // ----------------------------
-
-            return discovered;
-        }
 
         /// <summary>
         /// Timer callback to renew the lease time.
@@ -236,12 +188,13 @@ namespace NuvoControl.Client.ServiceAccess
         private ConfigureClient CreateConfigureClient()
         {
             ConfigureClient cfgIfc = null;
-            if (_cfgServiceDiscovered && _cfgDiscoveredServices.Endpoints.Count > 0)
+            if (ServiceProxy.ServiceDiscovery.isServiceDiscovered(typeof(IConfigure)) &&
+                ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IConfigure)).Endpoints.Count > 0)
             {
                 cfgIfc = new ConfigureClient();
                 // Connect to the discovered service endpoint
-                cfgIfc.Endpoint.Address = _cfgDiscoveredServices.Endpoints[0].Address;
-                _log.Trace(m => m("Invoking discovered Configuration service at {0}", _cfgDiscoveredServices.Endpoints[0].Address));
+                cfgIfc.Endpoint.Address = ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IConfigure)).Endpoints[0].Address;
+                _log.Trace(m => m("Invoking discovered Configuration service at {0}", ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IConfigure)).Endpoints[0].Address));
             }
             else
             {
