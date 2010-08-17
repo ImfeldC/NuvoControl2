@@ -95,6 +95,33 @@ namespace NuvoControl.Client.ServiceAccess
                 get { return _tag; }
                 set { _tag = value; }
             }
+
+            /// <summary>
+            /// Returns string equivalnet of the object.
+            /// </summary>
+            /// <returns>String representing the object.</returns>
+            public override string ToString()
+            {
+                string retString = "";
+                if( _serviceDiscovered )
+                {
+                    retString = String.Format("Type={0} - ", _discoverType.ToString());
+                    foreach (EndpointDiscoveryMetadata endpoint in _discoveredServices.Endpoints)
+                    {
+                        retString += String.Format("Address={0}, Version={1} [", endpoint.Address.ToString(), endpoint.Version);
+                        foreach (Uri uri in endpoint.ListenUris)
+                        {
+                            retString += String.Format("Uri.AbsolutePath={0},Uri.AbsoluteUri={1}, Uri.Host={2}", uri.AbsolutePath, uri.AbsoluteUri, uri.Host);
+                        }
+                        retString += "]";
+                    }
+                }
+                else
+                {
+                    retString = String.Format("Type={0} - (discovery not executed yet)", _discoverType.ToString());
+                }
+                return retString;
+            }
         }
 
         /// <summary>
@@ -195,14 +222,19 @@ namespace NuvoControl.Client.ServiceAccess
             // Wait for each discover service
             foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
             {
-                serviceDiscoveryEntry.DiscoveredServices = delDiscoverService.EndInvoke(serviceDiscoveryEntry.AsynchResult);
+                if (serviceDiscoveryEntry.AsynchResult != null)
+                {
+                    serviceDiscoveryEntry.DiscoveredServices = delDiscoverService.EndInvoke(serviceDiscoveryEntry.AsynchResult);
+                }
+                serviceDiscoveryEntry.AsynchResult = null;
             }
 
             _log.Trace(m => m("DiscoverAllServices: End discovering ..."));
+            _log.Trace(m => m("DiscoverAllServices: {0}", this.ToString()));
         }
 
         /// <summary>
-        /// Discovery method for the service.
+        /// Discovery method for the service. This method is called with a delegate asynchronous.
         /// </summary>
         /// <param name="discoverType">Type to discover.</param>
         /// <returns>Returns the discovered endpoints.</returns>
@@ -225,5 +257,18 @@ namespace NuvoControl.Client.ServiceAccess
             return discovered;
         }
 
+        /// <summary>
+        /// Returns string equivalnet of the object.
+        /// </summary>
+        /// <returns>String representing the object.</returns>
+        public override string ToString()
+        {
+            string retString = "";
+            foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
+            {
+                retString += serviceDiscoveryEntry.ToString();
+            }
+            return retString;
+        }
     }
 }
