@@ -175,6 +175,8 @@ namespace NuvoControl.Client.Viewer
         {
             _log.Debug(m => m("MainWindow.DiscoverServices() ..."));
             ServiceProxy.DiscoverServices();
+
+            _log.Debug(m => m("MainWindow.DiscoverServices() {0} server found ...", ServiceProxy.ServiceDiscovery.DiscoveredServers.Count));
         }
 
 

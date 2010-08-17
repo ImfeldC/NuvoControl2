@@ -178,7 +178,8 @@ namespace NuvoControl.Client.ServiceAccess
             get 
             {
                 string serverName = "";
-                serverName = ConfigurationProxy.endPointAdress.Uri.Host;
+                //serverName = ConfigurationProxy.endPointAdress.Uri.Host;
+                serverName = ServiceDiscovery.DiscoveredServers[0];
                 return serverName; 
             }
             set 
