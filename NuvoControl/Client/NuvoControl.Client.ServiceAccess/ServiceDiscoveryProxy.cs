@@ -6,6 +6,7 @@ using System.ServiceModel.Discovery;
 
 using Common.Logging;
 using NuvoControl.Common;
+using System.ServiceModel;
 
 
 namespace NuvoControl.Client.ServiceAccess
@@ -33,6 +34,11 @@ namespace NuvoControl.Client.ServiceAccess
             private bool _serviceDiscovered = false;
 
             /// <summary>
+            /// Name of the service.
+            /// </summary>
+            private string _name;
+
+            /// <summary>
             /// Type to discover.
             /// </summary>
             private Type _discoverType;
@@ -52,9 +58,11 @@ namespace NuvoControl.Client.ServiceAccess
             /// <summary>
             /// Constructor, for the specified type.
             /// </summary>
+            /// <param name="name">Name of the service.</param>
             /// <param name="discoverType">Type to discover.</param>
-            public ServiceDiscoveryEntry(Type discoverType)
+            public ServiceDiscoveryEntry( string name, Type discoverType)
             {
+                _name = name;
                 _discoverType = discoverType;
             }
 
@@ -64,6 +72,14 @@ namespace NuvoControl.Client.ServiceAccess
             public bool ServiceDiscovered
             {
                 get { return _serviceDiscovered; }
+            }
+
+            /// <summary>
+            /// Retruns the name of the service.
+            /// </summary>
+            public string Name
+            {
+                get { return _name; }
             }
 
             /// <summary>
@@ -105,7 +121,7 @@ namespace NuvoControl.Client.ServiceAccess
                 string retString = "";
                 if( _serviceDiscovered )
                 {
-                    retString = String.Format("Type={0} - ", _discoverType.ToString());
+                    retString = String.Format("Name={0}, Type={1} - ", _name, _discoverType.ToString());
                     foreach (EndpointDiscoveryMetadata endpoint in _discoveredServices.Endpoints)
                     {
                         retString += String.Format("Address={0}, Version={1} [", endpoint.Address.ToString(), endpoint.Version);
@@ -130,9 +146,14 @@ namespace NuvoControl.Client.ServiceAccess
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// List with the types to discover.
+        /// List with the types to discover and its discovered endpoints.
         /// </summary>
         private List<ServiceDiscoveryEntry> _serviceDiscoveryList = null;
+
+        /// <summary>
+        /// List with the discovered servers.
+        /// </summary>
+        private List<string> _discoveredServers = null;
 
         /// <summary>
         /// Constructor. Creates an empty list of types to discover.
@@ -141,31 +162,33 @@ namespace NuvoControl.Client.ServiceAccess
         public ServiceDiscoveryProxy()
         {
             _serviceDiscoveryList = new List<ServiceDiscoveryEntry>();
+            _discoveredServers = new List<string>();
         }
 
         /// <summary>
         /// Add a type to the list which will be discovered later.
         /// </summary>
+        /// <param name="name">Name of the service.</param>
         /// <param name="discoverType">Type to discover.</param>
-        public void addService(Type discoverType)
+        public void addService(string name, Type discoverType)
         {
-            _serviceDiscoveryList.Add(new ServiceDiscoveryEntry(discoverType));
+            _serviceDiscoveryList.Add(new ServiceDiscoveryEntry(name,discoverType));
         }
 
 
         /// <summary>
         /// Returns true if the specified type was already discovered.
         /// </summary>
-        /// <param name="discoverType">Type to discover.</param>
-        /// <returns>True if type ahs been discovered.</returns>
-        public bool isServiceDiscovered(Type discoverType)
+        /// <param name="serviceName">Name of the service.</param>
+        /// <returns>True if type has been discovered and at least one service was found.</returns>
+        public bool isServiceDiscovered(string serviceName)
         {
             bool bRet = false;
             foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
             {
-                if (serviceDiscoveryEntry.DiscoverType == discoverType)
+                if (serviceDiscoveryEntry.Name == serviceName)
                 {
-                    bRet = serviceDiscoveryEntry.ServiceDiscovered;
+                    bRet = (serviceDiscoveryEntry.ServiceDiscovered && serviceDiscoveryEntry.DiscoveredServices.Endpoints.Count>0);
                     break;
                 }
             }
@@ -173,23 +196,38 @@ namespace NuvoControl.Client.ServiceAccess
         }
 
         /// <summary>
-        /// Returns the discovered endpoints for the specified type.
-        /// Returns null if the discovery servcie wasn't executed so far.
+        /// Return list of discovered servers.
         /// </summary>
-        /// <param name="discoverType">Type to discover.</param>
-        /// <returns>Discovered endpoints for the specified type.</returns>
-        public FindResponse ServiceEndpoints(Type discoverType)
+        public List<string> DiscoveredServers
         {
-            FindResponse res = null;
+            get { return _discoveredServers; }
+        }
+
+        /// <summary>
+        /// Get endpoint address for the specified service name and server name
+        /// </summary>
+        /// <param name="serviceName">Service name.</param>
+        /// <param name="serverName">Server name.</param>
+        /// <returns>Endpoint address, for the specified service name and server name.</returns>
+        public EndpointAddress EndpointAddress(string serviceName, string serverName)
+        {
             foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
             {
-                if (serviceDiscoveryEntry.DiscoverType == discoverType)
+                if (serviceDiscoveryEntry.Name.Equals(serviceName))
                 {
-                    res = serviceDiscoveryEntry.DiscoveredServices;
-                    break;
+                    foreach (EndpointDiscoveryMetadata endpoint in serviceDiscoveryEntry.DiscoveredServices.Endpoints)
+                    {
+                        foreach (Uri uri in endpoint.ListenUris)
+                        {
+                            if (uri.Host.Equals(serverName))
+                            {
+                                return endpoint.Address;
+                            }
+                        }
+                    }
                 }
             }
-            return res;
+            return null;
         }
 
         /// <summary>
@@ -230,6 +268,7 @@ namespace NuvoControl.Client.ServiceAccess
             }
 
             _log.Trace(m => m("DiscoverAllServices: End discovering ..."));
+            builListOfDiscoveredServers();
             _log.Trace(m => m("DiscoverAllServices: {0}", this.ToString()));
         }
 
@@ -255,6 +294,27 @@ namespace NuvoControl.Client.ServiceAccess
             // ----------------------------
 
             return discovered;
+        }
+
+        /// <summary>
+        /// Build list of discovered servers.
+        /// </summary>
+        private void builListOfDiscoveredServers()
+        {
+            _discoveredServers.Clear();
+            foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
+            {
+                foreach( EndpointDiscoveryMetadata endpoint in serviceDiscoveryEntry.DiscoveredServices.Endpoints )
+                {
+                    foreach (Uri uri in endpoint.ListenUris)
+                    {
+                        if( !_discoveredServers.Contains(uri.Host) )
+                        {
+                            _discoveredServers.Add(uri.Host);
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>

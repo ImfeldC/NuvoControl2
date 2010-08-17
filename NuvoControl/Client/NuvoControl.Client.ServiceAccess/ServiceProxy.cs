@@ -81,8 +81,8 @@ namespace NuvoControl.Client.ServiceAccess
                 if (_serviceDiscovery == null)
                 {
                     _serviceDiscovery = new ServiceDiscoveryProxy();
-                    _serviceDiscovery.addService(typeof(IConfigure));
-                    _serviceDiscovery.addService(typeof(IMonitorAndControl));
+                    _serviceDiscovery.addService(ConfigurationProxy.serviceName, typeof(IConfigure));
+                    _serviceDiscovery.addService(MonitorAndControlProxy.serviceName, typeof(IMonitorAndControl));
                 }
                 return _serviceDiscovery; 
             }
