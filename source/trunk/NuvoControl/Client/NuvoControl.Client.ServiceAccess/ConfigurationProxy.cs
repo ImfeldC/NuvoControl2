@@ -98,7 +98,7 @@ namespace NuvoControl.Client.ServiceAccess
         #region Public Interface
 
         /// <summary>
-        /// Returns the endpoitn address of the service.
+        /// Returns the endpoint address of the service.
         /// </summary>
         public EndpointAddress endPointAdress
         {

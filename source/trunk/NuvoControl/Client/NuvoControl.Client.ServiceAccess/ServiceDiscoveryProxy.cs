@@ -16,6 +16,13 @@ namespace NuvoControl.Client.ServiceAccess
     public class ServiceDiscoveryProxy
     {
         /// <summary>
+        /// Delegate for asynchronous call of DiscoverService method
+        /// </summary>
+        /// <param name="discoverType">Type to retrieve.</param>
+        /// <returns>Endpoints found for the specified type.</returns>
+        private delegate FindResponse DelegateDiscoverService(Type discoverType);
+
+        /// <summary>
         /// Clas used as entyr in the list.
         /// </summary>
         private class ServiceDiscoveryEntry
@@ -35,6 +42,12 @@ namespace NuvoControl.Client.ServiceAccess
             /// Is null if the discovery service wasn't executed so far.
             /// </summary>
             private FindResponse _discoveredServices = null;
+
+            /// <summary>
+            /// Result used in case of asynchronous calls.
+            /// </summary>
+            private IAsyncResult _tag = null;
+
 
             /// <summary>
             /// Constructor, for the specified type.
@@ -62,7 +75,7 @@ namespace NuvoControl.Client.ServiceAccess
             }
 
             /// <summary>
-            /// Retruns or Sets the found endpoints for the specified type.
+            /// Gets and Sets the found endpoints for the specified type.
             /// </summary>
             public FindResponse DiscoveredServices
             {
@@ -74,6 +87,14 @@ namespace NuvoControl.Client.ServiceAccess
                 }
             }
 
+            /// <summary>
+            /// Gets and Sets the result set for asynchronous calls.
+            /// </summary>
+            public IAsyncResult AsynchResult
+            {
+                get { return _tag; }
+                set { _tag = value; }
+            }
         }
 
         /// <summary>
@@ -149,15 +170,35 @@ namespace NuvoControl.Client.ServiceAccess
         /// Add the types with the addService method.
         /// </summary>
         /// <param name="bEnforceDiscovery">If true, enforces a new discovery even if it was already executed.</param>
-        public void DiscoverService(bool bEnforceDiscovery)
+        public void DiscoverAllServices(bool bEnforceDiscovery)
         {
+            _log.Trace(m => m("DiscoverAllServices: Start discovering [bEnforceDiscovery={0}] ...", bEnforceDiscovery.ToString()));
+
+            // create the delegate
+            DelegateDiscoverService delDiscoverService = new DelegateDiscoverService(DiscoverService);
+
+            // Start asynchronous the discover service for each type
             foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
             {
                 if (!serviceDiscoveryEntry.ServiceDiscovered || bEnforceDiscovery)
                 {
-                    serviceDiscoveryEntry.DiscoveredServices = DiscoverService(serviceDiscoveryEntry.DiscoverType);
+                    //serviceDiscoveryEntry.DiscoveredServices = DiscoverService(serviceDiscoveryEntry.DiscoverType);
+                    serviceDiscoveryEntry.AsynchResult = delDiscoverService.BeginInvoke(serviceDiscoveryEntry.DiscoverType, null, null);
+                }
+                else
+                {
+                    // delete a previous existing result
+                    serviceDiscoveryEntry.AsynchResult = null;
                 }
             }
+
+            // Wait for each discover service
+            foreach (ServiceDiscoveryEntry serviceDiscoveryEntry in _serviceDiscoveryList)
+            {
+                serviceDiscoveryEntry.DiscoveredServices = delDiscoverService.EndInvoke(serviceDiscoveryEntry.AsynchResult);
+            }
+
+            _log.Trace(m => m("DiscoverAllServices: End discovering ..."));
         }
 
         /// <summary>

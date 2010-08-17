@@ -125,7 +125,7 @@ namespace NuvoControl.Client.ServiceAccess
         /// </summary>
         public static void DiscoverServices()
         {
-            ServiceDiscovery.DiscoverService(false);
+            ServiceDiscovery.DiscoverAllServices(false);
         }
 
         /// <summary>
