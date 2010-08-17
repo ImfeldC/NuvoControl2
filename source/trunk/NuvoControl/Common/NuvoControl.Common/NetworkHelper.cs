@@ -48,7 +48,7 @@ namespace NuvoControl.Common
         public static string buildEndpointAddress(string configuredEndpointAddress)
         {
             string endpointAdress = configuredEndpointAddress;
-            endpointAdress = endpointAdress.Replace("localhost", getIPAddress());
+            endpointAdress = endpointAdress.Replace("localhost", getHostName());
             return endpointAdress;
         }
 
