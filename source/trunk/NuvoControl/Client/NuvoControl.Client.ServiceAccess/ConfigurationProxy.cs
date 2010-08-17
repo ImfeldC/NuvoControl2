@@ -47,6 +47,11 @@ namespace NuvoControl.Client.ServiceAccess
         private const int RENEW_LEASE_TIME = 30000;
 
         /// <summary>
+        /// Name used to identify this service.
+        /// </summary>
+        public const string serviceName = "Configure";
+
+        /// <summary>
         /// Timer, used to renew the lease periodically.
         /// </summary>
         private Timer _timerRenewLease;
@@ -188,13 +193,13 @@ namespace NuvoControl.Client.ServiceAccess
         private ConfigureClient CreateConfigureClient()
         {
             ConfigureClient cfgIfc = null;
-            if (ServiceProxy.ServiceDiscovery.isServiceDiscovered(typeof(IConfigure)) &&
-                ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IConfigure)).Endpoints.Count > 0)
+            if (ServiceProxy.ServiceDiscovery.isServiceDiscovered(serviceName))
             {
                 cfgIfc = new ConfigureClient();
                 // Connect to the discovered service endpoint
-                cfgIfc.Endpoint.Address = ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IConfigure)).Endpoints[0].Address;
-                _log.Trace(m => m("Invoking discovered Configuration service at {0}", ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IConfigure)).Endpoints[0].Address));
+                EndpointAddress addr = ServiceProxy.ServiceDiscovery.EndpointAddress(serviceName, ServiceProxy.ServiceDiscovery.DiscoveredServers[0]);
+                cfgIfc.Endpoint.Address = addr;
+                _log.Trace(m => m("Invoking discovered Configuration service at {0}", addr));
             }
             else
             {

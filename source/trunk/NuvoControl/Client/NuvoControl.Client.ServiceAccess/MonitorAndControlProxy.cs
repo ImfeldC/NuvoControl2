@@ -143,6 +143,11 @@ namespace NuvoControl.Client.ServiceAccess
         private const int RENEW_LEASE_TIME = 30000;
 
         /// <summary>
+        /// Name used to identify this service.
+        /// </summary>
+        public const string serviceName = "Monitor&Control";
+
+        /// <summary>
         /// The WCF service proxy.
         /// </summary>
         private IMonitorAndControl _mcServiceProxy;
@@ -340,14 +345,14 @@ namespace NuvoControl.Client.ServiceAccess
         {
             MonitorAndControlClient mcIfc = null;
             IMonitorAndControlCallback serverCallback = this;
-            if (ServiceProxy.ServiceDiscovery.isServiceDiscovered(typeof(IMonitorAndControl)) && 
-                ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IMonitorAndControl)).Endpoints.Count > 0)
+            if (ServiceProxy.ServiceDiscovery.isServiceDiscovered(serviceName))
             {
                 mcIfc = new MonitorAndControlClient(new InstanceContext(serverCallback));
                 // Connect to the discovered service endpoint
-                mcIfc.Endpoint.Address = ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IMonitorAndControl)).Endpoints[0].Address;
+                EndpointAddress addr = ServiceProxy.ServiceDiscovery.EndpointAddress(serviceName, ServiceProxy.ServiceDiscovery.DiscoveredServers[0]);
+                mcIfc.Endpoint.Address = addr;
                 (mcIfc as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
-                _log.Trace(m => m("Invoking discovered M&C service at {0}", ServiceProxy.ServiceDiscovery.ServiceEndpoints(typeof(IMonitorAndControl)).Endpoints[0].Address));
+                _log.Trace(m => m("Invoking discovered M&C service at {0}", addr));
             }
             else
             {
