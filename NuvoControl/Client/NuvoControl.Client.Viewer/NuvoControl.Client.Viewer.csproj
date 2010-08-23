@@ -38,7 +38,7 @@
     <InstallUrl>http://www.imfeld.net/publish/NuvoControl.Client.Viewer/</InstallUrl>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>10</ApplicationRevision>
+    <ApplicationRevision>11</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
