@@ -91,7 +91,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         public string ToolTip
         {
-            get { return ("Click to browse down to " + _child.ObjectName); }
+            get { return ("Click to browse down to " + (_child==null?"(n/a)":_child.ObjectName)); }
         }
 
 

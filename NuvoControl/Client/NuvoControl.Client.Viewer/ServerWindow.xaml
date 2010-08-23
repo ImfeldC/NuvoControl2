@@ -1,0 +1,8 @@
+﻿<Window x:Class="NuvoControl.Client.Viewer.ServerWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="ServerWindow" Height="86" Width="252" xmlns:my="clr-namespace:NuvoControl.Client.Viewer.Controls">
+    <Grid>
+        <my:ServerControl HorizontalAlignment="Left" x:Name="_ctrlServerConnect" VerticalAlignment="Top" />
+    </Grid>
+</Window>

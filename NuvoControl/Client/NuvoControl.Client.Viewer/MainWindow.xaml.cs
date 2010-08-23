@@ -118,36 +118,56 @@ namespace NuvoControl.Client.Viewer
                 MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
-
-            _textServerName.Text = ServiceProxy.ServerName;
-            _textServerName.LostFocus += new RoutedEventHandler(_textServerName_LostFocus);
-
-            bool configRead = false;
-            try
+            if (serviceDiscovered && ServiceProxy.ServiceDiscovery.DiscoveredServers.Count > 0)
             {
-                ServiceConfigurator.Configure(Properties.Settings.Default.TestMode);   // set true in case of 'test' mode
-                ReadConfiguration();
-                configRead = true;
-            }
-            catch (Exception exc)
-            {
-                StringBuilder message = new StringBuilder("Failed to start up the viewer.\nThe viewer could not retrieve the configuration from the service.\n\n");
-                message.Append("Shut down the viewer and check following points:");
-                message.Append("\n- The service is running.");
-                message.Append("\n- The configured service address and port is proper.");
-                message.Append("\n- The configured viewer IP or name is proper.");
-                message.Append("\n\nException message:\n");
-                message.Append(exc.Message);
+                _textServerName.Text = "";
 
-                _log.Fatal(message.ToString());
+                // Select server in case more than one service is available ...
+                if (ServiceProxy.ServiceDiscovery.DiscoveredServers.Count > 1)
+                {
+                    // Display Server Dialog to select server to connect
+                    ServerWindow serverWindow = new ServerWindow();
+                    serverWindow.ShowDialog();
+                    _textServerName.Text = serverWindow._ctrlServerConnect.SelectedServer;
+                }
+                else
+                {
+                    _textServerName.Text = ServiceProxy.ServerName;
+                }
+                _textServerName.LostFocus += new RoutedEventHandler(_textServerName_LostFocus);
 
-                MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+                ServiceProxy.ServiceDiscovery.SelectedServer = _textServerName.Text;
 
-            if (configRead && serviceDiscovered)
-            {
-                InitializeViews();
-                InitializeViewModel();
+                if (_textServerName.Text.Length>0)
+                {
+                    bool configRead = false;
+                    try
+                    {
+                        ServiceConfigurator.Configure(Properties.Settings.Default.TestMode);   // set true in case of 'test' mode
+                        ReadConfiguration();
+                        configRead = true;
+                    }
+                    catch (Exception exc)
+                    {
+                        StringBuilder message = new StringBuilder("Failed to start up the viewer.\nThe viewer could not retrieve the configuration from the service.\n\n");
+                        message.Append("Shut down the viewer and check following points:");
+                        message.Append("\n- The service is running.");
+                        message.Append("\n- The configured service address and port is proper.");
+                        message.Append("\n- The configured viewer IP or name is proper.");
+                        message.Append("\n\nException message:\n");
+                        message.Append(exc.Message);
+
+                        _log.Fatal(message.ToString());
+
+                        MessageBox.Show(message.ToString(), "Nuvo Control Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+
+                    if (configRead && serviceDiscovered)
+                    {
+                        InitializeViews();
+                        InitializeViewModel();
+                    }
+                }
             }
 
             startupWindow.Close();
