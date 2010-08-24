@@ -313,9 +313,6 @@
     <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="AboutLogo.png">
-      <SubType>Image</SubType>
-    </Resource>
     <Content Include="Images\BackImage.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
