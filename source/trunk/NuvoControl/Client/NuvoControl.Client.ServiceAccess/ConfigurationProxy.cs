@@ -197,7 +197,7 @@ namespace NuvoControl.Client.ServiceAccess
             {
                 cfgIfc = new ConfigureClient();
                 // Connect to the discovered service endpoint
-                EndpointAddress addr = ServiceProxy.ServiceDiscovery.EndpointAddress(serviceName, ServiceProxy.ServiceDiscovery.DiscoveredServers[0]);
+                EndpointAddress addr = ServiceProxy.ServiceDiscovery.EndpointAddress(serviceName, ServiceProxy.ServiceDiscovery.SelectedServer);
                 cfgIfc.Endpoint.Address = addr;
                 _log.Trace(m => m("Invoking discovered Configuration service at {0}", addr));
             }

@@ -349,7 +349,7 @@ namespace NuvoControl.Client.ServiceAccess
             {
                 mcIfc = new MonitorAndControlClient(new InstanceContext(serverCallback));
                 // Connect to the discovered service endpoint
-                EndpointAddress addr = ServiceProxy.ServiceDiscovery.EndpointAddress(serviceName, ServiceProxy.ServiceDiscovery.DiscoveredServers[0]);
+                EndpointAddress addr = ServiceProxy.ServiceDiscovery.EndpointAddress(serviceName, ServiceProxy.ServiceDiscovery.SelectedServer);
                 mcIfc.Endpoint.Address = addr;
                 (mcIfc as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
                 _log.Trace(m => m("Invoking discovered M&C service at {0}", addr));

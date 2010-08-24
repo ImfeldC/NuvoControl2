@@ -151,6 +151,11 @@ namespace NuvoControl.Client.ServiceAccess
         private List<ServiceDiscoveryEntry> _serviceDiscoveryList = null;
 
         /// <summary>
+        /// Holds selected server. Is empty if no server has been selected.
+        /// </summary>
+        private string _selectedServer = "";
+
+        /// <summary>
         /// List with the discovered servers.
         /// </summary>
         private List<string> _discoveredServers = null;
@@ -193,6 +198,25 @@ namespace NuvoControl.Client.ServiceAccess
                 }
             }
             return bRet;
+        }
+
+        /// <summary>
+        /// Gets and sets the selected server.
+        /// </summary>
+        public string SelectedServer
+        {
+            get { return _selectedServer; }
+            set
+            {
+                if (_discoveredServers.Contains(value))
+                {
+                    _selectedServer = value;
+                }
+                else
+                {
+                    throw new Exception(String.Format("Unknown server! {0} is not known and cannot be set as selected server", value));
+                }
+            }
         }
 
         /// <summary>

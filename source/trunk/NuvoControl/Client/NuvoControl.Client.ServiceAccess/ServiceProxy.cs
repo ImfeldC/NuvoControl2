@@ -179,7 +179,18 @@ namespace NuvoControl.Client.ServiceAccess
             {
                 string serverName = "";
                 //serverName = ConfigurationProxy.endPointAdress.Uri.Host;
-                serverName = ServiceDiscovery.DiscoveredServers[0];
+                if (ServiceDiscovery.DiscoveredServers.Count == 1)
+                {
+                    serverName = ServiceDiscovery.DiscoveredServers[0];
+                }
+                else if (_serverName.Length > 0)
+                {
+                    return _serverName;
+                }
+                else
+                {
+                    throw new Exception(String.Format("Cannot determine selected server! There are {0} server(s) discovered.", ServiceDiscovery.DiscoveredServers.Count));
+                }
                 return serverName; 
             }
             set 
