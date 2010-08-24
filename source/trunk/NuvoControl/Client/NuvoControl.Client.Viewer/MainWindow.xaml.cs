@@ -391,7 +391,6 @@ namespace NuvoControl.Client.Viewer
                 _btnMenuTechno.IsChecked = false;
         }
 
-
         /// <summary>
         /// Laods the new skin into the resources.
         /// </summary>
@@ -401,6 +400,19 @@ namespace NuvoControl.Client.Viewer
             ResourceDictionary newDictionary = new ResourceDictionary();
             newDictionary.Source = new Uri(relativeSkinName, UriKind.Relative);
             this.Resources.MergedDictionaries[0] = newDictionary;
+        }
+
+
+        /// <summary>
+        /// Handler for About Box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _btnAboutBox_Click(object sender, RoutedEventArgs e)
+        {
+            // Uses a constructor that takes a parent window for the AboutBox.
+            AboutBox about = new AboutBox(this);
+            about.ShowDialog();
         }
 
 

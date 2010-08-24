@@ -27,13 +27,15 @@
                 <MenuItem Command="commands:CustomCommands.BrowseNext" Style="{DynamicResource SubMenuItemStyle}"/>
             </MenuItem>
             <MenuItem Header="_Skins"  Style="{DynamicResource BarStyle}">
-                <MenuItem Name="_btnMenuClassic" Header="Classic" IsCheckable="True" Checked="_btnMenuClassic_Checked"  Style="{DynamicResource SubMenuItemStyle}"/>
+                <MenuItem Name="_btnMenuClassic" Header="Classic" IsCheckable="True" Checked="_btnMenuClassic_Checked"  Style="{DynamicResource SubMenuItemStyle}" DataContext="{Binding}" />
                 <MenuItem Name="_btnMenuSmooth" Header="Smooth" IsCheckable="True"  Checked="_btnMenuSmooth_Checked" IsChecked="True"  Style="{DynamicResource SubMenuItemStyle}"/>
                 <MenuItem Name="_btnMenuSteel" Header="Steel" IsCheckable="True"  Checked="_btnMenuSteel_Checked"  Style="{DynamicResource SubMenuItemStyle}"/>
                 <MenuItem Name="_btnMenuTechno" Header="Machine" IsCheckable="True"  Checked="_btnMenuTechno_Checked"  Style="{DynamicResource SubMenuItemStyle}"/>
                 <MenuItem Name="_btnMenuFreak" Header="Freak" IsCheckable="True"  Checked="_btnMenuFreak_Checked"  Style="{DynamicResource SubMenuItemStyle}"/>
             </MenuItem>
-            <MenuItem Header="_Help"  Style="{DynamicResource BarStyle}"></MenuItem>
+            <MenuItem Header="_Help"  Style="{DynamicResource BarStyle}">
+                <MenuItem Name="_btnAboutBox" Header="About..." Style="{DynamicResource SubMenuItemStyle}" Click="_btnAboutBox_Click" />
+            </MenuItem>
         </Menu>
         <ToolBar Height="40" Name="toolBar1" HorizontalAlignment="Stretch" VerticalAlignment="Top" DockPanel.Dock="Top" Style="{DynamicResource ToolbarStyle}">
             <Button Name="_btnBack" Padding="0" Command="NavigationCommands.BrowseBack" ToolTip="{Binding Path=BackToolTip}">
