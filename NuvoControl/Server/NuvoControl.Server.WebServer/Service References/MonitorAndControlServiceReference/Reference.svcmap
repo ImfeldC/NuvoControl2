@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="d4973b04-cbca-4fc0-a987-9c6775a7ae56" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://imfi-laptopdell:8080/MonitorAndControlService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="MonitorAndControlService.xsd" MetadataType="Schema" ID="698ba222-a76d-4d17-b8de-6ec5abfafee2" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/MonitorAndControlService?xsd=xsd0" />
+    <MetadataFile FileName="MonitorAndControlService1.xsd" MetadataType="Schema" ID="01442fb1-073e-43ca-9b75-4c2b65a518b8" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/MonitorAndControlService?xsd=xsd3" />
+    <MetadataFile FileName="MonitorAndControlService2.xsd" MetadataType="Schema" ID="d84f6e43-bca3-4051-a015-c06b397f9867" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/MonitorAndControlService?xsd=xsd2" />
+    <MetadataFile FileName="MonitorAndControlService.disco" MetadataType="Disco" ID="f69fdc67-1969-4cf6-8eee-d2e92dc8b8a6" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/MonitorAndControlService?disco" />
+    <MetadataFile FileName="MonitorAndControlService3.xsd" MetadataType="Schema" ID="c35a6362-b5af-455e-bb37-5e769e66715c" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/MonitorAndControlService?xsd=xsd1" />
+    <MetadataFile FileName="MonitorAndControlService.wsdl" MetadataType="Wsdl" ID="3ae2c2e3-0fac-4c60-af62-89ca1e96d066" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/MonitorAndControlService?wsdl" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

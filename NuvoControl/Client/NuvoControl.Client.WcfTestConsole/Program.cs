@@ -134,7 +134,6 @@ namespace NuvoControl.Client.WcfTestConsole
             }
 
 
-            /*
 
             try
             {
@@ -158,7 +157,6 @@ namespace NuvoControl.Client.WcfTestConsole
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
 
-             */
 
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();

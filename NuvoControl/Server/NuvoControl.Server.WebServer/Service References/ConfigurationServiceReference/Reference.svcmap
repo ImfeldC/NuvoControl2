@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="2db31de1-cfc0-47a0-9b5f-05e19a8f4516" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://imfi-laptopdell:8080/ConfigurationService" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="ConfigurationService.xsd" MetadataType="Schema" ID="a383f638-8c03-4a3a-80d1-7199fc37afee" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd4" />
+    <MetadataFile FileName="ConfigurationService.wsdl" MetadataType="Wsdl" ID="ebd31e57-131b-40d4-9fa4-6c4b5ea9107d" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?wsdl" />
+    <MetadataFile FileName="ConfigurationService1.xsd" MetadataType="Schema" ID="38c067bd-d4b1-4e3f-b94c-331b40e774aa" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd0" />
+    <MetadataFile FileName="ConfigurationService2.xsd" MetadataType="Schema" ID="80a95ddd-fad3-4cf1-9814-92a66448e53c" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd1" />
+    <MetadataFile FileName="ConfigurationService3.xsd" MetadataType="Schema" ID="d401cfc3-ba7d-4941-ada6-646a3fac22e6" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd2" />
+    <MetadataFile FileName="ConfigurationService4.xsd" MetadataType="Schema" ID="c5c3bd7f-900d-4c86-886d-f3a2be74433f" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd3" />
+    <MetadataFile FileName="ConfigurationService.disco" MetadataType="Disco" ID="6aef6b0f-c79b-47a1-a794-a9b5220530a5" SourceId="1" SourceUrl="http://imfi-laptopdell:8080/ConfigurationService?disco" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

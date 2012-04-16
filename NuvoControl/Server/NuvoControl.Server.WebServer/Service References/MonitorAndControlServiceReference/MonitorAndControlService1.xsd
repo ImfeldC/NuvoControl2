@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/NuvoControl.Common" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NuvoControl.Common" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://imfi-laptopdell:8080/MonitorAndControlService?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:import schemaLocation="http://imfi-laptopdell:8080/MonitorAndControlService?xsd=xsd2" namespace="http://schemas.datacontract.org/2004/07/NuvoControl.Common.Configuration" />
+  <xs:complexType name="ZoneState">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_commandUnacknowledged" type="xs:boolean" />
+      <xs:element minOccurs="0" name="_guid" type="ser:guid" />
+      <xs:element minOccurs="0" name="_lastUpdate" type="xs:dateTime" />
+      <xs:element minOccurs="0" name="_powerStatus" type="xs:boolean" />
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/NuvoControl.Common.Configuration" minOccurs="0" name="_source" nillable="true" type="q1:Address" />
+      <xs:element minOccurs="0" name="_volume" type="xs:int" />
+      <xs:element minOccurs="0" name="_zoneQuality" type="tns:ZoneQuality" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ZoneState" nillable="true" type="tns:ZoneState" />
+  <xs:simpleType name="ZoneQuality">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Online" />
+      <xs:enumeration value="Offline" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ZoneQuality" nillable="true" type="tns:ZoneQuality" />
+</xs:schema>
