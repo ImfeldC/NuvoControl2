@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:ser="http://schemas.microsoft.com/2003/10/Serialization/" xmlns:tns="http://schemas.datacontract.org/2004/07/NuvoControl.Common.Configuration" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/NuvoControl.Common.Configuration" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/System.Windows" />
+  <xs:import schemaLocation="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/System.Drawing" />
+  <xs:import schemaLocation="http://imfi-laptopdell:8080/ConfigurationService?xsd=xsd1" namespace="http://schemas.microsoft.com/2003/10/Serialization/" />
+  <xs:complexType name="Graphic">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_building" nillable="true" type="tns:Building" />
+      <xs:element minOccurs="0" name="_sources" nillable="true" type="tns:ArrayOfSource" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Graphic" nillable="true" type="tns:Graphic" />
+  <xs:complexType name="Building">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_floors" nillable="true" type="tns:ArrayOfFloor" />
+      <xs:element minOccurs="0" name="_id" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_picturePath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_pictureType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Building" nillable="true" type="tns:Building" />
+  <xs:complexType name="ArrayOfFloor">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Floor" nillable="true" type="tns:Floor" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFloor" nillable="true" type="tns:ArrayOfFloor" />
+  <xs:complexType name="Floor">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_floorPlanPath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_floorPlanType" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_id" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_zones" nillable="true" type="tns:ArrayOfZone" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Floor" nillable="true" type="tns:Floor" />
+  <xs:complexType name="Address">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_deviceId" type="xs:int" />
+      <xs:element minOccurs="0" name="_objectId" type="xs:int" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Address" nillable="true" type="tns:Address" />
+  <xs:complexType name="ArrayOfZone">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Zone" nillable="true" type="tns:Zone" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfZone" nillable="true" type="tns:ArrayOfZone" />
+  <xs:complexType name="Zone">
+    <xs:sequence>
+      <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/System.Windows" minOccurs="0" name="_floorPlanCoordinates" nillable="true" type="q1:ArrayOfPoint" />
+      <xs:element minOccurs="0" name="_id" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_picturePath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_pictureType" nillable="true" type="xs:string" />
+      <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/System.Windows" minOccurs="0" name="_zoneControlCoordinate" type="q2:Point" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Zone" nillable="true" type="tns:Zone" />
+  <xs:complexType name="ArrayOfSource">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Source" nillable="true" type="tns:Source" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfSource" nillable="true" type="tns:ArrayOfSource" />
+  <xs:complexType name="Source">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_id" nillable="true" type="tns:Address" />
+      <xs:element minOccurs="0" name="_name" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_picturePath" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="_pictureType" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Source" nillable="true" type="tns:Source" />
+  <xs:complexType name="NuvoImage">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_path" nillable="true" type="xs:string" />
+      <xs:element xmlns:q3="http://schemas.datacontract.org/2004/07/System.Drawing" minOccurs="0" name="_picture" nillable="true" type="q3:Bitmap" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="NuvoImage" nillable="true" type="tns:NuvoImage" />
+  <xs:complexType name="Function">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="_id" type="ser:guid" />
+      <xs:element minOccurs="0" name="_zoneId" nillable="true" type="tns:Address" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="Function" nillable="true" type="tns:Function" />
+  <xs:complexType name="ArrayOfFunction">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Function" nillable="true" type="tns:Function" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="ArrayOfFunction" nillable="true" type="tns:ArrayOfFunction" />
+</xs:schema>
