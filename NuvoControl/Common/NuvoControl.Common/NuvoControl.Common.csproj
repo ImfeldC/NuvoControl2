@@ -98,6 +98,7 @@
     <Compile Include="ZoneState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Class Diagram\Configuration.cd" />
     <None Include="NamespaceDoc.dox" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
