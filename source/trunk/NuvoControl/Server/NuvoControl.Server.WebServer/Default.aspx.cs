@@ -11,9 +11,9 @@ namespace NuvoControl.Server.WebServer
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            lableHostNum.Text = Global.NumOfDiscoveredConfigurationHosts.ToString();
-            labelHostAdress.Text = Global.ConfigurationHostAdress;
-            linkHostAdress.Text = Global.ConfigurationHostAdress;
+            lableHostNum.Text = Global.ServiceManager.NumOfDiscoveredConfigurationHosts.ToString();
+            labelHostAdress.Text = Global.ServiceManager.ConfigurationHostAdress;
+            linkHostAdress.Text = Global.ServiceManager.ConfigurationHostAdress;
         }
     }
 }

@@ -1,5 +1,13 @@
-﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
+﻿<%@ Page Title="Home Page" Language="C#" Trace="true" MasterPageFile="~/Site.master" AutoEventWireup="true"
     CodeBehind="Default.aspx.cs" Inherits="NuvoControl.Server.WebServer._Default" %>
+
+<script runat="server">
+private void page_load(object sender, EventArgs e) {
+
+    Trace.Write("page_load", "page_load called.");
+    Trace.Write("page_load", "page_load finished.");
+}
+</script>
 
 <asp:Content ID="HeaderContent" runat="server" ContentPlaceHolderID="HeadContent">
 </asp:Content>

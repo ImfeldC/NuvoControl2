@@ -7,6 +7,8 @@ using System.Web.UI.WebControls;
 
 using System.ServiceModel;
 
+using Common.Logging;
+
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 
@@ -18,12 +20,14 @@ namespace NuvoControl.Server.WebServer
 
     public class ServerCallback : IMonitorAndControlCallback
     {
+        private static ILog _log = LogManager.GetCurrentClassLogger();
+
         public int _id = 1;
         #region IMonitorAndControlCallback Members
 
         public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
-            Console.WriteLine("Notification from server zone: {0}", zoneId.ToString());
+            _log.Trace(m => m("Notification from server zone: {0}", zoneId.ToString()));
             //labelZoneState.Text += String.Format("Notification from server zone: {0}", zoneId.ToString());
         }
 
@@ -33,7 +37,7 @@ namespace NuvoControl.Server.WebServer
 
     public partial class Status : System.Web.UI.Page
     {
-
+        private static ILog _log = LogManager.GetCurrentClassLogger();
 
         protected void LoadStatus(int iZoneId)
         {
@@ -41,10 +45,10 @@ namespace NuvoControl.Server.WebServer
             IMonitorAndControlCallback serverCallback = new ServerCallback();
             mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
             // Connect to the discovered service endpoint
-            mcProxy.Endpoint.Address = Global.DiscoveredMonitorControlClients.Endpoints[0].Address;
+            mcProxy.Endpoint.Address = Global.ServiceManager.DiscoveredMonitorControlClients.Endpoints[0].Address;
             mcProxy.Connect();
 
-            Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
+            _log.Trace(m => m("Read zone configuration for zone with id {0}.", iZoneId));
             ZoneState zoneState = mcProxy.GetZoneState(new Address(100, iZoneId));
 
             mcProxy.Disconnect();
@@ -60,7 +64,7 @@ namespace NuvoControl.Server.WebServer
             IMonitorAndControlCallback serverCallback = new ServerCallback();
             mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
             // Connect to the discovered service endpoint
-            mcProxy.Endpoint.Address = Global.DiscoveredMonitorControlClients.Endpoints[0].Address;
+            mcProxy.Endpoint.Address = Global.ServiceManager.DiscoveredMonitorControlClients.Endpoints[0].Address;
             mcProxy.Connect();
 
             ZoneState zoneState = mcProxy.GetZoneState(new Address(100, iZoneId));
