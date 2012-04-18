@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="NuvoControl.Common.Configuration.SystemConfiguration">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAQAIAAAAAAQAAAAACAAAIAAAAAAAACAAAAAAAAAQg=</HashCode>
+      <FileName>Configuration\SystemConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Hardware" />
+      <Property Name="Graphic" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Functions" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Hardware">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAEAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\Hardware.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Devices" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Graphic">
+    <Position X="0.5" Y="3.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAkAAAAAAAAAAAQAAAAAAAAAAAgAAA=</HashCode>
+      <FileName>Configuration\Graphic.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Building" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Sources" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Function">
+    <Position X="13" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAACAAACAAAAAAAEAABAAAAAAAAAAAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\Function.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ZoneId" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Zone">
+    <Position X="5" Y="6.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABCIAAAIAABAgAEAAFAEEQAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Configuration\Zone.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Address">
+    <Position X="13" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAABAAAAAAEgAAAAAQAAAAAAIAAEAAAAAAAAiA=</HashCode>
+      <FileName>Configuration\Address.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Device">
+    <Position X="8" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="ProtocolDriver" Type="NuvoControl.Common.Configuration.Protocol">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.159" Y="0.141" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAACABAAAAAAAEAgAABAAAICAAAQAAAAAAAAAAIAAgA=</HashCode>
+      <FileName>Configuration\Device.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProtocolDriver" />
+      <Property Name="Communication" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Building">
+    <Position X="0.5" Y="7" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABCIAAAIAAAAAgEAABAEEQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\Building.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Floors" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Communication">
+    <Position X="7.25" Y="4.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAACoIAAAAAAgACAICAAAIAAAAAAAEAAA=</HashCode>
+      <FileName>Configuration\Communication.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Protocol">
+    <Position X="9" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAACAAAAAAAAAEAQCAAAAAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Configuration\Protocol.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Source">
+    <Position X="1.5" Y="4.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AABCIAAAIAAAAAQEgABAEEQAAAAAAIAAAAAAAAAAAiA=</HashCode>
+      <FileName>Configuration\Source.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.752" Collapsed="true" />
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.Floor">
+    <Position X="2.75" Y="7" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAICIAAAAAADAEEEAABAAAQCAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Configuration\Floor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Zones" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.SleepFunction">
+    <Position X="15.25" Y="1.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAEAAAAAAAAAAAAACAAIiAAAEAAAAA=</HashCode>
+      <FileName>Configuration\SleepFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.AlarmFunction">
+    <Position X="17" Y="0.5" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAgEAAAAAAAAEAAEIAAAAAFAAAAAAAAAgAIQAACAAAA=</HashCode>
+      <FileName>Configuration\AlarmFunction.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="NuvoControl.Common.Configuration.NuvoImage">
+    <Position X="16.5" Y="7.75" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAAAgAAAAAACAAAEAAAAAAAAAAAAAAAAAAAAgAAAAAA=</HashCode>
+      <FileName>Configuration\NuvoImage.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Tahoma" Size="8.25" />
+</ClassDiagram>
