@@ -62,7 +62,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Zone">
-    <Position X="5" Y="6.5" Width="1.5" />
+    <Position X="5" Y="7.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -76,7 +76,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Address">
-    <Position X="13" Y="7.75" Width="1.5" />
+    <Position X="12.75" Y="7.75" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
@@ -92,11 +92,6 @@
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
     </Compartments>
-    <AssociationLine Name="ProtocolDriver" Type="NuvoControl.Common.Configuration.Protocol">
-      <MemberNameLabel ManuallyPlaced="true">
-        <Position X="-1.159" Y="0.141" />
-      </MemberNameLabel>
-    </AssociationLine>
     <TypeIdentifier>
       <HashCode>AAACABAAAAAAAEAgAABAAAICAAAQAAAAAAAAAAIAAgA=</HashCode>
       <FileName>Configuration\Device.cs</FileName>
@@ -107,7 +102,7 @@
     </ShowAsAssociation>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Building">
-    <Position X="0.5" Y="7" Width="1.5" />
+    <Position X="0.5" Y="9.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
@@ -124,7 +119,7 @@
     </ShowAsCollectionAssociation>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Communication">
-    <Position X="7.25" Y="4.25" Width="1.5" />
+    <Position X="9.25" Y="3.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Methods" Collapsed="true" />
       <Compartment Name="Fields" Collapsed="true" />
@@ -135,14 +130,14 @@
     </TypeIdentifier>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Protocol">
-    <Position X="9" Y="4.25" Width="1.5" />
+    <Position X="11" Y="1.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAIAAAAACAAAAAAAAAEAQCAAAAAAAAABAAAAAAAAA=</HashCode>
       <FileName>Configuration\Protocol.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Source">
-    <Position X="1.5" Y="4.75" Width="1.5" />
+    <Position X="5" Y="5.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -151,10 +146,13 @@
       <HashCode>AABCIAAAIAAAAAQEgABAEEQAAAAAAIAAAAAAAAAAAiA=</HashCode>
       <FileName>Configuration\Source.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Id" />
+    </ShowAsAssociation>
     <Lollipop Position="0.752" Collapsed="true" />
   </Class>
   <Class Name="NuvoControl.Common.Configuration.Floor">
-    <Position X="2.75" Y="7" Width="1.5" />
+    <Position X="2.75" Y="8.5" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
@@ -193,7 +191,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="NuvoControl.Common.Configuration.NuvoImage">
-    <Position X="16.5" Y="7.75" Width="1.5" />
+    <Position X="1.75" Y="6.25" Width="1.5" />
     <Compartments>
       <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Methods" Collapsed="true" />
