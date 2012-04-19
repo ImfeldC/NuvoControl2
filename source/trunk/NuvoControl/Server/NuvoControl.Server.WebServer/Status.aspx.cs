@@ -39,54 +39,27 @@ namespace NuvoControl.Server.WebServer
     {
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
-        protected void LoadStatus(int iZoneId)
+        private void Refresh()
         {
-            MonitorAndControlClient mcProxy = null;
-            IMonitorAndControlCallback serverCallback = new ServerCallback();
-            mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-            // Connect to the discovered service endpoint
-            mcProxy.Endpoint.Address = Global.ServiceManager.DiscoveredMonitorControlClients.Endpoints[0].Address;
-            mcProxy.Connect();
-
-            _log.Trace(m => m("Read zone configuration for zone with id {0}.", iZoneId));
-            ZoneState zoneState = mcProxy.GetZoneState(new Address(100, iZoneId));
-
-            mcProxy.Disconnect();
-
-            labelZoneState.Text = zoneState.ToString();
-            Button1.Text = zoneState.PowerStatus.ToString();
-        }
-
-
-        protected void SwitchZone( int iZoneId )
-        {
-            MonitorAndControlClient mcProxy = null;
-            IMonitorAndControlCallback serverCallback = new ServerCallback();
-            mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-            // Connect to the discovered service endpoint
-            mcProxy.Endpoint.Address = Global.ServiceManager.DiscoveredMonitorControlClients.Endpoints[0].Address;
-            mcProxy.Connect();
-
-            ZoneState zoneState = mcProxy.GetZoneState(new Address(100, iZoneId));
-            zoneState.PowerStatus = !zoneState.PowerStatus;
-            mcProxy.SetZoneState(new Address(100, iZoneId), zoneState);
-            zoneState = mcProxy.GetZoneState(new Address(100, iZoneId));
-
-            mcProxy.Disconnect();
-
-            labelZoneState.Text = zoneState.ToString();
-            Button1.Text = zoneState.PowerStatus.ToString();
-        }
-
-
-        protected void Button_Click(object sender, EventArgs e)
-        {
-            SwitchZone(2);
+            ucZone1.Refresh();
+            ucZone2.Refresh();
+            ucZone3.Refresh();
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            LoadStatus(2);
+            ucZone1.SetServiceManager(Global.ServiceManager);
+            ucZone2.SetServiceManager(Global.ServiceManager);
+            ucZone3.SetServiceManager(Global.ServiceManager);
+
+            ucZone1.SetZoneId(new Address(100, 2));
+            ucZone2.SetZoneId(new Address(100, 1));
+            ucZone3.SetZoneId(new Address(100, 4));
+        }
+
+        protected void btnRefresh_Click(object sender, EventArgs e)
+        {
+            Refresh();
         }
     }
 }

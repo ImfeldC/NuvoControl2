@@ -13,21 +13,39 @@ namespace NuvoControl.Server.WebServer {
     public partial class Status {
         
         /// <summary>
-        /// Button1 control.
+        /// ucZone1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::NuvoControl.Server.WebServer.ZoneStatusUserControl ucZone1;
         
         /// <summary>
-        /// labelZoneState control.
+        /// ucZone2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label labelZoneState;
+        protected global::NuvoControl.Server.WebServer.ZoneStatusUserControl ucZone2;
+        
+        /// <summary>
+        /// ucZone3 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NuvoControl.Server.WebServer.ZoneStatusUserControl ucZone3;
+        
+        /// <summary>
+        /// btnRefresh control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnRefresh;
     }
 }

@@ -64,6 +64,7 @@
     <Content Include="Account\Login.aspx" />
     <Content Include="Account\Register.aspx" />
     <Content Include="Configuration.aspx" />
+    <Content Include="Controls\ZoneStatusUserControl.ascx" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Function.datasource" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Graphic.datasource" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.NuvoImage.datasource" />
@@ -205,6 +206,13 @@
     </Compile>
     <Compile Include="Status.aspx.designer.cs">
       <DependentUpon>Status.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ZoneStatusUserControl.ascx.cs">
+      <DependentUpon>ZoneStatusUserControl.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Controls\ZoneStatusUserControl.ascx.designer.cs">
+      <DependentUpon>ZoneStatusUserControl.ascx</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
