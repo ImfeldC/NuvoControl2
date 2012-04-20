@@ -17,53 +17,21 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Server.WebServer
 {
+    /// <summary>
+    /// This class is used a general manager to handle the two services:
+    /// - Configuration Service
+    /// - Monitor & Control Service
+    /// </summary>
     public class ServiceManager
     {
+        /// <summary>
+        /// Private member for the logging object.
+        /// </summary>
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
-        // Zones & Sources
-        private List<Zone> zones = null;
-        private List<Source> sources = null;
-        public List<Zone> Zones
-        {
-            get { return zones; }
-        }
-        public List<Source> Sources
-        {
-            get { return sources; }
-        }
-
-        // Configuration Service
-        private FindResponse discoveredConfigurationClients = null;
-        public FindResponse DiscoveredConfigurationClients
-        {
-            get { return discoveredConfigurationClients; }
-        }
-        public int NumOfDiscoveredConfigurationHosts
-        {
-            get { return (((DiscoveredConfigurationClients != null) && (DiscoveredConfigurationClients.Endpoints.Count > 0)) ? DiscoveredConfigurationClients.Endpoints.Count : -1); }
-        }
-        public string ConfigurationHostAdress
-        {
-            get { return (((DiscoveredConfigurationClients != null) && (DiscoveredConfigurationClients.Endpoints.Count > 0)) ? DiscoveredConfigurationClients.Endpoints[0].Address.ToString() : ""); }
-        }
-
-        // Monitor & Control Service
-        private FindResponse discoveredMonitorControlClients = null;
-        public FindResponse DiscoveredMonitorControlClients
-        {
-            get { return discoveredMonitorControlClients; }
-        }
-        public int NumOfDiscoveredMonitorControlHosts
-        {
-            get { return (((discoveredMonitorControlClients != null) && (discoveredMonitorControlClients.Endpoints.Count > 0)) ? discoveredMonitorControlClients.Endpoints.Count : -1); ; }
-        }
-        public string MonitorControlHostAdress
-        {
-            get { return (((discoveredMonitorControlClients != null) && (discoveredMonitorControlClients.Endpoints.Count > 0)) ? discoveredMonitorControlClients.Endpoints[0].Address.ToString() : ""); ; }
-        }
-
-
+        /// <summary>
+        /// Default constructor. Initializes the privat members.
+        /// </summary>
         public ServiceManager()
         {
             _log.Trace(m => m("ServiceManager created."));
@@ -71,15 +39,54 @@ namespace NuvoControl.Server.WebServer
             sources = new List<Source>();
         }
 
-        private MonitorAndControlClient getMCProxy()
+
+        #region Zones & Sources
+        //
+        // Zones & Sources
+        //
+
+        /// <summary>
+        /// Private member to store the availables zone configuration.
+        /// </summary>
+        private List<Zone> zones = null;
+
+        /// <summary>
+        /// Private member to store the available source configuration.
+        /// </summary>
+        private List<Source> sources = null;
+
+        /// <summary>
+        /// Public access method to retrieve configured zones.
+        /// </summary>
+        public List<Zone> Zones
         {
-            MonitorAndControlClient mcProxy = null;
-            IMonitorAndControlCallback serverCallback = new ServerCallback();
-            mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-            // Connect to the discovered service endpoint
-            mcProxy.Endpoint.Address = Global.ServiceManager.DiscoveredMonitorControlClients.Endpoints[0].Address;
-            return mcProxy;
+            get { return zones; }
         }
+
+        /// <summary>
+        /// Public access method to retrieve configured sources.
+        /// </summary>
+        public List<Source> Sources
+        {
+            get { return sources; }
+        }
+        #endregion
+
+        #region Configuration Service
+        //
+        // Configuration Service
+        //
+
+        /// <summary>
+        /// Private member to store discovered configuration service hosts.
+        /// </summary>
+        private FindResponse discoveredConfigurationServiceHosts = null;
+
+        /// <summary>
+        /// Private member to store the adress (URL) of the configuration service host.
+        /// e.g. http://imfi-laptopdell:8080/ConfigurationService
+        /// </summary>
+        private EndpointAddress configurationServiceHostAddress = null;
 
         /// <summary>
         /// Searches for Configuration Services available on the network.
@@ -94,19 +101,72 @@ namespace NuvoControl.Server.WebServer
 
                 DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
                 FindCriteria criteria = new FindCriteria(typeof(IConfigure));
-                discoveredConfigurationClients = discoveryClient.Find(criteria);
+                discoveredConfigurationServiceHosts = discoveryClient.Find(criteria);
                 discoveryClient.Close();
 
-                _log.Trace(m => m("{0} <Configuration Service> found.", discoveredConfigurationClients.Endpoints.Count));
-                LogHelper.LogEndPoint(_log,discoveredConfigurationClients.Endpoints);
+                _log.Trace(m => m("{0} <Configuration Service> found.", discoveredConfigurationServiceHosts.Endpoints.Count));
+                LogHelper.LogEndPoint(_log, discoveredConfigurationServiceHosts.Endpoints);
+
+                if (discoveredConfigurationServiceHosts.Endpoints.Count > 0)
+                {
+                    // store service host address
+                    configurationServiceHostAddress = discoveredConfigurationServiceHosts.Endpoints[0].Address;
+                }
             }
             catch (Exception exc)
             {
                 _log.Trace(m => m("Exception: during discovering <Configuration Service>: {0}", exc));
-                discoveredConfigurationClients = null;
+                discoveredConfigurationServiceHosts = null;
             }
 
         }
+
+        /// <summary>
+        /// Retruns list of discovered configuration service hosts.
+        /// </summary>
+        public FindResponse DiscoveredConfigurationServiceHosts
+        {
+            get { return discoveredConfigurationServiceHosts; }
+        }
+
+        /// <summary>
+        /// Returns the number of discovered configuration service hosts. Returns -1 in case the search was not performed or an error occured.
+        /// </summary>
+        public int NumOfDiscoveredConfigurationServiceHosts
+        {
+            get { return (((DiscoveredConfigurationServiceHosts != null) && (DiscoveredConfigurationServiceHosts.Endpoints.Count >= 0)) ? DiscoveredConfigurationServiceHosts.Endpoints.Count : -1); }
+        }
+
+        /// <summary>
+        /// Retruns the address (URL) of the configuration service host.
+        /// This can either be a discovered address using the DiscoverConfigurationServices method or an address set by the application using the set method.
+        /// </summary>
+        public EndpointAddress ConfigurationServiceHostAdress
+        {
+            get { return configurationServiceHostAddress; }
+            set 
+            {
+                _log.Trace(m => m("Set ConfigurationServiceHostAdress to {0}.", value));
+                configurationServiceHostAddress = value; 
+            }
+        }
+        #endregion
+
+        #region Monitor & Control Service
+        //
+        // Monitor & Control Service
+        //
+
+        /// <summary>
+        /// Private member to store the discovered monitor and control service hosts.
+        /// </summary>
+        private FindResponse discoveredMonitorControlServiceHosts = null;
+
+        /// <summary>
+        /// Private member to store the adress (URL) of the monitor and control service host.
+        /// e.g. http://imfi-laptopdell:8080/MonitorAndControlService
+        /// </summary>
+        private EndpointAddress monitorControlServiceHostAddress = null;
 
         /// <summary>
         /// Searches for Monitor&Control Services available on the network.
@@ -121,18 +181,65 @@ namespace NuvoControl.Server.WebServer
 
                 DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
                 FindCriteria criteria = new FindCriteria(typeof(IMonitorAndControl));
-                discoveredMonitorControlClients = discoveryClient.Find(criteria);
+                discoveredMonitorControlServiceHosts = discoveryClient.Find(criteria);
                 discoveryClient.Close();
 
-                _log.Trace(m => m("{0} <MonitorControl Service> found.", discoveredMonitorControlClients.Endpoints.Count));
-                LogHelper.LogEndPoint(_log,discoveredMonitorControlClients.Endpoints);
+                _log.Trace(m => m("{0} <MonitorControl Service> found.", discoveredMonitorControlServiceHosts.Endpoints.Count));
+                LogHelper.LogEndPoint(_log, discoveredMonitorControlServiceHosts.Endpoints);
+
+                if (discoveredMonitorControlServiceHosts.Endpoints.Count > 0)
+                {
+                    // store service host address
+                    monitorControlServiceHostAddress = discoveredMonitorControlServiceHosts.Endpoints[0].Address;
+                }
             }
             catch (Exception exc)
             {
                 _log.Trace(m => m("Exception: during discovering <MonitorControl Service>: {0}", exc));
-                discoveredMonitorControlClients = null;
+                discoveredMonitorControlServiceHosts = null;
             }
 
+        }
+
+        /// <summary>
+        /// Retruns the list of discovered monitor and control service hosts.
+        /// </summary>
+        public FindResponse DiscoveredMonitorControlServiceHosts
+        {
+            get { return discoveredMonitorControlServiceHosts; }
+        }
+
+        /// <summary>
+        /// Retruns the number of discovered monitor and control service hosts. Returns -1 in case the search was not performed or an error occured.
+        /// </summary>
+        public int NumOfDiscoveredMonitorControlServiceHosts
+        {
+            get { return (((discoveredMonitorControlServiceHosts != null) && (discoveredMonitorControlServiceHosts.Endpoints.Count >= 0)) ? discoveredMonitorControlServiceHosts.Endpoints.Count : -1); ; }
+        }
+
+        /// <summary>
+        /// Retruns the address (URL) of the monitor and control service host.
+        /// This can either be a discovered address using the DiscoverMonitorControlServices method or an address set by the application using the set method.
+        /// </summary>
+        public EndpointAddress MonitorControlServiceHostAdress
+        {
+            get { return monitorControlServiceHostAddress; }
+            set { monitorControlServiceHostAddress = value; }
+        }
+        #endregion
+
+        /// <summary>
+        /// Retruns a proxy object to the monitor and control service.
+        /// </summary>
+        /// <returns>Proxy Object to Monitor & Control service.</returns>
+        private MonitorAndControlClient getMCProxy()
+        {
+            MonitorAndControlClient mcProxy = null;
+            IMonitorAndControlCallback serverCallback = new ServerCallback();
+            mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+            // Connect to the discovered service endpoint
+            mcProxy.Endpoint.Address = monitorControlServiceHostAddress;
+            return mcProxy;
         }
 
         /// <summary>
@@ -140,14 +247,14 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         public void LoadConfiguration()
         {
-            _log.Trace(m => m("LoadConfiguration called."));
+            _log.Trace(m => m("LoadConfiguration called for {0}.", (configurationServiceHostAddress==null)?"null":configurationServiceHostAddress.ToString()));
 
-            if ( (DiscoveredConfigurationClients!=null) && (DiscoveredConfigurationClients.Endpoints.Count>0) )
+            if ( configurationServiceHostAddress != null )
             {
                 ConfigureClient cfgIfc = null;
                 cfgIfc = new ConfigureClient();
                 // Connect to the discovered service endpoint
-                cfgIfc.Endpoint.Address = DiscoveredConfigurationClients.Endpoints[0].Address;
+                cfgIfc.Endpoint.Address = configurationServiceHostAddress;
 
 
                 Graphic graphic = cfgIfc.GetGraphicConfiguration();
@@ -179,9 +286,11 @@ namespace NuvoControl.Server.WebServer
                 _log.Trace(m => m("Totally {0} sources found!", sources.Count));
             }
         }
+ 
 
+        #region Command Section
         /// <summary>
-        /// Retruns Source configuration Object for a specific Source Id.
+        /// Retruns Source configuration object for a specific Source Id.
         /// </summary>
         /// <param name="sourceId">Source Id</param>
         /// <returns>Source object. Returns an empty object in case the Source Id was not found.</returns>
@@ -200,6 +309,11 @@ namespace NuvoControl.Server.WebServer
             return foundSource;
         }
 
+        /// <summary>
+        /// Retruns Source configuration object for a spefific source name.
+        /// </summary>
+        /// <param name="sourceName">Source Name</param>
+        /// <returns>Source object. Returns an empty object in case the Source Name was not found.</returns>
         public Source GetSource(string sourceName)
         {
             Source foundSource = new Source();
@@ -235,13 +349,34 @@ namespace NuvoControl.Server.WebServer
             return foundZone;
         }
 
+        /// <summary>
+        /// Returns Zone configuration Object for a specific Zone name.
+        /// </summary>
+        /// <param name="zoneId">Zone Name</param>
+        /// <returns>Zone object. Returns an empty object in case the Zone Name was not found.</returns>
+        public Zone GetZone(string zoneName)
+        {
+            Zone foundZone = new Zone();
+            foreach (Zone zone in zones)
+            {
+                if (zone.Name == zoneName)
+                {
+                    foundZone = zone;
+                    break;
+                }
+            }
+            _log.Trace(m => m("Zone found!", foundZone.ToString()));
+            return foundZone;
+        }
+
+        /// <summary>
+        /// Returns the current zone state for a zone, specified by Zone Id.
+        /// </summary>
+        /// <param name="zoneId">Zone Id</param>
+        /// <returns>Zone State.</returns>
         public ZoneState GetZoneState(Address zoneId)
         {
-            MonitorAndControlClient mcProxy = null;
-            IMonitorAndControlCallback serverCallback = new ServerCallback();
-            mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-            // Connect to the discovered service endpoint
-            mcProxy.Endpoint.Address = Global.ServiceManager.DiscoveredMonitorControlClients.Endpoints[0].Address;
+            MonitorAndControlClient mcProxy = getMCProxy();
             mcProxy.Connect();
 
             ZoneState zoneState = mcProxy.GetZoneState(zoneId);
@@ -251,6 +386,11 @@ namespace NuvoControl.Server.WebServer
             return zoneState;
         }
 
+        /// <summary>
+        /// Switches a zone, specified by its zone id, either on or off (depending on its current state).
+        /// </summary>
+        /// <param name="zoneId">Zone Id</param>
+        /// <returns>Zone state, after the switch command has been performed.</returns>
         public ZoneState SwitchZone(Address zoneId)
         {
             MonitorAndControlClient mcProxy = getMCProxy();
@@ -265,6 +405,12 @@ namespace NuvoControl.Server.WebServer
             return zoneState;
         }
 
+        /// <summary>
+        /// Changes the source of a specified zone.
+        /// </summary>
+        /// <param name="zoneId">Zone id, to specify zone</param>
+        /// <param name="sourceId">Source id, tp specify source</param>
+        /// <returns>Zone state, after the command has been performed.</returns>
         public ZoneState SwitchSource(Address zoneId, Address sourceId)
         {
             MonitorAndControlClient mcProxy = getMCProxy();
@@ -279,16 +425,32 @@ namespace NuvoControl.Server.WebServer
             return zoneState;
         }
 
+        /// <summary>
+        /// Increases the volume of a specified zone.
+        /// </summary>
+        /// <param name="zoneId">Zone id</param>
+        /// <returns>Zone state, after the command has been performed.</returns>
         public ZoneState VolumeUp(Address zoneId)
         {
             return AdjustVolume(zoneId, +3);
         }
 
+        /// <summary>
+        /// Decrease the volume of a specified zone.
+        /// </summary>
+        /// <param name="zoneId">Zone id</param>
+        /// <returns>Zone state, after the command has been performed.</returns>
         public ZoneState VolumeDown(Address zoneId)
         {
             return AdjustVolume(zoneId, -3);
         }
 
+        /// <summary>
+        /// Change the volume of a specified zone.
+        /// </summary>
+        /// <param name="zoneId">Zone id</param>
+        /// <param name="adjVolume">Delta Volume</param>
+        /// <returns>Zone state, after the command has been performed.</returns>
         private ZoneState AdjustVolume(Address zoneId, int adjVolume)
         {
             MonitorAndControlClient mcProxy = getMCProxy();
@@ -302,6 +464,8 @@ namespace NuvoControl.Server.WebServer
             mcProxy.Disconnect();
             return zoneState;
         }
+        #endregion
+
 
     }
 }

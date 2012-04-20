@@ -29,7 +29,7 @@ namespace NuvoControl.Server.WebServer
             ConfigureClient cfgIfc = null;
             cfgIfc = new ConfigureClient();
             // Connect to the discovered service endpoint
-            cfgIfc.Endpoint.Address = Global.ServiceManager.DiscoveredConfigurationClients.Endpoints[0].Address;
+            cfgIfc.Endpoint.Address = Global.ServiceManager.DiscoveredConfigurationServiceHosts.Endpoints[0].Address;
 
             for (int iZoneId = 1; iZoneId < 12; iZoneId++)
             {

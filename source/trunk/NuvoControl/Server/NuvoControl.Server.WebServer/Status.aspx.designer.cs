@@ -40,6 +40,24 @@ namespace NuvoControl.Server.WebServer {
         protected global::NuvoControl.Server.WebServer.ZoneStatusUserControl ucZone3;
         
         /// <summary>
+        /// listZones control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList listZones;
+        
+        /// <summary>
+        /// ucZoneX control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::NuvoControl.Server.WebServer.ZoneStatusUserControl ucZoneX;
+        
+        /// <summary>
         /// btnRefresh control.
         /// </summary>
         /// <remarks>

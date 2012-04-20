@@ -44,17 +44,30 @@ namespace NuvoControl.Server.WebServer
             ucZone1.Refresh();
             ucZone2.Refresh();
             ucZone3.Refresh();
+            ucZoneX.Refresh();
         }
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Set Service Manager wthin all zone user controls
             ucZone1.SetServiceManager(Global.ServiceManager);
             ucZone2.SetServiceManager(Global.ServiceManager);
             ucZone3.SetServiceManager(Global.ServiceManager);
+            ucZoneX.SetServiceManager(Global.ServiceManager);
 
+            // Set zone id within all zone user controls
             ucZone1.SetZoneId(new Address(100, 2));
             ucZone2.SetZoneId(new Address(100, 1));
             ucZone3.SetZoneId(new Address(100, 4));
+
+            // Init list with available zones
+            foreach (Zone zone in Global.ServiceManager.Zones)
+            {
+                listZones.Items.Add(zone.Name);
+            }
+
+            // Set zone id of last zone user control, to the selected index
+            ucZoneX.SetZoneId(Global.ServiceManager.GetZone(listZones.SelectedValue).Id);
         }
 
         protected void btnRefresh_Click(object sender, EventArgs e)

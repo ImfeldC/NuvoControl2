@@ -3,10 +3,10 @@
 <asp:Label ID="labelZoneName" runat="server" Text="Zone Name"></asp:Label>
 <asp:Panel ID="Panel1" runat="server">
     <asp:Button ID="btnVolDown" runat="server" onclick="btnVolDown_Click" 
-        Text="&lt; -" />
+        Text="&lt;" />
     <asp:Label ID="lblVolume" runat="server" Text="???"></asp:Label>
     <asp:Button ID="btnVolUp" runat="server" onclick="btnVolUp_Click" 
-        Text="+ &gt;" />
+        Text="&gt;" />
     <asp:DropDownList ID="listSources" runat="server" Height="25px" 
         onselectedindexchanged="listSources_SelectedIndexChanged" 
         AutoPostBack="True">
