@@ -30,8 +30,15 @@ namespace NuvoControl.Server.WebServer
 
             serviceManager = new ServiceManager();
 
-            serviceManager.DiscoverConfigurationServices();
-            serviceManager.DiscoverMonitorControlServices();
+            // Discover Services
+            //serviceManager.DiscoverConfigurationServices();
+            //serviceManager.DiscoverMonitorControlServices();
+
+            // Use dedicated service hosts
+            serviceManager.ConfigurationServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfi-laptopdell:8080/ConfigurationService");
+            serviceManager.MonitorControlServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfi-laptopdell:8080/MonitorAndControlService");
+
+            // Load Configuration
             serviceManager.LoadConfiguration();
         }
 
