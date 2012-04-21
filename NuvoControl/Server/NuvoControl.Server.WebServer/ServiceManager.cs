@@ -80,13 +80,13 @@ namespace NuvoControl.Server.WebServer
         /// <summary>
         /// Private member to store discovered configuration service hosts.
         /// </summary>
-        private FindResponse discoveredConfigurationServiceHosts = null;
+        private FindResponse _DiscoveredConfigurationServiceHosts = null;
 
         /// <summary>
         /// Private member to store the adress (URL) of the configuration service host.
         /// e.g. http://imfi-laptopdell:8080/ConfigurationService
         /// </summary>
-        private EndpointAddress configurationServiceHostAddress = null;
+        private EndpointAddress _ConfigurationServiceHostAddress = null;
 
         /// <summary>
         /// Searches for Configuration Services available on the network.
@@ -101,22 +101,22 @@ namespace NuvoControl.Server.WebServer
 
                 DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
                 FindCriteria criteria = new FindCriteria(typeof(IConfigure));
-                discoveredConfigurationServiceHosts = discoveryClient.Find(criteria);
+                _DiscoveredConfigurationServiceHosts = discoveryClient.Find(criteria);
                 discoveryClient.Close();
 
-                _log.Trace(m => m("{0} <Configuration Service> found.", discoveredConfigurationServiceHosts.Endpoints.Count));
-                LogHelper.LogEndPoint(_log, discoveredConfigurationServiceHosts.Endpoints);
+                _log.Trace(m => m("{0} <Configuration Service> found.", _DiscoveredConfigurationServiceHosts.Endpoints.Count));
+                LogHelper.LogEndPoint(_log, _DiscoveredConfigurationServiceHosts.Endpoints);
 
-                if (discoveredConfigurationServiceHosts.Endpoints.Count > 0)
+                if (_DiscoveredConfigurationServiceHosts.Endpoints.Count > 0)
                 {
                     // store service host address
-                    configurationServiceHostAddress = discoveredConfigurationServiceHosts.Endpoints[0].Address;
+                    _ConfigurationServiceHostAddress = _DiscoveredConfigurationServiceHosts.Endpoints[0].Address;
                 }
             }
             catch (Exception exc)
             {
                 _log.Trace(m => m("Exception: during discovering <Configuration Service>: {0}", exc));
-                discoveredConfigurationServiceHosts = null;
+                _DiscoveredConfigurationServiceHosts = null;
             }
 
         }
@@ -126,7 +126,7 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         public FindResponse DiscoveredConfigurationServiceHosts
         {
-            get { return discoveredConfigurationServiceHosts; }
+            get { return _DiscoveredConfigurationServiceHosts; }
         }
 
         /// <summary>
@@ -143,13 +143,72 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         public EndpointAddress ConfigurationServiceHostAdress
         {
-            get { return configurationServiceHostAddress; }
+            get { return _ConfigurationServiceHostAddress; }
             set 
             {
                 _log.Trace(m => m("Set ConfigurationServiceHostAdress to {0}.", value));
-                configurationServiceHostAddress = value; 
+                _ConfigurationServiceHostAddress = value; 
             }
         }
+
+        /// <summary>
+        /// Private member to store graphic configuration.
+        /// </summary>
+        private Graphic _graphic = null;
+
+        /// <summary>
+        /// Retruns the graphic configuration for the whole system.
+        /// </summary>
+        public Graphic Graphic
+        {
+            get { return _graphic; }
+        }
+
+        /// <summary>
+        /// Reads (loads) the configuration of the system from the configuration service.
+        /// </summary>
+        public void LoadConfiguration()
+        {
+            _log.Trace(m => m("LoadConfiguration called for {0}.", (_ConfigurationServiceHostAddress == null) ? "null" : _ConfigurationServiceHostAddress.ToString()));
+
+            if (_ConfigurationServiceHostAddress != null)
+            {
+                ConfigureClient cfgIfc = null;
+                cfgIfc = new ConfigureClient();
+                // Connect to the discovered service endpoint
+                cfgIfc.Endpoint.Address = _ConfigurationServiceHostAddress;
+
+
+                _graphic = cfgIfc.GetGraphicConfiguration();
+                _log.Trace(m => m("All graphic details: {0}", _graphic.ToString()));
+
+                // read available zones (via graphic configuration)
+                // Root -> Graphic -> Building -> Floors -> Zone(s)
+                zones.Clear();
+                foreach (Floor floor in _graphic.Building.Floors)
+                {
+                    _log.Trace(m => m("Read FLOOR with id={0}.", floor.Id));
+                    foreach (Zone zone in floor.Zones)
+                    {
+                        _log.Trace(m => m("Zone found with id {0} with name {1}.", zone.Id.ToString(), zone.Name));
+                        zones.Add(zone);
+                    }
+                }
+                _log.Trace(m => m("Totally {0} zones found!", zones.Count));
+
+
+                // read available sources (via graphic configuration)
+                // Root -> Graphic -> Source(s)
+                sources.Clear();
+                foreach (Source source in _graphic.Sources)
+                {
+                    _log.Trace(m => m("SOURCE found with id {0}, with the name {1}.", source.Id.ToString(), source.Name));
+                    sources.Add(source);
+                }
+                _log.Trace(m => m("Totally {0} sources found!", sources.Count));
+            }
+        }
+
         #endregion
 
         #region Monitor & Control Service
@@ -228,6 +287,7 @@ namespace NuvoControl.Server.WebServer
         }
         #endregion
 
+        #region Monitor & Control Service: Command Section
         /// <summary>
         /// Retruns a proxy object to the monitor and control service.
         /// </summary>
@@ -242,53 +302,6 @@ namespace NuvoControl.Server.WebServer
             return mcProxy;
         }
 
-        /// <summary>
-        /// Reads (loads) the configuration of the system from the configuration service.
-        /// </summary>
-        public void LoadConfiguration()
-        {
-            _log.Trace(m => m("LoadConfiguration called for {0}.", (configurationServiceHostAddress==null)?"null":configurationServiceHostAddress.ToString()));
-
-            if ( configurationServiceHostAddress != null )
-            {
-                ConfigureClient cfgIfc = null;
-                cfgIfc = new ConfigureClient();
-                // Connect to the discovered service endpoint
-                cfgIfc.Endpoint.Address = configurationServiceHostAddress;
-
-
-                Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                _log.Trace(m => m("All graphic details: {0}", graphic.ToString()));
-
-                // read available zones (via graphic configuration)
-                // Root -> Graphic -> Building -> Floors -> Zone(s)
-                zones.Clear();
-                foreach (Floor floor in graphic.Building.Floors)
-                {
-                    _log.Trace(m => m("Read FLOOR with id={0}.", floor.Id));
-                    foreach (Zone zone in floor.Zones)
-                    {
-                        _log.Trace(m => m("Zone found with id {0} with name {1}.", zone.Id.ToString(), zone.Name));
-                        zones.Add(zone);
-                    }
-                }
-                _log.Trace(m => m("Totally {0} zones found!", zones.Count));
-
-
-                // read available sources (via graphic configuration)
-                // Root -> Graphic -> Source(s)
-                sources.Clear();
-                foreach (Source source in graphic.Sources)
-                {
-                    _log.Trace(m => m("SOURCE found with id {0}, with the name {1}.", source.Id.ToString(), source.Name));
-                    sources.Add(source);
-                }
-                _log.Trace(m => m("Totally {0} sources found!", sources.Count));
-            }
-        }
- 
-
-        #region Command Section
         /// <summary>
         /// Retruns Source configuration object for a specific Source Id.
         /// </summary>

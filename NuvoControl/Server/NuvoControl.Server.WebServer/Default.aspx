@@ -1,5 +1,5 @@
 ﻿<%@ Page Title="Home Page" Language="C#" Trace="true" MasterPageFile="~/Site.master" AutoEventWireup="true"
-    CodeBehind="Default.aspx.cs" Inherits="NuvoControl.Server.WebServer._Default" %>
+    CodeBehind="Default.aspx.cs" Inherits="NuvoControl.Server.WebServer.DefaultPage" %>
 
 <script runat="server">
 private void page_load(object sender, EventArgs e) {

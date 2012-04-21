@@ -10,7 +10,7 @@
 namespace NuvoControl.Server.WebServer {
     
     
-    public partial class _Default {
+    public partial class DefaultPage {
         
         /// <summary>
         /// lableHostNum control.
