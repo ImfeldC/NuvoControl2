@@ -10,7 +10,7 @@
 namespace NuvoControl.Server.WebServer {
     
     
-    public partial class Status {
+    public partial class StatusPage {
         
         /// <summary>
         /// ucZone1 control.

@@ -35,7 +35,7 @@ namespace NuvoControl.Server.WebServer
     }
 
 
-    public partial class Status : System.Web.UI.Page
+    public partial class StatusPage : System.Web.UI.Page
     {
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
