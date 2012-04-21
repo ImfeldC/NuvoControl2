@@ -91,6 +91,7 @@
     <Compile Include="Configuration\Device.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="Configuration\Zone.cs" />
+    <Compile Include="ListExtensions.cs" />
     <Compile Include="LogHelper.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NetworkHelper.cs" />
