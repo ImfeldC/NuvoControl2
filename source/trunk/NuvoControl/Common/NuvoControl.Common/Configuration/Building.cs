@@ -146,7 +146,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this building.</returns>
         public override string ToString()
         {
-            return String.Format("Id={0}, Name={1}, PicturePath={2}, PictureType={3}, Floors={4}", _id, _name, _picturePath, _pictureType, _floors);
+            return String.Format("Id={0}, Name={1}, PicturePath={2}/{3}, Floors=[{4}]", _id, _name, _picturePath, _pictureType, _floors.ToString<Floor>(" / "));
         }
 
         #endregion

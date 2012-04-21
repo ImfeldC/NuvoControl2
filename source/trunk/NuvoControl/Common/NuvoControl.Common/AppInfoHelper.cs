@@ -5,6 +5,9 @@ using System.Text;
 
 namespace NuvoControl.Common
 {
+    /// <summary>
+    /// This class contains helper methods th retrieve infromatin about the application context.
+    /// </summary>
     public class AppInfoHelper
     {
         /// <summary>

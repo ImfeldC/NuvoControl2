@@ -98,7 +98,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this Grpahic object.</returns>
         public override string ToString()
         {
-            return String.Format( "Building=[{0}], Sources=[{1}]", _building.ToString(), _sources.ToString() );
+            return String.Format("Building=[{0}], Sources=[{1}]", _building.ToString(), _sources.ToString<Source>(" / "));
         }
 
         #endregion
