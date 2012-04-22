@@ -34,6 +34,11 @@ namespace NuvoControl.Common.Configuration
     [DataContract]
     public class Source: IComparable<Source>
     {
+        /// <summary>
+        /// Maximum number of sources for a NuVo (Essentia) system.
+        /// </summary>
+        public const int MAX_SOURCES = 6;
+
         #region Private Members
 
         /// <summary>
@@ -134,6 +139,20 @@ namespace NuvoControl.Common.Configuration
 
 
         /// <summary>
+        /// Return true if the Source object is empty (not initialized).
+        /// </summary>
+        /// <returns>True if the source object is empty.</returns>
+        public bool isEmpty()
+        {
+            if(_id.ObjectId==SystemConfiguration.ID_UNDEFINED && _id.DeviceId==SystemConfiguration.ID_UNDEFINED )
+            {
+                return true;
+            }
+            return false;
+        }
+
+
+        /// <summary>
         /// Determines wether the specified object equals the current object.
         /// </summary>
         /// <param name="obj">The object to compare with.</param>
@@ -208,7 +227,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this source.</returns>
         public override string ToString()
         {
-            return _name;
+            return String.Format("[id={0}, name={1}]", _id, _name);
         }
 
         #endregion
