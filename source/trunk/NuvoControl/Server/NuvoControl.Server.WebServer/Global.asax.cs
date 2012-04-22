@@ -35,16 +35,34 @@ namespace NuvoControl.Server.WebServer
 
             serviceManager = new ServiceManager();
 
-            // Discover Services
-            //serviceManager.DiscoverConfigurationServices();
-            //serviceManager.DiscoverMonitorControlServices();
-
             // Use dedicated service hosts
-            serviceManager.ConfigurationServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfi-laptopdell:8080/ConfigurationService");
-            serviceManager.MonitorControlServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfi-laptopdell:8080/MonitorAndControlService");
+            //serviceManager.ConfigurationServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfi-laptopdell:8080/ConfigurationService");
+            //serviceManager.MonitorControlServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfi-laptopdell:8080/MonitorAndControlService");
+            serviceManager.ConfigurationServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfihpavm:8080/ConfigurationService");
+            serviceManager.MonitorControlServiceHostAdress = new System.ServiceModel.EndpointAddress("http://imfihpavm:8080/MonitorAndControlService");
 
-            // Load Configuration
-            serviceManager.LoadConfiguration();
+            try
+            {
+                // Load Configuration
+                serviceManager.LoadConfiguration();
+            }
+            catch (TimeoutException ex)
+            {
+                // The configured endpoints wasn't found. Try to discover other hosts
+                _log.Warn(m => m("TimeoutException during reading configuration from endpoint [{0}] ... TimeoutException={1}", serviceManager.ConfigurationServiceHostAdress, ex.ToString()));
+
+                // Discover Services
+                serviceManager.DiscoverConfigurationServices();
+                serviceManager.DiscoverMonitorControlServices();
+
+                if (serviceManager.NumOfDiscoveredConfigurationServiceHosts > 0)
+                {
+                    _log.Trace(m => m("Configuration Servcie host discovered [{0}] ...", serviceManager.ConfigurationServiceHostAdress));
+
+                    // Load Configuration
+                    serviceManager.LoadConfiguration();
+                }
+            }
 
             // Load Zone State
             serviceManager.GetAllZoneStates();
