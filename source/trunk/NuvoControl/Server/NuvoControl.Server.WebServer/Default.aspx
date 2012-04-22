@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Home Page" Language="C#" Trace="true" MasterPageFile="~/Site.master" AutoEventWireup="true"
+﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.master" AutoEventWireup="true"
     CodeBehind="Default.aspx.cs" Inherits="NuvoControl.Server.WebServer.DefaultPage" %>
 
 <script runat="server">
