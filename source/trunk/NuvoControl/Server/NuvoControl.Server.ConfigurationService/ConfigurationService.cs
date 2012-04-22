@@ -25,6 +25,7 @@ using System.Diagnostics;
 
 using Common.Logging;
 
+using NuvoControl.Common;       // required for ToString<T> list extension
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.Dal;
 
@@ -130,7 +131,7 @@ namespace NuvoControl.Server.ConfigurationService
         /// <returns></returns>
         public Zone GetZoneKonfiguration(Address zoneId)
         {
-            _log.Trace(m => m("Configuration Service; GetZoneKonfiguration()."));
+            _log.Trace(m => m(String.Format("Configuration Service; GetZoneKonfiguration(ZoneId={0}).", zoneId.ToString())));
 
             List<Zone> zones = new List<Zone>();
             foreach (Floor floor in _systemConfiguration.Graphic.Building.Floors)
@@ -159,7 +160,20 @@ namespace NuvoControl.Server.ConfigurationService
         /// <returns></returns>
         public Function GetFunction(Guid id)
         {
-            throw new NotImplementedException();
+            _log.Trace(m => m(String.Format("Configuration Service; GetFunction(Guid={0}).", id.ToString())));
+
+            // Search function with the specified Guid
+            foreach (Function function in _systemConfiguration.Functions)
+            {
+                if (function.Id == id)
+                {
+                    _log.Trace(m => m(String.Format("Function with Guid={0} found: {1}.", id.ToString(), function.ToString())));
+                    return function;
+                }
+            }
+
+            _log.Warn(m => m(String.Format("Function with Guid={0} NOT found: {1}.", id.ToString(), _systemConfiguration.Functions.ToString<Function>(" / "))));
+            return null;
         }
 
         /// <summary>
@@ -169,7 +183,20 @@ namespace NuvoControl.Server.ConfigurationService
         /// <returns></returns>
         public List<Function> GetFunctions(Address zoneId)
         {
-            throw new NotImplementedException();
+            _log.Trace(m => m(String.Format("Configuration Service; GetFunctions(ZoneId={0}).", zoneId.ToString())));
+
+            // Search functions of the specified zone
+            List<Function> zoneFunctions = new List<Function>();
+            foreach( Function function in _systemConfiguration.Functions )
+            {
+                if( function.ZoneId == zoneId )
+                {
+                    zoneFunctions.Add( function );
+                }
+            }
+
+            _log.Trace(m => m(String.Format("Functions of ZoneId={0}: {1}.", zoneId.ToString(), zoneFunctions.ToString<Function>(" / "))));
+            return zoneFunctions;
         }
 
         /// <summary>

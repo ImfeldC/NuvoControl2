@@ -30,8 +30,14 @@ namespace NuvoControl.Common.Configuration
     /// 
     /// It is a data structurer.
     /// Is used as base class for all function classes.
+    /// 
+    /// NOTE: Due subclassing issues with WCF, you need to specify the allowed subclasses.
+    /// In this case: SleepFunction and AlarmFunction
+    /// See also http://msdn.microsoft.com/en-us/magazine/gg598929.aspx
     /// </summary>
     [DataContract]
+    [KnownType(typeof(SleepFunction))]
+    [KnownType(typeof(AlarmFunction))]
     public abstract class Function
     {
         #region Private Members
