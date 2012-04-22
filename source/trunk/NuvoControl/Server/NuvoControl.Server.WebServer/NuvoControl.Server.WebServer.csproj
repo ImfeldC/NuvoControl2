@@ -84,6 +84,8 @@
       <Generator>WCF Proxy Generator</Generator>
       <LastGenOutput>Reference.cs</LastGenOutput>
     </None>
+    <Content Include="Images\nuvo_IMFI_logo.gif" />
+    <Content Include="Images\nuvo_logo_top.gif" />
     <Content Include="Status.aspx" />
     <Content Include="Styles\Site.css" />
     <Content Include="Default.aspx" />

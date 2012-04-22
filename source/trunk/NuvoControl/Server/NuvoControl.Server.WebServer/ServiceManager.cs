@@ -17,6 +17,25 @@ using NuvoControl.Common;
 
 namespace NuvoControl.Server.WebServer
 {
+
+    /// <summary>
+    /// This class is used as server callback interface.
+    /// </summary>
+    public class ServcieManagerCallback : IMonitorAndControlCallback
+    {
+        private static ILog _log = LogManager.GetCurrentClassLogger();
+
+        #region IMonitorAndControlCallback Members
+
+        public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
+        {
+            _log.Trace(m => m("Notification from server zone with id={0} has changed. New state is {1}", zoneId.ToString(), zoneState.ToString()));
+        }
+
+        #endregion
+    }
+
+
     /// <summary>
     /// This class is used a general manager to handle the two services:
     /// - Configuration Service
@@ -35,8 +54,9 @@ namespace NuvoControl.Server.WebServer
         public ServiceManager()
         {
             _log.Trace(m => m("ServiceManager created."));
-            zones = new List<Zone>();
-            sources = new List<Source>();
+            _zones = new List<Zone>();
+            _sources = new List<Source>();
+            _functions = new List<Function>();
         }
 
 
@@ -48,19 +68,19 @@ namespace NuvoControl.Server.WebServer
         /// <summary>
         /// Private member to store the availables zone configuration.
         /// </summary>
-        private List<Zone> zones = null;
+        private List<Zone> _zones = null;
 
         /// <summary>
         /// Private member to store the available source configuration.
         /// </summary>
-        private List<Source> sources = null;
+        private List<Source> _sources = null;
 
         /// <summary>
         /// Public access method to retrieve configured zones.
         /// </summary>
         public List<Zone> Zones
         {
-            get { return zones; }
+            get { return _zones; }
         }
 
         /// <summary>
@@ -68,7 +88,7 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         public List<Source> Sources
         {
-            get { return sources; }
+            get { return _sources; }
         }
         #endregion
 
@@ -151,6 +171,7 @@ namespace NuvoControl.Server.WebServer
             }
         }
 
+
         /// <summary>
         /// Private member to store graphic configuration.
         /// </summary>
@@ -162,6 +183,19 @@ namespace NuvoControl.Server.WebServer
         public Graphic Graphic
         {
             get { return _graphic; }
+        }
+
+        /// <summary>
+        /// Private member to store all functions.
+        /// </summary>
+        private List<Function> _functions = null;
+
+        /// <summary>
+        /// Returns list of all functions.
+        /// </summary>
+        public List<Function> Functions
+        {
+            get { return _functions; }
         }
 
         /// <summary>
@@ -184,28 +218,34 @@ namespace NuvoControl.Server.WebServer
 
                 // read available zones (via graphic configuration)
                 // Root -> Graphic -> Building -> Floors -> Zone(s)
-                zones.Clear();
+                _zones.Clear();
+                _functions.Clear();
                 foreach (Floor floor in _graphic.Building.Floors)
                 {
                     _log.Trace(m => m("Read FLOOR with id={0}.", floor.Id));
                     foreach (Zone zone in floor.Zones)
                     {
                         _log.Trace(m => m("Zone found with id {0} with name {1}.", zone.Id.ToString(), zone.Name));
-                        zones.Add(zone);
+                        _zones.Add(zone);
+
+                        // ToDo: Not implemented yet! Implement GetFunctions(zone.Id) on server side!
+                        //Function[] functions = cfgIfc.GetFunctions(zone.Id);
+                        //_functions.AddRange(functions);
                     }
                 }
-                _log.Trace(m => m("Totally {0} zones found!", zones.Count));
+                _log.Trace(m => m("Totally {0} zones found!", _zones.Count));
+                _log.Trace(m => m("Totally {0} funtions found!", _functions.Count));
 
 
                 // read available sources (via graphic configuration)
                 // Root -> Graphic -> Source(s)
-                sources.Clear();
+                _sources.Clear();
                 foreach (Source source in _graphic.Sources)
                 {
                     _log.Trace(m => m("SOURCE found with id {0}, with the name {1}.", source.Id.ToString(), source.Name));
-                    sources.Add(source);
+                    _sources.Add(source);
                 }
-                _log.Trace(m => m("Totally {0} sources found!", sources.Count));
+                _log.Trace(m => m("Totally {0} sources found!", _sources.Count));
             }
         }
 
@@ -295,7 +335,7 @@ namespace NuvoControl.Server.WebServer
         private MonitorAndControlClient getMCProxy()
         {
             MonitorAndControlClient mcProxy = null;
-            IMonitorAndControlCallback serverCallback = new ServerCallback();
+            IMonitorAndControlCallback serverCallback = new ServcieManagerCallback();
             mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
             // Connect to the discovered service endpoint
             mcProxy.Endpoint.Address = monitorControlServiceHostAddress;
@@ -309,17 +349,15 @@ namespace NuvoControl.Server.WebServer
         /// <returns>Source object. Returns an empty object in case the Source Id was not found.</returns>
         public Source GetSource( Address sourceId )
         {
-            Source foundSource = new Source();
-            foreach (Source source in sources)
+            foreach (Source source in _sources)
             {
                 if (source.Id == sourceId)
                 {
-                    foundSource = source;
-                    break;
-                }
+                    return source;
+                 }
             }
-            _log.Trace(m => m("Source found!", foundSource.ToString()));
-            return foundSource;
+            _log.Warn(m => m("Source NOT found, with id {0}! _sources=[{1}]", sourceId.ToString(), _sources.ToString<Source>(" / ")));
+            return new Source();
         }
 
         /// <summary>
@@ -329,17 +367,15 @@ namespace NuvoControl.Server.WebServer
         /// <returns>Source object. Returns an empty object in case the Source Name was not found.</returns>
         public Source GetSource(string sourceName)
         {
-            Source foundSource = new Source();
-            foreach (Source source in sources)
+            foreach (Source source in _sources)
             {
                 if (source.Name == sourceName)
                 {
-                    foundSource = source;
-                    break;
+                    return source;
                 }
             }
-            _log.Trace(m => m("Source found!", foundSource.ToString()));
-            return foundSource;
+            _log.Warn(m => m("Source NOT found, with name {0}! _sources=[{1}]", sourceName, _sources.ToString<Source>(" / ")));
+            return new Source();
         }
 
         /// <summary>
@@ -349,17 +385,15 @@ namespace NuvoControl.Server.WebServer
         /// <returns>Zone object. Returns an empty object in case the Zone Id was not found.</returns>
         public Zone GetZone(Address zoneId)
         {
-            Zone foundZone = new Zone();
-            foreach (Zone zone in zones)
+            foreach (Zone zone in _zones)
             {
                 if (zone.Id == zoneId)
                 {
-                    foundZone = zone;
-                    break;
+                    return zone;
                 }
             }
-            _log.Trace(m => m("Zone found!", foundZone.ToString()));
-            return foundZone;
+            _log.Warn(m => m("Zone NOT found, with id {0}! _zones=[{1}]", zoneId.ToString(), _zones.ToString<Zone>(" / ")));
+            return new Zone();
         }
 
         /// <summary>
@@ -369,17 +403,15 @@ namespace NuvoControl.Server.WebServer
         /// <returns>Zone object. Returns an empty object in case the Zone Name was not found.</returns>
         public Zone GetZone(string zoneName)
         {
-            Zone foundZone = new Zone();
-            foreach (Zone zone in zones)
+            foreach (Zone zone in _zones)
             {
                 if (zone.Name == zoneName)
                 {
-                    foundZone = zone;
-                    break;
+                    return zone;
                 }
             }
-            _log.Trace(m => m("Zone found!", foundZone.ToString()));
-            return foundZone;
+            _log.Warn(m => m("Zone NOT found, with name {0}! _zones=[{1}]", zoneName, _zones.ToString<Zone>(" / ")));
+            return new Zone();
         }
 
         /// <summary>
@@ -393,10 +425,35 @@ namespace NuvoControl.Server.WebServer
             mcProxy.Connect();
 
             ZoneState zoneState = mcProxy.GetZoneState(zoneId);
-            _log.Trace(m => m("Read zone configuration for zone with id {0}. Zone State = [{1}]", zoneId.ToString(), zoneState.ToString()));
+            _log.Trace(m => m("Read zone status for zone with id {0}. Zone State = [{1}]", zoneId.ToString(), zoneState.ToString()));
 
             mcProxy.Disconnect();
+
+            // Tweak: If a source is not configured, it needs to be added programmatically to the list, because it is still possible to select this source on the keypad.
+            // If such an unconfigured source has been selected an error occurs, becuase the source is unkown!
+            // ToDo: Implement this tweak on server side
+            Source source = GetSource(zoneState.Source);
+            if( source.isEmpty() )
+            {
+                _sources.Add(new Source(zoneState.Source, String.Format("[{0}]",zoneState.Source), "n/a", "n/a"));
+                _log.Trace(m => m("SOURCE added with id {0}.", zoneState.Source));
+            }
             return zoneState;
+        }
+
+        /// <summary>
+        /// Returns the zone state for all zones.
+        /// </summary>
+        /// <returns>List of Zone State for all zones.</returns>
+        public List<ZoneState> GetAllZoneStates()
+        {
+            List<ZoneState> zoneStates = new List<ZoneState>();
+            foreach (Zone zone in _zones)
+            {
+                zoneStates.Add(GetZoneState(zone.Id));
+            }
+            _log.Trace(m => m("Zone state for all {0} zones loaded.", zoneStates.Count ));
+            return zoneStates;
         }
 
         /// <summary>

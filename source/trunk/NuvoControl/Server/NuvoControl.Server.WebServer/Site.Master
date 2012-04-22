@@ -7,16 +7,18 @@
     <link href="~/Styles/Site.css" rel="stylesheet" type="text/css" />
     <asp:ContentPlaceHolder ID="HeadContent" runat="server">
     </asp:ContentPlaceHolder>
+    <style type="text/css">
+        .style1
+        {
+            width: 464px;
+            height: 60px;
+        }
+    </style>
 </head>
 <body>
     <form runat="server">
     <div class="page">
         <div class="header">
-            <div class="title">
-                <h1>
-                    NuvoControl
-                </h1>
-            </div>
             <div class="loginDisplay">
                 <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
                     <AnonymousTemplate>
@@ -27,7 +29,7 @@
                         [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" LogoutPageUrl="~/"/> ]
                     </LoggedInTemplate>
                 </asp:LoginView>
-            </div>
+                <img alt="" class="style1" src="Images/nuvo_IMFI_logo.gif" /></div>
             <div class="clear hideSkiplink">
                 <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
                     <Items>
