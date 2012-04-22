@@ -87,7 +87,7 @@ namespace NuvoControl.Server.WebServer
         void Application_Error(object sender, EventArgs e)
         {
             // Code that runs when an unhandled error occurs
-            _log.Trace(m => m("Application_Error ..."));
+            _log.Warn(m => m("Application_Error ..."));
         }
 
         /// <summary>

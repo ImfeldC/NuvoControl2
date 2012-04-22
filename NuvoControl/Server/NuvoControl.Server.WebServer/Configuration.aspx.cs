@@ -74,5 +74,11 @@ namespace NuvoControl.Server.WebServer
             _log.Trace(m => m("Node selected (treeConfiguration_SelectedNodeChanged) Selected Node={0}, Path={1}.", treeConfiguration.SelectedNode.Text, treeConfiguration.SelectedNode.ValuePath));
 
         }
+
+        protected void buttonReadFunctions_Click(object sender, EventArgs e)
+        {
+            List<Function> functions = Global.ServiceManager.LoadFunctions();
+            labelFunctions.Text = functions.ToString<Function>(" / ");
+        }
     }
 }
