@@ -55,7 +55,7 @@ namespace NuvoControl.Server.WebServer
             {
                 _log.Trace(m => m("Read zone configuration for zone with id {0}.", zone.Id));
                 labelConfiguration.Text += zone.ToString();
-                labelConfiguration.Text += "\n";
+                labelConfiguration.Text += "\n--------------------------\n";
             }
 
             _log.Trace(m => m("All graphic details: {0}", Global.ServiceManager.Graphic));

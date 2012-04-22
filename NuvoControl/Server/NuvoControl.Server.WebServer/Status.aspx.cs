@@ -18,23 +18,6 @@ namespace NuvoControl.Server.WebServer
 {
 
 
-    public class ServerCallback : IMonitorAndControlCallback
-    {
-        private static ILog _log = LogManager.GetCurrentClassLogger();
-
-        public int _id = 1;
-        #region IMonitorAndControlCallback Members
-
-        public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
-        {
-            _log.Trace(m => m("Notification from server zone: {0}", zoneId.ToString()));
-            //labelZoneState.Text += String.Format("Notification from server zone: {0}", zoneId.ToString());
-        }
-
-        #endregion
-    }
-
-
     public partial class StatusPage : System.Web.UI.Page
     {
         private static ILog _log = LogManager.GetCurrentClassLogger();
@@ -60,12 +43,14 @@ namespace NuvoControl.Server.WebServer
             ucZone2.SetZoneId(new Address(100, 1));
             ucZone3.SetZoneId(new Address(100, 4));
 
-            // Init list with available zones
-            foreach (Zone zone in Global.ServiceManager.Zones)
+            if (!IsPostBack)
             {
-                listZones.Items.Add(zone.Name);
+                // Init list with available zones
+                foreach (Zone zone in Global.ServiceManager.Zones)
+                {
+                    listZones.Items.Add(zone.Name);
+                }
             }
-
             // Set zone id of last zone user control, to the selected index
             ucZoneX.SetZoneId(Global.ServiceManager.GetZone(listZones.SelectedValue).Id);
         }
@@ -73,6 +58,13 @@ namespace NuvoControl.Server.WebServer
         protected void btnRefresh_Click(object sender, EventArgs e)
         {
             Refresh();
+        }
+
+        protected void listZones_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _log.Trace(m => m("Selected Zone={0}", listZones.SelectedValue));
+            // Set zone id of last zone user control, to the selected index
+            ucZoneX.SetZoneId(Global.ServiceManager.GetZone(listZones.SelectedValue).Id);
         }
     }
 }

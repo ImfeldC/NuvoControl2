@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("NuvoControl.Server.WebServer")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("SEI")]
+[assembly: AssemblyCompany("ImfiSoft")]
 [assembly: AssemblyProduct("NuvoControl.Server.WebServer")]
-[assembly: AssemblyCopyright("Copyright © SEI 2012")]
+[assembly: AssemblyCopyright("Copyright © ImfiSoft 2012")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

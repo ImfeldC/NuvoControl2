@@ -3,7 +3,7 @@
 </asp:Content>
 <asp:Content ID="Content2" runat="server" contentplaceholderid="MainContent">
     <asp:TreeView ID="treeConfiguration" runat="server" 
-        onselectednodechanged="treeConfiguration_SelectedNodeChanged">
+    onselectednodechanged="treeConfiguration_SelectedNodeChanged">
     </asp:TreeView>
     <asp:Label ID="labelConfiguration" runat="server" Text="Label"></asp:Label>
 </asp:Content>
