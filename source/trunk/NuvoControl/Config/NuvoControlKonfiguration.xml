@@ -178,6 +178,9 @@
         <Source Id="100.4" Name="TV">
           <Picture RelativePath=".\Images\TV.jpg" PictureType="jpg" />
         </Source>
+        <Source Id="100.5" Name="AppleAirport">
+          <Picture RelativePath=".\Images\AppleAirport.jpg" PictureType="jpg" />
+        </Source>
         <Source Id="100.6" Name="Media Server">
           <Picture RelativePath=".\Images\MediaServer.jpg" PictureType="jpg" />
         </Source>
