@@ -10,4 +10,7 @@
     <p>
         Put content here.
     </p>
+    <p>
+        <asp:Label ID="labelAppInfo" runat="server" Text="(AppInfo)"></asp:Label>
+    </p>
 </asp:Content>
