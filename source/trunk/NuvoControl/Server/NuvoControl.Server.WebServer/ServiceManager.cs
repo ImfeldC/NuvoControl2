@@ -228,9 +228,9 @@ namespace NuvoControl.Server.WebServer
                         _log.Trace(m => m("Zone found with id {0} with name {1}.", zone.Id.ToString(), zone.Name));
                         _zones.Add(zone);
 
-                        // ToDo: Not implemented yet! Implement GetFunctions(zone.Id) on server side!
-                        //Function[] functions = cfgIfc.GetFunctions(zone.Id);
-                        //_functions.AddRange(functions);
+                        // Read the functions associated with this zone
+                        Function[] functions = cfgIfc.GetFunctions(zone.Id);
+                        _functions.AddRange(functions);
                     }
                 }
                 _log.Trace(m => m("Totally {0} zones found!", _zones.Count));
@@ -247,6 +247,33 @@ namespace NuvoControl.Server.WebServer
                 }
                 _log.Trace(m => m("Totally {0} sources found!", _sources.Count));
             }
+        }
+
+        /// <summary>
+        /// Reads (loads) the functions (part of the system configuration) from the configuration service.
+        /// </summary>
+        public List<Function> LoadFunctions()
+        {
+            _log.Trace(m => m("LoadFunctions called for {0}.", (_ConfigurationServiceHostAddress == null) ? "null" : _ConfigurationServiceHostAddress.ToString()));
+
+            if (_ConfigurationServiceHostAddress != null)
+            {
+                ConfigureClient cfgIfc = null;
+                cfgIfc = new ConfigureClient();
+                // Connect to the discovered service endpoint
+                cfgIfc.Endpoint.Address = _ConfigurationServiceHostAddress;
+
+                _functions.Clear();
+                foreach (Zone zone in _zones)
+                {
+                    _log.Trace(m => m("read functions for Zone id {0} with name {1}.", zone.Id.ToString(), zone.Name));
+
+                    // ToDo: Not implemented yet! Implement GetFunctions(zone.Id) on server side!
+                    _functions.AddRange(cfgIfc.GetFunctions(zone.Id));
+                }
+                _log.Trace(m => m("Totally {0} functions found! {1}", _functions.Count, _functions.ToString<Function>(" / ")));
+            }
+            return _functions;
         }
 
         #endregion

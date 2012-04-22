@@ -22,6 +22,24 @@ namespace NuvoControl.Server.WebServer {
         protected global::System.Web.UI.WebControls.TreeView treeConfiguration;
         
         /// <summary>
+        /// buttonReadFunctions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button buttonReadFunctions;
+        
+        /// <summary>
+        /// labelFunctions control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label labelFunctions;
+        
+        /// <summary>
         /// labelConfiguration control.
         /// </summary>
         /// <remarks>
