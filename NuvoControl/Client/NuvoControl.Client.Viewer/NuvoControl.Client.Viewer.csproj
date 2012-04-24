@@ -16,8 +16,8 @@
     <WarningLevel>4</WarningLevel>
     <ApplicationIcon>NuvoControl.ico</ApplicationIcon>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <ManifestCertificateThumbprint>5442C18842180C1C1EAE6D39EFE559E13BDEAAC4</ManifestCertificateThumbprint>
-    <ManifestKeyFile>NuvoControl.Client.Viewer_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestCertificateThumbprint>6266B849463C8AB6A9E5DF6433BA95FB3C9750C4</ManifestCertificateThumbprint>
+    <ManifestKeyFile>NuvoControl.Client.Viewer_1_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>true</SignManifests>
     <FileUpgradeFlags>
@@ -38,7 +38,7 @@
     <InstallUrl>http://www.imfeld.net/publish/NuvoControl.Client.Viewer/</InstallUrl>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>12</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -283,6 +283,7 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="app.config" />
+    <None Include="NuvoControl.Client.Viewer_1_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

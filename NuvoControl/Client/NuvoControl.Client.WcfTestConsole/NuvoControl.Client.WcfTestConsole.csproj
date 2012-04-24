@@ -19,7 +19,7 @@
     <UpgradeBackupLocation />
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <TargetFrameworkProfile />
-    <PublishUrl>http://localhost/NuvoControl.Client.WcfTestConsole/</PublishUrl>
+    <PublishUrl>ftp://www.imfeld.net/html/publish/NuvoControl.Client.WcfTestConsole/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -29,9 +29,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>http://www.imfeld.net/publish/NuvoControl.Client.WcfTestConsole/</InstallUrl>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>3</ApplicationRevision>
+    <ApplicationRevision>4</ApplicationRevision>
     <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -56,10 +57,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>89B9DA4BB1F9A51D8021D97EB06A193C0B9B8097</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>4670C9FC77BCE0186187C84441A385ED67EB52BB</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>NuvoControl.Client.WcfTestConsole_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>NuvoControl.Client.WcfTestConsole_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
@@ -114,6 +115,7 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="NuvoControl.Client.WcfTestConsole_1_TemporaryKey.pfx" />
     <None Include="NuvoControl.Client.WcfTestConsole_TemporaryKey.pfx" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Function.datasource" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Graphic.datasource" />
