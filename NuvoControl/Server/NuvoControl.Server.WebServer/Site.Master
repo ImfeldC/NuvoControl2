@@ -10,7 +10,7 @@
     <style type="text/css">
         .style1
         {
-            width: 464px;
+            width: 830px;
             height: 60px;
         }
     </style>
@@ -20,7 +20,7 @@
     <div class="page">
         <div class="header">
             <div class="loginDisplay">
-                <asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
+                <img alt="" class="style1" src="Images/nuvo_IMFI_logo.gif" /><asp:LoginView ID="HeadLoginView" runat="server" EnableViewState="false">
                     <AnonymousTemplate>
                         [ <a href="~/Account/Login.aspx" ID="HeadLoginStatus" runat="server">Log In</a> ]
                     </AnonymousTemplate>
@@ -29,7 +29,7 @@
                         [ <asp:LoginStatus ID="HeadLoginStatus" runat="server" LogoutAction="Redirect" LogoutText="Log Out" LogoutPageUrl="~/"/> ]
                     </LoggedInTemplate>
                 </asp:LoginView>
-                <img alt="" class="style1" src="Images/nuvo_IMFI_logo.gif" /></div>
+                </div>
             <div class="clear hideSkiplink">
                 <asp:Menu ID="NavigationMenu" runat="server" CssClass="menu" EnableViewState="false" IncludeStyleBlock="false" Orientation="Horizontal">
                     <Items>
