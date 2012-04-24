@@ -126,6 +126,8 @@ namespace NuvoControl.Server.WcfHostConsole
 
         private static void HostAllServices()
         {
+            /*
+            // URI used to connect within local LAN networks
             ServiceHost configurationServiceHost = new ServiceHost(_configurationService,
                 new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/ConfigurationService")));
             ServiceHostMc mCServiceHost = new ServiceHostMc(
@@ -134,6 +136,19 @@ namespace NuvoControl.Server.WcfHostConsole
             ServiceHostFunction functionServiceHost = new ServiceHostFunction(
                 typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions, 
                 new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/FunctionService")));
+            */
+
+            // URI used to connect via internet
+            // NOTE: This requires that dyndns service is running and up-to-date. The imfeldc.dyndns.org address will point to the access point, which itself is configured to forward
+            // and request to the virtual machine imfihpavm.
+            ServiceHost configurationServiceHost = new ServiceHost(_configurationService,
+                new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/ConfigurationService")));
+            ServiceHostMc mCServiceHost = new ServiceHostMc(
+                typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer,
+                new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/MonitorAndControlService")));
+            ServiceHostFunction functionServiceHost = new ServiceHostFunction(
+                typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions,
+                new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/FunctionService")));
 
             try
             {

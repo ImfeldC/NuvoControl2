@@ -43,12 +43,27 @@ namespace NuvoControl.Common
         /// 
         /// More information at http://social.msdn.microsoft.com/Forums/en-US/wcf/thread/843ef9fd-f48e-42ed-ab7c-2baf68d6f0d1
         /// </summary>
-        /// <param name="configuredEndpointAddress"></param>
-        /// <returns></returns>
+        /// <param name="configuredEndpointAddress">Configured endpoint address, with placeholder 'localhost' in it.</param>
+        /// <returns>Endpoint address with host name.</returns>
         public static string buildEndpointAddress(string configuredEndpointAddress)
         {
             string endpointAdress = configuredEndpointAddress;
             endpointAdress = endpointAdress.Replace("localhost", getHostName());
+            return endpointAdress;
+        }
+
+
+        /// <summary>
+        /// Replaces the placedolder 'localhost' in the endpoint address with the name of the
+        /// current host, passed as argument.
+        /// </summary>
+        /// <param name="configuredEndpointAddress">Configured endpoint address, with placeholder 'localhost' in it.</param>
+        /// <param name="hostname">Hostname which should be used instead of 'localhost'.</param>
+        /// <returns>Endpoint address with host name.</returns>
+        public static string buildEndpointAddress(string configuredEndpointAddress, string hostname)
+        {
+            string endpointAdress = configuredEndpointAddress;
+            endpointAdress = endpointAdress.Replace("localhost", hostname);
             return endpointAdress;
         }
 
