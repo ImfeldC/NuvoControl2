@@ -14,8 +14,8 @@
     <FileAlignment>512</FileAlignment>
     <ApplicationIcon>NuvoControl.ico</ApplicationIcon>
     <IsWebBootstrapper>true</IsWebBootstrapper>
-    <ManifestCertificateThumbprint>A4744305AF80344BFC90D85A2142F63DDC41F62C</ManifestCertificateThumbprint>
-    <ManifestKeyFile>NuvoControl.Server.WcfHostConsole_2_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestCertificateThumbprint>5A6B6C3D1BD362AE06672B1532021B825A702C87</ManifestCertificateThumbprint>
+    <ManifestKeyFile>NuvoControl.Server.WcfHostConsole_3_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
     <SignManifests>true</SignManifests>
     <FileUpgradeFlags>
@@ -36,8 +36,8 @@
     <InstallUrl>http://www.imfeld.net/publish//NuvoControl.Server.WcfHostConsole/</InstallUrl>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>27</ApplicationRevision>
-    <ApplicationVersion>2.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>28</ApplicationRevision>
+    <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
@@ -131,9 +131,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="NuvoControl.Server.WcfHostConsole_1_TemporaryKey.pfx" />
-    <None Include="NuvoControl.Server.WcfHostConsole_2_TemporaryKey.pfx" />
-    <None Include="NuvoControl.Server.WcfHostConsole_TemporaryKey.pfx" />
+    <None Include="NuvoControl.Server.WcfHostConsole_3_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
