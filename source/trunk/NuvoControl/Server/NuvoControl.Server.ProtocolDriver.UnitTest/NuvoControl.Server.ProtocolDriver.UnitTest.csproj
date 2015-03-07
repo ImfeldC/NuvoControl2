@@ -77,11 +77,17 @@
     <Compile Include="NuvoEssentiaProtocolTest.cs" />
     <Compile Include="NuvoTelegramTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ProtocolDriverFactoryTest.cs" />
     <Compile Include="ProtocolDriverSimulatorTest.cs" />
     <Compile Include="ProtocolDriverTest.cs" />
     <Compile Include="SerialPortFactoryTest.cs" />
     <Compile Include="SerialPortTest.cs" />
+    <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\NuvoControl.Server.ProtocolDriver\Config\NuvoEssentiaProfile.xml">
@@ -109,6 +115,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
