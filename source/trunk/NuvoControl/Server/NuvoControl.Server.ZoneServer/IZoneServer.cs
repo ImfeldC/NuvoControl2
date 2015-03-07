@@ -44,6 +44,11 @@ namespace NuvoControl.Server.ZoneServer
         void StartUp();
 
         /// <summary>
+        /// Unloads the zone servers.
+        /// </summary>
+        void ShutDown();
+
+        /// <summary>
         /// Returns the value/state of the specified zone.
         /// </summary>
         /// <param name="zoneId">The zone id.</param>

@@ -45,7 +45,7 @@ namespace NuvoControl.Server.FunctionServer
 
             traceFunctions();
 
-            _log.Trace(m => m("Ping timer started, each {0}[s]", Properties.FunctionServer.Default.FunctionIntervall));
+            _log.Trace(m => m("Function timer started, each {0}[s]", Properties.FunctionServer.Default.FunctionIntervall));
             _timerFunction.Interval = (Properties.FunctionServer.Default.FunctionIntervall < 10 ? 10 : Properties.FunctionServer.Default.FunctionIntervall) * 1000;
             _timerFunction.Elapsed += new System.Timers.ElapsedEventHandler(_timerFunction_Elapsed);
             _timerFunction.Start();

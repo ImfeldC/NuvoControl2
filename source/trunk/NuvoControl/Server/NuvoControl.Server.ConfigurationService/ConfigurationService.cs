@@ -58,6 +58,7 @@ namespace NuvoControl.Server.ConfigurationService
         /// The file name, containing the persistent system configuration.
         /// </summary>
         private string _configurationFile = null;
+        private string _remoteConfigurationFile = null;
 
         /// <summary>
         /// Helper, to read the configuration.
@@ -75,6 +76,17 @@ namespace NuvoControl.Server.ConfigurationService
         public ConfigurationService(string configurationFile)
         {
             this._configurationFile = configurationFile;
+            Initialize();
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="configurationFile">The file name, containing the persistent system configuration.</param>
+        public ConfigurationService(string configurationFile, string remoteConfigurationFile)
+        {
+            this._configurationFile = configurationFile;
+            this._remoteConfigurationFile = remoteConfigurationFile;
             Initialize();
         }
 
@@ -256,6 +268,15 @@ namespace NuvoControl.Server.ConfigurationService
             }
         }
 
+        /// <summary>
+        /// Check if configuration changed. If yes, reload them.
+        /// </summary>
+        /// <returns>true if configuration changed.</returns>
+        public bool CheckConfiguration()
+        {
+            return RefreshConfiguration();
+        }
+
         #endregion
 
         #region IDisposable Members
@@ -278,8 +299,27 @@ namespace NuvoControl.Server.ConfigurationService
         private void Initialize()
         {
             _configurationLoader = new ConfigurationLoader(_configurationFile);
+            if (_remoteConfigurationFile != null)
+            {
+                _configurationLoader.AppendConfiguration(_remoteConfigurationFile);
+            }
             _systemConfiguration = _configurationLoader.GetConfiguration();
             Validate();
+        }
+
+        /// <summary>
+        /// Check if configuration file changed. If yes, reload them.
+        /// </summary>
+        /// <returns>true if configuration file changed and reloaded.</returns>
+        private bool RefreshConfiguration()
+        {
+            bool bRefresh = _configurationLoader.RefreshConfiguration();
+            if (bRefresh)
+            {
+                _systemConfiguration = _configurationLoader.GetConfiguration();
+                Validate();
+            }
+            return bRefresh;
         }
 
         /// <summary>

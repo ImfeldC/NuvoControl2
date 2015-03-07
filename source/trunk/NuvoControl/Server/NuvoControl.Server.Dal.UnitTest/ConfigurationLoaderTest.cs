@@ -208,7 +208,7 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates.Count, 4);
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].X, 485);
             Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].Y, 210);
-            Assert.AreEqual(systemConfiguration.Graphic.Sources.Count, 5);
+            Assert.AreEqual(systemConfiguration.Graphic.Sources.Count, 6);
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Id, new Address(100, 1));
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Name, "Tuner A");
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PicturePath, @".\Images\Tuner.jpg");
@@ -235,6 +235,85 @@ namespace NuvoControl.Server.Dal.UnitTest
             */
 
         }
+
+    
+        /// <summary>
+        /// A test for AppendConfiguration
+        /// </summary>
+        [TestMethod()]
+        public void AppendConfigurationTest()
+        {
+            string file = @"NuvoControlKonfiguration.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            SystemConfiguration systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(systemConfiguration.Functions.Count, 1);
+
+            string appendfile = @"NuvoControlKonfigurationRemote.xml";
+            target.AppendConfiguration(appendfile);
+            systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(systemConfiguration.Functions.Count, 4);
+        
+        }
+
+        /// <summary>
+        /// A test for AppendConfiguration (with no HW section)
+        /// </summary>
+        [TestMethod()]
+        public void AppendConfigurationTestNoHW()
+        {
+            string file = @"NuvoControlKonfiguration.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            SystemConfiguration systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(systemConfiguration.Functions.Count, 1);
+
+            string appendfile = @"NuvoControlKonfigurationRemoteNoHW.xml";
+            target.AppendConfiguration(appendfile);
+            systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(systemConfiguration.Functions.Count, 4);
+
+        }
+
+        /// <summary>
+        /// A test to load configuration from remote lcoation
+        /// </summary>
+        [TestMethod()]
+        public void LoadRemoteConfigurationTest()
+        {
+            string file = @"NuvoControlKonfiguration.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            SystemConfiguration systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(systemConfiguration.Functions.Count, 1);
+
+            string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
+            target.AppendConfiguration(appendfile);
+            systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(systemConfiguration.Functions.Count, 4);
+
+        }
+
+        /// <summary>
+        /// A test to check if date/time of configuration file changed
+        /// </summary>
+        [TestMethod()]
+        public void CheckConfigurationDateTimeTest()
+        {
+            string file = @"NuvoControlKonfiguration.xml";
+            string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            target.AppendConfiguration(appendfile);
+            SystemConfiguration systemConfiguration = target.GetConfiguration();
+
+            bool bChanged = target.RefreshConfiguration();
+            Assert.IsFalse(bChanged);
+
+        }
+
     }
 }
 

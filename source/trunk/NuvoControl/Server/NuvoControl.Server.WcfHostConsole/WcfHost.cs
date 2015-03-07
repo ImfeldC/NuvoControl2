@@ -63,6 +63,18 @@ namespace NuvoControl.Server.WcfHostConsole
         /// </summary>
         private static FunctionServer.FunctionServer _functionServer = null;
 
+        /// <summary>
+        /// Private member to hold the timer used to periodically check for configuration changes
+        /// </summary>
+        private static System.Timers.Timer _timerCheckConfiguration = new System.Timers.Timer();
+
+
+        private static ServiceHost _configurationServiceHost = null;
+
+        private static ServiceHostMc _mCServiceHost = null;
+
+        private static ServiceHostFunction _functionServiceHost = null;
+
         #endregion
 
         #region Non-Public Interface
@@ -77,9 +89,47 @@ namespace NuvoControl.Server.WcfHostConsole
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
 
+            LoadAllServices();
+            HostAllServices();
+
+            _log.Trace(m => m("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
+            _timerCheckConfiguration.Interval = (Properties.Settings.Default.ConfigurationCheckIntervall < 30 ? 30 : Properties.Settings.Default.ConfigurationCheckIntervall) * 1000;
+            _timerCheckConfiguration.Elapsed += new System.Timers.ElapsedEventHandler(_timerCheckConfiguration_Elapsed);
+            _timerCheckConfiguration.Start();
+
+
+            Console.WriteLine(">>> Press <Enter> to stop the services.");
+            Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Periodic timer routine to check if configuration file changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void _timerCheckConfiguration_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //Console.Write(".");
+            bool bChanged = _configurationService.CheckConfiguration();
+            if (bChanged)
+            {
+                DisposeAllService();
+                UnloadAllServices();
+
+                LoadAllServices();
+                HostAllServices();
+            }
+        }
+
+
+
+
+        private static void LoadAllServices()
+        {
             try
             {
-                LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile);
+                //LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile);
+                LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile, Properties.Settings.Default.NuvoControlRemoteKonfigurationFile);
             }
             catch (Exception exc)
             {
@@ -119,8 +169,53 @@ namespace NuvoControl.Server.WcfHostConsole
             }
 
             Console.WriteLine();
+        }
 
-            HostAllServices();
+
+        private static void UnloadAllServices()
+        {
+            try
+            {
+                UnloadFunctionServer();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to unload the function server.", exc);
+                Console.WriteLine("Failed to unload the function server. Exception message: {0}", exc.Message);
+            }
+
+            try
+            {
+                UnloadZoneServer();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to unload the zone server.", exc);
+                Console.WriteLine("Failed to unload the zone server. Exception message: {0}", exc.Message);
+            }
+
+            try
+            {
+                UnloadProtocolDrivers();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to unload the protocol drivers.", exc);
+                Console.WriteLine("Failed to unload the protocol drivers. Exception message: {0}", exc.Message);
+            }
+
+            try
+            {
+                UnloadConfigurationService();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to load the system configuration.", exc);
+                Console.WriteLine("Failed to load the system configuration. Exception message: {0}", exc.Message);
+                return;
+            }
+
+            Console.WriteLine();
         }
 
 
@@ -141,49 +236,46 @@ namespace NuvoControl.Server.WcfHostConsole
             // URI used to connect via internet
             // NOTE: This requires that dyndns service is running and up-to-date. The imfeldc.dyndns.org address will point to the access point, which itself is configured to forward
             // and request to the virtual machine imfihpavm.
-            ServiceHost configurationServiceHost = new ServiceHost(_configurationService,
+            _configurationServiceHost = new ServiceHost(_configurationService,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/ConfigurationService")));
-            ServiceHostMc mCServiceHost = new ServiceHostMc(
+            _mCServiceHost = new ServiceHostMc(
                 typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/MonitorAndControlService")));
-            ServiceHostFunction functionServiceHost = new ServiceHostFunction(
+            _functionServiceHost = new ServiceHostFunction(
                 typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/FunctionService")));
 
             try
             {
                 // make the service discoverable by adding the discovery behavior
-                configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                _configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
-                configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                _configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
                 Console.WriteLine(">>> Discovery for Configuration service started ....");
-                configurationServiceHost.Open();
+                _configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
-                Console.WriteLine(">>> URI: {0}", configurationServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine(">>> URI: {0}", _configurationServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
                 // make the service discoverable by adding the discovery behavior
-                mCServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                _mCServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
-                mCServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                _mCServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
                 Console.WriteLine(">>> Discovery for Monitor and control service started ....");
-                mCServiceHost.Open();
+                _mCServiceHost.Open();
                 Console.WriteLine(">>> Monitor and control service is running.");
-                Console.WriteLine(">>> URI: {0}", mCServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine(">>> URI: {0}", _mCServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
                 // make the service discoverable by adding the discovery behavior
-                functionServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                _functionServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
-                functionServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                _functionServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
                 Console.WriteLine(">>> Discovery for Function service started ....");
-                functionServiceHost.Open();
+                _functionServiceHost.Open();
                 Console.WriteLine(">>> Function service is running.");
-                Console.WriteLine(">>> URI: {0}", functionServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine(">>> URI: {0}", _functionServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
-
-                Console.WriteLine(">>> Press <Enter> to stop the services.");
-                Console.ReadLine();
             }
             catch (Exception exc)
             {
@@ -194,21 +286,75 @@ namespace NuvoControl.Server.WcfHostConsole
             }
             finally
             {
-                configurationServiceHost.Close();
-                mCServiceHost.Close();
+                _configurationServiceHost.Close();
+                _mCServiceHost.Close();
             }   
+        }
+
+
+        private static void DisposeAllService()
+        {
+            if (_functionServiceHost != null)
+            {
+                _functionServiceHost.Close();
+                Console.WriteLine(">>> Discovery for Function service stopped ....");
+                _functionServiceHost = null;
+            }
+
+            if (_mCServiceHost != null)
+            {
+                _mCServiceHost.Close();
+                Console.WriteLine(">>> Discovery for Monitor and control service stopped ....");
+                _mCServiceHost = null;
+            }
+
+            if (_configurationServiceHost != null)
+            {
+                _configurationServiceHost.Close();
+                Console.WriteLine(">>> Discovery for Configuration service stopped ....");
+                _configurationServiceHost = null;
+            }
         }
 
         /// <summary>
         /// Reads the XML configuration file and instantiates accordingly the system configuration objects of NuvoControl.
         /// </summary>
-        /// <param name="configurationFile"></param>
+        /// <param name="configurationFile">Filename of configuration file</param>
         private static void LoadConfigurationService(string configurationFile)
         {
-            _log.Info(m=>m("Loading the nuvo control configuration from '{0}' ...", configurationFile));
+            _log.Info(m => m("Loading the nuvo control configuration from '{0}' ...", configurationFile));
             Console.WriteLine(">>> Loading configuration...");
+            Console.WriteLine(">>>   from {0}", configurationFile);
 
             _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile);
+        }
+
+        /// <summary>
+        /// Reads the XML configuration file and instantiates accordingly the system configuration objects of NuvoControl.
+        /// </summary>
+        /// <param name="configurationFile">Filename of configuration file</param>
+        /// <param name="remoteConfigurationFile">Filename of configuration file to append</param>
+        private static void LoadConfigurationService(string configurationFile, string remoteConfigurationFile)
+        {
+            _log.Info(m => m("Loading the nuvo control configuration from '{0}' and '{1}' ...", configurationFile, remoteConfigurationFile));
+            Console.WriteLine(">>> Loading configuration...");
+            Console.WriteLine(">>>   from {0}", configurationFile);
+            Console.WriteLine(">>>   and append {0}", remoteConfigurationFile);
+
+            _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile, remoteConfigurationFile);
+        }
+
+        /// <summary>
+        /// Unloads the system configuration objects of NuvoControl.
+        /// </summary>
+        /// <param name="configurationFile">Filename of configuration file</param>
+        private static void UnloadConfigurationService()
+        {
+            _log.Info(m => m("Unload the nuvo control configuration ..."));
+            Console.WriteLine(">>> Unload the nuvo control configuration ...");
+
+            _configurationService.Dispose();
+            _configurationService = null;
         }
 
 
@@ -227,8 +373,26 @@ namespace NuvoControl.Server.WcfHostConsole
                 {
                     driver.Open(ENuvoSystem.NuVoEssentia, device.Id, device.Communication);
                     _protocolDrivers[device.Id] = driver;
+                    Console.WriteLine(">>>   driver {0} loaded ...", device.Id);
                 }
             }
+        }
+
+        /// <summary>
+        /// Unload the protocol drivers.
+        /// </summary>
+        private static void UnloadProtocolDrivers()
+        {
+            _log.Info("Unload protocol drivers...");
+            Console.WriteLine(">>> Unload protocol drivers...");
+
+            foreach ( int deviceId in _protocolDrivers.Keys )
+            {
+                _protocolDrivers[deviceId].Close(deviceId);
+                //_protocolDrivers[deviceId] = null;
+                Console.WriteLine(">>>   driver {0} unloaded ...", deviceId);
+            }
+            _protocolDrivers.Clear();
         }
 
         
@@ -252,6 +416,18 @@ namespace NuvoControl.Server.WcfHostConsole
             _zoneServer.StartUp();
         }
 
+        /// <summary>
+        /// Unload the zone server. This object holds all zone controllers.
+        /// </summary>
+        private static void UnloadZoneServer()
+        {
+            _log.Info("Unload the zone server...");
+            Console.WriteLine(">>> Unload the zone server...");
+
+            _zoneServer.ShutDown();
+            _zoneServer = null;
+        }
+
 
         /// <summary>
         /// Instantiates the function server. This object holds all functions.
@@ -263,6 +439,17 @@ namespace NuvoControl.Server.WcfHostConsole
 
             _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
             //_functionServer.StartUp();
+        }
+
+        /// <summary>
+        /// Unload the function server. This object holds all functions.
+        /// </summary>
+        private static void UnloadFunctionServer()
+        {
+            _log.Info("Unload the function server...");
+            Console.WriteLine(">>> Unload the function server...");
+
+            _functionServer = null;
         }
 
         #endregion
