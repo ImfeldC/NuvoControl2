@@ -191,7 +191,7 @@
       <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.3" SleepDuration="60">
         <Validity ActiveFrom="23:15" ActiveTo="04:00"></Validity>
       </SleepFunction>
-
+	  
     </Functions>
   </Configuration>
 </NuvoControl>
