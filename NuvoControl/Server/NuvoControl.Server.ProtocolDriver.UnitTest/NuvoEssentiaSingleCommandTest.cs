@@ -188,6 +188,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         [TestMethod()]
         public void IncomingCommandTest()
         {
+            //Properties.Settings.Default.NuvoEssentiaProfileFile = "NuvoEssentiaProfile.xml";
             NuvoEssentiaSingleCommand target = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.RampVolumeUP,ENuvoEssentiaZones.Zone3);
             string actual= target.IncomingCommandTemplate;
             Assert.IsTrue(actual.CompareTo("ZxxPWRppp,SRCs,GRPq,VOL-yy") == 0);
