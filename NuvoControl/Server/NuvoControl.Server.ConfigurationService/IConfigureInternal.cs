@@ -41,6 +41,12 @@ namespace NuvoControl.Server.ConfigurationService
         /// </summary>
         /// <returns>True, if system configuration is valid. Otherwise false.</returns>
         bool Validate();
+
+        /// <summary>
+        /// Check if configuration has changed. If yes, relaod them.
+        /// </summary>
+        /// <returns>true if configuration changed.</returns>
+        bool CheckConfiguration();
     }
 }
 

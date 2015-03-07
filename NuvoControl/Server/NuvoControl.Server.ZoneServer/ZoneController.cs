@@ -176,6 +176,27 @@ namespace NuvoControl.Server.ZoneServer
         /// <summary>
         /// <see cref="IZoneController"/>
         /// </summary>
+        public void RemoveAllMonitor()
+        {
+            lock (this)
+            {
+                try
+                {
+                    foreach (Delegate del in _zoneNotification.GetInvocationList())
+                    {
+                        _zoneNotification -= (ZoneNotification)del;
+                    }
+                }
+                catch (Exception exc)
+                {
+                    _log.Warn("Failed to unsubscribe for all zones.", exc);
+                }
+            }
+        }
+
+        /// <summary>
+        /// <see cref="IZoneController"/>
+        /// </summary>
         public void NotifySubscribedClients()
         {
             if (_zoneNotification != null)

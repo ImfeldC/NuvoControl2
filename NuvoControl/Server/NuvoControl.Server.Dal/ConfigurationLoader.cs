@@ -28,6 +28,7 @@ using System.Windows;
 using Common.Logging;
 
 using NuvoControl.Common.Configuration;
+using System.Net;
 
 
 namespace NuvoControl.Server.Dal
@@ -50,6 +51,24 @@ namespace NuvoControl.Server.Dal
         private XDocument _configuration = null;
 
         /// <summary>
+        /// Represents the XML filename
+        /// </summary>
+        private string _configurationFilename = null;
+        /// <summary>
+        /// Represents the modification date and time of the XML file
+        /// </summary>
+        private DateTime _configurationFileWriteDateTime = new DateTime(1900, 1, 1);    
+
+        /// <summary>
+        /// Represents the XML filename to append
+        /// </summary>
+        private string _appendConfigurationFilename = null;
+        /// <summary>
+        /// Represents the modification date and time of the XML file to append
+        /// </summary>
+        private DateTime _appendConfigurationFileWriteDateTime = new DateTime(1900, 1, 1);    
+
+        /// <summary>
         /// The converted Nuvo Control system configuration. These is a hierarchy of data structurer objects.
         /// </summary>
         private SystemConfiguration _systemConfiguration = null;
@@ -63,8 +82,10 @@ namespace NuvoControl.Server.Dal
         /// </summary>
         /// <param name="file">XML file containing the configuration data.</param>
         public ConfigurationLoader(string file)
-        {   
-            _configuration = XDocument.Load(file);
+        {
+            _configurationFilename = file;
+            _systemConfiguration = null;    // throw away existing converted configuration
+            ReadXMLFiles();
         }
 
         #endregion
@@ -108,9 +129,116 @@ namespace NuvoControl.Server.Dal
             return _systemConfiguration;
         }
 
+        /// <summary>
+        /// Adds the specified configuration to the existing configuration.
+        /// </summary>
+        /// <param name="file">XML file containing the configuration data to append.</param>
+        public void AppendConfiguration(string file)
+        {
+            _appendConfigurationFilename = file;  
+            _systemConfiguration = null;    // throw away existing converted configuration
+            ReadXMLFiles();
+        }
+
+        /// <summary>
+        /// Refresh (reload) configuration if at least one configuration file has changed.
+        /// The method compares the modification date/time to determine if a refresh (reload) is required.
+        /// </summary>
+        /// <returns>true if one or more file modification date/time has changed.</returns>
+        public bool RefreshConfiguration()
+        {
+            bool bChanged = CheckXMLFiles();
+
+            if (bChanged)
+            {
+                _systemConfiguration = null;    // throw away existing converted configuration
+                ReadXMLFiles();
+            }
+
+            return bChanged;
+        }
+
         #endregion
 
         #region Non-Public Interface
+
+        /// <summary>
+        /// Reads the XML document(s).
+        /// </summary>
+        private void ReadXMLFiles()
+        {
+            _configuration = XDocument.Load(_configurationFilename);
+            _configurationFileWriteDateTime = File.GetLastWriteTime(_configurationFilename);
+
+            if (_appendConfigurationFilename != null)
+            {
+                XDocument appendConfiguration = XDocument.Load(_appendConfigurationFilename);
+
+                try
+                {
+                    // Load configuration from remote server (URI)
+                    Uri myUri = new Uri(_appendConfigurationFilename);
+                    // Creates an HttpWebRequest for the specified URL. 
+                    HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
+                    HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+                    _appendConfigurationFileWriteDateTime = myHttpWebResponse.LastModified;
+                    myHttpWebResponse.Close();
+                }
+                catch (UriFormatException ex)
+                {
+                    // Load configuration from local server
+                    _appendConfigurationFileWriteDateTime = File.GetLastWriteTime(_appendConfigurationFilename);
+                }
+
+                // Add Functions and Devices
+                if (appendConfiguration.Root.Element("Configuration").Element("Hardware") != null)
+                {
+                    _configuration.Root.Element("Configuration").Element("Hardware").Add(appendConfiguration.Root.Element("Configuration").Element("Hardware").Elements());
+                }
+                _configuration.Root.Element("Configuration").Element("Functions").Add(appendConfiguration.Root.Element("Configuration").Element("Functions").Elements());
+            }
+        }
+
+        /// <summary>
+        /// Compares (check) the modification date of the configuration files.
+        /// </summary>
+        /// <returns>true in case one or more configuration file changed.</returns>
+        private Boolean CheckXMLFiles()
+        {
+            Boolean fileChanged = false;
+            Console.WriteLine("\nCheck configuration. file were modified: {0} and {1}", _configurationFileWriteDateTime.ToString(), _appendConfigurationFileWriteDateTime.ToString());
+
+            if (DateTime.Compare(_configurationFileWriteDateTime, File.GetLastWriteTime(_configurationFilename)) != 0)
+            {
+                Console.WriteLine("\n\nThe configuration file was modified. {0} vs. {1}", _configurationFileWriteDateTime.ToString(), File.GetLastWriteTime(_configurationFilename).ToString());
+                fileChanged = true;
+            }
+
+
+            if (_appendConfigurationFilename != null)
+            {
+                Uri myUri = new Uri(_appendConfigurationFilename);
+                // Creates an HttpWebRequest for the specified URL. 
+                HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
+                HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+                if (myHttpWebResponse.StatusCode == HttpStatusCode.OK)
+                {
+                    _log.Trace(m => m("Request succeeded and the requested information is in the response , Description : {0}", myHttpWebResponse.StatusDescription));
+                    //Console.WriteLine("\r\nRequest succeeded and the requested information is in the response , Description : {0}", myHttpWebResponse.StatusDescription);
+                }
+                // Uses the LastModified property to compare with stored date/time 
+                if (DateTime.Compare(_appendConfigurationFileWriteDateTime, myHttpWebResponse.LastModified) != 0)
+                {
+                    Console.WriteLine("\n\nThe configuration file to append was modified. {0} vs. {1}", _appendConfigurationFileWriteDateTime.ToString(), myHttpWebResponse.LastModified.ToString());
+                    fileChanged = true;
+                }
+                // Releases the resources of the response.
+                myHttpWebResponse.Close();
+            }
+
+            return fileChanged;
+        }
+
 
 
         /// <summary>
@@ -118,6 +246,7 @@ namespace NuvoControl.Server.Dal
         /// </summary>
         private void ReadSystemConfiguration()
         {
+
             List<Function> functions = new List<Function>();
             functions.AddRange(ReadSleepFunctions().Cast<Function>());
             functions.AddRange(ReadAlarmFunctions().Cast<Function>());
@@ -242,18 +371,18 @@ namespace NuvoControl.Server.Dal
         {
             IEnumerable<AlarmFunction> functions =
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("AlarmFunction")
-                select new AlarmFunction(
-                    (Guid)function.Attribute("Id"),
-                    new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
-                        int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
-                    new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
-                        int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
-                    int.Parse((string)function.Attribute("Volume")),
-                    TimeSpan.Parse((string)function.Attribute("AlarmTime")),
-                    new TimeSpan(0, (int)function.Attribute("AlarmDuration"), 0),
-                    (from day in function.Element("Validity").Element("Days").Elements("Day")
-                     select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>()
-                    );
+                    select new AlarmFunction(
+                        (Guid)function.Attribute("Id"),
+                        new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                            int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                        new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                            int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                        int.Parse((string)function.Attribute("Volume")),
+                        TimeSpan.Parse((string)function.Attribute("AlarmTime")),
+                        new TimeSpan(0, (int)function.Attribute("AlarmDuration"), 0),
+                        (from day in function.Element("Validity").Element("Days").Elements("Day")
+                            select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>()
+                        );
 
             return functions.ToList<AlarmFunction>();
         }

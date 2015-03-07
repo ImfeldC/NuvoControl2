@@ -118,6 +118,11 @@ namespace NuvoControl.Server.ZoneServer
         void RemoveMonitor(ZoneNotification subscriber);
 
         /// <summary>
+        /// Unsubscribes all clients for value/state changes of this zone.
+        /// </summary>
+        void RemoveAllMonitor();
+
+        /// <summary>
         /// Triggers the notification of all subscribed clients with the actual zone value/state.
         /// </summary>
         void NotifySubscribedClients();

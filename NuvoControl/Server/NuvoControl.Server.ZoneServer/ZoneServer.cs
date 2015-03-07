@@ -83,6 +83,21 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
+        /// <summary>
+        /// <see cref="IZoneServer"/>
+        /// </summary>
+        public void ShutDown()
+        {
+            lock (this)
+            {
+                foreach (IZoneController zoneController in _zoneControllers.Values)
+                {
+                    zoneController.RemoveAllMonitor();
+                }
+                _zoneControllers.Clear();
+            }
+        }
+
 
         /// <summary>
         /// <see cref="IZoneServer"/>
@@ -142,7 +157,6 @@ namespace NuvoControl.Server.ZoneServer
                 _zoneControllers[zoneId].RemoveMonitor(subscriber);
             }
         }
-
 
         #endregion
 

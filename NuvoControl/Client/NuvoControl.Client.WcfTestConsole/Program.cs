@@ -25,7 +25,7 @@ namespace NuvoControl.Client.WcfTestConsole
         {
             WSDualHttpBinding binding = proxy.Endpoint.Binding as WSDualHttpBinding;
             Debug.Assert(binding != null);
-            binding.ClientBaseAddress = new Uri("http://localhost:" + port + "/");
+            binding.ClientBaseAddress = new Uri("http://imfeldc.dyndns.org:" + port + "/");
         }
         
 
@@ -73,8 +73,122 @@ namespace NuvoControl.Client.WcfTestConsole
             Console.WriteLine("**** Console client started. *******");
             _log.Debug(m => m("**** Console client started. *******"));
 
+            Console.WriteLine(">>> Starting WCF Test Client  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
+                AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
+            Console.WriteLine();
+
+            CheckFile("NuvoControlKonfiguration.xml");
+
+            //Discover();
+
+            //Control();
+
+            Console.WriteLine(">>> Press <Enter> to stop the services.");
+            Console.ReadLine();
+
+        }
+
+
+        private static void CheckFile( string filename )
+        {
+            System.Net.HttpWebRequest request = null;
+            System.Net.HttpWebResponse response = null;
+            string fullname = "http://www.imfeld.net/publish/configuration/" + filename;
+            request = (System.Net.HttpWebRequest)System.Net.HttpWebRequest.Create(fullname);
+            request.Timeout = 30000;
+            int flag = 0;
+            try
+            {
+                response = (System.Net.HttpWebResponse)request.GetResponse();
+                flag = 1;
+            }
+            catch 
+            {
+                flag = -1;
+            }
+
+            if (flag==1)
+            {
+                Console.WriteLine("File Found at {0}", fullname);
+
+                WebClient webClient = new WebClient();
+                webClient.DownloadFile(fullname, @"c:\" + filename);
+
+            }
+            else
+            {
+                Console.WriteLine("File Not Found!!!");
+            }
+        }
+
+        private static void Control()
+        {
+            ILog _log = LogManager.GetCurrentClassLogger();
+            try
+            {
+                int iSecTimeout = 60;
+                IMonitorAndControlCallback serverCallback = new ServerCallback();
+                //IMonitorAndControlCallback serverCallback = null;
+                MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                Console.WriteLine("Created Service at {0}", mcProxy.Endpoint.Address);
+
+                // Connect to the discovered service endpoint
+                //mcProxy.SetClientBaseAddress();
+                mcProxy.Endpoint.Address = new EndpointAddress("http://imfeldc.dyndns.org:" + 8080 + "/MonitorAndControlService");
+                Console.WriteLine("Invoking Service at {0}", mcProxy.Endpoint.Address);
+                                
+                mcProxy.Connect();
+                mcProxy.Monitor(new Address(100, 1));
+                Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
+                System.Threading.Thread.Sleep(iSecTimeout * 1000);
+                Console.WriteLine("Stop listening ....");
+                mcProxy.RemoveMonitor(new Address(100, 1));
+            }
+            catch (FaultException<ArgumentException> exc)
+            {
+                Console.WriteLine("FaultException: {0}", exc);
+                _log.Fatal(m => m("FaultException: {0}", exc));
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("Exception: {0}", exc);
+                _log.Fatal(m => m("Exception: {0}", exc));
+            }
+        }
+
+        private static void ControlWithCallback()
+        {
+            ILog _log = LogManager.GetCurrentClassLogger();
+            try
+            {
+                int iSecTimeout = 60;
+                IMonitorAndControlCallback serverCallback = new ServerCallback();
+                MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                mcProxy.SetClientBaseAddress();
+                mcProxy.Connect();
+                mcProxy.Monitor(new Address(100, 1));
+                Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
+                System.Threading.Thread.Sleep(iSecTimeout * 1000);
+                Console.WriteLine("Stop listening ....");
+                mcProxy.RemoveMonitor(new Address(100, 1));
+            }
+            catch (FaultException<ArgumentException> exc)
+            {
+                _log.Fatal(m => m("FaultException: {0}", exc));
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("Exception: {0}", exc);
+                _log.Fatal(m => m("Exception: {0}", exc));
+            }
+        }
+
+        private static void Discover()
+        {
             ConfigureClient cfgIfc = null;
             //IConfigure cfgIfc = null;
+
+            ILog _log = LogManager.GetCurrentClassLogger();
             try
             {
 
@@ -111,8 +225,8 @@ namespace NuvoControl.Client.WcfTestConsole
                     Console.WriteLine("Picture type: {0}", zone.PictureType);
                     Console.WriteLine("All zone details: {0}", zone.ToString());
 
-                    Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                    Console.WriteLine("All graphic details: {0}", graphic.ToString());
+                    //Graphic graphic = cfgIfc.GetGraphicConfiguration();
+                    //Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
                     //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
                     //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
@@ -132,34 +246,6 @@ namespace NuvoControl.Client.WcfTestConsole
             {
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
-
-
-
-            try
-            {
-                int iSecTimeout = 60;
-                IMonitorAndControlCallback serverCallback = new ServerCallback();
-                MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-                mcProxy.SetClientBaseAddress();
-                mcProxy.Connect();
-                mcProxy.Monitor(new Address(100, 1));
-                Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
-                System.Threading.Thread.Sleep(iSecTimeout*1000);
-                Console.WriteLine("Stop listening ....");
-                mcProxy.RemoveMonitor(new Address(100, 1));
-            }
-            catch (FaultException<ArgumentException> exc)
-            {
-                _log.Fatal(m => m("FaultException: {0}", exc));
-            }
-            catch (Exception exc)
-            {
-                _log.Fatal(m => m("Exception: {0}", exc));
-            }
-
-
-            Console.WriteLine(">>> Press <Enter> to stop the services.");
-            Console.ReadLine();
 
         }
 

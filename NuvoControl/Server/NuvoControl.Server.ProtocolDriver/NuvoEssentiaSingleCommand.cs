@@ -151,6 +151,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
 
+        private string _profileFilename = null;
         private Profile _profile;
 
         Guid _guid;
@@ -395,11 +396,13 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         private void constructMembers()
         {
+            _profileFilename = Properties.Settings.Default.NuvoEssentiaProfileFile; /* "NuvoEssentiaProfile.xml" */
+
             try
             {
                 // If no filename is provided, it searches the defintions
-                // of the commong application xml file (e.g. nuvocontrol.server.protocoldriver.test.dll.config)
-                _profile = new Xml( Properties.Settings.Default.NuvoEssentiaProfileFile /* "NuvoEssentiaProfile.xml" */ );
+                // of the common application xml file (e.g. nuvocontrol.server.protocoldriver.test.dll.config)
+                _profile = new Xml( _profileFilename );
             }
             catch (Exception ex)
             {

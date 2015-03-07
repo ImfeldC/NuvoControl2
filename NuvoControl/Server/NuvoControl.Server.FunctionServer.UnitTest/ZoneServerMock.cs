@@ -40,6 +40,11 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _started = true;
         }
 
+        public void ShutDown()
+        {
+            _started = false;
+        }
+
         public ZoneState GetZoneState(Address zoneId)
         {
             return _zoneStates[zoneId];
