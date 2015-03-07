@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- sAuthors: C. Imfeld -->
+<!-- Date: 06-Mar-2015 -->
+<NuvoControl>
+  <Configuration Version="1.0">
+  
+    <Functions>
+      <SleepFunction Id="c82b8d07-62b0-4257-b2dd-5976e142bc7f" ZoneId="100.3" SleepDuration="60">
+        <Validity ActiveFrom="23:15" ActiveTo="04:00"></Validity>
+      </SleepFunction>
+      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c94" ZoneId="100.3" Volume="29" AlarmTime="06:15" AlarmDuration="120" SourceId="100.6">
+        <Validity>
+          <Days>
+            <Day Name="Monday" />
+          </Days>
+        </Validity>
+      </AlarmFunction>
+      <AlarmFunction Id="22447a80-bf22-11de-8a39-0800200c9a66" ZoneId="100.3" Volume="29" AlarmTime="05:50" AlarmDuration="120" SourceId="100.6">
+        <Validity>
+          <Days>
+            <Day Name="Tuesday" />
+            <Day Name="Wednesday" />
+            <Day Name="Thursday" />
+            <Day Name="Friday" />
+          </Days>
+        </Validity>
+      </AlarmFunction>
+
+	  
+    </Functions>
+  </Configuration>
+</NuvoControl>
