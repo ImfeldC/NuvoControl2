@@ -29,6 +29,7 @@ using Common.Logging;
 
 using NuvoControl.Common.Configuration;
 using System.Net;
+using System.Security.Cryptography;
 
 
 namespace NuvoControl.Server.Dal
@@ -57,7 +58,11 @@ namespace NuvoControl.Server.Dal
         /// <summary>
         /// Represents the modification date and time of the XML file
         /// </summary>
-        private DateTime _configurationFileWriteDateTime = new DateTime(1900, 1, 1);    
+        private DateTime _configurationFileWriteDateTime = new DateTime(1900, 1, 1);
+        /// <summary>
+        /// Contains the MD5 hash of the configuration file
+        /// </summary>
+        private string _configurationFileHash = "";
 
         /// <summary>
         /// Represents the XML filename to append
@@ -66,7 +71,11 @@ namespace NuvoControl.Server.Dal
         /// <summary>
         /// Represents the modification date and time of the XML file to append
         /// </summary>
-        private DateTime _appendConfigurationFileWriteDateTime = new DateTime(1900, 1, 1);    
+        private DateTime _appendConfigurationFileWriteDateTime = new DateTime(1900, 1, 1);
+        /// <summary>
+        /// Contains the MD5 hash of the configuration file to append
+        /// </summary>
+        private string _appendConfigurationFileHash =  "";
 
         /// <summary>
         /// The converted Nuvo Control system configuration. These is a hierarchy of data structurer objects.
@@ -169,6 +178,8 @@ namespace NuvoControl.Server.Dal
         {
             _configuration = XDocument.Load(_configurationFilename);
             _configurationFileWriteDateTime = File.GetLastWriteTime(_configurationFilename);
+            _configurationFileHash = calculateHash(_configurationFilename);
+            Console.WriteLine("\nXML Configuration {0} loaded. GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ((_configurationFileHash == null) ? "null" : _configurationFileHash));
 
             if (_appendConfigurationFilename != null)
             {
@@ -182,12 +193,16 @@ namespace NuvoControl.Server.Dal
                     HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
                     HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
                     _appendConfigurationFileWriteDateTime = myHttpWebResponse.LastModified;
+                    _appendConfigurationFileHash = "";
                     myHttpWebResponse.Close();
+                    Console.WriteLine("\nXML Configuration {0} from remote added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ((_appendConfigurationFileHash == null) ? "null" : _appendConfigurationFileHash));
                 }
                 catch (UriFormatException ex)
                 {
                     // Load configuration from local server
                     _appendConfigurationFileWriteDateTime = File.GetLastWriteTime(_appendConfigurationFilename);
+                    _appendConfigurationFileHash = calculateHash(_appendConfigurationFilename);
+                    Console.WriteLine("\nXML Configuration {0} added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ((_appendConfigurationFileHash == null) ? "null" : _appendConfigurationFileHash));
                 }
 
                 // Add Functions and Devices
@@ -206,12 +221,20 @@ namespace NuvoControl.Server.Dal
         private Boolean CheckXMLFiles()
         {
             Boolean fileChanged = false;
-            Console.WriteLine("\nCheck configuration. file were modified: {0} and {1}", _configurationFileWriteDateTime.ToString(), _appendConfigurationFileWriteDateTime.ToString());
 
             if (DateTime.Compare(_configurationFileWriteDateTime, File.GetLastWriteTime(_configurationFilename)) != 0)
             {
                 Console.WriteLine("\n\nThe configuration file was modified. {0} vs. {1}", _configurationFileWriteDateTime.ToString(), File.GetLastWriteTime(_configurationFilename).ToString());
                 fileChanged = true;
+            }
+            else if (_configurationFileHash.CompareTo(calculateHash(_configurationFilename))==0 )
+            {
+                Console.WriteLine("\n\nThe configuration file was modified. {0} vs. {1}", _configurationFileHash.ToString(), calculateHash(_configurationFilename).ToString());
+                fileChanged = true;
+            }
+            else
+            {
+                Console.WriteLine("\n\nThe configuration file {2} was NOT modified. GetLastWriteTime={0} calculateHash={1}", File.GetLastWriteTime(_configurationFilename).ToString(), calculateHash(_configurationFilename).ToString(), _configurationFilename);
             }
 
 
@@ -399,6 +422,22 @@ namespace NuvoControl.Server.Dal
             else
                 return false;
         }
+
+        /// <summary>
+        /// Calculates MD5 hash of a local file.
+        /// Max. file size is 2GB
+        /// </summary>
+        /// <param name="filePath">file name</param>
+        /// <returns>MD5 hash of specifid file.</returns>
+        private string calculateHash(string filePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                //return BitConverter.ToInt64(md5.ComputeHash(File.ReadAllBytes(filePath)),0);
+                return BitConverter.ToString(md5.ComputeHash(File.ReadAllBytes(filePath))).Replace("-", "").ToLower();
+            }
+        }
+
 
         #endregion
     }
