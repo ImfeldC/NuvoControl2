@@ -62,7 +62,7 @@ namespace NuvoControl.Server.Dal
         /// <summary>
         /// Contains the MD5 hash of the configuration file
         /// </summary>
-        private string _configurationFileHash = "";
+        private byte[] _configurationFileHash = null;
 
         /// <summary>
         /// Represents the XML filename to append
@@ -75,7 +75,7 @@ namespace NuvoControl.Server.Dal
         /// <summary>
         /// Contains the MD5 hash of the configuration file to append
         /// </summary>
-        private string _appendConfigurationFileHash =  "";
+        private byte[] _appendConfigurationFileHash =  null;
 
         /// <summary>
         /// The converted Nuvo Control system configuration. These is a hierarchy of data structurer objects.
@@ -179,7 +179,8 @@ namespace NuvoControl.Server.Dal
             _configuration = XDocument.Load(_configurationFilename);
             _configurationFileWriteDateTime = File.GetLastWriteTime(_configurationFilename);
             _configurationFileHash = calculateHash(_configurationFilename);
-            Console.WriteLine("\nXML Configuration {0} loaded. GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ((_configurationFileHash == null) ? "null" : _configurationFileHash));
+            _log.Trace(m => m("\nXML Configuration {0} loaded. GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ByteArrayToString(_configurationFileHash)));
+            //Console.WriteLine("\nXML Configuration {0} loaded. GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ByteArrayToString(_configurationFileHash)));
 
             if (_appendConfigurationFilename != null)
             {
@@ -193,16 +194,17 @@ namespace NuvoControl.Server.Dal
                     HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
                     HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
                     _appendConfigurationFileWriteDateTime = myHttpWebResponse.LastModified;
-                    _appendConfigurationFileHash = "";
+                    _appendConfigurationFileHash = null;
                     myHttpWebResponse.Close();
-                    Console.WriteLine("\nXML Configuration {0} from remote added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ((_appendConfigurationFileHash == null) ? "null" : _appendConfigurationFileHash));
+                    _log.Trace(m => m("\nXML Configuration {0} from remote added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash) ));
+                    //Console.WriteLine("\nXML Configuration {0} from remote added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash) ));
                 }
                 catch (UriFormatException ex)
                 {
                     // Load configuration from local server
                     _appendConfigurationFileWriteDateTime = File.GetLastWriteTime(_appendConfigurationFilename);
                     _appendConfigurationFileHash = calculateHash(_appendConfigurationFilename);
-                    Console.WriteLine("\nXML Configuration {0} added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ((_appendConfigurationFileHash == null) ? "null" : _appendConfigurationFileHash));
+                    Console.WriteLine("\nXML Configuration {0} added. GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash));
                 }
 
                 // Add Functions and Devices
@@ -222,47 +224,72 @@ namespace NuvoControl.Server.Dal
         {
             Boolean fileChanged = false;
 
-            if (DateTime.Compare(_configurationFileWriteDateTime, File.GetLastWriteTime(_configurationFilename)) != 0)
-            {
-                Console.WriteLine("\n\nThe configuration file was modified. {0} vs. {1}", _configurationFileWriteDateTime.ToString(), File.GetLastWriteTime(_configurationFilename).ToString());
-                fileChanged = true;
-            }
-            else if (_configurationFileHash.CompareTo(calculateHash(_configurationFilename))==0 )
-            {
-                Console.WriteLine("\n\nThe configuration file was modified. {0} vs. {1}", _configurationFileHash.ToString(), calculateHash(_configurationFilename).ToString());
-                fileChanged = true;
-            }
-            else
-            {
-                Console.WriteLine("\n\nThe configuration file {2} was NOT modified. GetLastWriteTime={0} calculateHash={1}", File.GetLastWriteTime(_configurationFilename).ToString(), calculateHash(_configurationFilename).ToString(), _configurationFilename);
-            }
+            fileChanged = checkLocalFile();
 
-
-            if (_appendConfigurationFilename != null)
+            if ( (_appendConfigurationFilename != null) && (fileChanged == false) )
             {
-                Uri myUri = new Uri(_appendConfigurationFilename);
-                // Creates an HttpWebRequest for the specified URL. 
-                HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
-                HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
-                if (myHttpWebResponse.StatusCode == HttpStatusCode.OK)
-                {
-                    _log.Trace(m => m("Request succeeded and the requested information is in the response , Description : {0}", myHttpWebResponse.StatusDescription));
-                    //Console.WriteLine("\r\nRequest succeeded and the requested information is in the response , Description : {0}", myHttpWebResponse.StatusDescription);
-                }
-                // Uses the LastModified property to compare with stored date/time 
-                if (DateTime.Compare(_appendConfigurationFileWriteDateTime, myHttpWebResponse.LastModified) != 0)
-                {
-                    Console.WriteLine("\n\nThe configuration file to append was modified. {0} vs. {1}", _appendConfigurationFileWriteDateTime.ToString(), myHttpWebResponse.LastModified.ToString());
-                    fileChanged = true;
-                }
-                // Releases the resources of the response.
-                myHttpWebResponse.Close();
+                fileChanged = checkRemoteFile();
             }
 
             return fileChanged;
         }
 
 
+        /// <summary>
+        /// Check for changes on a local file.
+        /// TODO: There is problem to check if a local file has changed.
+        /// See also: http://stackoverflow.com/questions/1448716/net-fileinfo-lastwritetime-fileinfo-lastaccesstime-are-wrong
+        /// See also: http://stackoverflow.com/questions/9992223/file-getlastwritetime-seems-to-be-returning-out-of-date-value
+        /// </summary>
+        /// <returns>True if file has changed.</returns>
+        private bool checkLocalFile()
+        {
+            bool fileChanged = false;
+
+            if (DateTime.Compare(_configurationFileWriteDateTime, File.GetLastWriteTime(_configurationFilename)) != 0)
+            {
+                Console.WriteLine("\n\nThe configuration file was modified (GetLastWriteTime). {0} vs. {1}", _configurationFileWriteDateTime.ToString(), File.GetLastWriteTime(_configurationFilename).ToString());
+                fileChanged = true;
+            }
+            else if (!compareHash(_configurationFileHash, calculateHash(_configurationFilename)))
+            {
+                Console.WriteLine("\n\nThe configuration file was modified (calculateHash). {0} vs. {1}", _configurationFileHash.ToString(), ByteArrayToString(calculateHash(_configurationFilename)));
+                fileChanged = true;
+            }
+            else
+            {
+                _log.Trace(m => m("\nThe configuration file {2} was NOT modified. GetLastWriteTime={0} calculateHash={1}", File.GetLastWriteTime(_configurationFilename).ToString(), ByteArrayToString(calculateHash(_configurationFilename)), _configurationFilename));
+                //Console.WriteLine("\n\nThe configuration file {2} was NOT modified. GetLastWriteTime={0} calculateHash={1}", File.GetLastWriteTime(_configurationFilename).ToString(), ByteArrayToString(calculateHash(_configurationFilename)), _configurationFilename);
+            }
+            return fileChanged;
+        }
+
+        /// <summary>
+        /// Check remote file (http) for changes
+        /// </summary>
+        /// <returns>True if file has changed.</returns>
+        private bool checkRemoteFile()
+        {
+            bool fileChanged = false;
+            Uri myUri = new Uri(_appendConfigurationFilename);
+            // Creates an HttpWebRequest for the specified URL. 
+            HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(myUri);
+            HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+            if (myHttpWebResponse.StatusCode == HttpStatusCode.OK)
+            {
+                _log.Trace(m => m("Request succeeded and the requested information is in the response , Description : {0}", myHttpWebResponse.StatusDescription));
+                //Console.WriteLine("\r\nRequest succeeded and the requested information is in the response , Description : {0}", myHttpWebResponse.StatusDescription);
+            }
+            // Uses the LastModified property to compare with stored date/time 
+            if (DateTime.Compare(_appendConfigurationFileWriteDateTime, myHttpWebResponse.LastModified) != 0)
+            {
+                Console.WriteLine("\n\nThe configuration file to append was modified. {0} vs. {1}", _appendConfigurationFileWriteDateTime.ToString(), myHttpWebResponse.LastModified.ToString());
+                fileChanged = true;
+            }
+            // Releases the resources of the response.
+            myHttpWebResponse.Close();
+            return fileChanged;
+        }
 
         /// <summary>
         /// Creates the system configuration based on the XML configuration file.
@@ -429,15 +456,68 @@ namespace NuvoControl.Server.Dal
         /// </summary>
         /// <param name="filePath">file name</param>
         /// <returns>MD5 hash of specifid file.</returns>
-        private string calculateHash(string filePath)
+        private byte[] calculateHash(string filePath)
         {
             using (var md5 = MD5.Create())
             {
                 //return BitConverter.ToInt64(md5.ComputeHash(File.ReadAllBytes(filePath)),0);
-                return BitConverter.ToString(md5.ComputeHash(File.ReadAllBytes(filePath))).Replace("-", "").ToLower();
+                //return BitConverter.ToString(md5.ComputeHash(File.ReadAllBytes(filePath))).Replace("-", "").ToLower();
+                return md5.ComputeHash(File.ReadAllBytes(filePath));
             }
         }
 
+        /// <summary>
+        /// Converts byte array (hash) into string.
+        /// </summary>
+        /// <param name="arrInput">Byte array to convert.</param>
+        /// <returns>String for the passed byte array.</returns>
+        private static string ByteArrayToString(byte[] arrInput)
+        {
+            if (arrInput != null)
+            {
+                int i;
+                StringBuilder sOutput = new StringBuilder(arrInput.Length);
+                for (i = 0; i < arrInput.Length - 1; i++)
+                {
+                    sOutput.Append(arrInput[i].ToString("X2"));
+                }
+                return sOutput.ToString();
+            }
+            else
+            {
+                return "null";
+            }
+        }
+
+        /// <summary>
+        /// Compares two hashes. Returns true if they are equal.
+        /// </summary>
+        /// <param name="tmpHash">First hash value to compare.</param>
+        /// <param name="tmpNewHash">Second hash value to compare.</param>
+        /// <returns>True if the hash values are equal.</returns>
+        private bool compareHash(Byte[] tmpHash, Byte[] tmpNewHash)
+        {
+            bool bEqual = false;
+            if (tmpNewHash.Length == tmpHash.Length)
+            {
+                int i = 0;
+                while ((i < tmpNewHash.Length) && (tmpNewHash[i] == tmpHash[i]))
+                {
+                    i += 1;
+                }
+                if (i == tmpNewHash.Length)
+                {
+                    bEqual = true;
+                }
+            }
+
+            //if (bEqual)
+            //    Console.WriteLine("The two hash values are the same");
+            //else
+            //    Console.WriteLine("The two hash values are not the same");
+
+            return bEqual;
+        }
 
         #endregion
     }
