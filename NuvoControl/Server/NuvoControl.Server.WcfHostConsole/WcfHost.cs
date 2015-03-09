@@ -23,6 +23,7 @@ using System.Linq;
 using System.Text;
 using System.ServiceModel;
 using System.ServiceModel.Discovery;
+using System.ServiceModel.Description;      // WCF PingTest
 
 using Common.Logging;
 
@@ -75,6 +76,8 @@ namespace NuvoControl.Server.WcfHostConsole
 
         private static ServiceHostFunction _functionServiceHost = null;
 
+        private static int pingcount = 0;
+
         #endregion
 
         #region Non-Public Interface
@@ -88,6 +91,8 @@ namespace NuvoControl.Server.WcfHostConsole
             Console.WriteLine(">>> Starting WCF services V2  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
+
+            WcfTestHost_Open(); 
 
             LoadAllServices();
             HostAllServices();
@@ -233,6 +238,7 @@ namespace NuvoControl.Server.WcfHostConsole
                 new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/FunctionService")));
             */
 
+            
             // URI used to connect via internet
             // NOTE: This requires that dyndns service is running and up-to-date. The imfeldc.dyndns.org address will point to the access point, which itself is configured to forward
             // and request to the virtual machine imfihpavm.
@@ -244,23 +250,73 @@ namespace NuvoControl.Server.WcfHostConsole
             _functionServiceHost = new ServiceHostFunction(
                 typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/FunctionService")));
+            
+
+            /*
+            string hostname = System.Environment.MachineName;
+            int portnumber = 7400;
+            var baseAddress = new UriBuilder("http", hostname, portnumber, "ConfigurationService");
+            _configurationServiceHost = new ServiceHost(
+                /*typeof(NuvoControl.Server.ConfigurationService.ConfigurationService)*//* _configurationService, new UriBuilder("http", hostname, portnumber, "ConfigurationService").Uri);
+            _mCServiceHost = new ServiceHostMc(
+                typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer,
+                new UriBuilder("http", hostname, portnumber, "MonitorAndControlService").Uri);
+            _functionServiceHost = new ServiceHostFunction(
+                typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions,
+                new UriBuilder("http", hostname, portnumber, "FunctionService").Uri);
+            */
 
             try
             {
+                var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+
+                // enable wsdl, so you can use the service from WcfStorm, or other tools.
+                var defaultsmb = new ServiceMetadataBehavior();
+                defaultsmb.HttpGetEnabled = true;
+                defaultsmb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+
                 // make the service discoverable by adding the discovery behavior
                 _configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
                 _configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                // enable wsdl
+/*                var csmb = _configurationServiceHost.Description.Behaviors.Find<ServiceMetadataBehavior>();
+                if (csmb == null)
+                {
+                    _configurationServiceHost.Description.Behaviors.Add(defaultsmb);
+                }
+                else
+                {
+                    csmb.HttpGetEnabled = true;
+                    csmb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+                }
+*/                // create endpoint
+                //_configurationServiceHost.AddServiceEndpoint(typeof(IConfigure), binding, "");
                 Console.WriteLine(">>> Discovery for Configuration service started ....");
                 _configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
                 Console.WriteLine(">>> URI: {0}", _configurationServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
+
+                
                 // make the service discoverable by adding the discovery behavior
                 _mCServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
                 _mCServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                // enable wsdl
+/*                var mcsmb = _mCServiceHost.Description.Behaviors.Find<ServiceMetadataBehavior>();
+                if (mcsmb == null)
+                {
+                    _mCServiceHost.Description.Behaviors.Add(defaultsmb);
+                }
+                else
+                {
+                    mcsmb.HttpGetEnabled = true;
+                    mcsmb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+                }
+*/                // create endpoint
+                //_mCServiceHost.AddServiceEndpoint(typeof(IMonitorAndControl), binding, "");
                 Console.WriteLine(">>> Discovery for Monitor and control service started ....");
                 _mCServiceHost.Open();
                 Console.WriteLine(">>> Monitor and control service is running.");
@@ -271,6 +327,19 @@ namespace NuvoControl.Server.WcfHostConsole
                 _functionServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
                 _functionServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                // enable wsdl
+                var fsmb = _mCServiceHost.Description.Behaviors.Find<ServiceMetadataBehavior>();
+                if (fsmb == null)
+                {
+                    _functionServiceHost.Description.Behaviors.Add(defaultsmb);
+                }
+                else
+                {
+                    fsmb.HttpGetEnabled = true;
+                    fsmb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+                }
+                // create endpoint
+                //_functionServiceHost.AddServiceEndpoint(typeof(IFunction), binding, "");
                 Console.WriteLine(">>> Discovery for Function service started ....");
                 _functionServiceHost.Open();
                 Console.WriteLine(">>> Function service is running.");
@@ -453,5 +522,53 @@ namespace NuvoControl.Server.WcfHostConsole
         }
 
         #endregion
+
+        #region WCF Ping Test
+
+        /// <summary>
+        /// Ping Test method, called by client to "ping"
+        /// </summary>
+        private class WcfPingTest : IWcfPingTest
+        {
+            public string Ping() 
+            {
+                pingcount++;
+                string message = String.Format("PingTest called at {1} for {2} times", DateTime.Today.ToString(), pingcount.ToString());
+                Console.WriteLine("\n### Ping received! {0}", message);
+                return message; 
+            }
+        }
+
+        /// <summary>
+        /// Open ping service.
+        /// </summary>
+        private static void WcfTestHost_Open()
+        {
+            string hostname = System.Environment.MachineName;
+            var baseAddress = new UriBuilder("http", hostname, 7400, "WcfPing");
+            var h = new ServiceHost(typeof(WcfPingTest), baseAddress.Uri);
+
+            // enable processing of discovery messages.  use UdpDiscoveryEndpoint to enable listening. use EndpointDiscoveryBehavior for fine control.
+            h.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+            h.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+
+            // enable wsdl, so you can use the service from WcfStorm, or other tools.
+            var smb = new ServiceMetadataBehavior();
+            smb.HttpGetEnabled = true;
+            smb.MetadataExporter.PolicyVersion = PolicyVersion.Policy15;
+            h.Description.Behaviors.Add(smb);
+
+            // create endpoint
+            var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            h.AddServiceEndpoint(typeof(IWcfPingTest), binding, "");
+            Console.WriteLine(">>> Discovery for Ping service started ....");
+            h.Open();
+            Console.WriteLine(">>> Ping service is running.");
+            Console.WriteLine(">>> URI: {0}", h.BaseAddresses[0].AbsoluteUri);
+            Console.WriteLine();
+        }
+
+        #endregion
+
     }
 }
