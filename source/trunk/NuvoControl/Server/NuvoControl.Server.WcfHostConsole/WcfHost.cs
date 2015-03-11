@@ -92,10 +92,38 @@ namespace NuvoControl.Server.WcfHostConsole
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
 
+            WcfTestHost_Open(); 
+
             LoadAllServices();
             HostAllServices();
 
+
+            Console.WriteLine(">>> Press <Enter> to stop the services.");
+            Console.ReadLine();
         }
+
+        /// <summary>
+        /// Periodic timer routine to check if configuration file changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void _timerCheckConfiguration_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //Console.Write(".");
+            bool bChanged = _configurationService.CheckConfiguration();
+            if (bChanged)
+            {
+                DisposeAllService();
+                UnloadAllServices();
+
+                LoadAllServices();
+                HostAllServices();
+            }
+        }
+
+
+
+
         private static void LoadAllServices()
         {
             try
@@ -439,7 +467,7 @@ namespace NuvoControl.Server.WcfHostConsole
             public string Ping() 
             {
                 pingcount++;
-                string message = String.Format("PingTest called at {1} for {2} times", DateTime.Today.ToString(), pingcount.ToString());
+                string message = String.Format("PingTest called at {0} for {1} times", DateTime.Today.ToString(), pingcount.ToString());
                 Console.WriteLine("\n### Ping received! {0}", message);
                 return message; 
             }
