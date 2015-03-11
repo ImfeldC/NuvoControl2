@@ -92,14 +92,21 @@ namespace NuvoControl.Server.WcfHostConsole
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
 
-            WcfTestHost_Open(); 
+            WcfTestHost_Open();
+
+            _log.Trace(m => m("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
+            _timerCheckConfiguration.Interval = (Properties.Settings.Default.ConfigurationCheckIntervall < 30 ? 30 : Properties.Settings.Default.ConfigurationCheckIntervall) * 1000;
+            _timerCheckConfiguration.Elapsed += new System.Timers.ElapsedEventHandler(_timerCheckConfiguration_Elapsed);
+            _timerCheckConfiguration.Start();
 
             LoadAllServices();
             HostAllServices();
 
-
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();
+
+            DisposeAllService();
+            UnloadAllServices();
         }
 
         /// <summary>
@@ -233,52 +240,65 @@ namespace NuvoControl.Server.WcfHostConsole
                 new Uri(NetworkHelper.buildEndpointAddress("http://localhost:8080/FunctionService")));
             */
 
+            /*
             // URI used to connect via internet
             // NOTE: This requires that dyndns service is running and up-to-date. The imfeldc.dyndns.org address will point to the access point, which itself is configured to forward
             // and request to the virtual machine imfihpavm.
-            ServiceHost configurationServiceHost = new ServiceHost(_configurationService,
+            _configurationServiceHost = new ServiceHost(_configurationService,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/ConfigurationService")));
-            ServiceHostMc mCServiceHost = new ServiceHostMc(
+            _mCServiceHost = new ServiceHostMc(
                 typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/MonitorAndControlService")));
-            ServiceHostFunction functionServiceHost = new ServiceHostFunction(
+            _functionServiceHost = new ServiceHostFunction(
                 typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions,
                 new Uri(NetworkHelper.buildEndpointAddress("http://imfeldc.dyndns.org:8080/FunctionService")));
+            */
+
+            
+            string hostname = System.Environment.MachineName;
+            int portnumber = 7400;
+            var baseAddress = new UriBuilder("http", hostname, portnumber, "ConfigurationService");
+            _configurationServiceHost = new ServiceHost(
+                /*typeof(NuvoControl.Server.ConfigurationService.ConfigurationService)*/ _configurationService, new UriBuilder("http", hostname, portnumber, "ConfigurationService").Uri);
+            _mCServiceHost = new ServiceHostMc(
+                typeof(NuvoControl.Server.MonitorAndControlService.MonitorAndControlService), _zoneServer,
+                new UriBuilder("http", hostname, portnumber, "MonitorAndControlService").Uri);
+            _functionServiceHost = new ServiceHostFunction(
+                typeof(NuvoControl.Server.FunctionService.FunctionService), _zoneServer, _configurationService.SystemConfiguration.Functions,
+                new UriBuilder("http", hostname, portnumber, "FunctionService").Uri);
+            
 
             try
             {
                 // make the service discoverable by adding the discovery behavior
-                configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                _configurationServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
-                configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                _configurationServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
                 Console.WriteLine(">>> Discovery for Configuration service started ....");
-                configurationServiceHost.Open();
+                _configurationServiceHost.Open();
                 Console.WriteLine(">>> Configuration service is running.");
-                Console.WriteLine(">>> URI: {0}", configurationServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine(">>> URI: {0}", _configurationServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
                 // make the service discoverable by adding the discovery behavior
-                mCServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                _mCServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
-                mCServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                _mCServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
                 Console.WriteLine(">>> Discovery for Monitor and control service started ....");
-                mCServiceHost.Open();
+                _mCServiceHost.Open();
                 Console.WriteLine(">>> Monitor and control service is running.");
-                Console.WriteLine(">>> URI: {0}", mCServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine(">>> URI: {0}", _mCServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
 
                 // make the service discoverable by adding the discovery behavior
-                functionServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
+                _functionServiceHost.Description.Behaviors.Add(new ServiceDiscoveryBehavior());
                 // add the discovery endpoint that specifies where to publish the services
-                functionServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
+                _functionServiceHost.AddServiceEndpoint(new UdpDiscoveryEndpoint());
                 Console.WriteLine(">>> Discovery for Function service started ....");
-                functionServiceHost.Open();
+                _functionServiceHost.Open();
                 Console.WriteLine(">>> Function service is running.");
-                Console.WriteLine(">>> URI: {0}", functionServiceHost.BaseAddresses[0].AbsoluteUri);
+                Console.WriteLine(">>> URI: {0}", _functionServiceHost.BaseAddresses[0].AbsoluteUri);
                 Console.WriteLine();
-
-                Console.WriteLine(">>> Press <Enter> to stop the services.");
-                Console.ReadLine();
             }
             catch (Exception exc)
             {
@@ -287,11 +307,6 @@ namespace NuvoControl.Server.WcfHostConsole
                 Console.WriteLine(">>> Press <Enter> to close the console.");
                 Console.ReadLine();
             }
-            finally
-            {
-                configurationServiceHost.Close();
-                mCServiceHost.Close();
-            }   
         }
 
 
