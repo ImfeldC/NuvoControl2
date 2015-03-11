@@ -10,12 +10,17 @@ using System.ServiceModel;
 using System.ServiceModel.Discovery;
 using System.Collections.ObjectModel;
 
+using Common.Logging;
+
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 
-using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
-using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
-using Common.Logging;
+using NuvoControl.Server.WcfHostConsole;    // WCF Ping Test
+//using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
+//using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
+using NuvoControl.Server.FunctionService;
+using NuvoControl.Server.MonitorAndControlService;
+using NuvoControl.Server.ConfigurationService;
 
 namespace NuvoControl.Client.WcfTestConsole
 {
@@ -51,7 +56,7 @@ namespace NuvoControl.Client.WcfTestConsole
         }
     }
 
-    public class ServerCallback : IMonitorAndControlCallback
+    public class ServerCallback : IMonitorAndControlNotification
     {
         public int _id = 1;
         #region IMonitorAndControlCallback Members
@@ -77,9 +82,17 @@ namespace NuvoControl.Client.WcfTestConsole
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
 
-            CheckFile("NuvoControlKonfiguration.xml");
+            CheckFile("NuvoControlKonfigurationRemote.xml");
 
-            //Discover();
+            // WCF Ping Test
+            Console.WriteLine(">>> Start ping test ...");
+            System.Threading.Thread.Sleep(4000);
+            WcfTestClient_SetupChannel();
+            System.Threading.Thread.Sleep(2000);
+            WcfTestClient_Ping();
+            Console.WriteLine(">>> End ping test ...");
+
+            Discover();
 
             //Control();
 
@@ -88,7 +101,10 @@ namespace NuvoControl.Client.WcfTestConsole
 
         }
 
-
+        /// <summary>
+        /// Check if remote file (http) is available. If yes, it loads them down to local disk.
+        /// </summary>
+        /// <param name="filename">Filename as URI.</param>
         private static void CheckFile( string filename )
         {
             System.Net.HttpWebRequest request = null;
@@ -121,15 +137,16 @@ namespace NuvoControl.Client.WcfTestConsole
             }
         }
 
+/*
         private static void Control()
         {
             ILog _log = LogManager.GetCurrentClassLogger();
             try
             {
                 int iSecTimeout = 60;
-                IMonitorAndControlCallback serverCallback = new ServerCallback();
+                IMonitorAndControlNotification serverCallback = new ServerCallback();
                 //IMonitorAndControlCallback serverCallback = null;
-                MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
+                MonitorAndControlService mcProxy = new MonitorAndControlService(new InstanceContext(serverCallback));
                 Console.WriteLine("Created Service at {0}", mcProxy.Endpoint.Address);
 
                 // Connect to the discovered service endpoint
@@ -155,7 +172,8 @@ namespace NuvoControl.Client.WcfTestConsole
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
         }
-
+*/
+/*
         private static void ControlWithCallback()
         {
             ILog _log = LogManager.GetCurrentClassLogger();
@@ -182,60 +200,89 @@ namespace NuvoControl.Client.WcfTestConsole
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
         }
+*/
 
         private static void Discover()
         {
-            ConfigureClient cfgIfc = null;
-            //IConfigure cfgIfc = null;
-
             ILog _log = LogManager.GetCurrentClassLogger();
             try
             {
 
-                // ------- DISCOVERY ----------
-
-                Console.WriteLine("Start discovering ...");
-
-                DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-                FindCriteria criteria = new FindCriteria(typeof(IConfigure));
-                FindResponse discovered = discoveryClient.Find(criteria);
-                discoveryClient.Close();
-
-                Console.WriteLine("Discovery: {0} services found.", discovered.Endpoints.Count);
-                LogHelper.PrintEndPoints(discovered.Endpoints);
-
-                // ----------------------------
-
-                if (discovered.Endpoints.Count > 0)
+                // ------- DISCOVERY: IFunction ----------
                 {
-                    int iZoneId = 4;
+                    Console.WriteLine("Start discovering IFunction ...");
 
-                    cfgIfc = new ConfigureClient();
-                    // Connect to the discovered service endpoint
-                    cfgIfc.Endpoint.Address = discovered.Endpoints[0].Address;
-                    Console.WriteLine("Invoking Service at {0}", discovered.Endpoints[0].Address);
+                    DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
+                    FindCriteria criteria = new FindCriteria(typeof(IFunction));
+                    criteria.Duration = TimeSpan.FromSeconds(5);
+                    FindResponse discovered = discoveryClient.Find(criteria);
+
+                    Console.WriteLine("IFunction Discovery: {0} services found.", discovered.Endpoints.Count);
+                    LogHelper.PrintEndPoints(discovered.Endpoints);
+                    discoveryClient.Close();
+                }
+                // ------- DISCOVERY: IMonitorAndControl ----------
+                {
+                    Console.WriteLine("Start discovering IMonitorAndControl ...");
+
+                    DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
+                    FindCriteria criteria = new FindCriteria(typeof(IMonitorAndControl));
+                    criteria.Duration = TimeSpan.FromSeconds(5);
+                    FindResponse discovered = discoveryClient.Find(criteria);
+
+                    Console.WriteLine("IMonitorAndControl Discovery: {0} services found.", discovered.Endpoints.Count);
+                    LogHelper.PrintEndPoints(discovered.Endpoints);
+                    discoveryClient.Close();
+                }
+                // ------- DISCOVERY: IConfigure ----------
+                {
+                    Console.WriteLine("Start discovering IConfigure ...");
+
+                    DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
+                    FindCriteria criteria = new FindCriteria(typeof(IConfigure));
+                    criteria.Duration = TimeSpan.FromSeconds(5);
+                    FindResponse discovered = discoveryClient.Find(criteria);
+
+                    Console.WriteLine("IConfigure Discovery: {0} services found.", discovered.Endpoints.Count);
+                    LogHelper.PrintEndPoints(discovered.Endpoints);
+                    discoveryClient.Close();
+                // ----------------------------
+/*
+                    if (discovered.Endpoints.Count > 0)
+                    {
+                        int iZoneId = 4;
+
+                        ConfigureClient cfgIfc = null;
+                        //IConfigure cfgIfc = null;
+
+                        cfgIfc = new ConfigureClient();
+                        // Connect to the discovered service endpoint
+                        cfgIfc.Endpoint.Address = discovered.Endpoints[0].Address;
+                        Console.WriteLine("Invoking Service at {0}", discovered.Endpoints[0].Address);
 
 
-                    Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
+                        Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
 
-                    Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
-                    Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
+                        Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
+                        Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
 
-                    Console.WriteLine("Zone name: {0}", zone.Name);
-                    Console.WriteLine("Picture type: {0}", zone.PictureType);
-                    Console.WriteLine("All zone details: {0}", zone.ToString());
+                        Console.WriteLine("Zone name: {0}", zone.Name);
+                        Console.WriteLine("Picture type: {0}", zone.PictureType);
+                        Console.WriteLine("All zone details: {0}", zone.ToString());
 
-                    //Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                    //Console.WriteLine("All graphic details: {0}", graphic.ToString());
+                        //Graphic graphic = cfgIfc.GetGraphicConfiguration();
+                        //Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                    //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
-                    //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
-                    //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
-                    //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
-                    //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
-                    //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
+                        //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
+                        //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
+                        //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
+                        //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
+                        //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
+                        //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
 
-                    //cfgIfc.Close();
+                        //cfgIfc.Close();
+                    }
+ */
                 }
             }
             catch (FaultException<ArgumentException> exc)
@@ -248,7 +295,6 @@ namespace NuvoControl.Client.WcfTestConsole
             }
 
         }
-
 
         private static void GetImage(IConfigure cfgIfc, string imageName, string imageSaveToName)
         {
@@ -275,6 +321,53 @@ namespace NuvoControl.Client.WcfTestConsole
             }
 
         }
+
+
+        #region PingTest
+
+        private static List<IWcfPingTest> channelList = new List<IWcfPingTest>();
+        private static FindResponse WcfTestClient_DiscoverChannel()
+        {
+            Console.WriteLine(">>> Discover ping test server(s) ...");
+            var dc = new DiscoveryClient(new UdpDiscoveryEndpoint());
+            FindCriteria fc = new FindCriteria(typeof(IWcfPingTest));
+            fc.Duration = TimeSpan.FromSeconds(5);
+            FindResponse fr = dc.Find(fc);
+            foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+            {
+                Console.WriteLine(">>>   uri found = " + edm.Address.Uri.ToString());
+            }
+            return fr;
+        }
+        private static void WcfTestClient_SetupChannel()
+        {
+            Console.WriteLine(">>> Setup channel to ping test server(s) ...");
+            var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+            var factory = new ChannelFactory<IWcfPingTest>(binding);
+            FindResponse fr = WcfTestClient_DiscoverChannel();
+            foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+            {
+                var uri = edm.Address.Uri;
+                Console.WriteLine(">>>   creating channel to " + uri.ToString());
+                EndpointAddress ea = new EndpointAddress(uri);
+                IWcfPingTest channel = factory.CreateChannel(ea);
+                channelList.Add(channel);
+                Console.WriteLine(">>>   channel created");
+                //string result = channel.Ping();
+                //Console.WriteLine(">>>   ping result = " + result);
+            }
+        }
+        private static void WcfTestClient_Ping()
+        {
+            Console.WriteLine(">>> Ping test server(s) ...");
+            foreach (IWcfPingTest channel in channelList)
+            {
+                Console.WriteLine(">>>   pinging host");
+                string result = channel.Ping();
+                Console.WriteLine(">>>   ping result = " + result);
+            }
+        }
+        #endregion
 
     }
 }
