@@ -32,7 +32,7 @@
     <InstallUrl>http://www.imfeld.net/publish/NuvoControl.Client.WcfTestConsole/</InstallUrl>
     <PublisherName>NuvoControl</PublisherName>
     <SuiteName>NuvoControl</SuiteName>
-    <ApplicationRevision>7</ApplicationRevision>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>2.1.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -97,16 +97,6 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Service References\ConfigurationServiceReference\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
-    <Compile Include="Service References\MonitorAndControlServiceReference\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
@@ -125,42 +115,29 @@
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.ConfigurationService\NuvoControl.Server.ConfigurationService.csproj">
+      <Project>{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}</Project>
+      <Name>NuvoControl.Server.ConfigurationService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.FunctionService\NuvoControl.Server.FunctionService.csproj">
+      <Project>{1F25736C-42C9-4AEC-A514-9F4CEF0923EE}</Project>
+      <Name>NuvoControl.Server.FunctionService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.MonitorAndControlService\NuvoControl.Server.MonitorAndControlService.csproj">
+      <Project>{96A210B6-CCD8-451A-898F-BE40D09BAA49}</Project>
+      <Name>NuvoControl.Server.MonitorAndControlService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.WcfHostConsole\NuvoControl.Server.WcfHostConsole.csproj">
+      <Project>{58DCB860-91E2-4A66-8459-1FBE41C64FCC}</Project>
+      <Name>NuvoControl.Server.WcfHostConsole</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService.wsdl" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService.xsd" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService1.xsd" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService2.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NuvoControl.ico" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.NuvoImage.datasource" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService4.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\MonitorAndControlServiceReference\configuration.svcinfo" />
-    <None Include="Service References\MonitorAndControlServiceReference\configuration91.svcinfo" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.disco" />
-    <None Include="Service References\ConfigurationServiceReference\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\ConfigurationServiceReference\configuration.svcinfo" />
-    <None Include="Service References\ConfigurationServiceReference\configuration91.svcinfo" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService.disco" />
-    <None Include="Service References\ConfigurationServiceReference\ConfigurationService3.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.wsdl" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService1.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService2.xsd" />
-    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService3.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadataStorage Include="Service References\ConfigurationServiceReference\" />
-    <WCFMetadataStorage Include="Service References\MonitorAndControlServiceReference\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
