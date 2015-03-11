@@ -92,9 +92,16 @@ namespace NuvoControl.Server.WcfHostConsole
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
             Console.WriteLine();
 
+            LoadAllServices();
+            HostAllServices();
+
+        }
+        private static void LoadAllServices()
+        {
             try
             {
-                LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile);
+                //LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile);
+                LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile, Properties.Settings.Default.NuvoControlRemoteKonfigurationFile);
             }
             catch (Exception exc)
             {
@@ -134,8 +141,53 @@ namespace NuvoControl.Server.WcfHostConsole
             }
 
             Console.WriteLine();
+        }
 
-            HostAllServices();
+
+        private static void UnloadAllServices()
+        {
+            try
+            {
+                UnloadFunctionServer();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to unload the function server.", exc);
+                Console.WriteLine("Failed to unload the function server. Exception message: {0}", exc.Message);
+            }
+
+            try
+            {
+                UnloadZoneServer();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to unload the zone server.", exc);
+                Console.WriteLine("Failed to unload the zone server. Exception message: {0}", exc.Message);
+            }
+
+            try
+            {
+                UnloadProtocolDrivers();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to unload the protocol drivers.", exc);
+                Console.WriteLine("Failed to unload the protocol drivers. Exception message: {0}", exc.Message);
+            }
+
+            try
+            {
+                UnloadConfigurationService();
+            }
+            catch (Exception exc)
+            {
+                _log.ErrorFormat("Failed to load the system configuration.", exc);
+                Console.WriteLine("Failed to load the system configuration. Exception message: {0}", exc.Message);
+                return;
+            }
+
+            Console.WriteLine();
         }
 
 
