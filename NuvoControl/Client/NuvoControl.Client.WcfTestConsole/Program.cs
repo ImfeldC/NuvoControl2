@@ -98,14 +98,29 @@ namespace NuvoControl.Client.WcfTestConsole
 
             //Discover();
 
-            // ------- IMonitorAndControl ----------
-            Console.WriteLine(">>> Start Zone Status test ...");
+
             FindResponse fr = Discover("IMonitorAndControl", typeof(IMonitorAndControl), 5);
+
+            // ------- IMonitorAndControl: GetZoneState ----------
+            Console.WriteLine(">>> Start Zone Status test ...");
             if (fr.Endpoints.Count > 0)
             {
                 foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
                 {
                     GetZoneState(edm.Address, new Address(100, 2));
+                }
+            }
+            Console.WriteLine(">>> End Zone Status test ...");
+
+            // ------- IMonitorAndControl: SetZoneState ----------
+            Address adr = new Address(100, 2);
+            ZoneState stateCommand = new ZoneState(adr, false, 0, ZoneQuality.Offline);
+            Console.WriteLine(">>> Start Zone Status test ...");
+            if (fr.Endpoints.Count > 0)
+            {
+                foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+                {
+                    SetZoneState(edm.Address, adr, stateCommand);
                 }
             }
             Console.WriteLine(">>> End Zone Status test ...");
@@ -227,42 +242,55 @@ namespace NuvoControl.Client.WcfTestConsole
         }
 
 
-        private static void Control(EndpointAddress endPointAddress, Address adr)
+        private static void SetZoneState(EndpointAddress endPointAddress, Address adr, ZoneState stateCommand)
         {
+            Console.WriteLine(">>> Setup M&C server ...");
+
             ILog _log = LogManager.GetCurrentClassLogger();
+            IMonitorAndControl pipeProxy = null;
+            IMonitorAndControlNotification serverCallback = new ServerCallback();
             try
             {
-                //var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
-                //var factory = new DuplexChannelFactory<IMonitorAndControl>(binding);
-                //Console.WriteLine(">>>   creating channel to " + uri.ToString());
-                //EndpointAddress ea = new EndpointAddress(uri);
-                //IMonitorAndControl mcProxy = factory.CreateChannel(ea);
-                //Console.WriteLine(">>>   channel created");
-                //mcProxy.Connect();
+                int port = FindPort();
+                var binding = new WSDualHttpBinding("WSDualHttpBinding_IMonitorAndControl");
+                binding.ClientBaseAddress = new Uri("http://" + NetworkHelper.getHostName() + ":" + port + "/");
 
-                //IMonitorAndControlNotification serverCallback = new ServerCallback();
-                MonitorAndControlProxy mcProxy = new MonitorAndControlProxy(endPointAddress, "192.168.1.115");
-                //MonitorAndControlProxy mcProxy = new MonitorAndControlProxy("192.168.1.118");
+                /*note the "DuplexChannelFactory".  This is necessary for Callbacks.
+                 A regular "ChannelFactory" won't work with callbacks.*/
+                DuplexChannelFactory<IMonitorAndControl> pipeFactory =
+                      new DuplexChannelFactory<IMonitorAndControl>(
+                          new InstanceContext(serverCallback), binding, endPointAddress );
+                try
+                {
+                    Console.WriteLine(">>>   creating channel to {0} with callback address {1}", endPointAddress.Uri.ToString(), binding.ClientBaseAddress.ToString());
 
-                //IMonitorAndControlNotification serverCallback = new ServerCallback();
-                //MonitorAndControlProxy mcProxy = new MonitorAndControlProxy(endPointAddress, "192.168.1.115");
-                //MonitorAndControlProxy mcProxy = new MonitorAndControlProxy("192.168.1.118");
+                    //Open the channel to the server
+                    pipeProxy = pipeFactory.CreateChannel();
+                    pipeProxy.Connect();
 
-                //ZoneState state = mcProxy.GetZoneState(adr);
-                //Console.WriteLine(">>>   zone state: " + state.ToString());
+                    // Get zone status
+                    ZoneState state = pipeProxy.GetZoneState(adr);
+                    Console.WriteLine(">>>   zone state: {0}", state.ToString());
 
-                ZoneState state = mcProxy.GetZoneState(adr);
-                Console.WriteLine(">>>   zone state: " + state.ToString());
+                    // Get zone status
+                    pipeProxy.SetZoneState(adr, stateCommand);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("SetZoneState - Exception: {0}", e.Message);
+                    _log.Fatal(m => m("SetZoneState - Exception: {0}", e.Message));
+                }
+
             }
             catch (FaultException<ArgumentException> exc)
             {
-                Console.WriteLine("Control - FaultException: {0}", exc);
-                _log.Fatal(m => m("Control - FaultException: {0}", exc));
+                Console.WriteLine("SetZoneState - FaultException: {0}", exc);
+                _log.Fatal(m => m("SetZoneState - FaultException: {0}", exc));
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Control - Exception: {0}", exc);
-                _log.Fatal(m => m("Control - Exception: {0}", exc));
+                Console.WriteLine("SetZoneState - Exception: {0}", exc);
+                _log.Fatal(m => m("SetZoneState - Exception: {0}", exc));
             }
         }
 
