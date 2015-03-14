@@ -207,6 +207,15 @@ namespace NuvoControl.Client.ServiceAccess
                 Initialize(clientIpOrName);
         }
 
+        /// <summary>
+        /// Constructor, instantiates the M&C service proxy.
+        /// </summary>
+        /// <param name="endPointAddress">A valid URI to the server.</param>
+        public MonitorAndControlProxy(EndpointAddress endPointAddress, string clientIpOrName)
+        {
+            Initialize(endPointAddress, clientIpOrName);
+        }
+
         #endregion
 
         #region Public Interface
@@ -302,7 +311,7 @@ namespace NuvoControl.Client.ServiceAccess
         {
             try
             {
-                _log.Trace(m=>m("M&C Proxy; Initialize()"));
+                _log.Trace(m => m("M&C Proxy; Initialize( {0} )", clientIpOrName));
 
                 _mcServiceProxy = CreateMCClient(clientIpOrName);
                 _mcServiceProxy.Connect();
@@ -317,6 +326,28 @@ namespace NuvoControl.Client.ServiceAccess
                 _log.Error("Creating connection to the service failed.", exc);
                 (_mcServiceProxy as MonitorAndControlClient).Abort();
             }     
+        }
+
+
+        private void Initialize(EndpointAddress endPointAddress, string clientIpOrName)
+        {
+            try
+            {
+                _log.Trace(m => m("M&C Proxy; Initialize( {0} )", endPointAddress.Uri.ToString()));
+
+                _mcServiceProxy = CreateMCClient(endPointAddress, clientIpOrName);
+                _mcServiceProxy.Connect();
+
+                _timerRenewLease = new Timer(OnRenewLeaseCallback);
+                _timerRenewLease.Change(RENEW_LEASE_TIME, Timeout.Infinite);
+
+                _log.Trace(m => m("M&C Proxy; Initialize() done."));
+            }
+            catch (Exception exc)
+            {
+                _log.Error("Creating connection to the service failed.", exc);
+                (_mcServiceProxy as MonitorAndControlClient).Abort();
+            }
         }
 
         /// <summary>
@@ -363,6 +394,18 @@ namespace NuvoControl.Client.ServiceAccess
             return mcIfc;
         }
 
+
+        private MonitorAndControlClient CreateMCClient(EndpointAddress endPointAddress, string clientIpOrName)
+        {
+            MonitorAndControlClient mcIfc = null;
+            IMonitorAndControlCallback serverCallback = this;
+            mcIfc = new MonitorAndControlClient(new InstanceContext(serverCallback));
+            // Connect to the defined service endpoint
+            mcIfc.Endpoint.Address = endPointAddress;
+            (mcIfc as MonitorAndControlClient).SetClientBaseAddress(clientIpOrName);
+            _log.Trace(m => m("Invoking discovered M&C service at {0}", endPointAddress));
+            return mcIfc;
+        }
 
         #endregion
 

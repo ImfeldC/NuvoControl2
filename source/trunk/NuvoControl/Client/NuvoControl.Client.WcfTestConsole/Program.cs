@@ -21,6 +21,7 @@ using NuvoControl.Server.WcfHostConsole;    // WCF Ping Test
 using NuvoControl.Server.FunctionService;
 using NuvoControl.Server.MonitorAndControlService;
 using NuvoControl.Server.ConfigurationService;
+using NuvoControl.Client.ServiceAccess;
 
 namespace NuvoControl.Client.WcfTestConsole
 {
@@ -69,6 +70,11 @@ namespace NuvoControl.Client.WcfTestConsole
         #endregion
     }
 
+
+
+    /// <summary>
+    /// Main Program of WcfTestConsole
+    /// </summary>
     class Program
     {
         static void Main(string[] args)
@@ -86,15 +92,23 @@ namespace NuvoControl.Client.WcfTestConsole
 
             // WCF Ping Test
             Console.WriteLine(">>> Start ping test ...");
-            System.Threading.Thread.Sleep(4000);
             WcfTestClient_SetupChannel();
-            System.Threading.Thread.Sleep(2000);
             WcfTestClient_Ping();
             Console.WriteLine(">>> End ping test ...");
 
-            Discover();
+            //Discover();
 
-            //Control();
+            // ------- IMonitorAndControl ----------
+            Console.WriteLine(">>> Start Zone Status test ...");
+            FindResponse fr = Discover("IMonitorAndControl", typeof(IMonitorAndControl), 5);
+            if (fr.Endpoints.Count > 0)
+            {
+                foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+                {
+                    GetZoneState(edm.Address, new Address(100, 2));
+                }
+            }
+            Console.WriteLine(">>> End Zone Status test ...");
 
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();
@@ -137,58 +151,138 @@ namespace NuvoControl.Client.WcfTestConsole
             }
         }
 
-/*
-        private static void Control()
+        /// <summary>
+        /// Find available port for client callback.
+        /// </summary>
+        /// <returns>Available port number.</returns>
+        internal static int FindPort()
+        {
+            IPEndPoint endPoint = new IPEndPoint(IPAddress.Any, 0);
+            using (Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
+            {
+                socket.Bind(endPoint);
+                IPEndPoint local = (IPEndPoint)socket.LocalEndPoint;
+                return local.Port;
+            }
+        }
+
+        /// <summary>
+        /// Get zone status; connects to the end point address.
+        /// </summary>
+        /// <param name="endPointAddress">Server end point address.</param>
+        /// <param name="adr">Zone Address to get the status.</param>
+        private static void GetZoneState( EndpointAddress endPointAddress, Address adr )
+        {
+            Console.WriteLine(">>> Setup M&C server ...");
+
+            ILog _log = LogManager.GetCurrentClassLogger();
+            IMonitorAndControl pipeProxy = null;
+            IMonitorAndControlNotification serverCallback = new ServerCallback();
+            try
+            {
+                //var binding = new WSDualHttpBinding(WSDualHttpSecurityMode.None);
+                var binding = new WSDualHttpBinding("WSDualHttpBinding_IMonitorAndControl");
+
+                int port = FindPort();
+                //binding.ClientBaseAddress = new Uri("http://" + machineIpOrName + ":" + port + "/");
+                //binding.ClientBaseAddress = new Uri("http://" + "192.168.1.115" + ":" + port + "/");
+                binding.ClientBaseAddress = new Uri("http://" + NetworkHelper.getHostName() + ":" + port + "/");
+
+                /*note the "DuplexChannelFactory".  This is necessary for Callbacks.
+                 A regular "ChannelFactory" won't work with callbacks.*/
+                DuplexChannelFactory<IMonitorAndControl> pipeFactory =
+                      new DuplexChannelFactory<IMonitorAndControl>(
+                          new InstanceContext(serverCallback),
+                          binding /*new NetTcpBinding()*/,
+                          endPointAddress /*new EndpointAddress("net.tcp://localhost:8000/ISubscribe")*/);
+                try
+                {
+                    Console.WriteLine(">>>   creating channel to {0} with callback address {1}", endPointAddress.Uri.ToString(), binding.ClientBaseAddress.ToString());
+
+                    //Open the channel to the server
+                    pipeProxy = pipeFactory.CreateChannel();
+                    pipeProxy.Connect();
+
+                    // Get zone status
+                    ZoneState state = pipeProxy.GetZoneState(adr);
+                    Console.WriteLine(">>>   zone state: {0}", state.ToString());
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("GetZoneState - Exception: {0}", e.Message);
+                    _log.Fatal(m => m("GetZoneState - Exception: {0}", e.Message));
+                }
+
+            }
+            catch (FaultException<ArgumentException> exc)
+            {
+                Console.WriteLine("GetZoneState - FaultException: {0}", exc);
+                _log.Fatal(m => m("GetZoneState - FaultException: {0}", exc));
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("GetZoneState - Exception: {0}", exc);
+                _log.Fatal(m => m("GetZoneState - Exception: {0}", exc));
+            }
+        }
+
+
+        private static void Control(EndpointAddress endPointAddress, Address adr)
         {
             ILog _log = LogManager.GetCurrentClassLogger();
             try
             {
-                int iSecTimeout = 60;
-                IMonitorAndControlNotification serverCallback = new ServerCallback();
-                //IMonitorAndControlCallback serverCallback = null;
-                MonitorAndControlService mcProxy = new MonitorAndControlService(new InstanceContext(serverCallback));
-                Console.WriteLine("Created Service at {0}", mcProxy.Endpoint.Address);
+                //var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
+                //var factory = new DuplexChannelFactory<IMonitorAndControl>(binding);
+                //Console.WriteLine(">>>   creating channel to " + uri.ToString());
+                //EndpointAddress ea = new EndpointAddress(uri);
+                //IMonitorAndControl mcProxy = factory.CreateChannel(ea);
+                //Console.WriteLine(">>>   channel created");
+                //mcProxy.Connect();
 
-                // Connect to the discovered service endpoint
-                //mcProxy.SetClientBaseAddress();
-                mcProxy.Endpoint.Address = new EndpointAddress("http://imfeldc.dyndns.org:" + 8080 + "/MonitorAndControlService");
-                Console.WriteLine("Invoking Service at {0}", mcProxy.Endpoint.Address);
-                                
-                mcProxy.Connect();
-                mcProxy.Monitor(new Address(100, 1));
-                Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
-                System.Threading.Thread.Sleep(iSecTimeout * 1000);
-                Console.WriteLine("Stop listening ....");
-                mcProxy.RemoveMonitor(new Address(100, 1));
+                //IMonitorAndControlNotification serverCallback = new ServerCallback();
+                MonitorAndControlProxy mcProxy = new MonitorAndControlProxy(endPointAddress, "192.168.1.115");
+                //MonitorAndControlProxy mcProxy = new MonitorAndControlProxy("192.168.1.118");
+
+                //IMonitorAndControlNotification serverCallback = new ServerCallback();
+                //MonitorAndControlProxy mcProxy = new MonitorAndControlProxy(endPointAddress, "192.168.1.115");
+                //MonitorAndControlProxy mcProxy = new MonitorAndControlProxy("192.168.1.118");
+
+                //ZoneState state = mcProxy.GetZoneState(adr);
+                //Console.WriteLine(">>>   zone state: " + state.ToString());
+
+                ZoneState state = mcProxy.GetZoneState(adr);
+                Console.WriteLine(">>>   zone state: " + state.ToString());
             }
             catch (FaultException<ArgumentException> exc)
             {
-                Console.WriteLine("FaultException: {0}", exc);
-                _log.Fatal(m => m("FaultException: {0}", exc));
+                Console.WriteLine("Control - FaultException: {0}", exc);
+                _log.Fatal(m => m("Control - FaultException: {0}", exc));
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Exception: {0}", exc);
-                _log.Fatal(m => m("Exception: {0}", exc));
+                Console.WriteLine("Control - Exception: {0}", exc);
+                _log.Fatal(m => m("Control - Exception: {0}", exc));
             }
         }
-*/
-/*
+
+
         private static void ControlWithCallback()
         {
             ILog _log = LogManager.GetCurrentClassLogger();
             try
             {
-                int iSecTimeout = 60;
-                IMonitorAndControlCallback serverCallback = new ServerCallback();
-                MonitorAndControlClient mcProxy = new MonitorAndControlClient(new InstanceContext(serverCallback));
-                mcProxy.SetClientBaseAddress();
-                mcProxy.Connect();
-                mcProxy.Monitor(new Address(100, 1));
-                Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
-                System.Threading.Thread.Sleep(iSecTimeout * 1000);
-                Console.WriteLine("Stop listening ....");
-                mcProxy.RemoveMonitor(new Address(100, 1));
+                //int iSecTimeout = 60;
+                IMonitorAndControlNotification serverCallback = new ServerCallback();
+                MonitorAndControlProxy mcProxy = new MonitorAndControlProxy();
+                //mcProxy.GetZoneState();
+                //mcProxy.SetClientBaseAddress();
+                //mcProxy.Connect();
+                //mcProxy.Monitor(new Address(100, 1));
+                //Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
+                //System.Threading.Thread.Sleep(iSecTimeout * 1000);
+                //Console.WriteLine("Stop listening ....");
+                //mcProxy.RemoveMonitor(new Address(100, 1));
             }
             catch (FaultException<ArgumentException> exc)
             {
@@ -200,7 +294,7 @@ namespace NuvoControl.Client.WcfTestConsole
                 _log.Fatal(m => m("Exception: {0}", exc));
             }
         }
-*/
+
 
         private static void Discover()
         {
@@ -209,81 +303,50 @@ namespace NuvoControl.Client.WcfTestConsole
             {
 
                 // ------- DISCOVERY: IFunction ----------
-                {
-                    Console.WriteLine("Start discovering IFunction ...");
+                Discover("IFunction", typeof(IFunction), 5);
 
-                    DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-                    FindCriteria criteria = new FindCriteria(typeof(IFunction));
-                    criteria.Duration = TimeSpan.FromSeconds(5);
-                    FindResponse discovered = discoveryClient.Find(criteria);
-
-                    Console.WriteLine("IFunction Discovery: {0} services found.", discovered.Endpoints.Count);
-                    LogHelper.PrintEndPoints(discovered.Endpoints);
-                    discoveryClient.Close();
-                }
                 // ------- DISCOVERY: IMonitorAndControl ----------
-                {
-                    Console.WriteLine("Start discovering IMonitorAndControl ...");
+                Discover("IMonitorAndControl", typeof(IMonitorAndControl), 5);
 
-                    DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-                    FindCriteria criteria = new FindCriteria(typeof(IMonitorAndControl));
-                    criteria.Duration = TimeSpan.FromSeconds(5);
-                    FindResponse discovered = discoveryClient.Find(criteria);
-
-                    Console.WriteLine("IMonitorAndControl Discovery: {0} services found.", discovered.Endpoints.Count);
-                    LogHelper.PrintEndPoints(discovered.Endpoints);
-                    discoveryClient.Close();
-                }
                 // ------- DISCOVERY: IConfigure ----------
-                {
-                    Console.WriteLine("Start discovering IConfigure ...");
-
-                    DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-                    FindCriteria criteria = new FindCriteria(typeof(IConfigure));
-                    criteria.Duration = TimeSpan.FromSeconds(5);
-                    FindResponse discovered = discoveryClient.Find(criteria);
-
-                    Console.WriteLine("IConfigure Discovery: {0} services found.", discovered.Endpoints.Count);
-                    LogHelper.PrintEndPoints(discovered.Endpoints);
-                    discoveryClient.Close();
+                Discover("IConfigure", typeof(IConfigure), 5);
                 // ----------------------------
 /*
-                    if (discovered.Endpoints.Count > 0)
-                    {
-                        int iZoneId = 4;
+                if (discovered.Endpoints.Count > 0)
+                {
+                    int iZoneId = 4;
 
-                        ConfigureClient cfgIfc = null;
-                        //IConfigure cfgIfc = null;
+                    ConfigureClient cfgIfc = null;
+                    //IConfigure cfgIfc = null;
 
-                        cfgIfc = new ConfigureClient();
-                        // Connect to the discovered service endpoint
-                        cfgIfc.Endpoint.Address = discovered.Endpoints[0].Address;
-                        Console.WriteLine("Invoking Service at {0}", discovered.Endpoints[0].Address);
+                    cfgIfc = new ConfigureClient();
+                    // Connect to the discovered service endpoint
+                    cfgIfc.Endpoint.Address = discovered.Endpoints[0].Address;
+                    Console.WriteLine("Invoking Service at {0}", discovered.Endpoints[0].Address);
 
 
-                        Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
+                    Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
 
-                        Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
-                        Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
+                    Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
+                    Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
 
-                        Console.WriteLine("Zone name: {0}", zone.Name);
-                        Console.WriteLine("Picture type: {0}", zone.PictureType);
-                        Console.WriteLine("All zone details: {0}", zone.ToString());
+                    Console.WriteLine("Zone name: {0}", zone.Name);
+                    Console.WriteLine("Picture type: {0}", zone.PictureType);
+                    Console.WriteLine("All zone details: {0}", zone.ToString());
 
-                        //Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                        //Console.WriteLine("All graphic details: {0}", graphic.ToString());
+                    //Graphic graphic = cfgIfc.GetGraphicConfiguration();
+                    //Console.WriteLine("All graphic details: {0}", graphic.ToString());
 
-                        //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
-                        //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
-                        //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
-                        //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
-                        //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
-                        //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
+                    //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
+                    //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
+                    //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
+                    //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
+                    //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
+                    //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
 
-                        //cfgIfc.Close();
-                    }
- */
+                    //cfgIfc.Close();
                 }
+ */
             }
             catch (FaultException<ArgumentException> exc)
             {
@@ -295,6 +358,37 @@ namespace NuvoControl.Client.WcfTestConsole
             }
 
         }
+
+
+        private static FindResponse Discover(string identifier, Type type, int timespan)
+        {
+            FindResponse discovered = null;
+            ILog _log = LogManager.GetCurrentClassLogger();
+            try
+            {
+                // ------- DISCOVERY ----------
+                Console.WriteLine("Start discovering {0} ...", identifier);
+
+                DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
+                FindCriteria criteria = new FindCriteria(type);
+                criteria.Duration = TimeSpan.FromSeconds(timespan);
+                discovered = discoveryClient.Find(criteria);
+
+                Console.WriteLine("{0} Discovery: {1} services found.", identifier, discovered.Endpoints.Count);
+                LogHelper.PrintEndPoints(discovered.Endpoints);
+                discoveryClient.Close();
+            }
+            catch (FaultException<ArgumentException> exc)
+            {
+                _log.Fatal(m => m("FaultException: {0}", exc));
+            }
+            catch (Exception exc)
+            {
+                _log.Fatal(m => m("Exception: {0}", exc));
+            }
+            return discovered;
+        }
+
 
         private static void GetImage(IConfigure cfgIfc, string imageName, string imageSaveToName)
         {
@@ -325,7 +419,15 @@ namespace NuvoControl.Client.WcfTestConsole
 
         #region PingTest
 
+        /// <summary>
+        /// List of channels, for the ping test
+        /// </summary>
         private static List<IWcfPingTest> channelList = new List<IWcfPingTest>();
+
+        /// <summary>
+        /// Discovers ping test servers.
+        /// </summary>
+        /// <returns>Discovered endpoint(s).</returns>
         private static FindResponse WcfTestClient_DiscoverChannel()
         {
             Console.WriteLine(">>> Discover ping test server(s) ...");
@@ -339,6 +441,10 @@ namespace NuvoControl.Client.WcfTestConsole
             }
             return fr;
         }
+
+        /// <summary>
+        /// Setup channels to ping test servers.
+        /// </summary>
         private static void WcfTestClient_SetupChannel()
         {
             Console.WriteLine(">>> Setup channel to ping test server(s) ...");
@@ -357,6 +463,10 @@ namespace NuvoControl.Client.WcfTestConsole
                 //Console.WriteLine(">>>   ping result = " + result);
             }
         }
+
+        /// <summary>
+        /// Execute ping on the ping test servers.
+        /// </summary>
         private static void WcfTestClient_Ping()
         {
             Console.WriteLine(">>> Ping test server(s) ...");
@@ -367,6 +477,7 @@ namespace NuvoControl.Client.WcfTestConsole
                 Console.WriteLine(">>>   ping result = " + result);
             }
         }
+
         #endregion
 
     }

@@ -97,12 +97,30 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\MonitorAndControlServiceReference\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.wsdl" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService1.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService2.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService3.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="NuvoControl.Client.WcfTestConsole_2_TemporaryKey.pfx" />
@@ -131,12 +149,23 @@
       <Project>{58DCB860-91E2-4A66-8459-1FBE41C64FCC}</Project>
       <Name>NuvoControl.Server.WcfHostConsole</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Client.ServiceAccess\NuvoControl.Client.ServiceAccess.csproj">
+      <Project>{A98EC60A-AD98-4D73-8B4F-BB6496120E06}</Project>
+      <Name>NuvoControl.Client.ServiceAccess</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\DataSources\NuvoControl.Common.ZoneState.datasource" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="NuvoControl.ico" />
+    <None Include="Service References\MonitorAndControlServiceReference\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
+    <None Include="Service References\MonitorAndControlServiceReference\configuration.svcinfo" />
+    <None Include="Service References\MonitorAndControlServiceReference\configuration91.svcinfo" />
+    <None Include="Service References\MonitorAndControlServiceReference\MonitorAndControlService.disco" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.NuvoImage.datasource" />
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +189,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\MonitorAndControlServiceReference\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
