@@ -482,7 +482,7 @@ namespace NuvoControl.Server.WcfHostConsole
             public string Ping() 
             {
                 pingcount++;
-                string message = String.Format("PingTest called at {0} for {1} times", DateTime.Today.ToString(), pingcount.ToString());
+                string message = String.Format("PingTest called at {0} for {1} times", DateTime.Now.ToString(), pingcount.ToString());
                 Console.WriteLine("\n### Ping received! {0}", message);
                 return message; 
             }
