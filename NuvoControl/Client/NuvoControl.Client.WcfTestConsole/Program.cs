@@ -57,6 +57,10 @@ namespace NuvoControl.Client.WcfTestConsole
         }
     }
 
+
+    /// <summary>
+    /// Monitor and Control Callback, to receive zone state changes.
+    /// </summary>
     public class ServerCallback : IMonitorAndControlNotification
     {
         public int _id = 1;
@@ -64,14 +68,13 @@ namespace NuvoControl.Client.WcfTestConsole
 
         public void OnZoneStateChanged(Address zoneId, ZoneState zoneState)
         {
-            Console.WriteLine("Notification from server zone: {0}", zoneId.ToString());
+            Console.WriteLine("+++ Notification from server zone: zoneId={0} / zoneState={1}", zoneId.ToString(), zoneState.ToString());
         }
 
         #endregion
     }
 
-
-
+    
     /// <summary>
     /// Main Program of WcfTestConsole
     /// </summary>
@@ -102,28 +105,46 @@ namespace NuvoControl.Client.WcfTestConsole
             FindResponse fr = Discover("IMonitorAndControl", typeof(IMonitorAndControl), 5);
 
             // ------- IMonitorAndControl: GetZoneState ----------
-            Console.WriteLine(">>> Start Zone Status test ...");
-            if (fr.Endpoints.Count > 0)
-            {
-                foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+            {/*
+                Console.WriteLine(">>> Start GetZoneState test ...");
+                if (fr.Endpoints.Count > 0)
                 {
-                    GetZoneState(edm.Address, new Address(100, 2));
+                    foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+                    {
+                        GetZoneState(edm.Address, new Address(100, 2));
+                    }
                 }
-            }
-            Console.WriteLine(">>> End Zone Status test ...");
+                Console.WriteLine(">>> End GetZoneState test ...");
+            */}
 
             // ------- IMonitorAndControl: SetZoneState ----------
-            Address adr = new Address(100, 2);
-            ZoneState stateCommand = new ZoneState(adr, false, 0, ZoneQuality.Offline);
-            Console.WriteLine(">>> Start Zone Status test ...");
-            if (fr.Endpoints.Count > 0)
-            {
-                foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+            {/*
+                Address adr = new Address(100, 2);
+                ZoneState stateCommand = new ZoneState(adr, false, 0, ZoneQuality.Offline);
+                Console.WriteLine(">>> Start SetZoneState test ...");
+                if (fr.Endpoints.Count > 0)
                 {
-                    SetZoneState(edm.Address, adr, stateCommand);
+                    foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+                    {
+                        SetZoneState(edm.Address, adr, stateCommand);
+                    }
                 }
+                Console.WriteLine(">>> End SetZoneState test ...");
+            */}
+
+            // ------- IMonitorAndControl: ControlWithCallback ----------
+            {
+                Address adr = new Address(100, 2);
+                Console.WriteLine(">>> Start ControlWithCallback test ...");
+                if (fr.Endpoints.Count > 0)
+                {
+                    foreach (EndpointDiscoveryMetadata edm in fr.Endpoints)
+                    {
+                        ControlWithCallback(edm.Address, adr);
+                    }
+                }
+                Console.WriteLine(">>> End ControlWithCallback test ...");
             }
-            Console.WriteLine(">>> End Zone Status test ...");
 
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();
@@ -182,7 +203,7 @@ namespace NuvoControl.Client.WcfTestConsole
         }
 
         /// <summary>
-        /// Get zone status; connects to the end point address.
+        /// Get zone status; connects to the end point address and reads the zone status.
         /// </summary>
         /// <param name="endPointAddress">Server end point address.</param>
         /// <param name="adr">Zone Address to get the status.</param>
@@ -241,7 +262,12 @@ namespace NuvoControl.Client.WcfTestConsole
             }
         }
 
-
+        /// <summary>
+        /// Set zone status, connects to the end point address and sets a zone status.
+        /// </summary>
+        /// <param name="endPointAddress">Server end point address.</param>
+        /// <param name="adr">Zone Address to set the status.</param>
+        /// <param name="stateCommand">Command to send to zone.</param>
         private static void SetZoneState(EndpointAddress endPointAddress, Address adr, ZoneState stateCommand)
         {
             Console.WriteLine(">>> Setup M&C server ...");
@@ -293,37 +319,71 @@ namespace NuvoControl.Client.WcfTestConsole
                 _log.Fatal(m => m("SetZoneState - Exception: {0}", exc));
             }
         }
-
-
-        private static void ControlWithCallback()
+        
+        /// <summary>
+        /// Control with Callback, connects to the end point address and waits for notifications.
+        /// </summary>
+        /// <param name="endPointAddress">Server end point address.</param>
+        /// <param name="adr">Zone Address to monitor.</param>
+        private static void ControlWithCallback(EndpointAddress endPointAddress, Address adr)
         {
+            Console.WriteLine(">>> Setup M&C server ...");
+
             ILog _log = LogManager.GetCurrentClassLogger();
+            IMonitorAndControl pipeProxy = null;
+            IMonitorAndControlNotification serverCallback = new ServerCallback();
             try
             {
-                //int iSecTimeout = 60;
-                IMonitorAndControlNotification serverCallback = new ServerCallback();
-                MonitorAndControlProxy mcProxy = new MonitorAndControlProxy();
-                //mcProxy.GetZoneState();
-                //mcProxy.SetClientBaseAddress();
-                //mcProxy.Connect();
-                //mcProxy.Monitor(new Address(100, 1));
-                //Console.WriteLine("Wait {0} seconds, and listen to notifications!", iSecTimeout);
-                //System.Threading.Thread.Sleep(iSecTimeout * 1000);
-                //Console.WriteLine("Stop listening ....");
-                //mcProxy.RemoveMonitor(new Address(100, 1));
+                int port = FindPort();
+                var binding = new WSDualHttpBinding("WSDualHttpBinding_IMonitorAndControl");
+                binding.ClientBaseAddress = new Uri("http://" + NetworkHelper.getHostName() + ":" + port + "/");
+
+                /*note the "DuplexChannelFactory".  This is necessary for Callbacks.
+                 A regular "ChannelFactory" won't work with callbacks.*/
+                DuplexChannelFactory<IMonitorAndControl> pipeFactory =
+                      new DuplexChannelFactory<IMonitorAndControl>(
+                          new InstanceContext(serverCallback), binding, endPointAddress);
+                try
+                {
+                    Console.WriteLine(">>>   creating channel to {0} with callback address {1}", endPointAddress.Uri.ToString(), binding.ClientBaseAddress.ToString());
+
+                    //Open the channel to the server
+                    pipeProxy = pipeFactory.CreateChannel();
+                    pipeProxy.Connect();
+
+                    // Get zone status
+                    pipeProxy.Monitor(adr);
+
+                    // Listen to changes ...
+                    int iSecTimeout = 60;
+                    Console.WriteLine(">>>   Wait {0} seconds, and listen to notifications!", iSecTimeout);
+                    System.Threading.Thread.Sleep(iSecTimeout * 1000);
+                    Console.WriteLine(">>>   Stop listening ....");
+                    pipeProxy.RemoveMonitor(adr);
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("ControlWithCallback - Exception: {0}", e.Message);
+                    _log.Fatal(m => m("ControlWithCallback - Exception: {0}", e.Message));
+                }
+
             }
             catch (FaultException<ArgumentException> exc)
             {
-                _log.Fatal(m => m("FaultException: {0}", exc));
+                Console.WriteLine("ControlWithCallback - FaultException: {0}", exc);
+                _log.Fatal(m => m("ControlWithCallback - FaultException: {0}", exc));
             }
             catch (Exception exc)
             {
-                Console.WriteLine("Exception: {0}", exc);
-                _log.Fatal(m => m("Exception: {0}", exc));
+                Console.WriteLine("ControlWithCallback - Exception: {0}", exc);
+                _log.Fatal(m => m("ControlWithCallback - Exception: {0}", exc));
             }
         }
 
-
+        /// <summary>
+        /// Discover all available services.
+        /// </summary>
         private static void Discover()
         {
             ILog _log = LogManager.GetCurrentClassLogger();
@@ -338,43 +398,7 @@ namespace NuvoControl.Client.WcfTestConsole
 
                 // ------- DISCOVERY: IConfigure ----------
                 Discover("IConfigure", typeof(IConfigure), 5);
-                // ----------------------------
-/*
-                if (discovered.Endpoints.Count > 0)
-                {
-                    int iZoneId = 4;
 
-                    ConfigureClient cfgIfc = null;
-                    //IConfigure cfgIfc = null;
-
-                    cfgIfc = new ConfigureClient();
-                    // Connect to the discovered service endpoint
-                    cfgIfc.Endpoint.Address = discovered.Endpoints[0].Address;
-                    Console.WriteLine("Invoking Service at {0}", discovered.Endpoints[0].Address);
-
-
-                    Console.WriteLine("Server: ListenUri={0}", cfgIfc.Endpoint.ListenUri);
-
-                    Console.WriteLine("Read zone configuration for zone with id {0}.", iZoneId);
-                    Zone zone = cfgIfc.GetZoneKonfiguration(new Address(100, iZoneId));
-
-                    Console.WriteLine("Zone name: {0}", zone.Name);
-                    Console.WriteLine("Picture type: {0}", zone.PictureType);
-                    Console.WriteLine("All zone details: {0}", zone.ToString());
-
-                    //Graphic graphic = cfgIfc.GetGraphicConfiguration();
-                    //Console.WriteLine("All graphic details: {0}", graphic.ToString());
-
-                    //GetImage(cfgIfc, graphic.Building.PicturePath, "c:\\temp\\temp.jpg");
-                    //GetImage(cfgIfc, ".\\Images\\Funk.jpg", "c:\\temp\\Funk.jpg");
-                    //GetImage(cfgIfc, ".\\Images\\Building.png", "c:\\temp\\Building.png");
-                    //GetImage(cfgIfc, ".\\Images\\Galerie.bmp", "c:\\temp\\Galerie.bmp");
-                    //GetImage(cfgIfc, ".\\Images\\Galerie-Original.bmp", "c:\\temp\\Galerie-Original.bmp");
-                    //GetImage(cfgIfc, ".\\Images\\Hasenzimmer.jpg", "c:\\temp\\Hasenzimmer.jpg");
-
-                    //cfgIfc.Close();
-                }
- */
             }
             catch (FaultException<ArgumentException> exc)
             {
@@ -387,7 +411,13 @@ namespace NuvoControl.Client.WcfTestConsole
 
         }
 
-
+        /// <summary>
+        /// Discover specific servcie type.
+        /// </summary>
+        /// <param name="identifier">String identifier. Only used in console/log output.</param>
+        /// <param name="type">Service type.</param>
+        /// <param name="timespan">Timeout to discover a service.</param>
+        /// <returns></returns>
         private static FindResponse Discover(string identifier, Type type, int timespan)
         {
             FindResponse discovered = null;
