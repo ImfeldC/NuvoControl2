@@ -16,8 +16,6 @@ using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
 
 using NuvoControl.Server.WcfHostConsole;    // WCF Ping Test
-//using NuvoControl.Client.WcfTestConsole.ConfigurationServiceReference;
-//using NuvoControl.Client.WcfTestConsole.MonitorAndControlServiceReference;
 using NuvoControl.Server.FunctionService;
 using NuvoControl.Server.MonitorAndControlService;
 using NuvoControl.Server.ConfigurationService;
@@ -83,9 +81,7 @@ namespace NuvoControl.Client.WcfTestConsole
         static void Main(string[] args)
         {
             ILog _log = LogManager.GetCurrentClassLogger();
-
-            Console.WriteLine("**** Console client started. *******");
-            _log.Debug(m => m("**** Console client started. *******"));
+            LogHelper.Log("**** Console Test client started. *******", _log);
 
             Console.WriteLine(">>> Starting WCF Test Client  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
@@ -133,7 +129,7 @@ namespace NuvoControl.Client.WcfTestConsole
             */}
 
             // ------- IMonitorAndControl: ControlWithCallback ----------
-            {
+            {/*
                 Address adr = new Address(100, 2);
                 Console.WriteLine(">>> Start ControlWithCallback test ...");
                 if (fr.Endpoints.Count > 0)
@@ -144,7 +140,7 @@ namespace NuvoControl.Client.WcfTestConsole
                     }
                 }
                 Console.WriteLine(">>> End ControlWithCallback test ...");
-            }
+            */}
 
             Console.WriteLine(">>> Press <Enter> to stop the services.");
             Console.ReadLine();
@@ -322,6 +318,7 @@ namespace NuvoControl.Client.WcfTestConsole
         
         /// <summary>
         /// Control with Callback, connects to the end point address and waits for notifications.
+        /// See also http://www.codeproject.com/Articles/39143/C-WCF-Client-Server-without-HTTP-with-Callbacks-Ma
         /// </summary>
         /// <param name="endPointAddress">Server end point address.</param>
         /// <param name="adr">Zone Address to monitor.</param>
