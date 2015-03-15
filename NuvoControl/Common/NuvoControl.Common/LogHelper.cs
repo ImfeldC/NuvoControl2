@@ -16,6 +16,26 @@ namespace NuvoControl.Common
     {
 
         /// <summary>
+        /// Logs a message in a "standard" way to console and Logger.
+        /// </summary>
+        /// <param name="strMessage">Message to log.</param>
+        public static void Log(string strMessage)
+        {
+            Log(strMessage, LogManager.GetCurrentClassLogger());
+        }
+
+        /// <summary>
+        /// Logs a message in a "standard" way to console and Logger.
+        /// </summary>
+        /// <param name="strMessage">Message to log.</param>
+        /// <param name="logger">Logger to log the message.</param>
+        public static void Log(string strMessage, ILog logger)
+        {
+            Console.WriteLine(strMessage);
+            logger.Debug(m => m(strMessage));
+        }
+
+        /// <summary>
         /// Static method to print the endpoint collection to the logger.
         /// </summary>
         /// <param name="logger">Logger object.</param>
