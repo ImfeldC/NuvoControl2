@@ -28,7 +28,7 @@ using NuvoControl.Server.ProtocolDriver.Simulator;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
-    class NuvoTelegram : ITelegram
+    public class NuvoTelegram : ITelegram
     {
         #region Common Logger
         /// <summary>
