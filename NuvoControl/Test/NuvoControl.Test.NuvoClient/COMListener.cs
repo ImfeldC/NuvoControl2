@@ -84,9 +84,12 @@ namespace NuvoControl.Test.NuvoClient
 
             // Get list of available private queues
             string[] msgQueues = GetAllPrivateQueues();
-            foreach (string queue in msgQueues)
+            if (msgQueues != null)
             {
-                cmbComSelect.Items.Add(queue);
+                foreach (string queue in msgQueues)
+                {
+                    cmbComSelect.Items.Add(queue);
+                }
             }
 
             // Nice methods to browse all available ports:
@@ -250,28 +253,40 @@ namespace NuvoControl.Test.NuvoClient
 
         private string[] GetAllPrivateQueues()
         {
-            // get the list of message queues
-            MessageQueue[] MQList = MessageQueue.GetPrivateQueuesByMachine(_MachineName);
+            MessageQueue[] MQList = null;
+            try
+            {
+                // get the list of message queues
+                MQList = MessageQueue.GetPrivateQueuesByMachine(_MachineName);
+            }
+            catch (InvalidOperationException e)
+            {
+                // No message queue system installed (Message Queuing has not been installed on this computer.)
+                MQList = null;
+            }
 
             // check to make sure we found some private queues on that machine
-            if (MQList.Length > 0)
+            if ( MQList != null )
             {
-                // allocate a string array which holds for each queue the name, path, etc.
-                string[,] MQBigNameList = new string[MQList.Length, 3];
-                string[] MQSimpleNameList = new string[MQList.Length];
-
-                // loop through all message queues and get the name, path, etc.
-                for (int Count = 0; Count < MQList.Length; Count++)
+                if (MQList.Length > 0)
                 {
-                    // Big List
-                    MQBigNameList[Count, 0] = MQList[Count].QueueName;
-                    MQBigNameList[Count, 1] = MQList[Count].Label;
-                    MQBigNameList[Count, 2] = MQList[Count].Transactional.ToString();
+                    // allocate a string array which holds for each queue the name, path, etc.
+                    string[,] MQBigNameList = new string[MQList.Length, 3];
+                    string[] MQSimpleNameList = new string[MQList.Length];
 
-                    // Simple List
-                    MQSimpleNameList[Count] = MQList[Count].QueueName;
+                    // loop through all message queues and get the name, path, etc.
+                    for (int Count = 0; Count < MQList.Length; Count++)
+                    {
+                        // Big List
+                        MQBigNameList[Count, 0] = MQList[Count].QueueName;
+                        MQBigNameList[Count, 1] = MQList[Count].Label;
+                        MQBigNameList[Count, 2] = MQList[Count].Transactional.ToString();
+
+                        // Simple List
+                        MQSimpleNameList[Count] = MQList[Count].QueueName;
+                    }
+                    return MQSimpleNameList;
                 }
-                return MQSimpleNameList;
             }
             return null;
         }
