@@ -70,6 +70,7 @@ namespace NuvoControl.Server.Simulator
             this.btnSend = new System.Windows.Forms.Button();
             this.txtboxSendText = new System.Windows.Forms.TextBox();
             this.Simulation = new System.Windows.Forms.GroupBox();
+            this.cmbZoneSelect = new System.Windows.Forms.ComboBox();
             this.ucZoneInput = new NuvoControl.Server.Simulator.ZoneUserControl();
             this.numPeriodicUpdate = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
@@ -77,6 +78,7 @@ namespace NuvoControl.Server.Simulator
             this.label1 = new System.Windows.Forms.Label();
             this.progressSimulate = new System.Windows.Forms.ProgressBar();
             this.cmbSimModeSelect = new System.Windows.Forms.ComboBox();
+            this.btnSendState = new System.Windows.Forms.Button();
             this.grpZone.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.trackBass)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.trackTreble)).BeginInit();
@@ -92,20 +94,21 @@ namespace NuvoControl.Server.Simulator
             this.rtbCOM.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.rtbCOM.Location = new System.Drawing.Point(379, 4);
+            this.rtbCOM.Location = new System.Drawing.Point(392, 4);
             this.rtbCOM.Name = "rtbCOM";
-            this.rtbCOM.Size = new System.Drawing.Size(333, 580);
+            this.rtbCOM.Size = new System.Drawing.Size(333, 602);
             this.rtbCOM.TabIndex = 1;
             this.rtbCOM.Text = "";
             // 
             // grpZone
             // 
+            this.grpZone.Controls.Add(this.btnSendState);
             this.grpZone.Controls.Add(this.ucZoneManual);
             this.grpZone.Controls.Add(this.trackBass);
             this.grpZone.Controls.Add(this.trackTreble);
-            this.grpZone.Location = new System.Drawing.Point(11, 467);
+            this.grpZone.Location = new System.Drawing.Point(11, 489);
             this.grpZone.Name = "grpZone";
-            this.grpZone.Size = new System.Drawing.Size(278, 117);
+            this.grpZone.Size = new System.Drawing.Size(375, 117);
             this.grpZone.TabIndex = 2;
             this.grpZone.TabStop = false;
             this.grpZone.Text = "Zone (manual changes)";
@@ -149,16 +152,16 @@ namespace NuvoControl.Server.Simulator
             this.groupBox1.Controls.Add(this.ucZone3);
             this.groupBox1.Controls.Add(this.ucZone2);
             this.groupBox1.Controls.Add(this.ucZone1);
-            this.groupBox1.Location = new System.Drawing.Point(11, 251);
+            this.groupBox1.Location = new System.Drawing.Point(11, 273);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(361, 210);
+            this.groupBox1.Size = new System.Drawing.Size(375, 210);
             this.groupBox1.TabIndex = 20;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Zone (current status)";
             // 
             // ucZone4
             // 
-            this.ucZone4.Location = new System.Drawing.Point(182, 111);
+            this.ucZone4.Location = new System.Drawing.Point(197, 111);
             this.ucZone4.Name = "ucZone4";
             this.ucZone4.ReadOnly = false;
             this.ucZone4.Size = new System.Drawing.Size(172, 93);
@@ -167,7 +170,7 @@ namespace NuvoControl.Server.Simulator
             // 
             // ucZone3
             // 
-            this.ucZone3.Location = new System.Drawing.Point(6, 111);
+            this.ucZone3.Location = new System.Drawing.Point(11, 111);
             this.ucZone3.Name = "ucZone3";
             this.ucZone3.ReadOnly = false;
             this.ucZone3.Size = new System.Drawing.Size(172, 93);
@@ -176,7 +179,7 @@ namespace NuvoControl.Server.Simulator
             // 
             // ucZone2
             // 
-            this.ucZone2.Location = new System.Drawing.Point(182, 19);
+            this.ucZone2.Location = new System.Drawing.Point(197, 19);
             this.ucZone2.Name = "ucZone2";
             this.ucZone2.ReadOnly = false;
             this.ucZone2.Size = new System.Drawing.Size(172, 93);
@@ -185,7 +188,7 @@ namespace NuvoControl.Server.Simulator
             // 
             // ucZone1
             // 
-            this.ucZone1.Location = new System.Drawing.Point(6, 12);
+            this.ucZone1.Location = new System.Drawing.Point(11, 12);
             this.ucZone1.Name = "ucZone1";
             this.ucZone1.ReadOnly = false;
             this.ucZone1.Size = new System.Drawing.Size(172, 93);
@@ -229,7 +232,7 @@ namespace NuvoControl.Server.Simulator
             this.chkSend.AutoSize = true;
             this.chkSend.Checked = true;
             this.chkSend.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkSend.Location = new System.Drawing.Point(18, 33);
+            this.chkSend.Location = new System.Drawing.Point(17, 39);
             this.chkSend.Name = "chkSend";
             this.chkSend.Size = new System.Drawing.Size(51, 17);
             this.chkSend.TabIndex = 28;
@@ -241,7 +244,7 @@ namespace NuvoControl.Server.Simulator
             this.chkReceive.AutoSize = true;
             this.chkReceive.Checked = true;
             this.chkReceive.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkReceive.Location = new System.Drawing.Point(75, 33);
+            this.chkReceive.Location = new System.Drawing.Point(74, 39);
             this.chkReceive.Name = "chkReceive";
             this.chkReceive.Size = new System.Drawing.Size(66, 17);
             this.chkReceive.TabIndex = 29;
@@ -252,20 +255,20 @@ namespace NuvoControl.Server.Simulator
             // 
             this.groupBox2.Controls.Add(this.btnSend);
             this.groupBox2.Controls.Add(this.txtboxSendText);
-            this.groupBox2.Location = new System.Drawing.Point(11, 195);
+            this.groupBox2.Location = new System.Drawing.Point(11, 217);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(343, 50);
+            this.groupBox2.Size = new System.Drawing.Size(375, 50);
             this.groupBox2.TabIndex = 30;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Send Text";
             // 
             // btnSend
             // 
-            this.btnSend.Location = new System.Drawing.Point(260, 16);
+            this.btnSend.Location = new System.Drawing.Point(294, 16);
             this.btnSend.Name = "btnSend";
             this.btnSend.Size = new System.Drawing.Size(75, 23);
             this.btnSend.TabIndex = 13;
-            this.btnSend.Text = "Send";
+            this.btnSend.Text = "Send Text";
             this.btnSend.UseVisualStyleBackColor = true;
             this.btnSend.Click += new System.EventHandler(this.btnSend_Click);
             // 
@@ -273,12 +276,13 @@ namespace NuvoControl.Server.Simulator
             // 
             this.txtboxSendText.Location = new System.Drawing.Point(6, 19);
             this.txtboxSendText.Name = "txtboxSendText";
-            this.txtboxSendText.Size = new System.Drawing.Size(248, 20);
+            this.txtboxSendText.Size = new System.Drawing.Size(282, 20);
             this.txtboxSendText.TabIndex = 12;
             this.txtboxSendText.Text = "Hello...";
             // 
             // Simulation
             // 
+            this.Simulation.Controls.Add(this.cmbZoneSelect);
             this.Simulation.Controls.Add(this.ucZoneInput);
             this.Simulation.Controls.Add(this.numPeriodicUpdate);
             this.Simulation.Controls.Add(this.label2);
@@ -288,14 +292,23 @@ namespace NuvoControl.Server.Simulator
             this.Simulation.Controls.Add(this.cmbSimModeSelect);
             this.Simulation.Location = new System.Drawing.Point(11, 64);
             this.Simulation.Name = "Simulation";
-            this.Simulation.Size = new System.Drawing.Size(361, 125);
+            this.Simulation.Size = new System.Drawing.Size(375, 147);
             this.Simulation.TabIndex = 31;
             this.Simulation.TabStop = false;
             this.Simulation.Text = "Simulation";
             // 
+            // cmbZoneSelect
+            // 
+            this.cmbZoneSelect.FormattingEnabled = true;
+            this.cmbZoneSelect.Location = new System.Drawing.Point(188, 19);
+            this.cmbZoneSelect.Name = "cmbZoneSelect";
+            this.cmbZoneSelect.Size = new System.Drawing.Size(172, 21);
+            this.cmbZoneSelect.TabIndex = 29;
+            this.cmbZoneSelect.SelectedIndexChanged += new System.EventHandler(this.cmbZoneSelect_SelectedIndexChanged);
+            // 
             // ucZoneInput
             // 
-            this.ucZoneInput.Location = new System.Drawing.Point(189, 19);
+            this.ucZoneInput.Location = new System.Drawing.Point(188, 46);
             this.ucZoneInput.Name = "ucZoneInput";
             this.ucZoneInput.ReadOnly = true;
             this.ucZoneInput.Size = new System.Drawing.Size(172, 93);
@@ -386,11 +399,21 @@ namespace NuvoControl.Server.Simulator
             this.cmbSimModeSelect.TabIndex = 4;
             this.cmbSimModeSelect.SelectedIndexChanged += new System.EventHandler(this.cmbSimModeSelect_SelectedIndexChanged);
             // 
+            // btnSendState
+            // 
+            this.btnSendState.Location = new System.Drawing.Point(294, 19);
+            this.btnSendState.Name = "btnSendState";
+            this.btnSendState.Size = new System.Drawing.Size(75, 23);
+            this.btnSendState.TabIndex = 14;
+            this.btnSendState.Text = "Send State";
+            this.btnSendState.UseVisualStyleBackColor = true;
+            this.btnSendState.Click += new System.EventHandler(this.btnSendState_Click);
+            // 
             // NuvoControlSimulator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(714, 589);
+            this.ClientSize = new System.Drawing.Size(727, 611);
             this.Controls.Add(this.Simulation);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.chkReceive);
@@ -451,6 +474,8 @@ namespace NuvoControl.Server.Simulator
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ProgressBar progressSimulate;
         private System.Windows.Forms.ComboBox cmbSimModeSelect;
+        private System.Windows.Forms.ComboBox cmbZoneSelect;
+        private System.Windows.Forms.Button btnSendState;
     }
 }
 

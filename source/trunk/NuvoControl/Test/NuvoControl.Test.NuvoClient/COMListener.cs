@@ -79,8 +79,8 @@ namespace NuvoControl.Test.NuvoClient
             InitializeComponent();
 
             // Add known default serial port key words
-            cmbComSelect.Items.Add("SIM");
-            cmbComSelect.Items.Add("QUEUE");
+            cmbComSelect.Items.Add(NuvoTelegram.defaultPortSim);
+            cmbComSelect.Items.Add(NuvoTelegram.defaultPortQueue);
 
             // Get list of available private queues
             string[] msgQueues = GetAllPrivateQueues();

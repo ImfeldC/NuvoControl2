@@ -38,6 +38,12 @@ namespace NuvoControl.Server.ProtocolDriver
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
 
+        private string _startSendCharacter = "*";
+        private string _startRcvCharacter = "#";
+
+        public const string defaultPortQueue = "QUEUE";
+        public const string defaultPortSim = "SIM";
+
         private ISerialPort _serialPortPassedByCaller = null;
         private ISerialPort _serialPort = null;
         private SerialPortConnectInformation _serialPortConnectInformation = null;
@@ -81,12 +87,12 @@ namespace NuvoControl.Server.ProtocolDriver
             else
             {
                 _log.Debug(m => m("Start of NuvoTelegram .... create own serial port object!"));
-                if (_serialPortConnectInformation.PortName.Equals("SIM"))
+                if (_serialPortConnectInformation.PortName.Equals(defaultPortSim))
                 {
                     // Create serial port simulator
                     _serialPort = new ProtocolDriverSimulator();
                 }
-                else if (_serialPortConnectInformation.PortName.Equals("QUEUE"))
+                else if (_serialPortConnectInformation.PortName.Equals(defaultPortQueue))
                 {
                     // Create serial port queue
                     _serialPort = new SerialPortQueue();
@@ -111,9 +117,9 @@ namespace NuvoControl.Server.ProtocolDriver
             if ((telegram != null) && (telegram.Length > 0))
             {
                 string text = telegram;
-                if (text[0] != '*')
+                if (text[0] != _startSendCharacter[0])
                 {
-                    text = text.Insert(0, "*");
+                    text = text.Insert(0, _startSendCharacter);
                 }
                 if (text[text.Length - 1] != '\r')
                 {
@@ -158,13 +164,13 @@ namespace NuvoControl.Server.ProtocolDriver
         private bool IsResponseTelegramComplete
         {
             get{
-                return ((_currentTelegramBuffer.IndexOf('#') > -1) && (_currentTelegramBuffer.IndexOf('\r') > 0));
+                return ((_currentTelegramBuffer.IndexOf(_startRcvCharacter[0]) > -1) && (_currentTelegramBuffer.IndexOf('\r') > 0));
             }
         }
 
         private string cutLeadingCharacters( string telegram )
         {
-            int startSignPosition = telegram.IndexOf('#');
+            int startSignPosition = telegram.IndexOf(_startRcvCharacter[0]);
             if (startSignPosition == -1)
             {
                 // Start sign not received ...
@@ -185,9 +191,9 @@ namespace NuvoControl.Server.ProtocolDriver
 
         private string cutLeadingStartSigns(string telegram)
         {
-            while (telegram.Contains("#") == true)
+            while (telegram.Contains(_startRcvCharacter) == true)
             {
-                int startSignPosition = telegram.IndexOf('#');
+                int startSignPosition = telegram.IndexOf(_startRcvCharacter[0]);
                 // Start sign received, but not at the start ...
                 // Discarge starting characters, till the start sign
                 string delChars = telegram.Substring(0, startSignPosition);
@@ -202,7 +208,7 @@ namespace NuvoControl.Server.ProtocolDriver
             _currentTelegramBuffer = cutLeadingCharacters(_currentTelegramBuffer);
 
             // Do further processing, if start sign is available ...
-            if (_currentTelegramBuffer.IndexOf('#') == 0)
+            if (_currentTelegramBuffer.IndexOf(_startRcvCharacter[0]) == 0)
             {
                 // Analyze the telegram end
                 int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
