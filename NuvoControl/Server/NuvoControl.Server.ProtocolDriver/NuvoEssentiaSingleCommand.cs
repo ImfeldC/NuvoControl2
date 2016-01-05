@@ -359,7 +359,7 @@ namespace NuvoControl.Server.ProtocolDriver
 
         /// <summary>
         /// Constructor to build an incoming command.
-        /// If the command has been succesfully parsed, the values can be asked vai the member accessors, 
+        /// If the command has been succesfully parsed, the values can be asked via the member accessors, 
         /// like ZoneId, VolumeLevel, etc.
         /// </summary>
         /// <param name="commandString">Command string received from NuvoEssentia.</param>
