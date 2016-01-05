@@ -41,6 +41,10 @@ namespace NuvoControl.Server.Simulator
     /// </summary>
     public partial class NuvoControlSimulator : Form
     {
+        // Constant Values
+        private const string _strSimulatorQueues = "Simulator Queues";
+
+
         #region Common Logger
         /// <summary>
         /// Common logger object. Requires the using directive <c>Common.Logging</c>. See 
@@ -54,6 +58,7 @@ namespace NuvoControl.Server.Simulator
         private Address _address = new Address(1, 1);
         private string _MachineName = ".";
         private SerialPort _serialPort = new SerialPort();
+        private string _currentTelegramBuffer = "";
 
 
         /// <summary>
@@ -61,6 +66,12 @@ namespace NuvoControl.Server.Simulator
         /// See <see cref="MessageType"/> for more information.
         /// </summary>
         private Color[] _MessageColor = { Color.Blue, Color.Green, Color.Black, Color.Orange, Color.Red };
+
+        /// <summary>
+        /// Private variable to store the font style used for the message types.
+        /// See <see cref="MessageType"/> for more information.
+        /// </summary>
+        private FontStyle[] _MessageFontStyle = { FontStyle.Bold, FontStyle.Bold, FontStyle.Regular, FontStyle.Regular, FontStyle.Bold };
 
         /// <summary>
         /// Enumeration to hold our message types
@@ -118,8 +129,9 @@ namespace NuvoControl.Server.Simulator
         private const int _numOfZones = 12;
         private int _deviceId = 1;
 
-        //private Queue<ReceiveCompletedEventArgs> _incommingCommands = new Queue<ReceiveCompletedEventArgs>();
-        private Queue<string> _incommingCommands = new Queue<string>();
+        private Queue<ReceiveCompletedEventArgs> _incommingQueueMessages = new Queue<ReceiveCompletedEventArgs>();
+        private Queue<ProtocolCommandReceivedEventArgs> _incommingCommands = new Queue<ProtocolCommandReceivedEventArgs>();
+        private Queue<ProtocolZoneUpdatedEventArgs> _incomingUpdates = new Queue<ProtocolZoneUpdatedEventArgs>();
         private Queue<string> _outgoingCommands = new Queue<string>();
 
 
@@ -169,9 +181,12 @@ namespace NuvoControl.Server.Simulator
         /// </summary>
         private void initComSelect()
         {
-            // Add known default serial port key words
-            cmbComSelect.Items.Add("SIM");
-            cmbComSelect.Items.Add("QUEUE");
+            // Add known default serial port key words, supported by the protocol driver
+            cmbComSelect.Items.Add(NuvoTelegram.defaultPortSim);
+            cmbComSelect.Items.Add(NuvoTelegram.defaultPortQueue);
+
+            // Add options, supported by the simulator (only)
+            cmbComSelect.Items.Add(_strSimulatorQueues);
 
             // Get list of available private queues
             string[] msgQueues = GetAllPrivateQueues();
@@ -205,6 +220,7 @@ namespace NuvoControl.Server.Simulator
             {
                 // No message queue system installed (Message Queuing has not been installed on this computer.)
                 MQList = null;
+                DisplayData(MessageType.Warning, "Message Queuing has not been installed on this computer.");
             }
 
             // check to make sure we found some private queues on that machine
@@ -282,6 +298,7 @@ namespace NuvoControl.Server.Simulator
             _log.Debug(m => m("Form loaded: {0}", e.ToString()));
 
             initComSelect();
+            importEnumeration(typeof(ENuvoEssentiaZones), cmbZoneSelect);
 
             initZoneUserControl(ucZone1, ENuvoEssentiaZones.Zone1, _zoneSateController[ENuvoEssentiaZones.Zone1]);
             initZoneUserControl(ucZone2, ENuvoEssentiaZones.Zone2, _zoneSateController[ENuvoEssentiaZones.Zone2]);
@@ -328,8 +345,8 @@ namespace NuvoControl.Server.Simulator
             try
             {
                 _log.Debug(m => m("Message received from queue: {0}", eventArg.Message.Body.ToString()));
-                _incommingCommands.Enqueue(eventArg.Message.Body.ToString());
-                DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)eventArg.Message.Body, _incommingCommands.Count));
+                _incommingQueueMessages.Enqueue(eventArg);
+                DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)eventArg.Message.Body, _incommingQueueMessages.Count));
             }
             catch (Exception e)
             {
@@ -439,6 +456,7 @@ namespace NuvoControl.Server.Simulator
                 _log.Fatal(m => m("Message Queuing has not been installed on this computer."));
                 _log.Fatal(m => m("Cannot create queue: {0} ", queueName));
                 _log.Fatal(m => m("Exception: {0} ", e.ToString()));
+                DisplayData(MessageType.Warning, "Message Queuing has not been installed on this computer.");
             }
 
             return msgQueue;
@@ -469,7 +487,7 @@ namespace NuvoControl.Server.Simulator
                         rtbCOM.Invoke(new EventHandler(delegate
                         {
                             rtbCOM.SelectedText = string.Empty;
-                            rtbCOM.SelectionFont = new Font(rtbCOM.SelectionFont, FontStyle.Bold);
+                            rtbCOM.SelectionFont = new Font(rtbCOM.SelectionFont, _MessageFontStyle[(int)type]);
                             rtbCOM.SelectionColor = _MessageColor[(int)type];
                             rtbCOM.AppendText(msg);
                             rtbCOM.ScrollToCaret();
@@ -519,6 +537,12 @@ namespace NuvoControl.Server.Simulator
                 timerSimulate.Start();
                 timerPeriodicUpdate.Start();
             }
+            else if ((string)cmbSimModeSelect.SelectedItem == ProtocolDriverSimulator.EProtocolDriverSimulationMode.ListenOnly.ToString())
+            {
+                // Start simulation (listener)
+                timerSimulate.Start();
+                timerPeriodicUpdate.Stop();
+            }
             else if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoSimulation.ToString())
             {
                 // Start simulation
@@ -548,16 +572,38 @@ namespace NuvoControl.Server.Simulator
             //_log.Debug(m => m("Simulate .."));
             progressSimulate.Value = (progressSimulate.Value+1 > progressSimulate.Maximum ? 0 : progressSimulate.Value+1);
 
+            // Process incomming command queue
             if (_incommingCommands.Count > 0)
             {
                 do
                 {
-                    _log.Debug(m => m("Process incomming command {0}", (string)_incommingCommands.Peek()));
-                    simulate(_incommingCommands.Dequeue());
+                    _log.Debug(m => m("Process incomming command {0}", _incommingCommands.Peek().Command.ToString()));
+                    ProtocolCommandReceivedEventArgs eventArg = _incommingCommands.Dequeue();
+                    //updateUC(incomingCommand);
+                    //if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.ListenOnly.ToString())
+                    //{
+                    //    simulate(incomingCommand);
+                    //}
                 }
                 while (_incommingCommands.Count > 0);
             }
+
+            // Process incomming command updates
+            if (_incomingUpdates.Count > 0)
+            {
+                do
+                {
+                    _log.Debug(m => m("Process incomming update {0}", _incomingUpdates.Peek().ZoneState.ToString()));
+                    ProtocolZoneUpdatedEventArgs eventArg = _incomingUpdates.Dequeue();
+                    if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.NoSimulation.ToString() && chkReceive.Checked)
+                    {
+                        _zoneSateController.setZoneState((ENuvoEssentiaZones)eventArg.ZoneAddress.ObjectId, eventArg.ZoneState);
+                    }
+                }
+                while (_incomingUpdates.Count > 0);
+            }
         }
+
 
         /// <summary>
         /// Sends a command back to the system. It puts the outgoing commands on the outgoing
@@ -754,9 +800,8 @@ namespace NuvoControl.Server.Simulator
                     EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                     EVolumeResetStatus.VolumeResetOFF,
                     ESourceGroupStatus.SourceGroupOFF, "v1.23");
-                string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
-                //TODO: incoming or outgoing command
-                sendCommand(incomingCommand);
+                //string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
+                sendCommand(command);
             }
         }
 
@@ -921,8 +966,8 @@ namespace NuvoControl.Server.Simulator
             try
             {
                 _log.Debug(m => m("Message received from protocol driver: {0}", (string)e.Command.IncomingCommand));
-                _incommingCommands.Enqueue((string)e.Command.IncomingCommand);
                 DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)e.Command.IncomingCommand, _incommingCommands.Count));
+                _incommingCommands.Enqueue(e);  // (string)e.Command.IncomingCommand
             }
             catch (Exception exc)
             {
@@ -942,8 +987,11 @@ namespace NuvoControl.Server.Simulator
             try
             {
                 _log.Debug(m => m("Zone Udpate: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState));
-                //_incommingCommands.Enqueue((string)e.Command.IncomingCommand);
                 DisplayData(MessageType.Incoming, string.Format("Zone Udpate: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState));
+                _incomingUpdates.Enqueue(e);
+
+                // Not possible to update UC here, due different calling threads; we need to pass the message to the queue
+                //_zoneSateController.setZoneState((ENuvoEssentiaZones)e.ObjectId, e.ZoneState);
             }
             catch (Exception exc)
             {
@@ -962,7 +1010,7 @@ namespace NuvoControl.Server.Simulator
         {
             if (cmbComSelect.Text.Contains("private"))
             {
-                // Open a MSMQ queue 
+                // Open a MSMQ queue (found on the system)
                 if (chkReceive.Checked)
                 {
                     _rcvQueue = SerialPortQueue.GetQueue(".\\" + cmbComSelect.Text);
@@ -984,9 +1032,9 @@ namespace NuvoControl.Server.Simulator
                     }
                 }
             }
-            else if (cmbComSelect.Text.Contains("QUEUE"))
+            else if (cmbComSelect.Text.Equals(_strSimulatorQueues))
             {
-                // Open default MSMQ queue 
+                // Open default MSMQ queue (by Simulator) 
                 OpenQueues();
             }
             else
@@ -1001,11 +1049,15 @@ namespace NuvoControl.Server.Simulator
                 }
                 NuvoTelegram nuvoTelegram = new NuvoTelegram(_serialPort);
                 _nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"), new NuvoEssentiaProtocol(1, nuvoTelegram));
+
+                // Register for events and open serial port
+                _serialPort.onDataReceived += new SerialPortEventHandler(serialPort_DataReceived);
+                
                 if (chkSend.Checked)
                 {
                     DisplayData(MessageType.Normal, "Read version ...");
                     NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
-                    sendCommand(command.OutgoingCommand);
+                    sendCommand(command);
                 }
             }
         }
@@ -1017,29 +1069,70 @@ namespace NuvoControl.Server.Simulator
         /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
-            sendCommand( txtboxSendText.Text );
+            sendCommand(txtboxSendText.Text);
         }
 
 
-        private void sendCommand( string strCommand )
+        /// <summary>
+        /// Sends the specified command to the available queues and/or ports.
+        /// In case the command is not a valid Nuvo Essentia command, the text is send directly to the serial port (by-pass nuvo protocol driver)
+        /// </summary>
+        /// <param name="strCommand">Text string containing the command.</param>
+        private void sendCommand(string strCommand)
         {
-            if (_nuvoServer != null)
+            NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(strCommand);
+            if (command.Command != ENuvoEssentiaCommands.NoCommand)
             {
-                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(strCommand);
+                sendCommand(command);
+            }
+            else
+            {
+                sendString(strCommand);
+            }
+        }
+
+        /// <summary>
+        /// Sends a valid command via the protocal driver to the seria port and/or to the message queues. 
+        /// </summary>
+        /// <param name="command">Valid command.</param>
+        private void sendCommand( NuvoEssentiaSingleCommand command )
+        {
+            if (_nuvoServer != null & chkSend.Checked)
+            {
                 if (command.Command != ENuvoEssentiaCommands.NoCommand)
                 {
                     // in case of a valid command, send it via protocol driver
-                    DisplayData(MessageType.Outgoing, "Send via driver: " + command.OutgoingCommand);
+                    DisplayData(MessageType.Normal, "Send via protocol driver: ");
+                    DisplayData(MessageType.Outgoing, command.OutgoingCommand);
                     _nuvoServer.SendCommand(_address, command);
                 }
-                else
+            }
+            if (_rcvQueue != null & chkReceive.Checked)
+            {
+                DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+                _rcvQueue.Send(command.OutgoingCommand);
+            }
+            if (_sendQueue != null & chkSend.Checked)
+            {
+                DisplayData(MessageType.Outgoing, command.OutgoingCommand);
+                _sendQueue.Send(command.OutgoingCommand);
+            }
+        }
+
+        /// <summary>
+        /// Sends free text to the available queues and/or serial port.
+        /// </summary>
+        /// <param name="strCommand">Free text to send.</param>
+        private void sendString(string strCommand)
+        {
+            if (_nuvoServer != null & chkSend.Checked)
+            {
+                // in case of a "invalid" command, send it directly to serial port
+                if (_serialPort != null)
                 {
-                    // in case of a "invalid" command, send it directly to serial port
-                    if (_serialPort != null)
-                    {
-                        DisplayData(MessageType.Outgoing, "Send via serial port direct: " + strCommand);
-                        _serialPort.Write(strCommand);
-                    }
+                    DisplayData(MessageType.Normal, "Send via serial port direct: ");
+                    DisplayData(MessageType.Outgoing, strCommand);
+                    _serialPort.Write(strCommand);
                 }
             }
             if (_rcvQueue != null & chkReceive.Checked)
@@ -1051,6 +1144,58 @@ namespace NuvoControl.Server.Simulator
             {
                 DisplayData(MessageType.Outgoing, strCommand);
                 _sendQueue.Send(strCommand);
+            }
+        }
+
+        /// <summary>
+        /// Set the selected zone in the input zone user control.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cmbZoneSelect_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ucZoneInput.SetSelectedZone((ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true));
+        }
+
+        private void btnSendState_Click(object sender, EventArgs e)
+        {
+            ENuvoEssentiaZones zone = ucZoneManual.GetSelectedZone();
+            if (zone != ENuvoEssentiaZones.NoZone)
+            {
+                NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                    ENuvoEssentiaCommands.ReadStatusCONNECT,
+                    zone,
+                    ucZoneManual.GetSelectedSource(),
+                    NuvoEssentiaCommand.calcVolume2NuvoEssentia(ucZoneManual.GetSelectedVolumeLevel()),
+                    (int)trackBass.Value,
+                    (int)trackTreble.Value,
+                    ucZoneManual.GetSelectedPowerStatus(),
+                    new EIRCarrierFrequency[6],
+                    EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
+                    EVolumeResetStatus.VolumeResetOFF,
+                    ESourceGroupStatus.SourceGroupOFF, "v1.23");
+                string incomingCommand = ProtocolDriverSimulator.createIncomingCommand(command);
+                sendCommand(incomingCommand);
+            }
+        }
+
+
+        void serialPort_DataReceived(object sender, SerialPortEventArgs e)
+        {
+            // Add received message to the telegram
+            _currentTelegramBuffer += e.Message;
+            //DisplayData(MessageType.Normal, "Data received via serial port direct: ");
+            //DisplayData(MessageType.Incoming, e.Message);
+
+            // Analyze the telegram end
+            int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
+            if (endSignPosition > 0)
+            {
+                string telegramFound = _currentTelegramBuffer.Substring(1, endSignPosition - 1);
+                _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, endSignPosition + 1);
+
+                DisplayData(MessageType.Normal, "Telegram received via serial port direct: ");
+                DisplayData(MessageType.Incoming, telegramFound);
             }
         }
 

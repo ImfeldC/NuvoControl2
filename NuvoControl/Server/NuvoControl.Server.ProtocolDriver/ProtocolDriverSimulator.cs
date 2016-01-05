@@ -69,32 +69,37 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
             NoSimulation = 0,
 
             /// <summary>
+            /// ListenOnly: Simulation is not active. The incoming queue is processed.
+            /// </summary>
+            ListenOnly = 1,
+
+            /// <summary>
             /// AllOk: Simulation is active. Each command is simulated with the correct 
             ///        expected answer. The requested command is parsed and the state is 
             ///        stored in the simulator. An answer is generated to indicate NuvoControl
             ///        that the command has been executed without any problem.
             /// </summary>
-            AllOk = 1,
+            AllOk = 2,
 
             /// <summary>
             /// AllFail: Simulation is active. Return to each command an error message.
             /// </summary>
-            AllFail = 2,       
+            AllFail = 3,       
 
             /// <summary>
             /// WrongAnswer: Simulation is active. On each command is a 'wrong' (but valid) answer returned.
             /// </summary>
-            WrongAnswer = 3,
+            WrongAnswer = 4,
 
             /// <summary>
             /// NoAnswer: Simulation is active. No answer is returned on a acommand.
             /// </summary>
-            NoAnswer = 4,
+            NoAnswer = 5,
 
             /// <summary>
             /// PeriodicUpdate: Simulation is active. A periodic update is send by the simulator.
             /// </summary>
-            PeriodicUpdate = 5
+            PeriodicUpdate = 6
         }
 
         private bool _isOpen = false;
@@ -129,6 +134,10 @@ namespace NuvoControl.Server.ProtocolDriver.Simulator
             switch (_mode)
             {
                 case EProtocolDriverSimulationMode.NoSimulation:
+                    // Do nothing :-)
+                    break;
+
+                case EProtocolDriverSimulationMode.ListenOnly:
                     // Do nothing :-)
                     break;
 
