@@ -65,7 +65,7 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             _deviceId = deviceId;
 
-            _serialPort = ((nuvoTelegram == null)?new NuvoTelegram(null):nuvoTelegram);
+            _serialPort = ((nuvoTelegram == null)?new NuvoCommandTelegram(null):nuvoTelegram);
             _serialPort.onTelegramReceived += new TelegramEventHandler(_serialPort_onTelegramReceived);
         }
 
