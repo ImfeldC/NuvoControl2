@@ -1,6 +1,6 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ *   Copyright (C) 2009 by B. Limacher, Ch. Imfeld. All Rights Reserved.
  * 
  ***************************************************************************************************
  *
@@ -52,6 +52,6 @@ namespace NuvoControl.Server.ConfigurationService
 
 /**************************************************************************************************
  * 
- *   Copyright (C) B. Limacher, C. Imfeld. All Rights Reserved. Confidential
+ *   Copyright (C) 2009 by B. Limacher, Ch. Imfeld. All Rights Reserved.
  * 
 **************************************************************************************************/
