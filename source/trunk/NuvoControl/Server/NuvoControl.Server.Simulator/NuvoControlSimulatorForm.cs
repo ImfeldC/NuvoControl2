@@ -1179,6 +1179,11 @@ namespace NuvoControl.Server.Simulator
         }
 
 
+        /// <summary>
+        /// Method to receive data direct from serial port (by-pass protocol driver)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         void serialPort_DataReceived(object sender, SerialPortEventArgs e)
         {
             // Add received message to the telegram
@@ -1187,6 +1192,24 @@ namespace NuvoControl.Server.Simulator
             //DisplayData(MessageType.Incoming, e.Message);
 
             // Analyze the telegram end
+            int startSignPosition = _currentTelegramBuffer.IndexOf('*');
+            if (startSignPosition == -1)
+            {
+                // Start sign not received ...
+                // Discarge the content and wait for start sign
+                _log.Debug(m => m("Delete content received on serial port, start sign is missing. {0}", _currentTelegramBuffer));
+                _currentTelegramBuffer = "";
+            }
+            else if (startSignPosition > 0)
+            {
+                // Start sign received, but not at the start ...
+                // Discarge starting characters, till the start sign
+                string delChars = _currentTelegramBuffer.Substring(0, startSignPosition);
+                _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, startSignPosition);
+                _log.Debug(m => m("Delete content received on serial port, up to the start sign. {0}", delChars));
+            }
+
+
             int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
             if (endSignPosition > 0)
             {
