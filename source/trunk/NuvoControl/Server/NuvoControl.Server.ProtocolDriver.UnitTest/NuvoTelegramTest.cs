@@ -119,7 +119,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived1Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -139,7 +139,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived2Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -159,7 +159,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived3Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -178,7 +178,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived4Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -204,7 +204,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived5Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -241,7 +241,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived7Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -260,7 +260,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void onTelegramReceived8Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
             target.onTelegramReceived += new TelegramEventHandler(serialPort_TelegramReceived);
 
@@ -300,7 +300,7 @@ namespace NuvoControl.Server.ProtocolDriver.Test
         public void Write1Test()
         {
             SerialPortMock serialPort = new SerialPortMock();
-            NuvoTelegram target = new NuvoTelegram(serialPort);
+            NuvoCommandTelegram target = new NuvoCommandTelegram(serialPort);
             target.Open(new SerialPortConnectInformation("COM1"));
 
             target.SendTelegram("SendMessage");

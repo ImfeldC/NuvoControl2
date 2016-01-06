@@ -59,8 +59,7 @@ namespace NuvoControl.Server.Simulator
         private string _MachineName = ".";
         private SerialPort _serialPort = new SerialPort();
         private string _currentTelegramBuffer = "";
-
-
+ 
         /// <summary>
         /// Private variable to store the colors used for the message types.
         /// See <see cref="MessageType"/> for more information.
@@ -1047,12 +1046,12 @@ namespace NuvoControl.Server.Simulator
                     _nuvoServer.onCommandReceived += new ProtocolCommandReceivedEventHandler(_nuvoServer_onCommandReceived);
                     _nuvoServer.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_nuvoServer_onZoneStatusUpdate);
                 }
-                NuvoTelegram nuvoTelegram = new NuvoTelegram(_serialPort);
+                NuvoCommandTelegram nuvoTelegram = new NuvoCommandTelegram(_serialPort);
                 _nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(cmbComSelect.Text, 9600, 8, 1, "None"), new NuvoEssentiaProtocol(1, nuvoTelegram));
 
                 // Register for events and open serial port
                 _serialPort.onDataReceived += new SerialPortEventHandler(serialPort_DataReceived);
-                
+               
                 if (chkSend.Checked)
                 {
                     DisplayData(MessageType.Normal, "Read version ...");

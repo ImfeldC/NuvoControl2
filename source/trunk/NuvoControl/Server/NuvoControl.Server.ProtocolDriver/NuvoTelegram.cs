@@ -28,6 +28,138 @@ using NuvoControl.Server.ProtocolDriver.Simulator;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
+    /// <summary>
+    /// Class to handle command telegram send to Nuvo Essentia
+    /// </summary>
+    public class NuvoCommandTelegram : ITelegram
+    {
+        private NuvoTelegram _nuvoTelegram = null;
+
+        /// <summary>
+        /// Event raised in case a valid telegram has been received.
+        /// </summary>
+        public event TelegramEventHandler onTelegramReceived;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="serialPort"></param>
+        public NuvoCommandTelegram(ISerialPort serialPort)
+        {
+            // Command Telegram: Start Charater = '*' / Response Charater = '#'
+            _nuvoTelegram = new NuvoTelegram(serialPort, "*", "#");
+            _nuvoTelegram.onTelegramReceived += new TelegramEventHandler(_serialPort_onTelegramReceived); 
+        }
+
+        /// <summary>
+        /// Event method called in case a telegram has been received.
+        /// </summary>
+        /// <param name="sender">This point to the sender of this event.</param>
+        /// <param name="e">Event parameters, passed by the sender.</param>
+        void _serialPort_onTelegramReceived(object sender, TelegramEventArgs e)
+        {
+            //raise the event, and pass data to next layer
+            if (onTelegramReceived != null)
+            {
+                onTelegramReceived(this,e);
+            }
+        }
+
+        /// <summary>
+        /// Open a connection.
+        /// </summary>
+        /// <param name="serialPortConnectInformation">Contains the serial connection information.</param>
+        public void Open(SerialPortConnectInformation serialPortConnectInformation)
+        {
+            _nuvoTelegram.Open(serialPortConnectInformation);
+        }
+
+        /// <summary>
+        /// Close connection.
+        /// </summary>
+        public void Close()
+        {
+            _nuvoTelegram.Close();
+        }
+
+        /// <summary>
+        /// Send a telegram (answer).
+        /// </summary>
+        /// <param name="telegram">Text string to send.</param>
+        public void SendTelegram(string telegram)
+        {
+            _nuvoTelegram.SendTelegram(telegram);
+        }
+    }
+
+    /// <summary>
+    /// Class to handle response telegram send to Nuvo Essentia
+    /// </summary>
+    public class NuvoResponseTelegram : ITelegram
+    {
+        private NuvoTelegram _nuvoTelegram = null;
+
+        /// <summary>
+        /// Event raised in case a valid telegram has been received.
+        /// </summary>
+        public event TelegramEventHandler onTelegramReceived;
+
+        /// <summary>
+        /// Default constructor
+        /// </summary>
+        /// <param name="serialPort"></param>
+        public NuvoResponseTelegram(ISerialPort serialPort)
+        {
+            // Command Telegram: Start Charater = '*' / Response Charater = '#'
+            _nuvoTelegram = new NuvoTelegram(serialPort, "#", "*");
+            _nuvoTelegram.onTelegramReceived += new TelegramEventHandler(_serialPort_onTelegramReceived);
+        }
+
+        /// <summary>
+        /// Event method called in case a telegram has been received.
+        /// </summary>
+        /// <param name="sender">This point to the sender of this event.</param>
+        /// <param name="e">Event parameters, passed by the sender.</param>
+        void _serialPort_onTelegramReceived(object sender, TelegramEventArgs e)
+        {
+            //raise the event, and pass data to next layer
+            if (onTelegramReceived != null)
+            {
+                onTelegramReceived(this, e);
+            }
+        }
+
+        /// <summary>
+        /// Open a connection.
+        /// </summary>
+        /// <param name="serialPortConnectInformation">Contains the serial connection information.</param>
+        public void Open(SerialPortConnectInformation serialPortConnectInformation)
+        {
+            _nuvoTelegram.Open(serialPortConnectInformation);
+        }
+
+        /// <summary>
+        /// Close connection.
+        /// </summary>
+        public void Close()
+        {
+            _nuvoTelegram.Close();
+        }
+
+        /// <summary>
+        /// Send a telegram (answer).
+        /// </summary>
+        /// <param name="telegram">Text string to send.</param>
+        public void SendTelegram(string telegram)
+        {
+            throw new System.NotImplementedException();
+            //_nuvoTelegram.SendTelegram(telegram);
+        }
+    }
+
+    /// <summary>
+    /// Native Nuvo telegram class.
+    /// </summary>
     public class NuvoTelegram : ITelegram
     {
         #region Common Logger
@@ -38,10 +170,16 @@ namespace NuvoControl.Server.ProtocolDriver
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
 
-        private string _startSendCharacter = "*";
-        private string _startRcvCharacter = "#";
+        private string _startSendCharacter = "";
+        private string _startRcvCharacter = "";
 
+        /// <summary>
+        /// Default port name for MSMQ.
+        /// </summary>
         public const string defaultPortQueue = "QUEUE";
+        /// <summary>
+        /// Default port name for simulator
+        /// </summary>
         public const string defaultPortSim = "SIM";
 
         private ISerialPort _serialPortPassedByCaller = null;
@@ -49,14 +187,37 @@ namespace NuvoControl.Server.ProtocolDriver
         private SerialPortConnectInformation _serialPortConnectInformation = null;
         private string _currentTelegramBuffer = "";
 
-        public NuvoTelegram( ISerialPort serialPort )
+        /// <summary>
+        /// Default constructor. Similar to "NuvoCommandTelegram"
+        /// </summary>
+        /// <param name="serialPort">Serial port passed by called. Pass <null> if not passed by caller.</param>
+        public NuvoTelegram(ISerialPort serialPort)
         {
             _serialPortPassedByCaller = serialPort;
+            _startSendCharacter = "*";
+            _startRcvCharacter = "#";
+        }
+
+
+        /// <summary>
+        /// Constructor for basic Nuvo telegram class
+        /// </summary>
+        /// <param name="serialPort">Serial port passed by called. Pass <null> if not passed by caller.</null></param>
+        /// <param name="startSendCharacter">Start character for telegrams to "send"</param>
+        /// <param name="startRcvCharacter">Start character for telegrams to "receive"</param>
+        public NuvoTelegram( ISerialPort serialPort, string startSendCharacter, string startRcvCharacter )
+        {
+            _serialPortPassedByCaller = serialPort;
+            _startSendCharacter = startSendCharacter;
+            _startRcvCharacter = startRcvCharacter;
         }
 
 
         #region ITelegram Members
 
+        /// <summary>
+        /// Event raised in case a valid telegram has been received.
+        /// </summary>
         public event TelegramEventHandler onTelegramReceived;
 
         public void Open(SerialPortConnectInformation serialPortConnectInformation)
@@ -265,5 +426,7 @@ namespace NuvoControl.Server.ProtocolDriver
             {
             }
         }
+
     }
+
 }
