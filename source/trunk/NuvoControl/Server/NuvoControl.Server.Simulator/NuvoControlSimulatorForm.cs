@@ -129,8 +129,9 @@ namespace NuvoControl.Server.Simulator
         private int _deviceId = 1;
 
         private Queue<ReceiveCompletedEventArgs> _incommingQueueMessages = new Queue<ReceiveCompletedEventArgs>();
-        private Queue<ProtocolCommandReceivedEventArgs> _incommingCommands = new Queue<ProtocolCommandReceivedEventArgs>();
+        private Queue<ProtocolCommandReceivedEventArgs> _incommingResponses = new Queue<ProtocolCommandReceivedEventArgs>();
         private Queue<ProtocolZoneUpdatedEventArgs> _incomingUpdates = new Queue<ProtocolZoneUpdatedEventArgs>();
+        private Queue<string> _incommingCommands = new Queue<string>();
         private Queue<string> _outgoingCommands = new Queue<string>();
 
 
@@ -560,7 +561,7 @@ namespace NuvoControl.Server.Simulator
         /// <summary>
         /// Private timer event handler for the simulation.
         /// This timer method is called every 300 [ms]. See <see cref="System.Windows.Forms.Timer.Interval"/>.
-        /// In case a command is received in the incoming queue (<see cref="_incommingCommands"/>), it 
+        /// In case a command is received in the incoming queue (<see cref="_incommingResponses"/>), it 
         /// calls the private method <see cref="simulate"/>, whichs handles the different simulation
         /// modes.
         /// </summary>
@@ -571,23 +572,45 @@ namespace NuvoControl.Server.Simulator
             //_log.Debug(m => m("Simulate .."));
             progressSimulate.Value = (progressSimulate.Value+1 > progressSimulate.Maximum ? 0 : progressSimulate.Value+1);
 
-            // Process incomming command queue
-            if (_incommingCommands.Count > 0)
+            // Process incomming response queue
+            if (_incommingResponses.Count > 0)
             {
                 do
                 {
-                    _log.Debug(m => m("Process incomming command {0}", _incommingCommands.Peek().Command.ToString()));
-                    ProtocolCommandReceivedEventArgs eventArg = _incommingCommands.Dequeue();
-                    //updateUC(incomingCommand);
+                    _log.Debug(m => m("Process incomming response {0}", _incommingResponses.Peek().Command.ToString()));
+                    ProtocolCommandReceivedEventArgs eventArg = _incommingResponses.Dequeue();
+
+                    DisplayData(MessageType.Normal, "Response received: ");
+                    DisplayData(MessageType.Incoming, eventArg.Command.ToString());
+
                     //if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.ListenOnly.ToString())
                     //{
                     //    simulate(incomingCommand);
                     //}
                 }
+                while (_incommingResponses.Count > 0);
+            }
+
+            // Process incomming command queue
+            if (_incommingCommands.Count > 0)
+            {
+                do
+                {
+                    _log.Debug(m => m("Process incomming command {0}", _incommingCommands.Peek()));
+                    string strCommand = _incommingCommands.Dequeue();
+
+                    DisplayData(MessageType.Normal, "Command received: ");
+                    DisplayData(MessageType.Incoming, strCommand);
+
+                    if ((string)cmbSimModeSelect.SelectedItem != ProtocolDriverSimulator.EProtocolDriverSimulationMode.ListenOnly.ToString())
+                    {
+                        simulate(strCommand);
+                    }
+                }
                 while (_incommingCommands.Count > 0);
             }
 
-            // Process incomming command updates
+            // Process incomming updates
             if (_incomingUpdates.Count > 0)
             {
                 do
@@ -964,9 +987,10 @@ namespace NuvoControl.Server.Simulator
         {
             try
             {
-                _log.Debug(m => m("Message received from protocol driver: {0}", (string)e.Command.IncomingCommand));
-                DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)e.Command.IncomingCommand, _incommingCommands.Count));
-                _incommingCommands.Enqueue(e);  // (string)e.Command.IncomingCommand
+                _log.Debug(m => m("Command received from protocol driver: {0}", (string)e.Command.IncomingCommand));
+                DisplayData(MessageType.Normal, "Command received via protocol driver: ");
+                DisplayData(MessageType.Incoming, string.Format("({1}) {0}", (string)e.Command.IncomingCommand, _incommingResponses.Count));
+                _incommingResponses.Enqueue(e);  // put responeses received via protocol driver into the queue
             }
             catch (Exception exc)
             {
@@ -986,6 +1010,7 @@ namespace NuvoControl.Server.Simulator
             try
             {
                 _log.Debug(m => m("Zone Udpate: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState));
+                DisplayData(MessageType.Normal, "Zone status update received via protocol driver: ");
                 DisplayData(MessageType.Incoming, string.Format("Zone Udpate: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState));
                 _incomingUpdates.Enqueue(e);
 
@@ -1156,6 +1181,11 @@ namespace NuvoControl.Server.Simulator
             ucZoneInput.SetSelectedZone((ENuvoEssentiaZones)Enum.Parse(typeof(ENuvoEssentiaZones), cmbZoneSelect.Text, true));
         }
 
+        /// <summary>
+        /// Method to send on demmand the zone status.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSendState_Click(object sender, EventArgs e)
         {
             ENuvoEssentiaZones zone = ucZoneManual.GetSelectedZone();
@@ -1209,15 +1239,16 @@ namespace NuvoControl.Server.Simulator
                 _log.Debug(m => m("Delete content received on serial port, up to the start sign. {0}", delChars));
             }
 
-
             int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
             if (endSignPosition > 0)
             {
                 string telegramFound = _currentTelegramBuffer.Substring(1, endSignPosition - 1);
                 _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, endSignPosition + 1);
 
-                DisplayData(MessageType.Normal, "Telegram received via serial port direct: ");
-                DisplayData(MessageType.Incoming, telegramFound);
+                //DisplayData(MessageType.Normal, "Telegram received via serial port direct: ");
+                //DisplayData(MessageType.Incoming, telegramFound);
+
+                _incommingCommands.Enqueue(telegramFound);  // put commands received via serial port into the queue
             }
         }
 
