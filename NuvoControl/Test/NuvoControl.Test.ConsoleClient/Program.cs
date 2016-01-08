@@ -12,6 +12,7 @@ using NuvoControl.Server.ProtocolDriver;
 
 using NuvoControl.Common;
 
+using Common.Logging;
 
 
 namespace NuvoControl.Test.ConsoleClient
@@ -20,7 +21,11 @@ namespace NuvoControl.Test.ConsoleClient
     {
         static void Main(string[] args)
         {
-            Console.WriteLine(">>> Starting Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
+            ILog log = LogManager.GetCurrentClassLogger();
+            log.Debug(m => m("Starting Test Console Client! (Version={0})", Application.ProductVersion));
+            LogHelper.Log("**** Test Console Client started. *******", log);
+            
+            Console.WriteLine(">>> Starting Test Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
                 "n/a", "n/a", Application.ProductVersion);
             //Console.WriteLine(">>> Starting Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
             //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
