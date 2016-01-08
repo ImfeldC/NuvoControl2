@@ -24,6 +24,7 @@ using System.Text;
 using System.IO.Ports;
 using NuvoControl.Server.ProtocolDriver.Interface;
 using Common.Logging;
+using System.Timers;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -37,11 +38,57 @@ namespace NuvoControl.Server.ProtocolDriver
         private ILog _log = LogManager.GetCurrentClassLogger();
         #endregion
 
+        /// <summary>
+        /// Private members
+        /// </summary>
         private System.IO.Ports.SerialPort _comPort; 
         private SerialPortConnectInformation _serialPortConnectInformation;
+        private bool _LimitedEnvironment = false;       // true, if "mono" framework is detected!
 
+        /// <summary>
+        /// Private member to hold the timer used to send a 'ping' to the device.
+        /// </summary>
+        private System.Timers.Timer _timerPing = new System.Timers.Timer();
+
+
+        /// <summary>
+        /// Default constructor. 
+        /// Includes a check of the running environment; sets _LimitedEnvironment
+        /// </summary>
         public SerialPort()
         {
+            _log.Trace(m => m("Serial port instantiated!"));
+            try
+            {
+                // NOTE: The following properties are not implemented in the "mono" framework
+                // See "Limitations" in http://www.mono-project.com/archived/howtosystemioports/
+                // Not implemented under Mono (Raspberry Pi)
+                System.IO.Ports.SerialPort serialPort = new System.IO.Ports.SerialPort();
+                bool discardNull = serialPort.DiscardNull;
+                // if this command executes w/o exception, we are running on a "full" .NET environment (not "mono" framework)
+                _LimitedEnvironment = false;
+            }
+            catch (System.NotImplementedException exc)
+            {
+                // Limited environment detected!
+                _LimitedEnvironment = true;
+            }
+
+            // Enable read intervall timer only, if ..
+            // (a) Proper intervall is defined
+            // (b) A limited environemnt is detected (whcih doesn't support events) (see http://www.mono-project.com/archived/howtosystemioports/ )
+            if (Properties.Settings.Default.ReadIntervall > 0 && _LimitedEnvironment)
+            {
+                _log.Trace(m => m("Read intervall timer started, each {0}[s]", Properties.Settings.Default.PingIntervall));
+                _timerPing.Interval = (Properties.Settings.Default.PingIntervall < 2 ? 2 : Properties.Settings.Default.PingIntervall) * 1000;
+                _timerPing.Elapsed += new ElapsedEventHandler(_timerReadIntervall_Elapsed);
+                _timerPing.Start();
+            }
+            else
+            {
+                _log.Warn(m => m("Read intervall timer is disabled !!! ({0}[s])", Properties.Settings.Default.PingIntervall));
+            }
+
         }
 
 
@@ -82,6 +129,13 @@ namespace NuvoControl.Server.ProtocolDriver
                 _comPort.Write(text);
             else
                 _log.Error(m => m("Port is not open, cannot send data {0} to serial port.", text));
+
+            if (_LimitedEnvironment)
+            {
+                // Read data "synchronous", because event notifications are not supported
+                // See http://www.mono-project.com/archived/howtosystemioports/
+                readData();
+            }
         }
 
         #endregion
@@ -94,15 +148,66 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="e"></param>
         void comPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
-            //read data waiting in the buffer
-            string msg = _comPort.ReadExisting();
+            readData();
+        }
+
+        private string readData()
+        {
+            string msg = "";
+            try
+            {
+                //read data waiting in the buffer
+                msg = _comPort.ReadExisting();
+            }
+            catch (System.TimeoutException exc)
+            {
+                // ignore timeout, finish read-out
+            }
+
             //raise the event, and pass data to next layer
             if (onDataReceived != null)
             {
                 onDataReceived(this,
                   new SerialPortEventArgs(msg));
             }
+            return msg;
         }
+
+        private string ReadByteData()
+        {
+            byte tmpByte;
+            string rxString = "";
+
+            try
+            {
+                tmpByte = (byte)_comPort.ReadByte();
+                //Console.WriteLine("Start ...." + tmpByte);
+
+                while (tmpByte != 255)
+                {
+                    rxString += ((char)tmpByte);
+                    tmpByte = (byte)_comPort.ReadByte();
+                    //Console.WriteLine("Get data ...." + tmpByte);
+                }
+            }
+            catch (System.TimeoutException exc)
+            {
+                // ignore timeout, finish read-out
+            }
+
+            Console.WriteLine("Message received:" + rxString);
+            return rxString;
+        }
+        
+        /// <summary>
+        /// Timer event method, to check for data on the serial port.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void _timerReadIntervall_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            readData();
+        }        
         #endregion
 
         #region Open-/ClosePort
@@ -148,12 +253,13 @@ namespace NuvoControl.Server.ProtocolDriver
                 _comPort.ReadTimeout = 500;
                 _comPort.WriteTimeout = 500;
 
-                //now open the port
-                _log.Trace(m=>m("Open serial port {0}", _serialPortConnectInformation.PortName ));
+                // now open the port
+                _log.Trace(m=>m("Open serial port {0} (Limited={1})", _serialPortConnectInformation.PortName, _LimitedEnvironment ));
                 _log.Trace(m => m("--> {0}", this.ToString()));
                 _comPort.Open();
 
-                //add event handler
+                // add event handler
+                // NOTE: event handlers are NOT supported in limited environments (see http://www.mono-project.com/archived/howtosystemioports/)
                 _comPort.DataReceived += new SerialDataReceivedEventHandler(comPort_DataReceived);
                 _comPort.RtsEnable = true;
 
@@ -169,37 +275,56 @@ namespace NuvoControl.Server.ProtocolDriver
 
         #endregion
 
+        /// <summary>
+        /// Returns string representative of this class.
+        /// </summary>
+        /// <returns>String representative of this class.</returns>
         public override string ToString()
         {
             string strSerialPort = "";
 
-            //strSerialPort += String.Format("BaseStream: {0} /", _comPort.BaseStream);
-            strSerialPort += String.Format("BaudRate: {0} /", _comPort.BaudRate);
-            //strSerialPort += String.Format("BreakState: {0} /", _comPort.BreakState);
-            //strSerialPort += String.Format("BytesToRead: {0} /", _comPort.BytesToRead);
-            //strSerialPort += String.Format("BytesToWrite: {0} /", _comPort.BytesToWrite);
-            //strSerialPort += String.Format("CDHolding: {0} /", _comPort.CDHolding);
-            //strSerialPort += String.Format("CtsHolding: {0} /", _comPort.CtsHolding);
-            strSerialPort += String.Format("DataBits: {0} /", _comPort.DataBits);
-            strSerialPort += String.Format("DiscardNull: {0} /", _comPort.DiscardNull);
-            //strSerialPort += String.Format("DsrHolding: {0} /", _comPort.DsrHolding);
-            strSerialPort += String.Format("DtrEnable: {0} /", _comPort.DtrEnable);
-            strSerialPort += String.Format("Encoding: {0} /", _comPort.Encoding);
-            strSerialPort += String.Format("Handshake: {0} /", _comPort.Handshake);
-            strSerialPort += String.Format("IsOpen: {0} /", _comPort.IsOpen);
-            strSerialPort += String.Format("NewLine: {0} /", _comPort.NewLine);
-            strSerialPort += String.Format("Parity: {0} /", _comPort.Parity);
-            strSerialPort += String.Format("ParityReplace: {0} /", _comPort.ParityReplace);
-            strSerialPort += String.Format("PortName: {0} /", _comPort.PortName);
-            strSerialPort += String.Format("ReadBufferSize: {0} /", _comPort.ReadBufferSize);
-            strSerialPort += String.Format("ReadTimeout: {0} /", _comPort.ReadTimeout);
-            strSerialPort += String.Format("ReceivedBytesThreshold: {0} /", _comPort.ReceivedBytesThreshold);
-            strSerialPort += String.Format("RtsEnable: {0} /", _comPort.RtsEnable);
-            strSerialPort += String.Format("StopBits: {0} /", _comPort.StopBits);
-            strSerialPort += String.Format("WriteBufferSize: {0} /", _comPort.WriteBufferSize);
-            strSerialPort += String.Format("WriteTimeout: {0} /", _comPort.WriteTimeout);
+            try
+            {
+                //strSerialPort += String.Format("BaseStream: {0} /", _comPort.BaseStream);
+                strSerialPort += String.Format("BaudRate: {0} /", _comPort.BaudRate);
+                //strSerialPort += String.Format("BreakState: {0} /", _comPort.BreakState);
+                //strSerialPort += String.Format("BytesToRead: {0} /", _comPort.BytesToRead);
+                //strSerialPort += String.Format("BytesToWrite: {0} /", _comPort.BytesToWrite);
+                //strSerialPort += String.Format("CDHolding: {0} /", _comPort.CDHolding);
+                //strSerialPort += String.Format("CtsHolding: {0} /", _comPort.CtsHolding);
+                strSerialPort += String.Format("DataBits: {0} /", _comPort.DataBits);
+                //strSerialPort += String.Format("DsrHolding: {0} /", _comPort.DsrHolding);
+                strSerialPort += String.Format("DtrEnable: {0} /", _comPort.DtrEnable);
+                strSerialPort += String.Format("Encoding: {0} /", _comPort.Encoding);
+                strSerialPort += String.Format("Handshake: {0} /", _comPort.Handshake);
+                strSerialPort += String.Format("IsOpen: {0} /", _comPort.IsOpen);
+                strSerialPort += String.Format("NewLine: {0} /", _comPort.NewLine);
+                strSerialPort += String.Format("Parity: {0} /", _comPort.Parity);
+                strSerialPort += String.Format("PortName: {0} /", _comPort.PortName);
+                strSerialPort += String.Format("ReadBufferSize: {0} /", _comPort.ReadBufferSize);
+                strSerialPort += String.Format("ReadTimeout: {0} /", _comPort.ReadTimeout);
+                strSerialPort += String.Format("RtsEnable: {0} /", _comPort.RtsEnable);
+                strSerialPort += String.Format("StopBits: {0} /", _comPort.StopBits);
+                strSerialPort += String.Format("WriteTimeout: {0} /", _comPort.WriteTimeout);
+                strSerialPort += String.Format("WriteBufferSize: {0} /", _comPort.WriteBufferSize);
 
-            strSerialPort += String.Format("_serialPortConnectInformation: {0} /", _serialPortConnectInformation);
+                strSerialPort += String.Format("_serialPortConnectInformation: {0} /", _serialPortConnectInformation);
+
+                // NOTE: The following properties are not implemented in the "mono" framework
+                // See "Limitations" in http://www.mono-project.com/archived/howtosystemioports/
+                // Not implemented under Mono (Raspberry Pi)
+                if (!_LimitedEnvironment)
+                {
+                    strSerialPort += String.Format("ReceivedBytesThreshold: {0} /", _comPort.ReceivedBytesThreshold);
+                    strSerialPort += String.Format("ParityReplace: {0} /", _comPort.ParityReplace);
+                    strSerialPort += String.Format("DiscardNull: {0}", _comPort.DiscardNull);
+                }   
+            }
+            catch (System.NotImplementedException exc)
+            {
+                // ignore exception, return so far available string to caller.
+                strSerialPort += String.Format(" <Limited framework detected!>");
+            }
 
             return strSerialPort;
         }
