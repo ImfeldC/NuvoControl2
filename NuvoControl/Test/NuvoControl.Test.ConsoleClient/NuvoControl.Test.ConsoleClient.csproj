@@ -51,6 +51,20 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
+      <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
+      <Name>NuvoControl.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
+      <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.ProtocolDriver\NuvoControl.Server.ProtocolDriver.csproj">
+      <Project>{C5C321D7-92B9-4A5B-A278-F89FF09664B2}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
