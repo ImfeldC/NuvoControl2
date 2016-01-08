@@ -22,8 +22,20 @@ namespace NuvoControl.Test.ConsoleClient
       [Option('s', "senddata", HelpText = "Data to be send. E.g. *VER or *Z01OFF")]
       public string sendData { get; set; }
 
-      [Option('v', null, HelpText = "Print details during execution.")]
-      public bool Verbose { get; set; }
+      [Option('c', "command", HelpText = "Nuvo Essentia command to be send. E.g. ReadVersion or TurnALLZoneOFF (see ENuvoEssentiaCommands)")]
+      public string strCommand { get; set; }
+
+      [Option('z', "zone", HelpText = "Nuvo Essentia zone identifier. E.g. Zone1 (see ENuvoEssentiaZones)")]
+      public string strZone { get; set; }
+
+      [Option('o', "source", HelpText = "Nuvo Essentia source identifier. E.g. Source1 (see ENuvoEssentiaSources)")]
+      public string strSource { get; set; }
+
+      [Option('w', "powerstatus", HelpText = "Nuvo Essentia zone power status. Either ZoneStatusOFF or ZoneStatusON (see EZonePowerStatus)")]
+      public string strPowerStatus { get; set; }
+
+      [Option('v', "volume", HelpText = "Volume level.")]
+      public int volume { get; set; }
 
       [Option('?', "help", HelpText = "Print detailed help instructions.")]
       public bool Help { get; set; }
