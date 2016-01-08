@@ -224,7 +224,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         /// <param name="command">Nuvo Essentia command string.</param>
         /// <returns></returns>
-        private NuvoEssentiaSingleCommand convertString2NuvoEssentiaCommand(string command)
+        public static NuvoEssentiaSingleCommand convertString2NuvoEssentiaCommand(string command)
         {
             return new NuvoEssentiaSingleCommand(NuvoEssentiaSingleCommand.searchNuvoEssentiaCommandWithOutgoingCommand(command));
         }
