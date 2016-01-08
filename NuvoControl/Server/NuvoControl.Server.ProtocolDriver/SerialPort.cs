@@ -43,7 +43,8 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         private System.IO.Ports.SerialPort _comPort; 
         private SerialPortConnectInformation _serialPortConnectInformation;
-        private bool _LimitedEnvironment = false;       // true, if "mono" framework is detected!
+        private bool _limitedEnvironment = false;       // true, if "mono" framework is detected!
+        private bool _readIntervalTimerRunning = false; // true, if read interval timer has been started
 
         /// <summary>
         /// Private member to hold the timer used to send a 'ping' to the device.
@@ -66,27 +67,29 @@ namespace NuvoControl.Server.ProtocolDriver
                 System.IO.Ports.SerialPort serialPort = new System.IO.Ports.SerialPort();
                 bool discardNull = serialPort.DiscardNull;
                 // if this command executes w/o exception, we are running on a "full" .NET environment (not "mono" framework)
-                _LimitedEnvironment = false;
+                _limitedEnvironment = false;
             }
             catch (System.NotImplementedException exc)
             {
                 // Limited environment detected!
-                _LimitedEnvironment = true;
+                _limitedEnvironment = true;
             }
 
             // Enable read intervall timer only, if ..
             // (a) Proper intervall is defined
             // (b) A limited environemnt is detected (whcih doesn't support events) (see http://www.mono-project.com/archived/howtosystemioports/ )
-            if (Properties.Settings.Default.ReadIntervall > 0 && _LimitedEnvironment)
+            if (Properties.Settings.Default.ReadIntervall > 0 && _limitedEnvironment)
             {
                 _log.Trace(m => m("Read intervall timer started, each {0}[s]", Properties.Settings.Default.PingIntervall));
                 _timerPing.Interval = (Properties.Settings.Default.PingIntervall < 2 ? 2 : Properties.Settings.Default.PingIntervall) * 1000;
                 _timerPing.Elapsed += new ElapsedEventHandler(_timerReadIntervall_Elapsed);
                 _timerPing.Start();
+                _readIntervalTimerRunning = true;
             }
             else
             {
                 _log.Warn(m => m("Read intervall timer is disabled !!! ({0}[s])", Properties.Settings.Default.PingIntervall));
+                _readIntervalTimerRunning = false;
             }
 
         }
@@ -130,9 +133,9 @@ namespace NuvoControl.Server.ProtocolDriver
             else
                 _log.Error(m => m("Port is not open, cannot send data {0} to serial port.", text));
 
-            if (_LimitedEnvironment)
+            if (!_readIntervalTimerRunning)
             {
-                // Read data "synchronous", because event notifications are not supported
+                // Read data "synchronous" (only in case read interval timmer is NOT started), because event notifications are not supported
                 // See http://www.mono-project.com/archived/howtosystemioports/
                 readData();
             }
@@ -254,7 +257,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 _comPort.WriteTimeout = 500;
 
                 // now open the port
-                _log.Trace(m=>m("Open serial port {0} (Limited={1})", _serialPortConnectInformation.PortName, _LimitedEnvironment ));
+                _log.Trace(m=>m("Open serial port {0} (Limited={1})", _serialPortConnectInformation.PortName, _limitedEnvironment ));
                 _log.Trace(m => m("--> {0}", this.ToString()));
                 _comPort.Open();
 
@@ -313,7 +316,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // NOTE: The following properties are not implemented in the "mono" framework
                 // See "Limitations" in http://www.mono-project.com/archived/howtosystemioports/
                 // Not implemented under Mono (Raspberry Pi)
-                if (!_LimitedEnvironment)
+                if (!_limitedEnvironment)
                 {
                     strSerialPort += String.Format("ReceivedBytesThreshold: {0} /", _comPort.ReceivedBytesThreshold);
                     strSerialPort += String.Format("ParityReplace: {0} /", _comPort.ParityReplace);
