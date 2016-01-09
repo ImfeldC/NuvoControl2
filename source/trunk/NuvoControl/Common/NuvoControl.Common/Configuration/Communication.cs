@@ -91,6 +91,7 @@ namespace NuvoControl.Common.Configuration
         public string Port
         {
             get { return _port; }
+            set { _port = value; }
         }
 
         /// <summary>
@@ -99,6 +100,7 @@ namespace NuvoControl.Common.Configuration
         public int BaudRate
         {
             get { return _baudRate; }
+            set { _baudRate = value; }
         }
 
         /// <summary>
@@ -107,6 +109,7 @@ namespace NuvoControl.Common.Configuration
         public int DataBits
         {
             get { return _dataBits; }
+            set { _dataBits = value; }
         }
 
         /// <summary>
@@ -115,6 +118,7 @@ namespace NuvoControl.Common.Configuration
         public int ParityBit
         {
             get { return _parityBit; }
+            set { _parityBit = value; }
         }
 
         /// <summary>
@@ -123,9 +127,29 @@ namespace NuvoControl.Common.Configuration
         public string ParityMode
         {
             get { return _parityMode; }
+            set { _parityMode = value; }
         }
 
         #endregion
+
+        /// <summary>
+        /// Returns string representative of this class.
+        /// </summary>
+        /// <returns>String representative of this class.</returns>
+        public override string ToString()
+        {
+            string strCommunication = "";
+
+            strCommunication += String.Format("Serial Port: {0} /", _port);
+            strCommunication += String.Format("BaudRate: {0} /", _baudRate);
+            strCommunication += String.Format("Data Bits: {0} /", _dataBits);
+            strCommunication += String.Format("Parity Bit: {0} /", _parityBit);
+            strCommunication += String.Format("Parity Mode: {0}", _parityMode);
+
+            return strCommunication;
+        }
+    
+
     }
 }
 
