@@ -133,7 +133,7 @@ namespace NuvoControl.Server.ProtocolDriver
             else
                 _log.Error(m => m("Port is not open, cannot send data {0} to serial port.", text));
 
-            if (!_readIntervalTimerRunning)
+            if (_limitedEnvironment & !_readIntervalTimerRunning)
             {
                 // Read data "synchronous" (only in case read interval timmer is NOT started), because event notifications are not supported
                 // See http://www.mono-project.com/archived/howtosystemioports/
