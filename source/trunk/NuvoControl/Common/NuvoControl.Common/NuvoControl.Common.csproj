@@ -42,6 +42,9 @@
     <DocumentationFile>bin\Release\NuvoControl.Common.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine">
+      <HintPath>..\..\ExternalLibraries\CommandLine.dll</HintPath>
+    </Reference>
     <Reference Include="Common.Logging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=af08829b84f0328e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\ExternalLibraries\Common.Logging.dll</HintPath>
@@ -76,6 +79,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppInfoHelper.cs" />
+    <Compile Include="CommonOptions.cs" />
     <Compile Include="Configuration\AlarmFunction.cs" />
     <Compile Include="Configuration\Building.cs" />
     <Compile Include="Configuration\Communication.cs" />
