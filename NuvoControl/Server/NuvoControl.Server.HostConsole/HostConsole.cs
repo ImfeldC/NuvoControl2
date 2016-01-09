@@ -37,11 +37,11 @@ namespace NuvoControl.Server.HostConsole
             Console.WriteLine();
 
             // Load command line argumnets
-            var options = new Options();
-            CommandLine.Parser.Default.ParseArguments(args, options);
-            if (options.Help)
+            _options = new Options();
+            CommandLine.Parser.Default.ParseArguments(args, _options);
+            if (_options.Help)
             {
-                Console.WriteLine(options.GetUsage());
+                Console.WriteLine(_options.GetUsage());
             }
 
             LoadAllServices();
@@ -58,6 +58,8 @@ namespace NuvoControl.Server.HostConsole
         #region Fields
 
         private static ILog _log = LogManager.GetCurrentClassLogger();
+
+        private static Options _options = null;
 
         /// <summary>
         /// Holds the loaded system configuration.
@@ -224,9 +226,10 @@ namespace NuvoControl.Server.HostConsole
                 IProtocol driver = ProtocolDriverFactory.LoadDriver(device.ProtocolDriver.AssemblyName, device.ProtocolDriver.ClassName);
                 if (driver != null)
                 {
+                    AdjustDeviceSettings(device);
                     driver.Open(ENuvoSystem.NuVoEssentia, device.Id, device.Communication);
                     _protocolDrivers[device.Id] = driver;
-                    Console.WriteLine(">>>   driver {0} loaded ...", device.Id);
+                    Console.WriteLine(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString());
                 }
             }
         }
@@ -304,7 +307,23 @@ namespace NuvoControl.Server.HostConsole
             _functionServer = null;
         }
 
-        
-
+        /// <summary>
+        /// This methods evalutes the command line arguments (passed in Options) and overrides the settings read from configuration file.
+        /// </summary>
+        /// <param name="device">Device configuartion, to be adapted.</param>
+        private static void AdjustDeviceSettings(Device device)
+        {
+            if (_options != null)
+            {
+                if (_options.portName != null)
+                {
+                    device.Communication.Port = _options.portName;
+                }
+                if (_options.baudRate > 0)
+                {
+                    device.Communication.BaudRate = _options.baudRate;
+                }
+            }
+        }
     }
 }
