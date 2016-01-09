@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
+using System.Windows.Forms;     // used for Application
 using System.Text;
 using System.IO.Ports;
 
-using NuvoControl.Common.Configuration;
-
-using NuvoControl.Server.ProtocolDriver.Interface;
-using NuvoControl.Server.ProtocolDriver;
+using Common.Logging;
 
 using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
 
-using Common.Logging;
+using NuvoControl.Server.ProtocolDriver;
+using NuvoControl.Server.ProtocolDriver.Interface;
+
 
 
 namespace NuvoControl.Test.ConsoleClient
@@ -32,6 +32,7 @@ namespace NuvoControl.Test.ConsoleClient
             Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem() );
             Console.WriteLine();
 
+            // Load command line argumnets
             var options = new Options();
             CommandLine.Parser.Default.ParseArguments(args, options);
             if (options.Help)
