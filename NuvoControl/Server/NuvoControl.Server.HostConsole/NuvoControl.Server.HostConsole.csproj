@@ -95,7 +95,8 @@
   <ItemGroup>
     <Content Include="..\..\Config\NuvoControlKonfiguration.xml">
       <Link>Config\NuvoControlKonfiguration.xml</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -96,8 +96,23 @@ namespace NuvoControl.Common.Configuration
             get { return _className; }
         }
 
-
         #endregion
+
+        /// <summary>
+        /// Returns string representative of this class.
+        /// </summary>
+        /// <returns>String representative of this class.</returns>
+        public override string ToString()
+        {
+            string strProtocol = "";
+
+            strProtocol += String.Format("Name: {0} /", _name);
+            strProtocol += String.Format("Assembly Name: {0} /", _assemblyName);
+            strProtocol += String.Format("Class Name: {0} /", _className);
+
+            return strProtocol;
+        }
+    
     }
 }
 

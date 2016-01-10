@@ -365,7 +365,6 @@ namespace NuvoControl.Server.WcfHostConsole
         /// <summary>
         /// Unloads the system configuration objects of NuvoControl.
         /// </summary>
-        /// <param name="configurationFile">Filename of configuration file</param>
         private static void UnloadConfigurationService()
         {
             _log.Info(m => m("Unload the nuvo control configuration ..."));

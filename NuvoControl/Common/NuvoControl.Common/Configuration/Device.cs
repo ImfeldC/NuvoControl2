@@ -127,6 +127,33 @@ namespace NuvoControl.Common.Configuration
 
         #endregion
 
+        /// <summary>
+        /// Returns string representative of this class.
+        /// </summary>
+        /// <returns>String representative of this class.</returns>
+        public override string ToString()
+        {
+            string strDevice = "";
+
+            strDevice += String.Format("Id={0} /", _id);
+            strDevice += String.Format("Communication=[{0}] /", _communication.ToString());
+            strDevice += String.Format("Protocol Driver=[{0}] /", _protocolDriver.ToString());
+            strDevice += String.Format("Zones=[");
+            foreach (int zone in _zones)
+            {
+                strDevice += String.Format("Zone={0}, ", zone);
+            }
+            strDevice += String.Format("]");
+            strDevice += String.Format("Sources=[");
+            foreach (int source in _sources)
+            {
+                strDevice += String.Format("Source={0}, ", source);
+            }
+            strDevice += String.Format("]");
+
+            return strDevice;
+        }
+
     }
 }
 
