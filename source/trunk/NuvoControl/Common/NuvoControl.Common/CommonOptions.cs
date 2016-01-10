@@ -13,7 +13,7 @@ namespace NuvoControl.Common
     public class CommonOptions
     {
         [Option('v', "verbose", HelpText = "Enable verbose mode. Print-out more messages.")]
-        public int volume { get; set; }
+        public bool verbose { get; set; }
 
         [Option('?', "help", HelpText = "Print detailed help instructions.")]
         public bool Help { get; set; }

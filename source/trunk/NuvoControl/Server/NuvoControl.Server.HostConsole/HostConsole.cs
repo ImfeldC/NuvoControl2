@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;     // used for Application
 using System.Text;
-//using System.IO.Ports;
 
 using Common.Logging;
 
@@ -43,6 +42,11 @@ namespace NuvoControl.Server.HostConsole
             {
                 Console.WriteLine(_options.GetUsage());
             }
+
+            _log.Trace(m => m("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
+            _timerCheckConfiguration.Interval = (Properties.Settings.Default.ConfigurationCheckIntervall < 30 ? 30 : Properties.Settings.Default.ConfigurationCheckIntervall) * 1000;
+            _timerCheckConfiguration.Elapsed += new System.Timers.ElapsedEventHandler(_timerCheckConfiguration_Elapsed);
+            _timerCheckConfiguration.Start();
 
             LoadAllServices();
 
@@ -88,6 +92,27 @@ namespace NuvoControl.Server.HostConsole
 
         #endregion
 
+        #region Configuration Check Timer
+
+        /// <summary>
+        /// Periodic timer routine to check if configuration file changed.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        static void _timerCheckConfiguration_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            //Console.Write(".");
+            bool bChanged = _configurationService.CheckConfiguration();
+            if (bChanged)
+            {
+                UnloadAllServices();
+                LoadAllServices();
+            }
+        }
+
+        #endregion
+
+        #region Services
 
         private static void LoadAllServices()
         {
@@ -135,7 +160,6 @@ namespace NuvoControl.Server.HostConsole
 
             Console.WriteLine();
         }
-
 
         private static void UnloadAllServices()
         {
@@ -229,7 +253,10 @@ namespace NuvoControl.Server.HostConsole
                     AdjustDeviceSettings(device);
                     driver.Open(ENuvoSystem.NuVoEssentia, device.Id, device.Communication);
                     _protocolDrivers[device.Id] = driver;
-                    Console.WriteLine(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString());
+                    if (_options.verbose)
+                    {
+                        Console.WriteLine(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString());
+                    }
                 }
             }
         }
@@ -251,6 +278,7 @@ namespace NuvoControl.Server.HostConsole
             _protocolDrivers.Clear();
         }
 
+
         /// <summary>
         /// Instantiates the zone server. This object holds all zone controllers.
         /// </summary>
@@ -262,6 +290,7 @@ namespace NuvoControl.Server.HostConsole
             List<IZoneController> zoneControllers = new List<IZoneController>();
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
+                Console.WriteLine(">>>   device {0} loaded ...", device.ToString());
                 foreach (int zoneId in device.Zones)
                 {
                     zoneControllers.Add(new ZoneController(new Address(device.Id, zoneId), _protocolDrivers[device.Id]));
@@ -293,7 +322,11 @@ namespace NuvoControl.Server.HostConsole
             Console.WriteLine(">>> Instantiating the function server...");
 
             _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
-            //_functionServer.StartUp();
+
+            if (_options.verbose)
+            {
+                Console.WriteLine(">>>   Functions: {0}", _functionServer.ToString());
+            }
         }
 
         /// <summary>
@@ -307,6 +340,7 @@ namespace NuvoControl.Server.HostConsole
             _functionServer = null;
         }
 
+
         /// <summary>
         /// This methods evalutes the command line arguments (passed in Options) and overrides the settings read from configuration file.
         /// </summary>
@@ -317,13 +351,20 @@ namespace NuvoControl.Server.HostConsole
             {
                 if (_options.portName != null)
                 {
+                    if (_options.verbose)
+                    {
+                        Console.WriteLine(">>>   Override loaded configuration for 'Port Name', use {0} instead of {1}", _options.portName, device.Communication.Port);
+                    }
                     device.Communication.Port = _options.portName;
                 }
                 if (_options.baudRate > 0)
                 {
+                    Console.WriteLine(">>>   Override loaded configuration for 'Baud Rate', use {0} instead of {1}", _options.baudRate, device.Communication.BaudRate);
                     device.Communication.BaudRate = _options.baudRate;
                 }
             }
         }
+
+        #endregion
     }
 }
