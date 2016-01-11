@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;     // used for Application
+using System.Windows.Forms;     // needed for Application
+//using System.Windows.Controls;  // needed for MediaElement (not supported on Raspberry Pi!)
 using System.Text;
+using System.IO;                // FileStream
 using System.IO.Ports;
+using System.Media;             // SoundPlayer
+using System.Net;
+using System.Diagnostics;       // ProcessStartInfo
 
 using Common.Logging;
 
@@ -15,21 +20,23 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 
 
 
+
 namespace NuvoControl.Test.ConsoleClient
 {
     class SerialPortTest
     {
+        [STAThread]
         static void Main(string[] args)
         {
             ILog log = LogManager.GetCurrentClassLogger();
             log.Debug(m => m("Starting Test Console Client! (Version={0})", Application.ProductVersion));
             LogHelper.Log("**** Test Console Client started. *******", log);
-            
+
             Console.WriteLine(">>> Starting Test Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
                 "n/a", "n/a", Application.ProductVersion);
             //Console.WriteLine(">>> Starting Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
             //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
-            Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem() );
+            Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem());
             Console.WriteLine();
 
             // Load command line argumnets
@@ -39,6 +46,120 @@ namespace NuvoControl.Test.ConsoleClient
             {
                 Console.WriteLine(options.GetUsage());
             }
+
+
+            ////////////////////////////////
+            // Play Sound Test
+            ////////////////////////////////
+
+            Console.WriteLine("Start play sound tests.... ");
+
+            #region Play File
+            if (options.soundFile != null)
+            {
+                Console.WriteLine("   Play File {0} ...", options.soundFile);
+                try
+                {
+                    // Example, see http://raspberrypi.stackexchange.com/questions/3368/is-there-a-way-to-get-soundplayer-to-work-or-is-there-an-alternative
+                    // To test on Raspberry Pi: aplay tada.wav
+                    // How to configure: https://www.raspberrypi.org/documentation/configuration/audio-config.md
+                    {
+                        // Plays *.wav only
+                        SoundPlayer player = new SoundPlayer(options.soundFile);
+                        player.PlaySync();
+                        player.Dispose();
+                    }
+                }
+                catch (System.IO.FileNotFoundException exc)
+                {
+                    Console.WriteLine("   File {0} not found, skip sound test.", options.soundFile);
+                }
+                catch (System.ArgumentException exc)
+                {
+                    Console.WriteLine("   File {0} not supported, skip sound test. [Exception={1}]", options.soundFile, exc.ToString());
+                }
+            }
+            #endregion
+
+            #region Play Stream
+            if (options.soundStream != null)
+            {
+                Console.WriteLine("   Play Stream {0} ...", options.soundStream);
+                try
+                {
+                    // Example URI:
+                    // - http://www.tonycuffe.com/mp3/tail%20toddle.mp3
+                    // - http://www.tonycuffe.com/mp3/tailtoddle_lo.mp3
+                    // - http://www.tonycuffe.com/mp3/cairnomount.mp3
+                    // - http://drs3.radio.net/
+                    // - http://asx.skypro.ch/radio/internet-128/virus.asx
+
+                    /* => MediaElement (not supported on Raspberry Pi!)
+                    MediaElement mediaElement = new MediaElement();
+
+                    mediaElement.Source = new Uri(options.soundStream);
+                    // See http://stackoverflow.com/questions/19852537/setting-the-loadedbehaviour-and-unloadedbehaviour-of-mediaelement-wpf-applicatio
+                    mediaElement.LoadedBehavior = MediaState.Manual;
+                    mediaElement.UnloadedBehavior = MediaState.Stop;
+                    // Play media
+                    mediaElement.Play();
+
+                    Console.WriteLine(">>> Press <Enter> to continue.");
+                    Console.ReadLine();
+                    */
+
+                    /*
+                    // Creates an HttpWebRequest with the specified URL. 
+                    HttpWebRequest myHttpWebRequest = (HttpWebRequest)WebRequest.Create(options.soundStream);
+                    // Sends the HttpWebRequest and waits for the response.			
+                    HttpWebResponse myHttpWebResponse = (HttpWebResponse)myHttpWebRequest.GetResponse();
+                    // Gets the stream associated with the response.
+                    Stream receiveStream = myHttpWebResponse.GetResponseStream();
+
+                    // Plays *.wav only
+                    SoundPlayer player = new SoundPlayer(receiveStream);
+                    player.PlaySync();
+                    player.Dispose();
+                    */
+
+                }
+                catch (System.IO.FileNotFoundException exc)
+                {
+                    Console.WriteLine("   Stream {0} not found, skip sound test.", options.soundStream);
+                }
+                catch (System.ArgumentException exc)
+                {
+                    Console.WriteLine("   Stream {0} not supported, skip sound test. [Exception={1}]", options.soundStream, exc.ToString());
+                }
+                catch (System.InvalidOperationException exc)
+                {
+                    Console.WriteLine("   Stream {0} invalid. [Exception={1}]", options.soundStream, exc.ToString());
+                }
+                catch (System.NotSupportedException exc)
+                {
+                    Console.WriteLine("   Not supported excpetion for {0}. [Exception={1}]", options.soundStream, exc.ToString());
+                }
+            }
+            #endregion
+
+            Console.WriteLine("End play sound tests....");
+            Console.WriteLine();
+
+
+            ///////////////////////////////
+            // Test Spawn Process
+            ///////////////////////////////
+
+            Console.WriteLine("Start Process tests.... ");
+            Process process = null;
+
+            if (options.processCmd != null)
+            {
+                process = run_cmd(options.processCmd, options.processArg);
+            }
+
+            Console.WriteLine("End Process tests....");
+            Console.WriteLine();
 
             ////////////////////////////////
             // Test Serial Port
@@ -50,7 +171,7 @@ namespace NuvoControl.Test.ConsoleClient
             myTest.Test();
 
             // Send command, passed with -s option (direct to serial port)
-            if( options.sendData != null )
+            if (options.sendData != null)
                 myTest.SendReceiveData(options.sendData + "\r\n");
 
             myTest.Close();
@@ -68,9 +189,9 @@ namespace NuvoControl.Test.ConsoleClient
 
             myTest.sendCommand(
                 options.strCommand == null ? "ReadStatusCONNECT" : options.strCommand,
-                options.strZone == null ? "Zone1" : options.strZone, 
-                options.strSource == null ? "Source1" : options.strSource, 
-                options.strSource == null ? "ZoneStatusOFF" : options.strPowerStatus, 
+                options.strZone == null ? "Zone1" : options.strZone,
+                options.strSource == null ? "Source1" : options.strSource,
+                options.strSource == null ? "ZoneStatusOFF" : options.strPowerStatus,
                 options.volume, 20, 20);
 
             //Console.WriteLine("Read version ...");
@@ -83,6 +204,12 @@ namespace NuvoControl.Test.ConsoleClient
             Console.WriteLine(">>> ");
             Console.WriteLine(">>> Press <Enter> to stop the console application.");
             Console.ReadLine();
+
+            // Close application
+            if (process != null)
+            {
+                process.Kill();
+            }
         }
 
 
@@ -117,6 +244,8 @@ namespace NuvoControl.Test.ConsoleClient
         ////////////////////////////////
         // Test Serial Port
         ////////////////////////////////
+
+        #region Test Serial Port
 
         public void Test()
         {
@@ -189,10 +318,14 @@ namespace NuvoControl.Test.ConsoleClient
             mySerial.Close();
         }
 
+        #endregion
+
 
         ///////////////////////////////
         // Test Protocol driver
         ///////////////////////////////
+
+        #region Test Protocl driver
 
         // Private members
         Address _address = new Address(1, 1);
@@ -247,5 +380,33 @@ namespace NuvoControl.Test.ConsoleClient
             Console.WriteLine("Zone Update: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState);
         }
 
+        #endregion
+
+
+        ///////////////////////////////
+        // Test Start Process
+        ///////////////////////////////
+
+        // See http://stackoverflow.com/questions/11779143/run-a-python-script-from-c-sharp
+        public static Process run_cmd(string cmd, string args)
+        {
+            ProcessStartInfo start = new ProcessStartInfo();
+            start.FileName = cmd;       // e.g. cmd is full path to python.exe
+            start.Arguments = args;     // e.g. args is path to .py file and any cmd line args
+            start.UseShellExecute = false;
+            start.RedirectStandardOutput = true;
+            Process process = Process.Start(start);
+            Console.WriteLine("   Process {0} {1} started .... id={2} [{3}]", cmd, args, process.Id, process.ToString());
+
+            /*
+            using (StreamReader reader = process.StandardOutput)
+            {
+                string result = reader.ReadToEnd();
+                Console.Write(result);
+            }
+            */
+
+            return process;
+        }
     }
 }

@@ -13,6 +13,8 @@ namespace NuvoControl.Test.ConsoleClient
 {
     class Options :CommonOptions
     {
+      // Communication Settings
+
       [Option('p', "portname", Required = true, HelpText = "Portname to connect. E.g. COM1 or /dev/ttyAMA0")]
       public string portName { get; set; }
 
@@ -21,6 +23,9 @@ namespace NuvoControl.Test.ConsoleClient
 
       [Option('r', "readtimeout", HelpText = "Read timeout [ms]. E.g. 4000")]
       public int readTimeout { get; set; }
+
+
+      // Command Send Settings
 
       [Option("senddata", HelpText = "Data to be send. E.g. *VER or *Z01OFF")]
       public string sendData { get; set; }
@@ -39,6 +44,25 @@ namespace NuvoControl.Test.ConsoleClient
 
       [Option("volume", HelpText = "Volume level.")]
       public int volume { get; set; }
+
+
+      // Play Sound Settings
+
+      [Option("soundfile", HelpText = "Sound file to play. (e.g. Example.mp3)")]
+      public string soundFile { get; set; }
+
+      [Option("soundstream", HelpText = "Sound stream to play. (e.g. http://drs3.radio.net/)")]
+      public string soundStream { get; set; }
+
+
+      // Process Settings
+
+      [Option("process_cmd", HelpText = "Command to be started as own process. (e.g. '/usr/bin/mpg321')")]
+      public string processCmd { get; set; }
+
+      [Option("process_arg", HelpText = "Argumnets to be passed with the command. (e.g. 'example.mp3')")]
+      public string processArg { get; set; }
+
 
     }
 }
