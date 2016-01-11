@@ -182,9 +182,12 @@ namespace NuvoControl.Server.ZoneServer
             {
                 try
                 {
-                    foreach (Delegate del in _zoneNotification.GetInvocationList())
+                    if (_zoneNotification != null)
                     {
-                        _zoneNotification -= (ZoneNotification)del;
+                        foreach (Delegate del in _zoneNotification.GetInvocationList())
+                        {
+                            _zoneNotification -= (ZoneNotification)del;
+                        }
                     }
                 }
                 catch (Exception exc)
