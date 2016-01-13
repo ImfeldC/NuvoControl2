@@ -18,6 +18,7 @@ using NuvoControl.Server.ZoneServer;
 
 
 
+
 namespace NuvoControl.Server.HostConsole
 {
     class HostConsole
@@ -33,6 +34,13 @@ namespace NuvoControl.Server.HostConsole
             //Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
             //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
             Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem());
+            string strargs = "";
+            foreach (string arg in args)
+            {
+                strargs += arg;
+                strargs += " ";
+            }
+            Console.WriteLine("    Command line arguments: {0}", strargs);
             Console.WriteLine();
 
             // Load command line argumnets
@@ -256,6 +264,12 @@ namespace NuvoControl.Server.HostConsole
                     if (_options.verbose)
                     {
                         Console.WriteLine(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString());
+
+                        // Subscribe for events
+                        driver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_driver_onCommandReceived);
+                        driver.onDeviceStatusUpdate += new ProtocolDeviceUpdatedEventHandler(_driver_onDeviceStatusUpdate);
+                        driver.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_driver_onZoneStatusUpdate);
+
                     }
                 }
             }
@@ -366,5 +380,42 @@ namespace NuvoControl.Server.HostConsole
         }
 
         #endregion
+
+
+        #region Protocol Driver Events
+
+        /// <summary>
+        /// Zone Status Event method
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
+        static void _driver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
+        {
+            Console.WriteLine(">>>   [{0}]  Zone Status Update: {1}", DateTime.Now.ToShortTimeString(), e.ZoneState.ToString());
+        }
+
+        /// <summary>
+        /// Device Status Update method
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
+        static void _driver_onDeviceStatusUpdate(object sender, ProtocolDeviceUpdatedEventArgs e)
+        {
+            Console.WriteLine(">>>   [{0}]  Device Status Update: {1}", DateTime.Now.ToShortTimeString(), e.DeviceQuality.ToString());
+        }
+
+        /// <summary>
+        /// Command Received method
+        /// </summary>
+        /// <param name="sender">This pointer to the sender of the event.</param>
+        /// <param name="e">Event arguments, returned by the sender.</param>
+        static void _driver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
+        {
+            Console.WriteLine(">>>   [{0}]  Command Received: {1}", DateTime.Now.ToShortTimeString(), e.Command.ToString());
+        }
+
+        #endregion
+
+
     }
 }
