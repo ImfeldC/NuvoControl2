@@ -368,29 +368,32 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             _currentTelegramBuffer = cutLeadingCharacters(_currentTelegramBuffer);
 
-            // Do further processing, if start sign is available ...
-            if (_currentTelegramBuffer.IndexOf(_startRcvCharacter[0]) == 0)
+            if (_currentTelegramBuffer.Length > 0)
             {
-                // Analyze the telegram end
-                int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
-                if (endSignPosition > 0)
+                // Do further processing, if start sign is available ...
+                if (_currentTelegramBuffer.IndexOf(_startRcvCharacter[0]) == 0)
                 {
-                    string telegramFound = _currentTelegramBuffer.Substring(1, endSignPosition - 1);
-                    _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, endSignPosition + 1);
-
-                    telegramFound = cutLeadingStartSigns(telegramFound);
-                    //raise the event, and pass data to next layer
-                    if (onTelegramReceived != null)
+                    // Analyze the telegram end
+                    int endSignPosition = _currentTelegramBuffer.IndexOf('\r');
+                    if (endSignPosition > 0)
                     {
-                        onTelegramReceived(this,
-                          new TelegramEventArgs(telegramFound));
-                    }
-                }
+                        string telegramFound = _currentTelegramBuffer.Substring(1, endSignPosition - 1);
+                        _currentTelegramBuffer = _currentTelegramBuffer.Remove(0, endSignPosition + 1);
 
-            }
-            else
-            {
-                _log.Error(m => m("Start sign missing. {0}", _currentTelegramBuffer));
+                        telegramFound = cutLeadingStartSigns(telegramFound);
+                        //raise the event, and pass data to next layer
+                        if (onTelegramReceived != null)
+                        {
+                            onTelegramReceived(this,
+                              new TelegramEventArgs(telegramFound));
+                        }
+                    }
+
+                }
+                else
+                {
+                    _log.Error(m => m("Start sign missing. {0}", _currentTelegramBuffer));
+                }
             }
         }
 
