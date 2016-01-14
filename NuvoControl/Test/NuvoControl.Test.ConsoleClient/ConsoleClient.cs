@@ -10,6 +10,7 @@ using System.Media;             // SoundPlayer
 using System.Net;
 using System.Diagnostics;       // ProcessStartInfo
 
+
 using Common.Logging;
 
 using NuvoControl.Common;
@@ -161,6 +162,26 @@ namespace NuvoControl.Test.ConsoleClient
             Console.WriteLine("End Process tests....");
             Console.WriteLine();
 
+            ///////////////////////////////
+            // Test Mail
+            ///////////////////////////////
+
+            Console.WriteLine("Start Mail tests.... ");
+
+            if (options.mailRecepient != null)
+            {
+                bool bSend = MailHelper.SendMail(options.mailRecepient,
+                    (options.mailSubject == null ? "Mail from Nuvo Control" : options.mailSubject),
+                    (options.mailBody == null ? "<Empty Body>" : options.mailBody));
+                if (options.verbose)
+                {
+                    Console.WriteLine("    Mail {1} send to {0}", options.mailRecepient, (bSend==true?"":"NOT"));
+                }
+            }
+
+            Console.WriteLine("End Mail tests....");
+            Console.WriteLine();
+
             ////////////////////////////////
             // Test Serial Port
             ////////////////////////////////
@@ -208,7 +229,14 @@ namespace NuvoControl.Test.ConsoleClient
             // Close application
             if (process != null)
             {
-                process.Kill();
+                try
+                {
+                    process.Kill();
+                }
+                catch( System.InvalidOperationException exc )
+                {
+                    //ignore any exception at shutdown
+                }
             }
         }
 
@@ -408,5 +436,8 @@ namespace NuvoControl.Test.ConsoleClient
 
             return process;
         }
+
+
+
     }
 }
