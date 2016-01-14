@@ -110,11 +110,14 @@ namespace NuvoControl.Server.HostConsole
         static void _timerCheckConfiguration_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             //Console.Write(".");
-            bool bChanged = _configurationService.CheckConfiguration();
-            if (bChanged)
+            if (_configurationService != null)
             {
-                UnloadAllServices();
-                LoadAllServices();
+                bool bChanged = _configurationService.CheckConfiguration();
+                if (bChanged)
+                {
+                    UnloadAllServices();
+                    LoadAllServices();
+                }
             }
         }
 
