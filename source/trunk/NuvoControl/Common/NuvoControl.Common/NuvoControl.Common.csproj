@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="AppInfoHelper.cs" />
     <Compile Include="CommonOptions.cs" />
+    <Compile Include="Configuration\Command.cs" />
     <Compile Include="Configuration\AlarmFunction.cs" />
     <Compile Include="Configuration\Building.cs" />
     <Compile Include="Configuration\Communication.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="EnvironmentHelper.cs" />
     <Compile Include="ListExtensions.cs" />
     <Compile Include="LogHelper.cs" />
+    <Compile Include="MailHelper.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="NetworkHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
