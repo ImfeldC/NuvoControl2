@@ -64,5 +64,17 @@ namespace NuvoControl.Test.ConsoleClient
       public string processArg { get; set; }
 
 
+      // Mail Settings
+
+      [Option("mail_recepient", HelpText = "Mail address of the recepient. (e.g. 'christian@imfeld.net')")]
+      public string mailRecepient { get; set; }
+
+      [Option("mail_subject", HelpText = "Mail subject.")]
+      public string mailSubject { get; set; }
+
+      [Option("mail_body", HelpText = "Mail body.")]
+      public string mailBody { get; set; }
+
+    
     }
 }
