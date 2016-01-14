@@ -54,6 +54,9 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private Address _zoneId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
+        [DataMember]
+        private List<Command> _commands = new List<Command>();
+
         #endregion
 
         #region Constructors
@@ -74,6 +77,18 @@ namespace NuvoControl.Common.Configuration
         {
             this._id = id;
             this._zoneId = zoneId;
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="id">The function id.</param>
+        /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
+        public Function(Guid id, Address zoneId, List<Command> commands)
+        {
+            this._id = id;
+            this._zoneId = zoneId;
+            this._commands.AddRange( commands );
         }
 
         #endregion
@@ -104,7 +119,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("Zone={0}, Guid={1}", ZoneId, Id);
+            return String.Format("Zone={0}, Guid={1}, Commands={2}", ZoneId, Id, _commands.Count());
         }
 
         #endregion

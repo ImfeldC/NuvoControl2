@@ -299,6 +299,7 @@ namespace NuvoControl.Server.Dal
 
             List<Function> functions = new List<Function>();
             functions.AddRange(ReadSleepFunctions().Cast<Function>());
+            functions.AddRange(ReadAlarmFunctionsWithCommands().Cast<Function>());
             functions.AddRange(ReadAlarmFunctions().Cast<Function>());
 
             _systemConfiguration = new SystemConfiguration(
@@ -417,10 +418,12 @@ namespace NuvoControl.Server.Dal
         /// Reads and creates the alarm function objects based on the XML configuration file.
         /// </summary>
         /// <returns>The created alarm function configuration objects.</returns>
-        private List<AlarmFunction> ReadAlarmFunctions()
+        private List<AlarmFunction> ReadAlarmFunctionsWithCommands()
         {
+            // Load Alarmfunction WITH command section
             IEnumerable<AlarmFunction> functions =
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("AlarmFunction")
+                    where function.Element("Commands") != null
                     select new AlarmFunction(
                         (Guid)function.Attribute("Id"),
                         new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
@@ -431,8 +434,36 @@ namespace NuvoControl.Server.Dal
                         TimeSpan.Parse((string)function.Attribute("AlarmTime")),
                         new TimeSpan(0, (int)function.Attribute("AlarmDuration"), 0),
                         (from day in function.Element("Validity").Element("Days").Elements("Day")
-                            select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>()
+                            select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>(),
+                        (from command in function.Element("Commands").Elements("Command")
+                            select new Command( (string)command.Attribute("cmd") )).ToList<Command>()
                         );
+
+            return functions.ToList<AlarmFunction>();
+        }
+
+        /// <summary>
+        /// Reads and creates the alarm function objects based on the XML configuration file.
+        /// </summary>
+        /// <returns>The created alarm function configuration objects.</returns>
+        private List<AlarmFunction> ReadAlarmFunctions()
+        {
+            // Load Alarmfunction WITHOUT command section
+            IEnumerable<AlarmFunction> functions =
+                from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("AlarmFunction")
+                where function.Element("Commands") == null
+                select new AlarmFunction(
+                    (Guid)function.Attribute("Id"),
+                    new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                        int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                    new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                        int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                    int.Parse((string)function.Attribute("Volume")),
+                    TimeSpan.Parse((string)function.Attribute("AlarmTime")),
+                    new TimeSpan(0, (int)function.Attribute("AlarmDuration"), 0),
+                    (from day in function.Element("Validity").Element("Days").Elements("Day")
+                     select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>()
+                    );
 
             return functions.ToList<AlarmFunction>();
         }
