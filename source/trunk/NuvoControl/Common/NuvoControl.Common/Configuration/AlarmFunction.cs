@@ -97,6 +97,16 @@ namespace NuvoControl.Common.Configuration
             this._validOnDays = validOnDays;
         }
 
+        public AlarmFunction(Guid id, Address zoneId, Address sourceId, int volume, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays, List<Command> commands)
+            : base(id, zoneId, commands)
+        {
+            this._alarmTime = alarmTime;
+            this._alarmDuration = alarmDuration;
+            this._sourceId = sourceId;
+            this._volume = volume;
+            this._validOnDays = validOnDays;
+        }
+
         #endregion
 
         #region Public Interface

@@ -194,6 +194,9 @@
             <Day Name="Monday" />
           </Days>
         </Validity>
+        <Commands>
+          <Command cmd="SendMail1" />
+        </Commands>
       </AlarmFunction>
       <AlarmFunction Id="9901106d-4811-48c3-a734-dab53f15d73d" ZoneId="100.2" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
         <Validity>
@@ -204,6 +207,9 @@
             <Day Name="Friday" />
           </Days>
         </Validity>
+        <Commands>
+          <Command cmd="SendMail2" />
+        </Commands>
       </AlarmFunction>
 
       <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.3" SleepDuration="60">
