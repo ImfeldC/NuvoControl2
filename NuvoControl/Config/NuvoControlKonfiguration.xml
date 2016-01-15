@@ -2,7 +2,7 @@
 <!-- sAuthors: C. Imfeld, B. Limacher-->
 <!-- Date: 17-Mar-2010 -->
 <NuvoControl>
-  <Configuration Version="1.0">
+  <Configuration Version="2.0">
     <Hardware>
       <Device Id="100">
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
@@ -208,7 +208,11 @@
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="SendMail2" />
+          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d733">
+            <Recepient to-addr="christian@imfeld.net" />
+            <Recepient cc-addr="ccmail@imfeld.net" />
+          </Command>
+          <Command cmd="PlaySound" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d744" />
         </Commands>
       </AlarmFunction>
 
