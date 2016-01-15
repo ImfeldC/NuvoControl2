@@ -14,7 +14,21 @@ namespace NuvoControl.Common
     /// </summary>
     public class LogHelper
     {
+        /// <summary>
+        /// Global verbose mode, per default switched-off
+        /// </summary>
+        private static bool _verbose = false;
 
+        /// <summary>
+        /// Public accessor for verbose mode
+        /// </summary>
+        public static bool Verbose
+        {
+            get { return LogHelper._verbose; }
+            set { LogHelper._verbose = value; }
+        }
+
+        
         /// <summary>
         /// Logs a message in a "standard" way to console and Logger.
         /// </summary>
@@ -31,7 +45,10 @@ namespace NuvoControl.Common
         /// <param name="logger">Logger to log the message.</param>
         public static void Log(string strMessage, ILog logger)
         {
-            Console.WriteLine(strMessage);
+            if (Verbose)
+            {
+                Console.WriteLine(strMessage);
+            }
             logger.Debug(m => m(strMessage));
         }
 

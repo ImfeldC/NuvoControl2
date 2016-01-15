@@ -26,22 +26,6 @@ namespace NuvoControl.Server.HostConsole
         static void Main(string[] args)
         {
             ILog log = LogManager.GetCurrentClassLogger();
-            log.Debug(m => m("Starting Server Console! (Version={0})", Application.ProductVersion));
-            LogHelper.Log("**** Server Console started. *******", log);
-
-            Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
-                "n/a", "n/a", Application.ProductVersion);
-            //Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
-            //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
-            Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem());
-            string strargs = "";
-            foreach (string arg in args)
-            {
-                strargs += arg;
-                strargs += " ";
-            }
-            Console.WriteLine("    Command line arguments: {0}", strargs);
-            Console.WriteLine();
 
             // Load command line argumnets
             _options = new Options();
@@ -49,6 +33,30 @@ namespace NuvoControl.Server.HostConsole
             if (_options.Help)
             {
                 Console.WriteLine(_options.GetUsage());
+            }
+
+            // Set global verbose mode
+            LogHelper.Verbose = _options.verbose;
+
+            log.Debug(m => m("Starting Server Console! (Version={0})", Application.ProductVersion));
+            LogHelper.Log("**** Server Console started. *******", log);
+
+            Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
+                "n/a", "n/a", Application.ProductVersion);
+            //Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
+            //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
+
+            if (LogHelper.Verbose)
+            {
+                Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem());
+                string strargs = "";
+                foreach (string arg in args)
+                {
+                    strargs += arg;
+                    strargs += " ";
+                }
+                Console.WriteLine("    Command line arguments: {0}", strargs);
+                Console.WriteLine();
             }
 
             _log.Trace(m => m("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
@@ -264,7 +272,7 @@ namespace NuvoControl.Server.HostConsole
                     AdjustDeviceSettings(device);
                     driver.Open(ENuvoSystem.NuVoEssentia, device.Id, device.Communication);
                     _protocolDrivers[device.Id] = driver;
-                    if (_options.verbose)
+                    if (LogHelper.Verbose)
                     {
                         Console.WriteLine(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString());
 
@@ -340,7 +348,7 @@ namespace NuvoControl.Server.HostConsole
 
             _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
 
-            if (_options.verbose)
+            if (LogHelper.Verbose)
             {
                 Console.WriteLine(">>>   Functions: {0}", _functionServer.ToString());
             }
@@ -368,7 +376,7 @@ namespace NuvoControl.Server.HostConsole
             {
                 if (_options.portName != null)
                 {
-                    if (_options.verbose)
+                    if (LogHelper.Verbose)
                     {
                         Console.WriteLine(">>>   Override loaded configuration for 'Port Name', use {0} instead of {1}", _options.portName, device.Communication.Port);
                     }
