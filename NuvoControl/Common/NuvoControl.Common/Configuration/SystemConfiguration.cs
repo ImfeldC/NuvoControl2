@@ -38,7 +38,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Public constant defining the system configuration version.
         /// </summary>
-        public const string VERSION = "1.0";
+        public const string VERSION = "2.0";
 
         /// <summary>
         /// Public constant defining 'ID Undefined'.

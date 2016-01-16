@@ -119,7 +119,16 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("Zone={0}, Guid={1}, Commands={2}", ZoneId, Id, _commands.Count());
+            string strCommand = "";
+            if (_commands.Count() > 0)
+            {
+                foreach (Command command in _commands)
+                {
+                    strCommand += command.ToString();
+                    strCommand += ",";
+                }
+            }
+            return String.Format("Zone={0}, Guid={1}, Commands={2} [{3}]", ZoneId, Id, _commands.Count(), strCommand);
         }
 
         #endregion
