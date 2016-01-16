@@ -25,6 +25,8 @@ using System.Xml.Linq;
 using System.IO;
 using System.Windows;
 
+using System.Net.Mail;
+
 using Common.Logging;
 
 using NuvoControl.Common;
@@ -455,8 +457,7 @@ namespace NuvoControl.Server.Dal
                         new TimeSpan(0, (int)function.Attribute("AlarmDuration"), 0),
                         (from day in function.Element("Validity").Element("Days").Elements("Day")
                             select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>(),
-                        (from command in function.Element("Commands").Elements("Command")
-                            select new Command( (string)command.Attribute("cmd") )).ToList<Command>()
+                        readCommands(function)
                         );
 
             return functions.ToList<AlarmFunction>();
@@ -486,6 +487,45 @@ namespace NuvoControl.Server.Dal
                     );
 
             return functions.ToList<AlarmFunction>();
+        }
+
+
+
+        private List<Command> readCommands(XElement function)
+        {
+            // Read SendMail commands, with three kind of mail address (to & cc & bcc)
+            IEnumerable<Command> sendMailCommands = (from command in function.Element("Commands").Elements("Command")
+                            where command.Attribute("cmd").Value == "SendMail"
+                                && command.Element("Recipients") != null
+                            select new SendMailCommand(
+                                (Guid)command.Attribute("Id"),
+                                (bool)command.Attribute("onFunctionError"),
+                                (bool)command.Attribute("onFunctionStart"),
+                                (bool)command.Attribute("onFunctionEnd"),
+                                (from recipient in command.Element("Recipients").Elements("Recipient")
+                                where recipient.Attribute("type").Value == "to"
+                                select new MailAddress( (string)recipient.Attribute("name"))),
+                                (from recipient in command.Element("Recipients").Elements("Recipient")
+                                where recipient.Attribute("type").Value == "cc"
+                                select new MailAddress((string)recipient.Attribute("name"))),
+                                (from recipient in command.Element("Recipients").Elements("Recipient")
+                                where recipient.Attribute("type").Value == "bcc"
+                                select new MailAddress((string)recipient.Attribute("name")))
+                            ));
+
+
+
+            IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
+                                    where command.Attribute("cmd").Value == "PlaySound"
+                                    select new Command(
+                                        (Guid)command.Attribute("Id"),
+                                        (eCommand)Enum.Parse(typeof(eCommand), (string)command.Attribute("cmd")),
+                                        (bool)command.Attribute("onFunctionError"),
+                                        (bool)command.Attribute("onFunctionStart"),
+                                        (bool)command.Attribute("onFunctionEnd")
+                             ));
+
+            return (sendMailCommands.Concat(playSoundCommands)).ToList<Command>();
         }
 
 

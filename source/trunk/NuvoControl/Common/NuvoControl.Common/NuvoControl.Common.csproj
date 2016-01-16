@@ -87,6 +87,7 @@
     <Compile Include="Configuration\NuvoImage.cs" />
     <Compile Include="Configuration\Protocol.cs" />
     <Compile Include="Configuration\Address.cs" />
+    <Compile Include="Configuration\SendMailCommand.cs" />
     <Compile Include="Configuration\SleepFunction.cs" />
     <Compile Include="Configuration\Source.cs" />
     <Compile Include="Configuration\Floor.cs" />
