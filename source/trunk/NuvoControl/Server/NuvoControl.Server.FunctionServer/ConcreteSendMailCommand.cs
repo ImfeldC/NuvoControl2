@@ -26,7 +26,7 @@ namespace NuvoControl.Server.FunctionServer
 
         public override void execCommand(eCommandType cmdType, Function function)
         {
-            LogHelper.Log(String.Format(">>> Execute SendMail command on event {0}: {1}", cmdType, _sendMailCommand.ToString()));
+            LogHelper.Log(String.Format(">>> Execute SendMail command on event {0}: SendMailCommand={1} / Function={2}", cmdType, _sendMailCommand.ToString(), function.ToString()));
 
             // Send mail ...
             MailHelper.SendMail(_sendMailCommand.ToAddress, 
