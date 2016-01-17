@@ -78,7 +78,7 @@ namespace NuvoControl.Common.Configuration
         }
 
         /// <summary>
-        /// Constructor
+        /// Standard constructor, called by configuration loader (w/o commands section) V1.0
         /// </summary>
         /// <param name="id">The function id.</param>
         /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
@@ -97,6 +97,17 @@ namespace NuvoControl.Common.Configuration
             this._validOnDays = validOnDays;
         }
 
+        /// <summary>
+        /// Standard constructor, called by configuration loader (wiht commands section) V2.0
+        /// </summary>
+        /// <param name="id">The function id.</param>
+        /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
+        /// <param name="sourceId">Address of the source to play during the alarm.</param>
+        /// <param name="volume">Volume to play the alarm.</param>
+        /// <param name="alarmTime">Alarm time.</param>
+        /// <param name="alarmDuration">Duration of the alarm.</param>
+        /// <param name="validOnDays">The days, on which this alarm is valid.</param>
+        /// <param name="commands">List of commands, to be executed by this function.</param>
         public AlarmFunction(Guid id, Address zoneId, Address sourceId, int volume, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays, List<Command> commands)
             : base(id, zoneId, commands)
         {

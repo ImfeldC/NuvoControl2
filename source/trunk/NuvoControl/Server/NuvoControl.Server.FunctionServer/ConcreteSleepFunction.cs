@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using Common.Logging;
+
+using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
-using Common.Logging;
-using NuvoControl.Common;
+
 
 namespace NuvoControl.Server.FunctionServer
 {
@@ -41,6 +44,11 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         private DateTime _lastZoneChangeToON = new DateTime(2000, 1, 1);
 
+        /// <summary>
+        /// True, if a sleep function is running right now.
+        /// </summary>
+        private bool _sleepRunning = false;
+
 
         /// <summary>
         /// Constructor to instantiate a concrete sleep function.
@@ -48,10 +56,11 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="function">Configuration data for this sleep function.</param>
         /// <param name="zoneServer">Zone server, to get notification about zone changes.</param>
         public ConcreteSleepFunction(SleepFunction function, IZoneServer zoneServer)
-            : base(zoneServer)
+            : base(zoneServer, function)
         {
             if (function == null)
             {
+                onFunctionError();
                 throw new FunctionServerException("Function configuration is null. This is not allowed");
             }
             _function = function;
@@ -108,7 +117,14 @@ namespace NuvoControl.Server.FunctionServer
                 {
                     string strMessage = String.Format("The update time of last zone change {0} is in the future! Actual Time = {1}", _lastZoneChangeToON, aktTime );
                     _log.Fatal(strMessage);
+                    onFunctionError();
                     throw new FunctionServerException(strMessage);
+                }
+                if (_sleepRunning == false)
+                {
+                    // Sleep function starts ...
+                    _sleepRunning = true;
+                    onFunctionStart();
                 }
                 TimeSpan onTime = aktTime-_lastZoneChangeToON;
                 if ((_zoneState.PowerStatus == true) && (onTime >= _function.SleepDuration))
@@ -122,6 +138,9 @@ namespace NuvoControl.Server.FunctionServer
                         newState.PowerStatus = false;
                         _zoneServer.SetZoneState(_function.ZoneId, newState);
                     }
+                    // Sleep function ends ...
+                    _sleepRunning = false;
+                    onFunctionEnd();
                 }
                 else
                 {

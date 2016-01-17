@@ -2,31 +2,72 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using Common.Logging;
+
+using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
-using Common.Logging;
-using NuvoControl.Common;
+
 
 namespace NuvoControl.Server.FunctionServer
 {
     public abstract class ConcreteFunction : IConcreteFunction
     {
-
+        /// <summary>
+        /// Logger object.
+        /// </summary>
         private static ILog _log = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// Private member to store zone server.
+        /// </summary>
         protected IZoneServer _zoneServer = null;
 
+        /// <summary>
+        /// Private member to hold the configuration data for the (base) function
+        /// </summary>
+        private Function _function;
 
-        public ConcreteFunction(IZoneServer zoneServer)
+        /// <summary>
+        /// Private member to hold the concrete commands
+        /// </summary>
+        private List<IConcreteCommand> _commands = new List<IConcreteCommand>();
+
+
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="zoneServer"></param>
+        /// <param name="function"></param>
+        public ConcreteFunction(IZoneServer zoneServer, Function function)
         {
             _zoneServer = zoneServer;
             if (_zoneServer == null)
             {
                 _log.Warn(m => m("Zone Server not available, cannot monitor any zone ..."));
             }
+            _function = function;
+            instantiateConcreteCommands();
         }
 
 
+        /// <summary>
+        /// Create concrete commands.
+        /// </summary>
+        private void instantiateConcreteCommands()
+        {
+            foreach (Command cmd in _function.Commands)
+            {
+                _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd));
+            }
+        }
+
+        /// <summary>
+        /// Subscribe for zone events.
+        /// </summary>
+        /// <param name="zoneId"></param>
         protected void subscribeZone(Address zoneId)
         {
             if (_zoneServer != null)
@@ -40,6 +81,10 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
+        /// <summary>
+        /// Unsubscribe for zone events.
+        /// </summary>
+        /// <param name="zoneId"></param>
         protected void unsubscribeZone(Address zoneId)
         {
             if (_zoneServer != null)
@@ -82,15 +127,57 @@ namespace NuvoControl.Server.FunctionServer
         /// Notifcation handler, called from the zone server, which delivers zone state changes
         /// </summary>
         /// <param name="sender">The zone controller, for which the state change appened.</param>
-        /// <param name="e">State change event arguments.</param>
+        /// <param name="e">State change event argument.</param>
         private void OnZoneNotification(object sender, ZoneStateEventArgs e)
         {
             //_log.Trace(m => m("ConcreteFunction: OnZoneNotification() EventArgs={0} ...", e.ToString()));
             notifyOnZoneUpdate(e);
         }
 
-
+        /// <summary>
+        /// Abstract method called by base class ConcreteFunction, to notify super class in case of a zone update.
+        /// </summary>
+        /// <param name="e">State change event argument.</param>
         protected abstract void notifyOnZoneUpdate(ZoneStateEventArgs e);
+
+        /// <summary>
+        /// Protected method to be called by super class, in case of an error in function.
+        /// </summary>
+        protected void onFunctionError()
+        {
+            LogHelper.Log(String.Format(">>> onFunctionError: {0}", _function.ToString()));
+            onFunctionEvent(eCommandType.onFunctionError);
+        }
+
+        /// <summary>
+        /// Protected method to be called by super class, in case the function starts.
+        /// </summary>
+        protected void onFunctionStart()
+        {
+            LogHelper.Log(String.Format(">>> onFunctionStart: {0}", _function.ToString()));
+            onFunctionEvent(eCommandType.onFunctionStart);
+        }
+
+        /// <summary>
+        /// Protected method to be called by super class, in case function ends.
+        /// </summary>
+        protected void onFunctionEnd()
+        {
+            LogHelper.Log(String.Format(">>> onFunctionEnd: {0}", _function.ToString()));
+            onFunctionEvent(eCommandType.onFunctionEnd);
+        }
+
+        /// <summary>
+        /// Private method which calls the event method of super class.
+        /// </summary>
+        /// <param name="commandType">Type of command (e.g. onFunctionError)</param>
+        private void onFunctionEvent(eCommandType commandType)
+        {
+            foreach (IConcreteCommand cmd in _commands)
+            {
+                cmd.execCommand(commandType);
+            }
+        }
 
 
         #region IConcreteFunction Members

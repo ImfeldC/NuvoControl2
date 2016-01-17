@@ -11,11 +11,35 @@ namespace NuvoControl.Common.Configuration
     public class SendMailCommand : Command
     {
 
-        private List<MailAddress>   _toAddress = new List<MailAddress>();
+        private List<MailAddress> _toAddress = new List<MailAddress>();
+        public List<MailAddress> ToAddress
+        {
+            get { return _toAddress; }
+        }
 
         private List<MailAddress> _ccAddress = new List<MailAddress>();
+        public List<MailAddress> CcAddress
+        {
+            get { return _ccAddress; }
+        }
 
         private List<MailAddress> _bccAddress = new List<MailAddress>();
+        public List<MailAddress> BccAddress
+        {
+            get { return _bccAddress; }
+        }
+
+        private string _configuredSubject = "";
+        public string Subject
+        {
+            get { return _configuredSubject; }
+        }
+
+        private string _configuredBody = "";
+        public string Body
+        {
+            get { return _configuredBody; }
+        }
 
 
         /// <summary>
@@ -23,10 +47,12 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         public SendMailCommand()
         {
+            Initialize();
         }
 
         public SendMailCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd,
-            IEnumerable<MailAddress> toAddress, IEnumerable<MailAddress> ccAddress, IEnumerable<MailAddress> bccAddress )
+            IEnumerable<MailAddress> toAddress, IEnumerable<MailAddress> ccAddress, IEnumerable<MailAddress> bccAddress,
+            string subject, string body )
             : base( id, eCommand.SendMail, onFunctionError, onFunctionStart, onFunctionEnd )
         {
             _toAddress = toAddress.ToList<MailAddress>();
@@ -34,17 +60,23 @@ namespace NuvoControl.Common.Configuration
                 _ccAddress = ccAddress.ToList<MailAddress>();
             if (bccAddress != null)
                 _bccAddress = bccAddress.ToList<MailAddress>();
+            _configuredSubject = subject;
+            _configuredBody = body;
+            Initialize();
         }
 
-        public SendMailCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd,
-            List<MailAddress> toAddress, List<MailAddress> ccAddress, List<MailAddress> bccAddress)
-            : base(id, eCommand.SendMail, onFunctionError, onFunctionStart, onFunctionEnd)
+        private void Initialize()
         {
-            _toAddress = toAddress;
-            if (ccAddress != null)
-                _ccAddress = ccAddress;
-            if (bccAddress != null)
-                _bccAddress = bccAddress;
+            if (_configuredSubject == "")
+            {
+                // Initialize default subject
+                _configuredSubject = String.Format("SendMailCommand: {0}", base.Id);
+            }
+            if (_configuredBody == "")
+            {
+                // Initialize default body
+                _configuredBody = String.Format("SendMailCommand Body: {0} ({1})", ToString(), DateTime.Now.ToString());
+            }
         }
 
         /// <summary>

@@ -12,9 +12,15 @@ namespace NuvoControl.Common.Configuration
         PlaySound = 1
     }
 
+    public enum eCommandType
+    {
+        onFunctionError = 0,
+        onFunctionStart = 1,
+        onFunctionEnd = 2
+    }
 
     [DataContract]
-    public class Command
+    public abstract class Command
     {
 
 
@@ -33,10 +39,32 @@ namespace NuvoControl.Common.Configuration
 
         [DataMember]
         private bool _onFunctionError = false;
+
+        public bool OnFunctionError
+        {
+            get { return _onFunctionError; }
+            set { _onFunctionError = value; }
+        }
+
+
         [DataMember]
         private bool _onFunctionStart = false;
+
+        public bool OnFunctionStart
+        {
+            get { return _onFunctionStart; }
+            set { _onFunctionStart = value; }
+        }
+
+
         [DataMember]
         private bool _onFunctionEnd = false;
+
+        public bool OnFunctionEnd
+        {
+            get { return _onFunctionEnd; }
+            set { _onFunctionEnd = value; }
+        }
 
 
         /// <summary>
@@ -77,7 +105,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("Command={0}, OnError={2}, OnStart={3}, OnEnd={4}, Guid={1}", 
+            return String.Format("{0}, OnError={2}, OnStart={3}, OnEnd={4}, Id={1}", 
                 _command, Id, 
                 (_onFunctionError?"Yes":"No"), (_onFunctionStart?"Yes":"No"), (_onFunctionEnd?"Yes":"No"));
         }
