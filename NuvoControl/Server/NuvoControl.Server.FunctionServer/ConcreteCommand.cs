@@ -58,6 +58,27 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
+        /// <summary>
+        /// Returns true, if this command type is set.
+        /// </summary>
+        /// <param name="cmdType">Command type to check (e.g. onFunctionStart)</param>
+        /// <returns></returns>
+        public bool checkCommandType(eCommandType cmdType)
+        {
+            if (cmdType==eCommandType.onFunctionError)
+            {
+                return onFunctionError;
+            }
+            else if (cmdType==eCommandType.onFunctionStart)
+            {
+                return onFunctionStart;
+            }
+            else if (cmdType==eCommandType.onFunctionEnd)
+            {
+                return onFunctionEnd;
+            }
+            return false;
+        }
 
         public abstract void execCommand(eCommandType cmdType, Function function);
 
