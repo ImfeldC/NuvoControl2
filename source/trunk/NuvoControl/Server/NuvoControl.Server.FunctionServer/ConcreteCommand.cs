@@ -59,7 +59,7 @@ namespace NuvoControl.Server.FunctionServer
         }
 
 
-        public abstract void execCommand(eCommandType cmdType);
+        public abstract void execCommand(eCommandType cmdType, Function function);
 
     }
 }

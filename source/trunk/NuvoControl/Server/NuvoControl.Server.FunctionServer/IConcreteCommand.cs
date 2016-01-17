@@ -20,6 +20,6 @@ namespace NuvoControl.Server.FunctionServer
 
         bool onFunctionEnd { get; }
 
-        void execCommand(eCommandType cmdType);
+        void execCommand(eCommandType cmdType, Function function);
     }
 }
