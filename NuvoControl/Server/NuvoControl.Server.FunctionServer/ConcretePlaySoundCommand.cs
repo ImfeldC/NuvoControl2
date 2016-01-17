@@ -18,7 +18,7 @@ namespace NuvoControl.Server.FunctionServer
         {
         }
 
-        public override void execCommand(eCommandType cmdType)
+        public override void execCommand(eCommandType cmdType, Function function)
         {
             LogHelper.Log(String.Format("Execute PlaySound command on event {0}", cmdType));
         }

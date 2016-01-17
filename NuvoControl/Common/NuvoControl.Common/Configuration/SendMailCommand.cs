@@ -70,12 +70,12 @@ namespace NuvoControl.Common.Configuration
             if (_configuredSubject == "")
             {
                 // Initialize default subject
-                _configuredSubject = String.Format("SendMailCommand: {0}", base.Id);
+                _configuredSubject = "SendMailCommand: {OnFunction} Id={Command.Id} Machine={MachineName}";
             }
             if (_configuredBody == "")
             {
                 // Initialize default body
-                _configuredBody = String.Format("SendMailCommand Body: {0} ({1})", ToString(), DateTime.Now.ToString());
+                _configuredBody = "SendMailCommand Body: {Command.Id} on Machine={MachineName} \nOS={OperatingSystem} \nFunction={Function} \n({DateTime.Now})";
             }
         }
 

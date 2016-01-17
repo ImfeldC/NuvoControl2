@@ -175,7 +175,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             foreach (IConcreteCommand cmd in _commands)
             {
-                cmd.execCommand(commandType);
+                cmd.execCommand(commandType, _function);
             }
         }
 

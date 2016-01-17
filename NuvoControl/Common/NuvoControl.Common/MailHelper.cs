@@ -14,6 +14,7 @@ namespace NuvoControl.Common
     //   certmgr -ssl smtps://smtp.gmail.com:465
     public class MailHelper
     {
+        // TODO: store connection settings in a proper way
         private const string your_id = "imfeldc@gmail.com";
         private const string your_password = "DIGITAL";
 
@@ -100,5 +101,21 @@ namespace NuvoControl.Common
             }
         }
 
+        /// <summary>
+        /// Method to replace defined placeholders.
+        /// {DateTime.Now}: current date and time
+        /// {MachineName}: will be replaced with the machine name
+        /// {OperatingSystem}: will be repalced with a text of the OS
+        /// </summary>
+        /// <param name="strMessage">Message string with the placeholders to be replaced.</param>
+        /// <returns>Message string with replaced placeholders.</returns>
+        public static string replacePlaceHolders(string strMessage)
+        {
+            string strNewMessage = strMessage;
+            strNewMessage = strNewMessage.Replace("{DateTime.Now}", DateTime.Now.ToString());
+            strNewMessage = strNewMessage.Replace("{MachineName}", System.Environment.MachineName);
+            strNewMessage = strNewMessage.Replace("{OperatingSystem}", EnvironmentHelper.getOperatingSystem());
+            return strNewMessage;
+        }
     }
 }
