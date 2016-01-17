@@ -85,6 +85,7 @@
     <Compile Include="Configuration\Building.cs" />
     <Compile Include="Configuration\Communication.cs" />
     <Compile Include="Configuration\NuvoImage.cs" />
+    <Compile Include="Configuration\PlaySoundCommand.cs" />
     <Compile Include="Configuration\Protocol.cs" />
     <Compile Include="Configuration\Address.cs" />
     <Compile Include="Configuration\SendMailCommand.cs" />

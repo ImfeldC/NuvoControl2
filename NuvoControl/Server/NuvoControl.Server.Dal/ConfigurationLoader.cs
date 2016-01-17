@@ -320,6 +320,7 @@ namespace NuvoControl.Server.Dal
         {
 
             List<Function> functions = new List<Function>();
+            functions.AddRange(ReadSleepFunctionsWithCommands().Cast<Function>());
             functions.AddRange(ReadSleepFunctions().Cast<Function>());
             functions.AddRange(ReadAlarmFunctionsWithCommands().Cast<Function>());
             functions.AddRange(ReadAlarmFunctions().Cast<Function>());
@@ -419,10 +420,35 @@ namespace NuvoControl.Server.Dal
         /// Reads and creates the sleep function objects based on the XML configuration file.
         /// </summary>
         /// <returns>The created sleep function configuration objects.</returns>
-        private List<SleepFunction> ReadSleepFunctions()
+        private List<SleepFunction> ReadSleepFunctionsWithCommands()
         {
+            // Load Sleepfunction WITH command section
             IEnumerable<SleepFunction> functions =
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("SleepFunction")
+                where function.Element("Commands") != null
+                select new SleepFunction(
+                    (Guid)function.Attribute("Id"),
+                    new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                        int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                    new TimeSpan(0, (int)function.Attribute("SleepDuration"), 0),
+                    TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveFrom")),
+                    TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveTo")),
+                    readCommands(function)
+                     );
+
+            return functions.ToList<SleepFunction>();
+        }
+
+        /// <summary>
+        /// Reads and creates the sleep function objects (w/p commands) based on the XML configuration file.
+        /// </summary>
+        /// <returns>The created sleep function configuration objects.</returns>
+        private List<SleepFunction> ReadSleepFunctions()
+        {
+            // Load Sleepfunction WITHOUT command section
+            IEnumerable<SleepFunction> functions =
+                from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("SleepFunction")
+                where function.Element("Commands") == null
                 select new SleepFunction(
                     (Guid)function.Attribute("Id"),
                     new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
@@ -437,7 +463,7 @@ namespace NuvoControl.Server.Dal
 
 
         /// <summary>
-        /// Reads and creates the alarm function objects based on the XML configuration file.
+        /// Reads and creates the alarm function objects (with commands) based on the XML configuration file.
         /// </summary>
         /// <returns>The created alarm function configuration objects.</returns>
         private List<AlarmFunction> ReadAlarmFunctionsWithCommands()
@@ -464,7 +490,7 @@ namespace NuvoControl.Server.Dal
         }
 
         /// <summary>
-        /// Reads and creates the alarm function objects based on the XML configuration file.
+        /// Reads and creates the alarm function objects (w/o commnds) based on the XML configuration file.
         /// </summary>
         /// <returns>The created alarm function configuration objects.</returns>
         private List<AlarmFunction> ReadAlarmFunctions()
@@ -491,6 +517,11 @@ namespace NuvoControl.Server.Dal
 
 
 
+        /// <summary>
+        /// Private method to read commands, as part of a function
+        /// </summary>
+        /// <param name="function">Parent function, which contains the commands</param>
+        /// <returns>List of commands read from function.</returns>
         private List<Command> readCommands(XElement function)
         {
             // Read SendMail commands, with three kind of mail address (to & cc & bcc)
@@ -510,19 +541,18 @@ namespace NuvoControl.Server.Dal
                                 select new MailAddress((string)recipient.Attribute("name"))),
                                 (from recipient in command.Element("Recipients").Elements("Recipient")
                                 where recipient.Attribute("type").Value == "bcc"
-                                select new MailAddress((string)recipient.Attribute("name")))
+                                select new MailAddress((string)recipient.Attribute("name"))),
+                                (command.Element("Subject")!=null?(string)command.Element("Subject").Value:""),
+                                (command.Element("Body")!=null?(string)command.Element("Body").Value:"")
                             ));
 
-
-
             IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
-                                    where command.Attribute("cmd").Value == "PlaySound"
-                                    select new Command(
-                                        (Guid)command.Attribute("Id"),
-                                        (eCommand)Enum.Parse(typeof(eCommand), (string)command.Attribute("cmd")),
-                                        (bool)command.Attribute("onFunctionError"),
-                                        (bool)command.Attribute("onFunctionStart"),
-                                        (bool)command.Attribute("onFunctionEnd")
+                            where command.Attribute("cmd").Value == "PlaySound"
+                            select new PlaySoundCommand(
+                                (Guid)command.Attribute("Id"),
+                                (bool)command.Attribute("onFunctionError"),
+                                (bool)command.Attribute("onFunctionStart"),
+                                (bool)command.Attribute("onFunctionEnd")
                              ));
 
             return (sendMailCommands.Concat(playSoundCommands)).ToList<Command>();

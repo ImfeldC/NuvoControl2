@@ -55,11 +55,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConcreteAlarmFunction.cs" />
+    <Compile Include="ConcreteCommand.cs" />
+    <Compile Include="ConcreteCommandFactory.cs" />
     <Compile Include="ConcreteFunction.cs" />
     <Compile Include="ConcreteFunctionFactory.cs" />
+    <Compile Include="ConcretePlaySoundCommand.cs" />
+    <Compile Include="ConcreteSendMailCommand.cs" />
     <Compile Include="ConcreteSleepFunction.cs" />
     <Compile Include="FunctionServer.cs" />
     <Compile Include="FunctionServerException.cs" />
+    <Compile Include="IConcreteCommand.cs" />
     <Compile Include="Properties\FunctionServer.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

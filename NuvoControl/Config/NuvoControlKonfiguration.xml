@@ -233,6 +233,13 @@
 
       <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.3" SleepDuration="60">
         <Validity ActiveFrom="23:15" ActiveTo="04:00"></Validity>
+        <Commands>
+          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d710">
+            <Recipients>
+              <Recipient name="christian@imfeld.net" type="to" />
+            </Recipients>
+          </Command>
+        </Commands>
       </SleepFunction>
 	  
     </Functions>

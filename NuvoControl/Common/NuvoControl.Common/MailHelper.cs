@@ -20,25 +20,54 @@ namespace NuvoControl.Common
         /// <summary>
         /// Sends mail message
         /// </summary>
-        /// <param name="recepient">Recepient mail address.</param>
+        /// <param name="recipient">Recipient mail address.</param>
         /// <param name="subject">Mail subject.</param>
         /// <param name="body">Mail body.</param>
         /// <returns>true in case send was succesful, otherwise false.</returns>
-        public static bool SendMail(string recepient, string subject, string body)
+        public static bool SendMail(string recipient, string subject, string body)
         {
-            return SendMail(recepient, subject, body, your_id, your_password);
+            return SendMail(recipient, subject, body, your_id, your_password);
         }
 
         /// <summary>
         /// Sends mail message
         /// </summary>
-        /// <param name="recepient">Recepient mail address.</param>
+        /// <param name="recipient">Recipient mail address.</param>
         /// <param name="subject">Mail subject.</param>
         /// <param name="body">Mail body.</param>
         /// <param name="myid">GMail username.</param>
         /// <param name="mypassword">GMail password.</param>
         /// <returns>true in case send was succesful, otherwise false.</returns>
-        public static bool SendMail(string recepient, string subject, string body, string myid, string mypassword)
+        public static bool SendMail(string recipient, string subject, string body, string myid, string mypassword)
+        {
+            List<MailAddress> recipients = new List<MailAddress>();
+            recipients.Add(new MailAddress(recipient));
+            return SendMail(recipients, subject, body, myid, mypassword);
+        }
+
+
+        /// <summary>
+        /// Sends mail message
+        /// </summary>
+        /// <param name="recipients">List of recipients..</param>
+        /// <param name="subject">Mail subject.</param>
+        /// <param name="body">Mail body.</param>
+        /// <returns>true in case send was succesful, otherwise false.</returns>
+        public static bool SendMail(List<MailAddress> recipients, string subject, string body)
+        {
+            return SendMail(recipients, subject, body, your_id, your_password);
+        }
+
+        /// <summary>
+        /// Sends mail message
+        /// </summary>
+        /// <param name="recipients">List of recipients.</param>
+        /// <param name="subject">Mail subject.</param>
+        /// <param name="body">Mail body.</param>
+        /// <param name="myid">GMail username.</param>
+        /// <param name="mypassword">GMail password.</param>
+        /// <returns>true in case send was succesful, otherwise false.</returns>
+        public static bool SendMail(List<MailAddress> recipients, string subject, string body, string myid, string mypassword)
         {
             try
             {
@@ -51,7 +80,14 @@ namespace NuvoControl.Common
                     Credentials = new System.Net.NetworkCredential(myid, mypassword),
                     Timeout = 10000,
                 };
-                MailMessage mm = new MailMessage(your_id, recepient, subject, body);
+                MailMessage mm = new MailMessage();
+                mm.From = new MailAddress(your_id);
+                foreach (MailAddress addr in recipients)
+                {
+                    mm.To.Add(addr);
+                }
+                mm.Subject = subject;
+                mm.Body = body;
                 client.Send(mm);
 
                 //Console.WriteLine("Email Sent");

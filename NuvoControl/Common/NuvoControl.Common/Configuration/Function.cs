@@ -132,6 +132,12 @@ namespace NuvoControl.Common.Configuration
         }
 
         #endregion
+
+        public List<Command> Commands
+        {
+            get { return _commands; }
+        }
+
     }
 }
 

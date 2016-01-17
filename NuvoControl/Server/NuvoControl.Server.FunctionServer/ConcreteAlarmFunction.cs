@@ -40,10 +40,11 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="function">Configuration data for this alarm function.</param>
         /// <param name="zoneServer">Zone server, to get notification about zone changes.</param>
         public ConcreteAlarmFunction(AlarmFunction function, IZoneServer zoneServer)
-            : base(zoneServer)
+            : base(zoneServer, function)
         {
             if (function == null)
             {
+                onFunctionError();
                 throw new FunctionServerException("Function configuration is null. This is not allowed");
             }
             _function = function;
@@ -118,7 +119,9 @@ namespace NuvoControl.Server.FunctionServer
                             newState.Volume = _function.Volume;
                             _zoneServer.SetZoneState(_function.ZoneId, newState);
                         }
+                        // Function starts ...
                         _alarmRunning = true;
+                        onFunctionStart();
                     }
                 }
 
@@ -139,7 +142,9 @@ namespace NuvoControl.Server.FunctionServer
                             _zoneServer.SetZoneState(_function.ZoneId, newState);
                         }
                     }
+                    // Function ends ...
                     _alarmRunning = false;
+                    onFunctionEnd();
                 }
             }
         }
