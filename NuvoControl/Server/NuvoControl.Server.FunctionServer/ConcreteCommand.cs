@@ -58,6 +58,24 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
+
+        public bool onValidityStart
+        {
+            get
+            {
+                return _command.OnValidityStart;
+            }
+        }
+
+        public bool onValidityEnd
+        {
+            get
+            {
+                return _command.OnValidityEnd;
+            }
+        }
+
+
         /// <summary>
         /// Returns true, if this command type is set.
         /// </summary>
@@ -77,10 +95,29 @@ namespace NuvoControl.Server.FunctionServer
             {
                 return onFunctionEnd;
             }
+            else if (cmdType == eCommandType.onValidityStart)
+            {
+                return onValidityStart;
+            }
+            else if (cmdType == eCommandType.onValidityEnd)
+            {
+                return onValidityEnd;
+            }
             return false;
         }
 
         public abstract void execCommand(eCommandType cmdType, Function function);
+
+        /// <summary>
+        /// Public override of ToString() method.
+        /// </summary>
+        /// <returns>Returns string representative.</returns>
+        public override string ToString()
+        {
+            return String.Format("ConcreteCommand: {0}, OnError={2}, OnFuncStart={3}, OnFuncEnd={4}, OnValStart={5}, OnValEnd={6}, Id={1}",
+                _command, _command.Id,
+                (onFunctionError ? "Yes" : "No"), (onFunctionStart ? "Yes" : "No"), (onFunctionEnd ? "Yes" : "No"), (onValidityStart ? "Yes" : "No"), (onValidityEnd ? "Yes" : "No"));
+        }
 
     }
 }

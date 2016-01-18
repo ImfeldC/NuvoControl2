@@ -50,10 +50,19 @@ namespace NuvoControl.Common.Configuration
             Initialize();
         }
 
-        public SendMailCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd,
+        /// <summary>
+        /// Standard constructor, used by configuration loader.
+        /// </summary>
+        /// <param name="id">Id of the command.</param>
+        /// <param name="onFunctionError">True, if command shall be executed in case of an error.</param>
+        /// <param name="onFunctionStart">True, if command shall be executed at function start.</param>
+        /// <param name="onFunctionEnd">True, if command shall be executed at function end.</param>
+        /// <param name="onValidityStart">True, if command shall be executed at validity start.</param>
+        /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
+        public SendMailCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd,
             IEnumerable<MailAddress> toAddress, IEnumerable<MailAddress> ccAddress, IEnumerable<MailAddress> bccAddress,
             string subject, string body )
-            : base( id, eCommand.SendMail, onFunctionError, onFunctionStart, onFunctionEnd )
+            : base(id, eCommand.SendMail, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd)
         {
             _toAddress = toAddress.ToList<MailAddress>();
             if (ccAddress != null)

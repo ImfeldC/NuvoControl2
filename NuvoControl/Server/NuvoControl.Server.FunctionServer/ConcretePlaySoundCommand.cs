@@ -13,14 +13,20 @@ namespace NuvoControl.Server.FunctionServer
 {
     class ConcretePlaySoundCommand : ConcreteCommand
     {
+        private PlaySoundCommand _playSoundCommand = null;
+
         public ConcretePlaySoundCommand(PlaySoundCommand command)
             :base( command )
         {
+            _playSoundCommand = command;
         }
 
         public override void execCommand(eCommandType cmdType, Function function)
         {
-            LogHelper.Log(String.Format("Execute PlaySound command on event {0}", cmdType));
+            if (checkCommandType(cmdType))
+            {
+                LogHelper.Log(String.Format(">>> Execute PlaySound command on event {0}: PlayMailCommand={1} / Function={2}", cmdType, _playSoundCommand.ToString(), function.ToString()));
+            }
         }
 
     }

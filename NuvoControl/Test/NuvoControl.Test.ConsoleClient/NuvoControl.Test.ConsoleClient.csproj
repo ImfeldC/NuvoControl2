@@ -78,6 +78,10 @@
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Server\NuvoControl.Server.ConfigurationService\NuvoControl.Server.ConfigurationService.csproj">
+      <Project>{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}</Project>
+      <Name>NuvoControl.Server.ConfigurationService</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Server\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
       <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
       <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
@@ -113,6 +117,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Config\NuvoControlKonfiguration.xml">
+      <Link>Config\NuvoControlKonfiguration.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Sound\example.mp3">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

@@ -49,6 +49,11 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         private bool _sleepRunning = false;
 
+        /// <summary>
+        /// True, if validty window is running.
+        /// </summary>
+        private bool _validityRunning = false;
+
 
         /// <summary>
         /// Constructor to instantiate a concrete sleep function.
@@ -113,38 +118,57 @@ namespace NuvoControl.Server.FunctionServer
             //_log.Trace(m => m("calc sleep function at {0}: Active={1}, lastZoneChangeToON={2}, ZoneState={3}", aktTime, isFunctionActiveRightNow(aktTime), _lastZoneChangeToON, _zoneState));
             if (isFunctionActiveRightNow(aktTime))
             {
+                if (!_validityRunning)
+                {
+                    // start of validity reached ...
+                    _validityRunning = true;
+                    onValidityStart();
+                }
+
                 if (aktTime < _lastZoneChangeToON)
                 {
-                    string strMessage = String.Format("The update time of last zone change {0} is in the future! Actual Time = {1}", _lastZoneChangeToON, aktTime );
+                    string strMessage = String.Format("The update time of last zone change {0} is in the future! Actual Time = {1}", _lastZoneChangeToON, aktTime);
                     _log.Fatal(strMessage);
                     onFunctionError();
                     throw new FunctionServerException(strMessage);
                 }
-                if (_sleepRunning == false)
+                TimeSpan onTime = aktTime - _lastZoneChangeToON;
+                if (_zoneState.PowerStatus == true)
                 {
-                    // Sleep function starts ...
-                    _sleepRunning = true;
-                    onFunctionStart();
-                }
-                TimeSpan onTime = aktTime-_lastZoneChangeToON;
-                if ((_zoneState.PowerStatus == true) && (onTime >= _function.SleepDuration))
-                {
-                    // Zone power status is ON  and the sleep duration has been reached, switch off zone
-                    Console.WriteLine("ConcreteSleepFunction: Switch zone '{2}' OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON, _function.ZoneId);
-                    _log.Trace(m => m("ConcreteSleepFunction: Switch zone '{2}' OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON, _function.ZoneId));
-                    if (_zoneServer != null)
+                    if (!_sleepRunning)
                     {
-                        ZoneState newState = new ZoneState(_zoneState);
-                        newState.PowerStatus = false;
-                        _zoneServer.SetZoneState(_function.ZoneId, newState);
+                        // Sleep function starts ...
+                        _sleepRunning = true;
+                        onFunctionStart();
                     }
-                    // Sleep function ends ...
-                    _sleepRunning = false;
-                    onFunctionEnd();
+                    if (onTime >= _function.SleepDuration)
+                    {
+                        // Zone power status is ON  and the sleep duration has been reached, switch off zone
+                        Console.WriteLine("ConcreteSleepFunction: Switch zone '{2}' OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON, _function.ZoneId);
+                        _log.Trace(m => m("ConcreteSleepFunction: Switch zone '{2}' OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON, _function.ZoneId));
+                        if (_zoneServer != null)
+                        {
+                            ZoneState newState = new ZoneState(_zoneState);
+                            newState.PowerStatus = false;
+                            _zoneServer.SetZoneState(_function.ZoneId, newState);
+                        }
+                        // Sleep function ends ...
+                        _sleepRunning = false;
+                        onFunctionEnd();
+                    }
                 }
                 else
                 {
                     _log.Trace(m => m("Don't switch off zone! PowerStatus={0}, onTime={1}, AkTime={2}, LastChangeToON={3}", _zoneState.PowerStatus, onTime, aktTime, _lastZoneChangeToON));
+                }
+            }
+            else
+            {
+                if (_validityRunning)
+                {
+                    // end of validity reached ...
+                    _validityRunning = false;
+                    onValidityEnd();
                 }
             }
         }

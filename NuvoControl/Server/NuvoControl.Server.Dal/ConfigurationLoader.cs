@@ -199,7 +199,7 @@ namespace NuvoControl.Server.Dal
             if (LogHelper.Verbose)
                 Console.WriteLine("\nXML Configuration {0} loaded. Version={3}, GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ByteArrayToString(_configurationFileHash), _configurationVersion);
 
-            if (_appendConfigurationFilename != null)
+            if ((_appendConfigurationFilename != null) && (_appendConfigurationFilename != ""))
             {
                 XDocument appendConfiguration = XDocument.Load(_appendConfigurationFilename);
                 _appendConfigurationVersion = (string)appendConfiguration.Root.Element("Configuration").Attribute("Version");
@@ -533,6 +533,8 @@ namespace NuvoControl.Server.Dal
                                 (bool)command.Attribute("onFunctionError"),
                                 (bool)command.Attribute("onFunctionStart"),
                                 (bool)command.Attribute("onFunctionEnd"),
+                                command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
+                                command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
                                 (from recipient in command.Element("Recipients").Elements("Recipient")
                                 where recipient.Attribute("type").Value == "to"
                                 select new MailAddress( (string)recipient.Attribute("name"))),
@@ -552,7 +554,9 @@ namespace NuvoControl.Server.Dal
                                 (Guid)command.Attribute("Id"),
                                 (bool)command.Attribute("onFunctionError"),
                                 (bool)command.Attribute("onFunctionStart"),
-                                (bool)command.Attribute("onFunctionEnd")
+                                (bool)command.Attribute("onFunctionEnd"),
+                                command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
+                                command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false
                              ));
 
             return (sendMailCommands.Concat(playSoundCommands)).ToList<Command>();

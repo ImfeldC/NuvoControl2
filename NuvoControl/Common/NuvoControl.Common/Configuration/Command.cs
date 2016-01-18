@@ -14,9 +14,11 @@ namespace NuvoControl.Common.Configuration
 
     public enum eCommandType
     {
-        onFunctionError = 0,
-        onFunctionStart = 1,
-        onFunctionEnd = 2
+        onFunctionError = 0,    // in case an error occurs
+        onFunctionStart = 1,    // in case function starts (e.g. alarm time reached)
+        onFunctionEnd = 2,      // in case function ends (e.g. sleep duration reached)
+        onValidityStart = 3,    // in case validity of a function starts
+        onValidityEnd = 4       // in case valididty of a function ends
     }
 
     [DataContract]
@@ -67,6 +69,26 @@ namespace NuvoControl.Common.Configuration
         }
 
 
+        [DataMember]
+        private bool _onValidityStart = false;
+
+        public bool OnValidityStart
+        {
+            get { return _onValidityStart; }
+            set { _onValidityStart = value; }
+        }
+
+
+        [DataMember]
+        private bool _onValidityEnd = false;
+
+        public bool OnValidityEnd
+        {
+            get { return _onValidityEnd; }
+            set { _onValidityEnd = value; }
+        }
+
+
         /// <summary>
         /// Default Constructor.
         /// </summary>
@@ -82,13 +104,17 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onFunctionError">True, if command shall be executed in case of an error.</param>
         /// <param name="onFunctionStart">True, if command shall be executed at function start.</param>
         /// <param name="onFunctionEnd">True, if command shall be executed at function end.</param>
-        public Command(Guid id, eCommand command, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd)
+        /// <param name="onValidityStart">True, if command shall be executed at validity start.</param>
+        /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
+        public Command(Guid id, eCommand command, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd)
         {
             _id = id;
             _command = command;
             _onFunctionError = onFunctionError;
             _onFunctionStart = onFunctionStart;
             _onFunctionEnd = onFunctionEnd;
+            _onValidityStart = onValidityStart;
+            _onValidityEnd = onValidityEnd;
         }
 
         /// <summary>
@@ -105,9 +131,9 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("{0}, OnError={2}, OnStart={3}, OnEnd={4}, Id={1}", 
-                _command, Id, 
-                (_onFunctionError?"Yes":"No"), (_onFunctionStart?"Yes":"No"), (_onFunctionEnd?"Yes":"No"));
+            return String.Format("Command: {0}, OnError={2}, OnFuncStart={3}, OnFuncEnd={4}, OnValStart={5}, OnValEnd={6}, Id={1}", 
+                _command, Id,
+                (_onFunctionError ? "Yes" : "No"), (_onFunctionStart ? "Yes" : "No"), (_onFunctionEnd ? "Yes" : "No"), (_onValidityStart ? "Yes" : "No"), (_onValidityEnd ? "Yes" : "No"));
         }
 
     }
