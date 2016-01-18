@@ -21,17 +21,19 @@ namespace NuvoControl.Server.FunctionServer
         public ConcreteSendMailCommand(SendMailCommand command)
             :base( command )
         {
-            _sendMailCommand = (SendMailCommand)Command;
+            _sendMailCommand = command;
         }
 
         public override void execCommand(eCommandType cmdType, Function function)
         {
-            LogHelper.Log(String.Format(">>> Execute SendMail command on event {0}: SendMailCommand={1} / Function={2}", cmdType, _sendMailCommand.ToString(), function.ToString()));
-
-            // Send mail ...
-            MailHelper.SendMail(_sendMailCommand.ToAddress, 
-                replacePlaceHolders(_sendMailCommand.Subject,cmdType,function), 
-                replacePlaceHolders(_sendMailCommand.Body,cmdType,function));
+            if (checkCommandType(cmdType))
+            {
+                LogHelper.Log(String.Format(">>> Execute SendMail command on event {0}: SendMailCommand={1} / Function={2}", cmdType, _sendMailCommand.ToString(), function.ToString()));
+                // Send mail ...
+                MailHelper.SendMail(_sendMailCommand.ToAddress,
+                    replacePlaceHolders(_sendMailCommand.Subject, cmdType, function),
+                    replacePlaceHolders(_sendMailCommand.Body, cmdType, function));
+            }
         }
 
         /// <summary>

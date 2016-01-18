@@ -168,6 +168,24 @@ namespace NuvoControl.Server.FunctionServer
         }
 
         /// <summary>
+        /// Protected method to be called by super class, in case the validity starts.
+        /// </summary>
+        protected void onValidityStart()
+        {
+            LogHelper.Log(String.Format(">>> onValidityStart: {0}", _function.ToString()));
+            onFunctionEvent(eCommandType.onValidityStart);
+        }
+
+        /// <summary>
+        /// Protected method to be called by super class, in case validity ends.
+        /// </summary>
+        protected void onValidityEnd()
+        {
+            LogHelper.Log(String.Format(">>> onValidityEnd: {0}", _function.ToString()));
+            onFunctionEvent(eCommandType.onValidityEnd);
+        }
+
+        /// <summary>
         /// Private method which calls the event method of super class.
         /// </summary>
         /// <param name="commandType">Type of command (e.g. onFunctionError)</param>

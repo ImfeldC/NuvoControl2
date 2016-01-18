@@ -35,6 +35,12 @@ namespace NuvoControl.Server.FunctionServer
         private bool _alarmRunning = false;
 
         /// <summary>
+        /// True, if validty window is running.
+        /// </summary>
+        private bool _validityRunning = false;
+
+
+        /// <summary>
         /// Constructor to instantiate a concrete alarm function.
         /// </summary>
         /// <param name="function">Configuration data for this alarm function.</param>
@@ -97,7 +103,14 @@ namespace NuvoControl.Server.FunctionServer
             //_log.Trace(m => m("calculateFunction at {0}: Active={1}", aktTime, isFunctionActiveToday(aktTime)));
             if( isFunctionActiveToday( aktTime ) )
             {
-                if( (aktTime.TimeOfDay >= _function.AlarmTime) &&
+                if (!_validityRunning)
+                {
+                    // start of validity reached ...
+                    _validityRunning = true;
+                    onValidityStart();
+                }
+
+                if ((aktTime.TimeOfDay >= _function.AlarmTime) &&
                     (aktTime.TimeOfDay < (_function.AlarmTime + _function.AlarmDuration)) )
                 {
                     _log.Trace(m => m("calculateFunction at {0}: Function is in an active window. PowerStatus={1}, LastChangeToON={2}, Function={3}, Active={4}", 
@@ -145,6 +158,15 @@ namespace NuvoControl.Server.FunctionServer
                     // Function ends ...
                     _alarmRunning = false;
                     onFunctionEnd();
+                }
+            }
+            else
+            {
+                if (_validityRunning)
+                {
+                    // end of validity reached ...
+                    _validityRunning = false;
+                    onValidityEnd();
                 }
             }
         }

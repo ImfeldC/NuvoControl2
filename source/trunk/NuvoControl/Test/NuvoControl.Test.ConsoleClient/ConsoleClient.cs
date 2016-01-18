@@ -221,6 +221,16 @@ namespace NuvoControl.Test.ConsoleClient
             //_nuvoServer.SendCommand(_address, command);
             Console.WriteLine("End protocol driver tests....");
 
+            String configurationFile = "./Config/NuvoControlKonfiguration.xml";
+            String remoteConfigurationFile = "";
+            Console.WriteLine(">>> Loading configuration...");
+            Console.WriteLine(">>>   from {0}", configurationFile);
+            Console.WriteLine(">>>   and append {0}", remoteConfigurationFile);
+
+            NuvoControl.Server.ConfigurationService.ConfigurationService _configurationService = null;
+            _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile, remoteConfigurationFile);
+
+
             Console.WriteLine(">>> ");
             Console.WriteLine(">>> ");
             Console.WriteLine(">>> Press <Enter> to stop the console application.");
@@ -284,27 +294,29 @@ namespace NuvoControl.Test.ConsoleClient
         public void SendReceiveData(string sendData)
         {
             if (mySerial != null)
+            {
                 if (mySerial.IsOpen)
                     mySerial.Close();
 
-            try
-            {
-                Console.WriteLine("Open connection to Port '{0}' (Baud Rate={1})", _portName, _baudRate);
-                mySerial = new System.IO.Ports.SerialPort(_portName, _baudRate);
-                mySerial.Open();
-                mySerial.ReadTimeout = _readTimeout;
-                SendData(sendData);
-            }
-            catch (System.ArgumentException exc)
-            {
-                Console.WriteLine("Exception! {0}", exc.ToString());
-                mySerial = null;
-            }
+                try
+                {
+                    Console.WriteLine("Open connection to Port '{0}' (Baud Rate={1})", _portName, _baudRate);
+                    mySerial = new System.IO.Ports.SerialPort(_portName, _baudRate);
+                    mySerial.Open();
+                    mySerial.ReadTimeout = _readTimeout;
+                    SendData(sendData);
+                }
+                catch (System.ArgumentException exc)
+                {
+                    Console.WriteLine("Exception! {0}", exc.ToString());
+                    mySerial = null;
+                }
 
-            if (mySerial != null)
-            {
-                string inputData = ReadData();
-                //Console.WriteLine("Message received:" + inputData);
+                if (mySerial != null)
+                {
+                    string inputData = ReadData();
+                    //Console.WriteLine("Message received:" + inputData);
+                }
             }
         }
 
@@ -336,14 +348,22 @@ namespace NuvoControl.Test.ConsoleClient
  
         public bool SendData(string Data)
         {
-            mySerial.Write(Data);
-            Console.WriteLine("Message send:" + Data);
-            return true;
+            if (mySerial != null)
+            {
+                mySerial.Write(Data);
+                Console.WriteLine("Message send:" + Data);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public void Close()
         {
-            mySerial.Close();
+            if( mySerial != null )
+                mySerial.Close();
         }
 
         #endregion
