@@ -87,7 +87,7 @@ namespace NuvoControl.Common
                 {
                     mm.To.Add(addr);
                 }
-                mm.Subject = subject;
+                mm.Subject = subject.Trim();
                 mm.Body = body;
                 client.Send(mm);
 
