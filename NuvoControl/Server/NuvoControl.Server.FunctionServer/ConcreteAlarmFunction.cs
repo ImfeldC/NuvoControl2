@@ -30,6 +30,11 @@ namespace NuvoControl.Server.FunctionServer
         private DateTime _lastZoneChangeToON = new DateTime(2000, 1, 1);
 
         /// <summary>
+        /// True, if a alarm command has been sent.
+        /// </summary>
+        private bool _alarmCommandHasBeenSent = false;
+
+        /// <summary>
         /// True, if an alarm is running right now.
         /// </summary>
         private bool _alarmRunning = false;
@@ -115,8 +120,15 @@ namespace NuvoControl.Server.FunctionServer
                 {
                     _log.Trace(m => m("calculateFunction at {0}: Function is in an active window. PowerStatus={1}, LastChangeToON={2}, Function={3}, Active={4}", 
                         aktTime, _zoneState.PowerStatus, _lastZoneChangeToON.TimeOfDay, Function, isFunctionActiveToday(aktTime)));
-                    // alarm 'window' is running, check if we need to switch the zone ...
 
+                    if (!_alarmRunning)
+                    {
+                        // Function starts ...
+                        _alarmRunning = true;
+                        onFunctionStart();
+                    }
+
+                    // alarm 'window' is running, check if we need to switch the zone ...
                     if ((_zoneState.PowerStatus == false) &&
                         (_lastZoneChangeToON < (aktTime.Date + _function.AlarmTime)))
                     {
@@ -131,21 +143,19 @@ namespace NuvoControl.Server.FunctionServer
                             newState.Source = _function.SourceId;
                             newState.Volume = _function.Volume;
                             _zoneServer.SetZoneState(_function.ZoneId, newState);
+                            _alarmCommandHasBeenSent = true;
                         }
-                        // Function starts ...
-                        _alarmRunning = true;
-                        onFunctionStart();
                     }
                 }
 
                 if ((aktTime.TimeOfDay > (_function.AlarmTime + _function.AlarmDuration)) &&
                     (_alarmRunning == true))
                 {
-                    // alarm 'window' is past, and an alarm has been send ..
+                    // alarm 'window' is past  ..
 
-                    if (_zoneState.PowerStatus == true)
+                    if (_zoneState.PowerStatus == true && _alarmCommandHasBeenSent)
                     {
-                        // the zone is 'on' ...
+                        // the zone is 'on' and an alarm has been send ...
                         Console.WriteLine("ConcreteAlarmFunction: Switch zone '{2}' OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON, _function.ZoneId);
                         _log.Trace(m => m("ConcreteAlarmFunction: Switch zone '{2}' OFF! AkTime={0}, LastChangeToON={1}", aktTime, _lastZoneChangeToON, _function.ZoneId));
                         if (_zoneServer != null)
@@ -155,6 +165,7 @@ namespace NuvoControl.Server.FunctionServer
                             _zoneServer.SetZoneState(_function.ZoneId, newState);
                         }
                     }
+
                     // Function ends ...
                     _alarmRunning = false;
                     onFunctionEnd();
