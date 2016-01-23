@@ -96,6 +96,7 @@
     <Compile Include="Configuration\Graphic.cs" />
     <Compile Include="Configuration\Hardware.cs" />
     <Compile Include="Configuration\Device.cs" />
+    <Compile Include="Configuration\StartProcessCommand.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="Configuration\Zone.cs" />
     <Compile Include="EnvironmentHelper.cs" />

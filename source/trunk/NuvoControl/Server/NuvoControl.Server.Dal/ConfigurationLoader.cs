@@ -530,11 +530,13 @@ namespace NuvoControl.Server.Dal
                                 && command.Element("Recipients") != null
                             select new SendMailCommand(
                                 (Guid)command.Attribute("Id"),
-                                (bool)command.Attribute("onFunctionError"),
-                                (bool)command.Attribute("onFunctionStart"),
-                                (bool)command.Attribute("onFunctionEnd"),
+                                command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
+                                command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
+                                command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
                                 command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
                                 command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
+                                command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
+                                command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
                                 (from recipient in command.Element("Recipients").Elements("Recipient")
                                 where recipient.Attribute("type").Value == "to"
                                 select new MailAddress( (string)recipient.Attribute("name"))),
@@ -548,15 +550,19 @@ namespace NuvoControl.Server.Dal
                                 (command.Element("Body")!=null?(string)command.Element("Body").Value:"")
                             ));
 
+            // Read PlaySound command
             IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
                             where command.Attribute("cmd").Value == "PlaySound"
                             select new PlaySoundCommand(
                                 (Guid)command.Attribute("Id"),
-                                (bool)command.Attribute("onFunctionError"),
-                                (bool)command.Attribute("onFunctionStart"),
-                                (bool)command.Attribute("onFunctionEnd"),
+                                command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
+                                command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
+                                command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
                                 command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
-                                command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false
+                                command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
+                                command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
+                                command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
+                                command.Attribute("url") != null ? (string)command.Attribute("url") : ""
                              ));
 
             return (sendMailCommands.Concat(playSoundCommands)).ToList<Command>();
