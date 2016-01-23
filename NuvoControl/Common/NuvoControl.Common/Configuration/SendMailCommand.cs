@@ -59,10 +59,19 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onFunctionEnd">True, if command shall be executed at function end.</param>
         /// <param name="onValidityStart">True, if command shall be executed at validity start.</param>
         /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
-        public SendMailCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd,
+        /// <param name="onUnix">True, if command shall be exceuted on Unix systems. Default=True</param>
+        /// <param name="onWindows">True, if command shall be executed on Windows systems. Default=True</param>
+        /// <param name="toAddress"></param>
+        /// <param name="ccAddress"></param>
+        /// <param name="bccAddress"></param>
+        /// <param name="subject"></param>
+        /// <param name="body"></param>
+        public SendMailCommand(Guid id, 
+            bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, 
+            bool onUnix, bool onWindows,
             IEnumerable<MailAddress> toAddress, IEnumerable<MailAddress> ccAddress, IEnumerable<MailAddress> bccAddress,
             string subject, string body )
-            : base(id, eCommand.SendMail, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd)
+            : base(id, eCommand.SendMail, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd, onUnix, onWindows)
         {
             _toAddress = toAddress.ToList<MailAddress>();
             if (ccAddress != null)
@@ -94,7 +103,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("Command={0}, ToCount={1}, CcCount={2}, BccCount={3}",
+            return String.Format("SendMail=[ Command={0}, ToCount={1}, CcCount={2}, BccCount={3} ]",
                 base.ToString(), _toAddress.Count(), _ccAddress.Count(), _bccAddress.Count() );
         }
 

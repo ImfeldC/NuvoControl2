@@ -9,7 +9,8 @@ namespace NuvoControl.Common.Configuration
     public enum eCommand
     {
         SendMail = 0,
-        PlaySound = 1
+        PlaySound = 1,
+        StartProcess = 2
     }
 
     public enum eCommandType
@@ -38,10 +39,44 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private eCommand _command;
 
+        /// <summary>
+        /// True, if command shall be executed on Unix platform
+        /// </summary>
+        [DataMember]
+        private bool _onUnix = false;
+
+        /// <summary>
+        /// True, if command shall be executed on Unix platform
+        /// </summary>
+        public bool OnUnix
+        {
+            get { return _onUnix; }
+            set { _onUnix = value; }
+        }
+
+
+        /// <summary>
+        /// True, if command shall be executed on Windows platform
+        /// </summary>
+        [DataMember]
+        private bool _onWindows = false;
+
+        /// <summary>
+        /// True, if command shall be executed on Windows platform
+        /// </summary>
+        public bool OnWindows
+        {
+            get { return _onWindows; }
+            set { _onWindows = value; }
+        }
+
 
         [DataMember]
         private bool _onFunctionError = false;
 
+        /// <summary>
+        /// True, if command shall be executed in case of an error.
+        /// </summary>
         public bool OnFunctionError
         {
             get { return _onFunctionError; }
@@ -52,6 +87,9 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private bool _onFunctionStart = false;
 
+        /// <summary>
+        /// True, if command shall be executed at function start.
+        /// </summary>
         public bool OnFunctionStart
         {
             get { return _onFunctionStart; }
@@ -62,6 +100,9 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private bool _onFunctionEnd = false;
 
+        /// <summary>
+        /// True, if command shall be executed at function end.
+        /// </summary>
         public bool OnFunctionEnd
         {
             get { return _onFunctionEnd; }
@@ -72,6 +113,9 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private bool _onValidityStart = false;
 
+        /// <summary>
+        /// True, if command shall be executed at function validity start.
+        /// </summary>
         public bool OnValidityStart
         {
             get { return _onValidityStart; }
@@ -82,6 +126,9 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private bool _onValidityEnd = false;
 
+        /// <summary>
+        /// True, if command shall be executed at validity end.
+        /// </summary>
         public bool OnValidityEnd
         {
             get { return _onValidityEnd; }
@@ -106,7 +153,11 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onFunctionEnd">True, if command shall be executed at function end.</param>
         /// <param name="onValidityStart">True, if command shall be executed at validity start.</param>
         /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
-        public Command(Guid id, eCommand command, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd)
+        /// <param name="onUnix">True, if command shall be exceuted on Unix systems. Default=True</param>
+        /// <param name="onWindows">True, if command shall be executed on Windows systems. Default=True</param>
+        public Command(Guid id, eCommand command, 
+            bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd,
+            bool onUnix, bool onWindows)
         {
             _id = id;
             _command = command;
@@ -115,6 +166,8 @@ namespace NuvoControl.Common.Configuration
             _onFunctionEnd = onFunctionEnd;
             _onValidityStart = onValidityStart;
             _onValidityEnd = onValidityEnd;
+            _onUnix = onUnix;
+            _onWindows = onWindows;
         }
 
         /// <summary>
@@ -131,9 +184,10 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("Command: {0}, OnError={2}, OnFuncStart={3}, OnFuncEnd={4}, OnValStart={5}, OnValEnd={6}, Id={1}", 
+            return String.Format("Command: {0} -- [OS: Unix={7}, Windows={8}] -- [EVENTS: OnError={2}, OnFuncStart={3}, OnFuncEnd={4}, OnValStart={5}, OnValEnd={6}] -- Id={1}", 
                 _command, Id,
-                (_onFunctionError ? "Yes" : "No"), (_onFunctionStart ? "Yes" : "No"), (_onFunctionEnd ? "Yes" : "No"), (_onValidityStart ? "Yes" : "No"), (_onValidityEnd ? "Yes" : "No"));
+                (_onFunctionError ? "Yes" : "No"), (_onFunctionStart ? "Yes" : "No"), (_onFunctionEnd ? "Yes" : "No"), (_onValidityStart ? "Yes" : "No"), (_onValidityEnd ? "Yes" : "No"),
+                (_onUnix ? "Yes" : "No"), (_onWindows ? "Yes" : "No") );
         }
 
     }

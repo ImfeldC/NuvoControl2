@@ -5,19 +5,8 @@ using System.Text;
 
 namespace NuvoControl.Common.Configuration
 {
-    public class PlaySoundCommand : Command
+    class StartProcessCommand : Command
     {
-
-        private string _url = "";
-
-        /// <summary>
-        /// URL to play.
-        /// </summary>
-        public string Url
-        {
-            get { return _url; }
-            set { _url = value; }
-        }
 
         /// <summary>
         /// Standard constructor, used by configuration loader.
@@ -30,21 +19,9 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
         /// <param name="onUnix">True, if command shall be exceuted on Unix systems. Default=True</param>
         /// <param name="onWindows">True, if command shall be executed on Windows systems. Default=True</param>
-        public PlaySoundCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
-            string url )
+        public StartProcessCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows)
             :base(id, eCommand.PlaySound, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd, onUnix, onWindows)
         {
-            _url = url;
-        }
-
-        /// <summary>
-        /// Public override of ToString() method.
-        /// </summary>
-        /// <returns>Returns string representative.</returns>
-        public override string ToString()
-        {
-            return String.Format("PlaySound=[ url={1}, Command={0} ]",
-                base.ToString(), _url);
         }
 
     }

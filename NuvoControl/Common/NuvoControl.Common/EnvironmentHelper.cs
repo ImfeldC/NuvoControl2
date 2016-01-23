@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 
 namespace NuvoControl.Common
 {
@@ -59,6 +60,36 @@ namespace NuvoControl.Common
                 return false;
             }
         }
-    
+
+        // See http://stackoverflow.com/questions/11779143/run-a-python-script-from-c-sharp
+        public static Process run_cmd(string cmd, string args)
+        {
+            Process process = null;
+            try
+            {
+                ProcessStartInfo start = new ProcessStartInfo();
+                start.FileName = cmd;       // e.g. cmd is full path to python.exe
+                start.Arguments = args;     // e.g. args is path to .py file and any cmd line args
+                start.UseShellExecute = false;
+                start.RedirectStandardOutput = true;
+                process = Process.Start(start);
+                Console.WriteLine("   Process {0} {1} started .... id={2} [{3}]", cmd, args, process.Id, process.ToString());
+
+                /*
+                using (StreamReader reader = process.StandardOutput)
+                {
+                    string result = reader.ReadToEnd();
+                    Console.Write(result);
+                }
+                */
+            }
+            catch (Exception exc)
+            {
+                Console.WriteLine("   EXCEPTION to start Process {0} {1} started .... exc={2}", cmd, args, exc.ToString());
+                process = null;
+            }
+
+            return process;
+        }
     }
 }
