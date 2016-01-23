@@ -132,6 +132,7 @@ namespace NuvoControl.Server.FunctionServer
                     onFunctionError();
                     throw new FunctionServerException(strMessage);
                 }
+
                 TimeSpan onTime = aktTime - _lastZoneChangeToON;
                 if (_zoneState.PowerStatus == true)
                 {
