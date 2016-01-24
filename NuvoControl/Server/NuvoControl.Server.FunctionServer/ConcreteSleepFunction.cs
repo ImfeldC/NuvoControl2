@@ -205,6 +205,7 @@ namespace NuvoControl.Server.FunctionServer
         public void Dispose()
         {
             unsubscribeZone(_function.ZoneId);
+            base.Dispose();
         }
 
         #endregion

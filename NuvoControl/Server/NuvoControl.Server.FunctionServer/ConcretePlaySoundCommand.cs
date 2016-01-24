@@ -13,7 +13,7 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.FunctionServer
 {
-    class ConcretePlaySoundCommand : ConcreteCommand
+    class ConcretePlaySoundCommand : ConcreteCommand, IDisposable
     {
         private PlaySoundCommand _playSoundCommand = null;
         private Process _process = null;
@@ -26,9 +26,10 @@ namespace NuvoControl.Server.FunctionServer
 
         public override void execCommand(eCommandType cmdType, Function function)
         {
-            if (checkCommandType(cmdType))
+            // onFunctionStart configured to run ...
+            if (checkCommandType(cmdType) && cmdType == eCommandType.onFunctionStart)
             {
-                LogHelper.Log(String.Format(">>> Execute PlaySound command on event {0}: PlayMailCommand={1} / Function={2}", cmdType, _playSoundCommand.ToString(), function.ToString()));
+                LogHelper.Log(String.Format(">>> Execute PlaySound command on event {0}: PlaySoundCommand={1} / Function={2}", cmdType, _playSoundCommand.ToString(), function.ToString()));
 
                 if (EnvironmentHelper.isRunningOnLinux())
                 {
@@ -40,24 +41,16 @@ namespace NuvoControl.Server.FunctionServer
                 }
             }
 
-            if (cmdType == eCommandType.onFunctionEnd)
+            // onFunctionEnd configured to run ...
+            if (checkCommandType(cmdType) && cmdType == eCommandType.onFunctionEnd)
             {
-                // Stop any sound ...
-                // Close application
-                if (_process != null)
-                {
-                    try
-                    {
-                        _process.Kill();
-                    }
-                    catch (System.InvalidOperationException exc)
-                    {
-                        //ignore any exception at shutdown
-                    }
-                }
+                killProcess();
             }
         }
 
+        /// <summary>
+        /// Play sound on Windows platform
+        /// </summary>
         private void playSound()
         {
             // Example URI:
@@ -68,12 +61,46 @@ namespace NuvoControl.Server.FunctionServer
             // - http://asx.skypro.ch/radio/internet-128/virus.asx
 
             Console.WriteLine("   Beep!");
+            LogHelper.Log(String.Format("    ... play sound on Windows! Process={0}", (_process != null ? _process.ToString() : "(null)")));
         }
 
+        /// <summary>
+        /// Play sound on Unix platform
+        /// </summary>
         private void playSoundOnUnix()
         {
+            killProcess();
             _process = EnvironmentHelper.run_cmd("/usr/bin/mpg321", _playSoundCommand.Url);
+            LogHelper.Log(String.Format("    ... play sound on Unix! Process={0}", (_process != null ? _process.ToString() : "(null)") ));
         }
 
+        /// <summary>
+        /// Kill process
+        /// </summary>
+        private void killProcess()
+        {
+            // Stop any sound ...
+            // Close application
+            if (_process != null)
+            {
+                try
+                {
+                    _process.Kill();
+                    _process = null;
+                }
+                catch (System.InvalidOperationException exc)
+                {
+                    //ignore any exception at shutdown
+                    LogHelper.LogException("Cannot kill process in 'killProcess' method!", exc);
+                }
+            }
+        }
+
+        public void Dispose()
+        {
+            // kill any process, before shutdown
+            killProcess();
+            base.Dispose();
+        }
     }
 }

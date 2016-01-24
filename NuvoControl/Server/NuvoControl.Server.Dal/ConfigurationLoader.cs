@@ -195,9 +195,7 @@ namespace NuvoControl.Server.Dal
             _configurationFileWriteDateTime = File.GetLastWriteTime(_configurationFilename);
             _configurationFileHash = calculateHash(_configurationFilename);
             _configurationVersion = (string)_configuration.Root.Element("Configuration").Attribute("Version");
-            _log.Trace(m => m("\nXML Configuration {0} loaded. Version={3}, GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ByteArrayToString(_configurationFileHash), _configurationVersion));
-            if (LogHelper.Verbose)
-                Console.WriteLine("\nXML Configuration {0} loaded. Version={3}, GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ByteArrayToString(_configurationFileHash), _configurationVersion);
+            LogHelper.Log(String.Format("\nXML Configuration {0} loaded. Version={3}, GetLastWriteTime={1} calculateHash={2}", _configurationFilename, _configurationFileWriteDateTime.ToString(), ByteArrayToString(_configurationFileHash), _configurationVersion));
 
             if ((_appendConfigurationFilename != null) && (_appendConfigurationFilename != ""))
             {
@@ -214,17 +212,14 @@ namespace NuvoControl.Server.Dal
                     _appendConfigurationFileWriteDateTime = myHttpWebResponse.LastModified;
                     _appendConfigurationFileHash = null;
                     myHttpWebResponse.Close();
-                    _log.Trace(m => m("\nXML Configuration {0} from remote added. Version={3}, GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash), _appendConfigurationVersion));
-                    if( LogHelper.Verbose )
-                        Console.WriteLine("\nXML Configuration {0} from remote added. Version={3}, GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash), _appendConfigurationVersion);
+                    LogHelper.Log(String.Format("\nXML Configuration {0} from remote added. Version={3}, GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash), _appendConfigurationVersion));
                 }
                 catch (UriFormatException ex)
                 {
                     // Load configuration from local server
                     _appendConfigurationFileWriteDateTime = File.GetLastWriteTime(_appendConfigurationFilename);
                     _appendConfigurationFileHash = calculateHash(_appendConfigurationFilename);
-                    if (LogHelper.Verbose)
-                        Console.WriteLine("\nXML Configuration {0} added. Version={3}, GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash), _appendConfigurationVersion);
+                    LogHelper.Log(String.Format("\nXML Configuration {0} added. Version={3}, GetLastWriteTime={1} calculateHash={2}", _appendConfigurationFilename, _appendConfigurationFileWriteDateTime.ToString(), ByteArrayToString(_appendConfigurationFileHash), _appendConfigurationVersion));
                 }
 
                 // Add Functions and Devices
@@ -268,14 +263,12 @@ namespace NuvoControl.Server.Dal
 
             if (DateTime.Compare(_configurationFileWriteDateTime, File.GetLastWriteTime(_configurationFilename)) != 0)
             {
-                if (LogHelper.Verbose)
-                    Console.WriteLine("\n\nThe configuration file was modified (GetLastWriteTime). {0} vs. {1}", _configurationFileWriteDateTime.ToString(), File.GetLastWriteTime(_configurationFilename).ToString());
+                LogHelper.Log(String.Format("\n\nThe configuration file was modified (GetLastWriteTime). {0} vs. {1}", _configurationFileWriteDateTime.ToString(), File.GetLastWriteTime(_configurationFilename).ToString()));
                 fileChanged = true;
             }
             else if (!compareHash(_configurationFileHash, calculateHash(_configurationFilename)))
             {
-                if (LogHelper.Verbose)
-                    Console.WriteLine("\n\nThe configuration file was modified (calculateHash). {0} vs. {1}", _configurationFileHash.ToString(), ByteArrayToString(calculateHash(_configurationFilename)));
+                LogHelper.Log(String.Format("\n\nThe configuration file was modified (calculateHash). {0} vs. {1}", _configurationFileHash.ToString(), ByteArrayToString(calculateHash(_configurationFilename))));
                 fileChanged = true;
             }
             else

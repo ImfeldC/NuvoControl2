@@ -6,7 +6,7 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.FunctionServer
 {
-    interface IConcreteFunction
+    interface IConcreteFunction : IDisposable
     {
         /// <summary>
         /// Returns the underlying configuration data for this function object.

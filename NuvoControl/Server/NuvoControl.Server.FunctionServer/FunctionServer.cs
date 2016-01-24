@@ -107,6 +107,12 @@ namespace NuvoControl.Server.FunctionServer
         {
             _log.Trace(m => m("Function server disposed!"));
             _timerFunction.Stop();
+
+            // Dispose all functions ...
+            foreach (IConcreteFunction func in _concreteFunctions)
+            {
+                func.Dispose();
+            }
         }
 
         #endregion
