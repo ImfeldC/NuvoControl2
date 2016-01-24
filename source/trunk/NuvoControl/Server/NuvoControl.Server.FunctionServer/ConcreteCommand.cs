@@ -11,7 +11,7 @@ using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.FunctionServer
 {
-    public abstract class ConcreteCommand : IConcreteCommand
+    public abstract class ConcreteCommand : IConcreteCommand, IDisposable
     {
 
         private static ILog _log = LogManager.GetCurrentClassLogger();
@@ -119,5 +119,10 @@ namespace NuvoControl.Server.FunctionServer
                 (onFunctionError ? "Yes" : "No"), (onFunctionStart ? "Yes" : "No"), (onFunctionEnd ? "Yes" : "No"), (onValidityStart ? "Yes" : "No"), (onValidityEnd ? "Yes" : "No"));
         }
 
+
+        public void Dispose()
+        {
+            // Dispose concrete command (base class)
+        }
     }
 }

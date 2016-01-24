@@ -29,17 +29,6 @@ namespace NuvoControl.Test.ConsoleClient
         [STAThread]
         static void Main(string[] args)
         {
-            ILog log = LogManager.GetCurrentClassLogger();
-            log.Debug(m => m("Starting Test Console Client! (Version={0})", Application.ProductVersion));
-            LogHelper.Log("**** Test Console Client started. *******", log);
-
-            Console.WriteLine(">>> Starting Test Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
-                "n/a", "n/a", Application.ProductVersion);
-            //Console.WriteLine(">>> Starting Console Client  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
-            //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
-            Console.WriteLine("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem());
-            Console.WriteLine();
-
             // Load command line argumnets
             var options = new Options();
             CommandLine.Parser.Default.ParseArguments(args, options);
@@ -47,6 +36,11 @@ namespace NuvoControl.Test.ConsoleClient
             {
                 Console.WriteLine(options.GetUsage());
             }
+
+            // Set global verbose mode
+            LogHelper.Verbose = options.verbose;
+
+            LogHelper.LogAppStart("Test Console Client");
 
 
             ////////////////////////////////

@@ -12,7 +12,7 @@ using NuvoControl.Server.ZoneServer;
 
 namespace NuvoControl.Server.FunctionServer
 {
-    public abstract class ConcreteFunction : IConcreteFunction
+    public abstract class ConcreteFunction : IConcreteFunction, IDisposable
     {
         /// <summary>
         /// Logger object.
@@ -209,5 +209,14 @@ namespace NuvoControl.Server.FunctionServer
         #endregion
 
 
+
+        public void Dispose()
+        {
+            // Dispose concrete function (base class)
+            foreach (IConcreteCommand cmd in _commands)
+            {
+                cmd.Dispose();
+            }
+        }
     }
 }
