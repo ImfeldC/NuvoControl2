@@ -23,8 +23,11 @@ using System.Linq;
 using System.Text;
 using System.IO.Ports;
 using NuvoControl.Server.ProtocolDriver.Interface;
-using Common.Logging;
 using System.Timers;
+
+using Common.Logging;
+using NuvoControl.Common;
+
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -58,7 +61,6 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         public SerialPort()
         {
-            _log.Trace(m => m("Serial port instantiated!"));
             try
             {
                 // NOTE: The following properties are not implemented in the "mono" framework
@@ -74,6 +76,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // Limited environment detected!
                 _limitedEnvironment = true;
             }
+            LogHelper.Log(String.Format("Serial port instantiated! (Limited Enironment={0}", _limitedEnvironment));
 
             // Enable read intervall timer only, if ..
             // (a) Proper intervall is defined
@@ -167,12 +170,17 @@ namespace NuvoControl.Server.ProtocolDriver
                 // ignore timeout, finish read-out
             }
 
-            //raise the event, and pass data to next layer
-            if (onDataReceived != null)
+            if (msg != "")
             {
-                onDataReceived(this,
-                  new SerialPortEventArgs(msg));
+                //raise the event, and pass data to next layer
+                if (onDataReceived != null)
+                {
+                    onDataReceived(this,
+                      new SerialPortEventArgs(msg));
+                }
+                LogHelper.Log("(readData) Message received:" + msg);
             }
+
             return msg;
         }
 
@@ -198,7 +206,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // ignore timeout, finish read-out
             }
 
-            Console.WriteLine("Message received:" + rxString);
+            LogHelper.Log("(ReadByteData) Message received:" + rxString);
             return rxString;
         }
         
