@@ -19,7 +19,7 @@ using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ProtocolDriver;
 using NuvoControl.Server.ProtocolDriver.Interface;
 
-
+using NuvoControl.ThingSpeak;
 
 
 
@@ -52,13 +52,13 @@ namespace NuvoControl.Test.ConsoleClient
             Console.WriteLine("Start ThingSpeak tests.... ");
 
             short TSResponse3 = 0;
-            Boolean bRet3 = ThingSpeak.SendDataToThingSpeak("10BLEA0XICFWMWW1", "1", "25", out TSResponse3);
+            Boolean bRet3 = NuvoControl.ThingSpeak.ThingSpeak.SendDataToThingSpeak("10BLEA0XICFWMWW1", "1", "25", out TSResponse3);
             Thread.Sleep(20000);    // wait approx. 20s before sending new data
             short TSResponse1 = 0;
-            Boolean bRet1 = ThingSpeak.SendDataToThingSpeak("10BLEA0XICFWMWW1", "1", "2", "3", "4", "5", "6", "7", "8", out TSResponse1);
+            Boolean bRet1 = NuvoControl.ThingSpeak.ThingSpeak.SendDataToThingSpeak("10BLEA0XICFWMWW1", "1", "2", "3", "4", "5", "6", "7", "8", out TSResponse1);
             Thread.Sleep(20000);    // wait approx. 20s before sending new data
             short TSResponse2 = 0;
-            Boolean bRet2 = ThingSpeak.UpdateThingkSpeakStatus("10BLEA0XICFWMWW1", ("Test Status: " + strAppName), out TSResponse2);
+            Boolean bRet2 = NuvoControl.ThingSpeak.ThingSpeak.UpdateThingkSpeakStatus("10BLEA0XICFWMWW1", ("Test Status: " + strAppName), out TSResponse2);
 
             Console.WriteLine("End ThingSpeak tests....");
             Console.WriteLine();
