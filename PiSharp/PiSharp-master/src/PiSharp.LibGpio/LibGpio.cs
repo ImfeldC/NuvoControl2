@@ -118,7 +118,7 @@ namespace PiSharp.LibGpio
 
             
 
-            Debug.WriteLine(string.Format("[PiSharp.LibGpio] Broadcom GPIO number '{0}', configured for use", pinNumber));
+            Debug.WriteLine(string.Format("[PiSharp.LibGpio] Broadcom GPIO number '{0}' closed", pinNumber));
         }
 
         /// <summary>
