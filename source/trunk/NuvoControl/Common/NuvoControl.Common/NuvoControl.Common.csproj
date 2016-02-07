@@ -80,16 +80,17 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppInfoHelper.cs" />
+    <Compile Include="Command\SendNuvoCommand.cs" />
     <Compile Include="CommonOptions.cs" />
-    <Compile Include="Configuration\Command.cs" />
+    <Compile Include="Command\Command.cs" />
     <Compile Include="Configuration\AlarmFunction.cs" />
     <Compile Include="Configuration\Building.cs" />
     <Compile Include="Configuration\Communication.cs" />
     <Compile Include="Configuration\NuvoImage.cs" />
-    <Compile Include="Configuration\PlaySoundCommand.cs" />
+    <Compile Include="Command\PlaySoundCommand.cs" />
     <Compile Include="Configuration\Protocol.cs" />
     <Compile Include="Configuration\Address.cs" />
-    <Compile Include="Configuration\SendMailCommand.cs" />
+    <Compile Include="Command\SendMailCommand.cs" />
     <Compile Include="Configuration\SleepFunction.cs" />
     <Compile Include="Configuration\Source.cs" />
     <Compile Include="Configuration\Floor.cs" />
@@ -97,7 +98,7 @@
     <Compile Include="Configuration\Graphic.cs" />
     <Compile Include="Configuration\Hardware.cs" />
     <Compile Include="Configuration\Device.cs" />
-    <Compile Include="Configuration\StartProcessCommand.cs" />
+    <Compile Include="Command\StartProcessCommand.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="Configuration\Zone.cs" />
     <Compile Include="EnvironmentHelper.cs" />

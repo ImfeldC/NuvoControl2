@@ -60,7 +60,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             foreach (Command cmd in _function.Commands)
             {
-                _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd));
+                _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd, _zoneServer));
             }
         }
 
@@ -193,7 +193,14 @@ namespace NuvoControl.Server.FunctionServer
         {
             foreach (IConcreteCommand cmd in _commands)
             {
-                cmd.execCommand(commandType, _function);
+                if (cmd != null)
+                {
+                    cmd.execCommand(commandType, _function);
+                }
+                else
+                {
+                    LogHelper.Log(String.Format("Ignore <null> concrete command, in list [{0}]", _commands.ToString() ));
+                }
             }
         }
 

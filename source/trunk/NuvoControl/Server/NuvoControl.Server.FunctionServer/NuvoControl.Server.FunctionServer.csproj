@@ -59,17 +59,18 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command\ConcreteSendNuvoCommand.cs" />
     <Compile Include="ConcreteAlarmFunction.cs" />
-    <Compile Include="ConcreteCommand.cs" />
+    <Compile Include="Command\ConcreteCommand.cs" />
     <Compile Include="ConcreteCommandFactory.cs" />
     <Compile Include="ConcreteFunction.cs" />
     <Compile Include="ConcreteFunctionFactory.cs" />
-    <Compile Include="ConcretePlaySoundCommand.cs" />
-    <Compile Include="ConcreteSendMailCommand.cs" />
+    <Compile Include="Command\ConcretePlaySoundCommand.cs" />
+    <Compile Include="Command\ConcreteSendMailCommand.cs" />
     <Compile Include="ConcreteSleepFunction.cs" />
     <Compile Include="FunctionServer.cs" />
     <Compile Include="FunctionServerException.cs" />
-    <Compile Include="IConcreteCommand.cs" />
+    <Compile Include="Command\IConcreteCommand.cs" />
     <Compile Include="Properties\FunctionServer.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

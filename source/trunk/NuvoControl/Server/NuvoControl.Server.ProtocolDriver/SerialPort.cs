@@ -178,7 +178,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     onDataReceived(this,
                       new SerialPortEventArgs(msg));
                 }
-                LogHelper.Log("(readData) Message received:" + msg);
+                LogHelper.Log("(readData) Message received:" + msg.Trim().Replace('\r','-'));
             }
 
             return msg;
@@ -206,7 +206,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // ignore timeout, finish read-out
             }
 
-            LogHelper.Log("(ReadByteData) Message received:" + rxString);
+            LogHelper.Log("(ReadByteData) Message received:" + rxString.Trim().Replace('\r', '-'));
             return rxString;
         }
         

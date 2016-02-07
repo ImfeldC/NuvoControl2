@@ -6,13 +6,32 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
+    /// <summary>
+    /// Enum of supported commands
+    /// </summary>
     public enum eCommand
     {
+        /// <summary>
+        /// Send mail
+        /// </summary>
         SendMail = 0,
+        /// <summary>
+        /// Play sound
+        /// </summary>
         PlaySound = 1,
-        StartProcess = 2
+        /// <summary>
+        /// Start a process
+        /// </summary>
+        StartProcess = 2,
+        /// <summary>
+        /// Send Nuvo Command
+        /// </summary>
+        SendNuvoCommand = 3
     }
 
+    /// <summary>
+    /// Events in case the command shall be executed.
+    /// </summary>
     public enum eCommandType
     {
         onFunctionError = 0,    // in case an error occurs
