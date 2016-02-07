@@ -272,9 +272,24 @@
 
           <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                    process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
+
+          <Command cmd="SendNuvoCommand" onValidityStart="True" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
+
         </Commands>
       </SleepFunction>
 
+
+      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.3" SourceId="100.1" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
+        <Validity ActiveFrom="14:00" ActiveTo="04:00"></Validity>
+        <Command cmd="PlaySound" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
+                 url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+        <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
+                 process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
+        
+        <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
+        
+      </ZoneChangeFunction>
+      
     </Functions>
   </Configuration>
 </NuvoControl>

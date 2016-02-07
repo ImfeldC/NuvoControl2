@@ -357,7 +357,7 @@ namespace NuvoControl.Test.ConsoleClient
                 // ignore timeout, finish read-out
             }
 
-            Console.WriteLine("Message received:" + rxString);
+            Console.WriteLine("Message received:" + rxString.Trim().Replace('\r', '-'));
             return rxString;
         }
  
