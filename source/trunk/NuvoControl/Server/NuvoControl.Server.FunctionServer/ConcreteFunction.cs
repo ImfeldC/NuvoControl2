@@ -222,7 +222,8 @@ namespace NuvoControl.Server.FunctionServer
             // Dispose concrete function (base class)
             foreach (IConcreteCommand cmd in _commands)
             {
-                cmd.Dispose();
+                if( cmd != null )
+                    cmd.Dispose();
             }
         }
     }
