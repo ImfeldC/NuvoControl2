@@ -28,16 +28,14 @@ namespace NuvoControl.Server.HostConsole
             // Load command line argumnets
             _options = new Options();
             CommandLine.Parser.Default.ParseArguments(args, _options);
+            // Set global verbose mode
+            LogHelper.SetOptions(_options );
+            LogHelper.LogAppStart("Server Console"); 
+            LogHelper.LogArgs(args);
             if (_options.Help)
             {
                 Console.WriteLine(_options.GetUsage());
             }
-
-            // Set global verbose mode
-            LogHelper.Verbose = _options.verbose;
-
-            LogHelper.LogAppStart("Server Console"); 
-            LogHelper.LogArgs(args);
 
             _log.Trace(m => m("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
             _timerCheckConfiguration.Interval = (Properties.Settings.Default.ConfigurationCheckIntervall < 30 ? 30 : Properties.Settings.Default.ConfigurationCheckIntervall) * 1000;
@@ -46,9 +44,9 @@ namespace NuvoControl.Server.HostConsole
 
             LoadAllServices();
 
-            Console.WriteLine(">>> ");
-            Console.WriteLine(">>> ");
-            Console.WriteLine(">>> Press <Enter> to stop the console application.");
+            LogHelper.Log(LogLevel.All, ">>> ");
+            LogHelper.Log(LogLevel.All, ">>> ");
+            LogHelper.Log(LogLevel.All, ">>> Press <Enter> to stop the console application.");
             Console.ReadLine();
 
             UnloadAllServices();
@@ -152,8 +150,6 @@ namespace NuvoControl.Server.HostConsole
             {
                 LogHelper.LogException("Failed to create the function server.", exc);
             }
-
-            Console.WriteLine();
         }
 
         private static void UnloadAllServices()
@@ -194,8 +190,6 @@ namespace NuvoControl.Server.HostConsole
                 LogHelper.LogException("Failed to load the system configuration.", exc);
                 return;
             }
-
-            Console.WriteLine();
         }
 
 
@@ -207,9 +201,9 @@ namespace NuvoControl.Server.HostConsole
         private static void LoadConfigurationService(string configurationFile, string remoteConfigurationFile)
         {
             _log.Info(m => m("Loading the nuvo control configuration from '{0}' and '{1}' ...", configurationFile, remoteConfigurationFile));
-            Console.WriteLine(">>> Loading configuration...");
-            Console.WriteLine(">>>   from {0}", configurationFile);
-            Console.WriteLine(">>>   and append {0}", remoteConfigurationFile);
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Loading configuration..."));
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   from {0}", configurationFile));
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   and append {0}", remoteConfigurationFile));
 
             _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile, remoteConfigurationFile);
         }
@@ -220,8 +214,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="configurationFile">Filename of configuration file</param>
         private static void UnloadConfigurationService()
         {
-            _log.Info(m => m("Unload the nuvo control configuration ..."));
-            Console.WriteLine(">>> Unload the nuvo control configuration ...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload the nuvo control configuration ..."));
 
             _configurationService.Dispose();
             _configurationService = null;
@@ -233,8 +226,7 @@ namespace NuvoControl.Server.HostConsole
         /// </summary>
         private static void LoadProtocolDrivers()
         {
-            _log.Info("Loading protocol drivers...");
-            Console.WriteLine(">>> Loading protocol drivers...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Loading protocol drivers..."));
 
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
@@ -260,14 +252,13 @@ namespace NuvoControl.Server.HostConsole
         /// </summary>
         private static void UnloadProtocolDrivers()
         {
-            _log.Info("Unload protocol drivers...");
-            Console.WriteLine(">>> Unload protocol drivers...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload protocol drivers..."));
 
             foreach (int deviceId in _protocolDrivers.Keys)
             {
                 _protocolDrivers[deviceId].Close(deviceId);
                 //_protocolDrivers[deviceId] = null;
-                Console.WriteLine(">>>   driver {0} unloaded ...", deviceId);
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   driver {0} unloaded ...", deviceId));
             }
             _protocolDrivers.Clear();
         }
@@ -278,13 +269,12 @@ namespace NuvoControl.Server.HostConsole
         /// </summary>
         private static void InstantiateZoneServer()
         {
-            _log.Info("Instantiating the zone server...");
-            Console.WriteLine(">>> Instantiating the zone server...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the zone server..."));
 
             List<IZoneController> zoneControllers = new List<IZoneController>();
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
-                Console.WriteLine(">>>   device {0} loaded ...", device.ToString());
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.ToString()));
                 foreach (int zoneId in device.Zones)
                 {
                     zoneControllers.Add(new ZoneController(new Address(device.Id, zoneId), _protocolDrivers[device.Id]));
@@ -299,8 +289,7 @@ namespace NuvoControl.Server.HostConsole
         /// </summary>
         private static void UnloadZoneServer()
         {
-            _log.Info("Unload the zone server...");
-            Console.WriteLine(">>> Unload the zone server...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload the zone server..."));
 
             _zoneServer.ShutDown();
             _zoneServer = null;
@@ -312,8 +301,7 @@ namespace NuvoControl.Server.HostConsole
         /// </summary>
         private static void InstantiateFunctionServer()
         {
-            _log.Info("Instantiating the function server...");
-            Console.WriteLine(">>> Instantiating the function server...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the function server..."));
 
             _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
             LogHelper.Log(LogLevel.Info, String.Format(">>>   Functions: {0}", _functionServer.ToString()));
@@ -324,8 +312,7 @@ namespace NuvoControl.Server.HostConsole
         /// </summary>
         private static void UnloadFunctionServer()
         {
-            _log.Info("Unload the function server...");
-            Console.WriteLine(">>> Unload the function server...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload the function server..."));
 
             _functionServer.Dispose();
             _functionServer = null;
@@ -365,7 +352,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
-            Console.WriteLine(">>>   [{0}]  Zone {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.ZoneState.ToString());
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Zone {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.ZoneState.ToString()));
         }
 
         /// <summary>
@@ -375,7 +362,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onDeviceStatusUpdate(object sender, ProtocolDeviceUpdatedEventArgs e)
         {
-            Console.WriteLine(">>>   [{0}]  Device {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.DeviceId.ToString(), e.DeviceQuality.ToString());
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Device {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.DeviceId.ToString(), e.DeviceQuality.ToString()));
         }
 
         /// <summary>
@@ -385,7 +372,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
-            Console.WriteLine(">>>   [{0}]  Zone {1}  Command Received: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.Command.ToString());
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Zone {1}  Command Received: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.Command.ToString()));
         }
 
         #endregion

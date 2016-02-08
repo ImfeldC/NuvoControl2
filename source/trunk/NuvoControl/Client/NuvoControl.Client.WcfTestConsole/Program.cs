@@ -142,7 +142,7 @@ namespace NuvoControl.Client.WcfTestConsole
                 Console.WriteLine(">>> End ControlWithCallback test ...");
             */}
 
-            Console.WriteLine(">>> Press <Enter> to stop the services.");
+            LogHelper.Log(LogLevel.All, ">>> Press <Enter> to stop the services.");
             Console.ReadLine();
 
         }

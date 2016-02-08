@@ -33,23 +33,21 @@ namespace NuvoControl.Test.ConsoleClient
             // Load command line argumnets
             var options = new Options();
             CommandLine.Parser.Default.ParseArguments(args, options);
+            // Set global verbose mode
+            LogHelper.SetOptions( options );
+            const string strAppName = "Test Console Client";
+            LogHelper.LogAppStart(strAppName);
+            LogHelper.LogArgs(args);
             if (options.Help)
             {
                 Console.WriteLine(options.GetUsage());
             }
 
-            // Set global verbose mode
-            LogHelper.Verbose = options.verbose;
-
-            const string strAppName = "Test Console Client";
-            LogHelper.LogAppStart(strAppName);
-
-
             ////////////////////////////////
             // ThingSpeak Test
             ////////////////////////////////
 
-            Console.WriteLine("Start ThingSpeak tests.... ");
+            LogHelper.Log(LogLevel.All, "Start ThingSpeak tests.... ");
 
             short TSResponse3 = 0;
             Boolean bRet3 = NuvoControl.ThingSpeak.ThingSpeak.SendDataToThingSpeak("10BLEA0XICFWMWW1", "1", "25", out TSResponse3);
@@ -60,20 +58,20 @@ namespace NuvoControl.Test.ConsoleClient
             short TSResponse2 = 0;
             Boolean bRet2 = NuvoControl.ThingSpeak.ThingSpeak.UpdateThingkSpeakStatus("10BLEA0XICFWMWW1", ("Test Status: " + strAppName), out TSResponse2);
 
-            Console.WriteLine("End ThingSpeak tests....");
-            Console.WriteLine();
+            LogHelper.Log(LogLevel.All, "End ThingSpeak tests....");
+            LogHelper.Log(LogLevel.All, "");
 
 
             ////////////////////////////////
             // Play Sound Test
             ////////////////////////////////
 
-            Console.WriteLine("Start play sound tests.... ");
+            LogHelper.Log(LogLevel.All, "Start play sound tests.... ");
 
             #region Play File
             if (options.soundFile != null)
             {
-                Console.WriteLine("   Play File {0} ...", options.soundFile);
+                LogHelper.Log(LogLevel.Info, String.Format("   Play File {0} ...", options.soundFile));
                 try
                 {
                     // Example, see http://raspberrypi.stackexchange.com/questions/3368/is-there-a-way-to-get-soundplayer-to-work-or-is-there-an-alternative
@@ -88,11 +86,11 @@ namespace NuvoControl.Test.ConsoleClient
                 }
                 catch (System.IO.FileNotFoundException exc)
                 {
-                    Console.WriteLine("   File {0} not found, skip sound test.", options.soundFile);
+                    LogHelper.Log(LogLevel.Error, String.Format("   File {0} not found, skip sound test.", options.soundFile));
                 }
                 catch (System.ArgumentException exc)
                 {
-                    Console.WriteLine("   File {0} not supported, skip sound test. [Exception={1}]", options.soundFile, exc.ToString());
+                    LogHelper.Log(LogLevel.Fatal, String.Format("   File {0} not supported, skip sound test. [Exception={1}]", options.soundFile, exc.ToString()));
                 }
             }
             #endregion
@@ -100,7 +98,7 @@ namespace NuvoControl.Test.ConsoleClient
             #region Play Stream
             if (options.soundStream != null)
             {
-                Console.WriteLine("   Play Stream {0} ...", options.soundStream);
+                LogHelper.Log(LogLevel.Info, String.Format("   Play Stream {0} ...", options.soundStream));
                 try
                 {
                     // Example URI:
@@ -141,32 +139,32 @@ namespace NuvoControl.Test.ConsoleClient
                 }
                 catch (System.IO.FileNotFoundException exc)
                 {
-                    Console.WriteLine("   Stream {0} not found, skip sound test.", options.soundStream);
+                    LogHelper.Log(LogLevel.Error, String.Format("   Stream {0} not found, skip sound test.", options.soundStream));
                 }
                 catch (System.ArgumentException exc)
                 {
-                    Console.WriteLine("   Stream {0} not supported, skip sound test. [Exception={1}]", options.soundStream, exc.ToString());
+                    LogHelper.Log(LogLevel.Error, String.Format("   Stream {0} not supported, skip sound test. [Exception={1}]", options.soundStream, exc.ToString()));
                 }
                 catch (System.InvalidOperationException exc)
                 {
-                    Console.WriteLine("   Stream {0} invalid. [Exception={1}]", options.soundStream, exc.ToString());
+                    LogHelper.Log(LogLevel.Fatal, String.Format("   Stream {0} invalid. [Exception={1}]", options.soundStream, exc.ToString()));
                 }
                 catch (System.NotSupportedException exc)
                 {
-                    Console.WriteLine("   Not supported excpetion for {0}. [Exception={1}]", options.soundStream, exc.ToString());
+                    LogHelper.Log(LogLevel.Fatal, String.Format("   Not supported excpetion for {0}. [Exception={1}]", options.soundStream, exc.ToString()));
                 }
             }
             #endregion
 
-            Console.WriteLine("End play sound tests....");
-            Console.WriteLine();
+            LogHelper.Log(LogLevel.All, "End play sound tests....");
+            LogHelper.Log(LogLevel.All, "");
 
 
             ///////////////////////////////
             // Test Spawn Process
             ///////////////////////////////
 
-            Console.WriteLine("Start Process tests.... ");
+            LogHelper.Log(LogLevel.All, "Start Process tests.... ");
             Process process = null;
 
             if (options.processCmd != null)
@@ -174,34 +172,30 @@ namespace NuvoControl.Test.ConsoleClient
                 process = run_cmd(options.processCmd, options.processArg);
             }
 
-            Console.WriteLine("End Process tests....");
-            Console.WriteLine();
+            LogHelper.Log(LogLevel.All, "End Process tests....");
+            LogHelper.Log(LogLevel.All, "");
 
             ///////////////////////////////
             // Test Mail
             ///////////////////////////////
 
-            Console.WriteLine("Start Mail tests.... ");
+            LogHelper.Log(LogLevel.All, "Start Mail tests.... ");
 
             if (options.mailRecepient != null)
             {
                 bool bSend = MailHelper.SendMail(options.mailRecepient,
                     (options.mailSubject == null ? "Mail from Nuvo Control" : options.mailSubject),
                     (options.mailBody == null ? "<Empty Body>" : options.mailBody));
-                if (options.verbose)
-                {
-                    Console.WriteLine("    Mail {1} send to {0}", options.mailRecepient, (bSend==true?"":"NOT"));
-                }
+                LogHelper.Log(LogLevel.Info, String.Format("    Mail {1} send to {0}", options.mailRecepient, (bSend==true?"":"NOT")));
             }
 
-            Console.WriteLine("End Mail tests....");
-            Console.WriteLine();
+            LogHelper.Log(LogLevel.All, "End Mail tests....");
 
             ////////////////////////////////
             // Test Serial Port
             ////////////////////////////////
 
-            Console.WriteLine("Start serial port tests....");
+            LogHelper.Log(LogLevel.All, "Start serial port tests....");
             // Connect and Test (direct serial port)
             SerialPortTest myTest = new SerialPortTest(options);
             myTest.Test();
@@ -211,15 +205,15 @@ namespace NuvoControl.Test.ConsoleClient
                 myTest.SendReceiveData(options.sendData + "\r\n");
 
             myTest.Close();
-            Console.WriteLine("End serial port tests....");
-            Console.WriteLine();
+            LogHelper.Log(LogLevel.All, "End serial port tests....");
+            LogHelper.Log(LogLevel.All, "");
 
 
             ///////////////////////////////
             // Test Protocol driver
             ///////////////////////////////
 
-            Console.WriteLine("Start protocol driver tests....");
+            LogHelper.Log(LogLevel.All, "Start protocol driver tests....");
             // Connect and Test (via protocol driver)
             myTest.TestCommand();
 
@@ -234,21 +228,21 @@ namespace NuvoControl.Test.ConsoleClient
             //NuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion);
             //Console.WriteLine("Ootgoing command: " + command.OutgoingCommand);
             //_nuvoServer.SendCommand(_address, command);
-            Console.WriteLine("End protocol driver tests....");
+            LogHelper.Log(LogLevel.All, "End protocol driver tests....");
 
             String configurationFile = "./Config/NuvoControlKonfiguration.xml";
             String remoteConfigurationFile = "";
-            Console.WriteLine(">>> Loading configuration...");
-            Console.WriteLine(">>>   from {0}", configurationFile);
-            Console.WriteLine(">>>   and append {0}", remoteConfigurationFile);
+            LogHelper.Log(LogLevel.Info, ">>> Loading configuration...");
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   from {0}", configurationFile));
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   and append {0}", remoteConfigurationFile));
 
             NuvoControl.Server.ConfigurationService.ConfigurationService _configurationService = null;
             _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile, remoteConfigurationFile);
 
 
-            Console.WriteLine(">>> ");
-            Console.WriteLine(">>> ");
-            Console.WriteLine(">>> Press <Enter> to stop the console application.");
+            LogHelper.Log(LogLevel.All, ">>> ");
+            LogHelper.Log(LogLevel.All, ">>> ");
+            LogHelper.Log(LogLevel.All, ">>> Press <Enter> to stop the console application.");
             Console.ReadLine();
 
             // Close application
@@ -315,7 +309,7 @@ namespace NuvoControl.Test.ConsoleClient
 
                 try
                 {
-                    Console.WriteLine("Open connection to Port '{0}' (Baud Rate={1})", _portName, _baudRate);
+                    LogHelper.Log(LogLevel.Info, String.Format("Open connection to Port '{0}' (Baud Rate={1})", _portName, _baudRate));
                     mySerial = new System.IO.Ports.SerialPort(_portName, _baudRate);
                     mySerial.Open();
                     mySerial.ReadTimeout = _readTimeout;
@@ -323,7 +317,7 @@ namespace NuvoControl.Test.ConsoleClient
                 }
                 catch (System.ArgumentException exc)
                 {
-                    Console.WriteLine("Exception! {0}", exc.ToString());
+                    LogHelper.Log(LogLevel.Fatal, String.Format("Exception! {0}", exc.ToString()));
                     mySerial = null;
                 }
 
@@ -357,7 +351,7 @@ namespace NuvoControl.Test.ConsoleClient
                 // ignore timeout, finish read-out
             }
 
-            Console.WriteLine("Message received:" + rxString.Trim().Replace('\r', '-'));
+            LogHelper.Log(LogLevel.Info, String.Format("Message received:" + rxString.Trim().Replace('\r', '-')));
             return rxString;
         }
  
@@ -366,7 +360,7 @@ namespace NuvoControl.Test.ConsoleClient
             if (mySerial != null)
             {
                 mySerial.Write(Data);
-                Console.WriteLine("Message send:" + Data);
+                LogHelper.Log(LogLevel.Info, String.Format("Message send:" + Data));
                 return true;
             }
             else
@@ -398,17 +392,17 @@ namespace NuvoControl.Test.ConsoleClient
         public void TestCommand()
         {
             // Open a protocol stack (using a class implementing IProtocol)
-            Console.WriteLine("Open connection to Port '{0}'", _options.portName);
+            LogHelper.Log(LogLevel.Info, String.Format("Open connection to Port '{0}'", _options.portName));
             _nuvoServer = new NuvoEssentiaProtocolDriver();
             _nuvoServer.onCommandReceived += new ProtocolCommandReceivedEventHandler(nuvoServer_onCommandReceived);
             _nuvoServer.onZoneStatusUpdate += new ProtocolZoneUpdatedEventHandler(_nuvoServer_onZoneStatusUpdate);
 
-            Console.WriteLine("Create telegram class for serial port ...");
+            LogHelper.Log(LogLevel.Info, String.Format("Create telegram class for serial port ..."));
             NuvoCommandTelegram nuvoTelegram = new NuvoCommandTelegram(_serialPort);
             _nuvoServer.Open(ENuvoSystem.NuVoEssentia, 1, new Communication(_portName, _baudRate, 8, 1, "None"), new NuvoEssentiaProtocol(1, nuvoTelegram));
-            Console.WriteLine("Serail port created and opened ... '{0}'", _serialPort.ToString());
+            LogHelper.Log(LogLevel.Info, String.Format("Serail port created and opened ... '{0}'", _serialPort.ToString()));
 
-            Console.WriteLine("Send command '{0}'", ENuvoEssentiaCommands.ReadVersion.ToString());
+            LogHelper.Log(LogLevel.Info, String.Format("Send command '{0}'", ENuvoEssentiaCommands.ReadVersion.ToString()));
             _nuvoServer.SendCommand(_address, new NuvoEssentiaSingleCommand(ENuvoEssentiaCommands.ReadVersion));
         }
 
@@ -426,7 +420,7 @@ namespace NuvoControl.Test.ConsoleClient
                 EDIPSwitchOverrideStatus.DIPSwitchOverrideOFF,
                 EVolumeResetStatus.VolumeResetOFF,
                 ESourceGroupStatus.SourceGroupOFF, "V1.0");
-            Console.WriteLine("Send commend: " + command.OutgoingCommand);
+            LogHelper.Log(LogLevel.Info, String.Format("Send command: " + command.OutgoingCommand));
             if (_nuvoServer != null)
             {
                 _nuvoServer.SendCommand(_address, command);
@@ -435,12 +429,12 @@ namespace NuvoControl.Test.ConsoleClient
 
         void nuvoServer_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
-            Console.WriteLine("Command Received:" + e.Command.IncomingCommand);
+            LogHelper.Log(LogLevel.Info, String.Format("Command Received:" + e.Command.IncomingCommand));
         }
 
         void _nuvoServer_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
-            Console.WriteLine("Zone Update: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState);
+            LogHelper.Log(LogLevel.Info, String.Format("Zone Update: Zone='{0}' State='{1}'", e.ZoneAddress, e.ZoneState));
         }
 
         #endregion
@@ -459,7 +453,7 @@ namespace NuvoControl.Test.ConsoleClient
             start.UseShellExecute = false;
             start.RedirectStandardOutput = true;
             Process process = Process.Start(start);
-            Console.WriteLine("   Process {0} {1} started .... id={2} [{3}]", cmd, args, process.Id, process.ToString());
+            LogHelper.Log(LogLevel.Info, String.Format("   Process {0} {1} started .... id={2} [{3}]", cmd, args, process.Id, process.ToString()));
 
             /*
             using (StreamReader reader = process.StandardOutput)

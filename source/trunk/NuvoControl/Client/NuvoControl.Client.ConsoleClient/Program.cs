@@ -46,15 +46,12 @@ namespace NuvoControl.Client.ConsoleClient
         {
             ILog _log = LogManager.GetCurrentClassLogger();
 
-            LogHelper.Log(LogLevel.Info, "**** Console client started. *******", _log);
-
-            Console.WriteLine(">>> Starting Console Client  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
-                AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
-            Console.WriteLine();
-
-
+            // Load command line argumnets
             var options = new Options();
             CommandLine.Parser.Default.ParseArguments(args, options);
+            // Set global verbose mode
+            LogHelper.SetOptions(options);
+            LogHelper.LogAppStart("**** Console client started. *******");
             if (options.Help)
             {
                 Console.WriteLine(options.GetUsage());
@@ -65,7 +62,7 @@ namespace NuvoControl.Client.ConsoleClient
             //FindResponse fr = Discover("IMonitorAndControl", typeof(IMonitorAndControl), 5);
 
 
-            Console.WriteLine(">>> Press <Enter> to stop the services.");
+            LogHelper.Log(LogLevel.All, ">>> Press <Enter> to stop the services.");
             Console.ReadLine();
 
         }
@@ -84,14 +81,14 @@ namespace NuvoControl.Client.ConsoleClient
             try
             {
                 // ------- DISCOVERY ----------
-                Console.WriteLine("Start discovering {0} ...", identifier);
+                LogHelper.Log(LogLevel.Info, String.Format("Start discovering {0} ...", identifier));
 
                 DiscoveryClient discoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
                 FindCriteria criteria = new FindCriteria(type);
                 criteria.Duration = TimeSpan.FromSeconds(timespan);
                 discovered = discoveryClient.Find(criteria);
 
-                Console.WriteLine("{0} Discovery: {1} services found.", identifier, discovered.Endpoints.Count);
+                LogHelper.Log(LogLevel.Info, String.Format("{0} Discovery: {1} services found.", identifier, discovered.Endpoints.Count));
                 LogHelper.PrintEndPoints(discovered.Endpoints);
                 discoveryClient.Close();
             }
