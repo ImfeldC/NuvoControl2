@@ -200,10 +200,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="remoteConfigurationFile">Filename of configuration file to append</param>
         private static void LoadConfigurationService(string configurationFile, string remoteConfigurationFile)
         {
-            _log.Info(m => m("Loading the nuvo control configuration from '{0}' and '{1}' ...", configurationFile, remoteConfigurationFile));
-            LogHelper.Log(LogLevel.Info, String.Format(">>> Loading configuration..."));
-            LogHelper.Log(LogLevel.Info, String.Format(">>>   from {0}", configurationFile));
-            LogHelper.Log(LogLevel.Info, String.Format(">>>   and append {0}", remoteConfigurationFile));
+            LogHelper.Log(LogLevel.Info, String.Format("Loading the nuvo control configuration from '{0}' and '{1}' ...", configurationFile, remoteConfigurationFile));
 
             _configurationService = new NuvoControl.Server.ConfigurationService.ConfigurationService(configurationFile, remoteConfigurationFile);
         }
@@ -304,7 +301,7 @@ namespace NuvoControl.Server.HostConsole
             LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the function server..."));
 
             _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
-            LogHelper.Log(LogLevel.Info, String.Format(">>>   Functions: {0}", _functionServer.ToString()));
+            LogHelper.Log(LogLevel.Debug, String.Format(">>>   Functions: {0}", _functionServer.ToString()));
         }
 
         /// <summary>
