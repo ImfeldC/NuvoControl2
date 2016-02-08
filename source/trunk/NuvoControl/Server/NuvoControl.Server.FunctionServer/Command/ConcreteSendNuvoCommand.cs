@@ -42,7 +42,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             if (checkCommandType(cmdType))
             {
-                LogHelper.Log(String.Format(">>> Execute SendNuvoCommand command on event {0}: SendNuvoCommand={1} / Function={2}", cmdType, _sendNuvoCommand.ToString(), function.ToString()));
+                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute SendNuvoCommand command on event {0}: SendNuvoCommand={1} / Function={2}", cmdType, _sendNuvoCommand.ToString(), function.ToString()));
 
                 // Send Nuvo command ...
                 if (_zoneServer != null)
@@ -55,7 +55,7 @@ namespace NuvoControl.Server.FunctionServer
                 }
                 else
                 {
-                    LogHelper.Log(String.Format("    Execute SendNuvoCommand FAILED!"));
+                    LogHelper.Log(LogLevel.Error, String.Format("    Execute SendNuvoCommand FAILED!"));
                 }
 
             }

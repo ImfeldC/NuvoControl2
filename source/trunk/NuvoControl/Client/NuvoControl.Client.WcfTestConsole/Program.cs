@@ -81,7 +81,7 @@ namespace NuvoControl.Client.WcfTestConsole
         static void Main(string[] args)
         {
             ILog _log = LogManager.GetCurrentClassLogger();
-            LogHelper.Log("**** Console Test client started. *******", _log);
+            LogHelper.Log(LogLevel.Info, "**** Console Test client started. *******", _log);
 
             Console.WriteLine(">>> Starting WCF Test Client  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());

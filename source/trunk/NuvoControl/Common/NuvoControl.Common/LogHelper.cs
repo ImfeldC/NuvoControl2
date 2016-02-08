@@ -15,6 +15,34 @@ namespace NuvoControl.Common
     /// </summary>
     public class LogHelper
     {
+
+        #region Verbose Mode
+        /*
+        The six logging levels used by Log are (in order): 
+            1.trace (the least serious)
+            2.debug
+            3.info
+            4.warn
+            5.error
+            6.fatal (the most serious)
+        */
+
+        /// <summary>
+        /// Global minimum level, for verbose mode.
+        /// E.g. if minimum level is set to "info"; all messages of level "info" and higher ("warn", "error", "fatal") are shown
+        /// </summary>
+        private static LogLevel _minVerboseLogLevel = LogLevel.All;
+
+        /// <summary>
+        /// Public accessor for minimum level for verbose mode.
+        /// </summary>
+        public static LogLevel MinVerboseLogLevel
+        {
+            get { return LogHelper._minVerboseLogLevel; }
+            set { LogHelper._minVerboseLogLevel = value; }
+        }
+
+
         /// <summary>
         /// Global verbose mode, per default switched-off
         /// </summary>
@@ -28,15 +56,68 @@ namespace NuvoControl.Common
             get { return LogHelper._verbose; }
             set { LogHelper._verbose = value; }
         }
+        #endregion
 
-        
         /// <summary>
         /// Logs a message in a "standard" way to console and Logger.
         /// </summary>
         /// <param name="strMessage">Message to log.</param>
-        public static void Log(string strMessage)
+        public static void Log(LogLevel logLevel, string strMessage)
         {
-            Log(strMessage, LogManager.GetCurrentClassLogger());
+            Log(logLevel, strMessage, LogManager.GetCurrentClassLogger());
+        }
+
+        /// <summary>
+        /// Logs a message in a "standard" way to console and Logger.
+        /// </summary>
+        /// <param name="logLevel">Log Level to log</param>
+        /// <param name="strMessage">Message to log.</param>
+        /// <param name="logger">Logger to log the message.</param>
+        public static void Log(LogLevel logLevel, string strMessage, ILog logger)
+        {
+            if (Verbose && (logLevel >= _minVerboseLogLevel | _minVerboseLogLevel == LogLevel.All) )
+            {
+                Console.WriteLine(String.Format("[{0}] {1}", logLevel.ToString(), strMessage));
+            }
+
+            switch (logLevel)
+            {
+                // All Level
+                case LogLevel.All:
+                    // Log "All Level" as "Info"
+                    logger.Info(m => m(strMessage));
+                    break;
+                // 6.fatal (the most serious)
+                case LogLevel.Fatal:
+                    logger.Fatal(m => m(strMessage));
+                    break;
+                // 5.error
+                case LogLevel.Error:
+                    logger.Error(m => m(strMessage));
+                    break;
+                // 4.warn
+                case LogLevel.Warn:
+                    logger.Warn(m => m(strMessage));
+                    break;
+                // 3.info
+                case LogLevel.Info:
+                    logger.Info(m => m(strMessage));
+                    break;
+                // 2.debug
+                case LogLevel.Debug:
+                    logger.Debug(m => m(strMessage));
+                    break;
+                // 1.trace (the least serious)
+                case LogLevel.Trace:
+                    logger.Trace(m => m(strMessage));
+                    break;
+                // No Level
+                case LogLevel.Off:
+                    break;
+                // default
+                default:
+                    break;
+            }
         }
 
         /// <summary>
@@ -46,11 +127,11 @@ namespace NuvoControl.Common
         public static void LogAppStart(string strStartMessage)
         {
             Console.WriteLine(String.Format("**** {0} started. *******", strStartMessage));
-            Log(String.Format(">>> Starting {0}  --- Assembly Version={1} / Deployment Version={2} / Product Version={3} (using .NET 4.0) ... ",
+            Log(LogLevel.Info, String.Format(">>> Starting {0}  --- Assembly Version={1} / Deployment Version={2} / Product Version={3} (using .NET 4.0) ... ",
                 strStartMessage, "n/a", "n/a", Application.ProductVersion));
             //Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",
             //    AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion(), Application.ProductVersion);
-            Log(String.Format("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem()));
+            Log(LogLevel.Info, String.Format("    Linux={0} / Detected environment: {1}", EnvironmentHelper.isRunningOnLinux(), EnvironmentHelper.getOperatingSystem()));
         }
 
         /// <summary>
@@ -60,7 +141,7 @@ namespace NuvoControl.Common
         /// <param name="exc">Exception to log.</param>
         public static void LogException(string strMessage, Exception exc)
         {
-            Log(String.Format("----------------\nException! {0} [{1}]\n----------------\n", strMessage, exc.ToString()));
+            Log(LogLevel.Fatal, String.Format("----------------\nException! {0} [{1}]\n----------------\n", strMessage, exc.ToString()));
         }
 
         /// <summary>
@@ -75,21 +156,7 @@ namespace NuvoControl.Common
                 strargs += arg;
                 strargs += " ";
             }
-            Log(String.Format("    Command line arguments: {0}\n", strargs));
-        }
-
-        /// <summary>
-        /// Logs a message in a "standard" way to console and Logger.
-        /// </summary>
-        /// <param name="strMessage">Message to log.</param>
-        /// <param name="logger">Logger to log the message.</param>
-        public static void Log(string strMessage, ILog logger)
-        {
-            if (Verbose)
-            {
-                Console.WriteLine(strMessage);
-            }
-            logger.Debug(m => m(strMessage));
+            Log(LogLevel.Info, String.Format("    Command line arguments: {0}\n", strargs));
         }
 
         /// <summary>
@@ -101,14 +168,14 @@ namespace NuvoControl.Common
         {
             foreach (EndpointDiscoveryMetadata ep in endpointCollection)
             {
-                logger.Info(m => m("Address={0}", ep.Address.ToString()));
+                Log(LogLevel.Info, String.Format("Address={0}", ep.Address.ToString()), logger);
                 foreach (Uri uri in ep.ListenUris)
                 {
-                    logger.Info(m => m("  Uri.AbsolutePath={0}", uri.AbsolutePath));
-                    logger.Info(m => m("  Uri.AbsoluteUri={0}", uri.AbsoluteUri));
-                    logger.Info(m => m("  Uri.Host={0}", uri.Host));
+                    Log(LogLevel.Info, String.Format("  Uri.AbsolutePath={0}", uri.AbsolutePath), logger);
+                    Log(LogLevel.Info, String.Format("  Uri.AbsoluteUri={0}", uri.AbsoluteUri), logger);
+                    Log(LogLevel.Info, String.Format("  Uri.Host={0}", uri.Host));
                 }
-                logger.Info(m => m("Version={0}", ep.Version));
+                Log(LogLevel.Info, String.Format("Version={0}", ep.Version), logger);
             }
         }
 

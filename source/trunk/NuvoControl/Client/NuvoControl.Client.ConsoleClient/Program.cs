@@ -46,7 +46,7 @@ namespace NuvoControl.Client.ConsoleClient
         {
             ILog _log = LogManager.GetCurrentClassLogger();
 
-            LogHelper.Log("**** Console client started. *******", _log);
+            LogHelper.Log(LogLevel.Info, "**** Console client started. *******", _log);
 
             Console.WriteLine(">>> Starting Console Client  --- Assembly Version={0} / Deployment Version={1} (using .NET 4.0) ... ",
                 AppInfoHelper.getAssemblyVersion(), AppInfoHelper.getDeploymentVersion());
