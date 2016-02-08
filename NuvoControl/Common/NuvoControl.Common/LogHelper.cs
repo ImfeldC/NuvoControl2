@@ -56,6 +56,17 @@ namespace NuvoControl.Common
             get { return LogHelper._verbose; }
             set { LogHelper._verbose = value; }
         }
+
+        /// <summary>
+        /// Set all options, passed with command line options.
+        /// </summary>
+        /// <param name="options">Options passed with command line options.</param>
+        public static void SetOptions(CommonOptions options)
+        {
+            Verbose = options.verbose;
+            MinVerboseLogLevel = options.minVerboseLevel;
+        }
+
         #endregion
 
         /// <summary>
@@ -126,7 +137,7 @@ namespace NuvoControl.Common
         /// <param name="strStartMessage"></param>
         public static void LogAppStart(string strStartMessage)
         {
-            Console.WriteLine(String.Format("**** {0} started. *******", strStartMessage));
+            Log(LogLevel.All, String.Format("**** {0} started. *******", strStartMessage));
             Log(LogLevel.Info, String.Format(">>> Starting {0}  --- Assembly Version={1} / Deployment Version={2} / Product Version={3} (using .NET 4.0) ... ",
                 strStartMessage, "n/a", "n/a", Application.ProductVersion));
             //Console.WriteLine(">>> Starting Server Console  --- Assembly Version={0} / Deployment Version={1} / Product Version={2} (using .NET 4.0) ... ",

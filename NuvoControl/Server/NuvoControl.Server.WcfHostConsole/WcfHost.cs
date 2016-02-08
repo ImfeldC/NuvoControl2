@@ -102,7 +102,7 @@ namespace NuvoControl.Server.WcfHostConsole
             LoadAllServices();
             HostAllServices();
 
-            Console.WriteLine(">>> Press <Enter> to stop the services.");
+            LogHelper.Log(LogLevel.All, ">>> Press <Enter> to stop the services.");
             Console.ReadLine();
 
             DisposeAllService();

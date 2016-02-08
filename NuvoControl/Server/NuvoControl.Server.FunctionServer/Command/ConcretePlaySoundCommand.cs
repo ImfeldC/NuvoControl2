@@ -67,7 +67,7 @@ namespace NuvoControl.Server.FunctionServer
             // - http://drs3.radio.net/
             // - http://asx.skypro.ch/radio/internet-128/virus.asx
 
-            Console.WriteLine("   Beep!");
+            LogHelper.Log(LogLevel.All, "   Beep!");
             LogHelper.Log(LogLevel.Info, String.Format("    ... play sound on Windows! Process={0}", (_process != null ? _process.ToString() : "(null)")));
         }
 
