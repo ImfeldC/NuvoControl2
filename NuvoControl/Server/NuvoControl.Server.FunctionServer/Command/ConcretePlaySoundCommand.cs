@@ -29,7 +29,8 @@ namespace NuvoControl.Server.FunctionServer
             // onFunctionStart & onValidityStart configured to run ...
             if (checkCommandType(cmdType) && (cmdType == eCommandType.onFunctionStart | cmdType == eCommandType.onValidityStart) )
             {
-                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute PlaySound command on event {0}: PlaySoundCommand={1} / Function={2}", cmdType, _playSoundCommand.ToString(), function.ToString()));
+                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute PlaySound command on event {0}", cmdType));
+                LogHelper.Log(LogLevel.Trace, String.Format("      PlaySoundCommand={0} / Function={1}", _playSoundCommand.ToString(), function.ToString()));
 
                 if (EnvironmentHelper.isRunningOnLinux())
                 {

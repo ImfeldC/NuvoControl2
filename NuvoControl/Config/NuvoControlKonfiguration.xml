@@ -279,6 +279,15 @@
       </SleepFunction>
 
 
+      <SleepFunction Id="99999999-9999-9999-9999-999999999991" ZoneId="100.1" SleepDuration="60">
+        <Validity ActiveFrom="20:00" ActiveTo="04:00"></Validity>
+        <Commands>
+          <Command cmd="PlaySound" onValidityStart="True" onValidityEnd="True" Id="99999999-9999-9999-9999-999999999991"
+                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+        </Commands>
+      </SleepFunction>
+
+
       <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.3" SourceId="100.1" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
         <Validity ActiveFrom="14:00" ActiveTo="04:00"></Validity>
         <Command cmd="PlaySound" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
