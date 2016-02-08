@@ -26,10 +26,10 @@ namespace NuvoControl.Server.FunctionServer
 
         public override void execCommand(eCommandType cmdType, Function function)
         {
-            // onFunctionStart configured to run ...
-            if (checkCommandType(cmdType) && cmdType == eCommandType.onFunctionStart)
+            // onFunctionStart & onValidityStart configured to run ...
+            if (checkCommandType(cmdType) && (cmdType == eCommandType.onFunctionStart | cmdType == eCommandType.onValidityStart) )
             {
-                LogHelper.Log(String.Format(">>> Execute PlaySound command on event {0}: PlaySoundCommand={1} / Function={2}", cmdType, _playSoundCommand.ToString(), function.ToString()));
+                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute PlaySound command on event {0}: PlaySoundCommand={1} / Function={2}", cmdType, _playSoundCommand.ToString(), function.ToString()));
 
                 if (EnvironmentHelper.isRunningOnLinux())
                 {
@@ -41,8 +41,15 @@ namespace NuvoControl.Server.FunctionServer
                 }
             }
 
-            // onFunctionEnd configured to run ...
-            if (checkCommandType(cmdType) && cmdType == eCommandType.onFunctionEnd)
+            // onFunctionEnd & onValidityEnd configured to run ...
+            if (checkCommandType(cmdType) && (cmdType == eCommandType.onFunctionEnd | cmdType == eCommandType.onValidityEnd) )
+            {
+                killProcess();
+            }
+
+            // onFunctionError configured to run ...
+            // ... stop any running process in case of an error
+            if (checkCommandType(cmdType) && cmdType == eCommandType.onFunctionError)
             {
                 killProcess();
             }
@@ -61,7 +68,7 @@ namespace NuvoControl.Server.FunctionServer
             // - http://asx.skypro.ch/radio/internet-128/virus.asx
 
             Console.WriteLine("   Beep!");
-            LogHelper.Log(String.Format("    ... play sound on Windows! Process={0}", (_process != null ? _process.ToString() : "(null)")));
+            LogHelper.Log(LogLevel.Info, String.Format("    ... play sound on Windows! Process={0}", (_process != null ? _process.ToString() : "(null)")));
         }
 
         /// <summary>
@@ -71,7 +78,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             killProcess();
             _process = EnvironmentHelper.run_cmd("/usr/bin/mpg321", _playSoundCommand.Url);
-            LogHelper.Log(String.Format("    ... play sound on Unix! Process={0}", (_process != null ? _process.ToString() : "(null)") ));
+            LogHelper.Log(LogLevel.Info, String.Format("    ... play sound on Unix! Process={0}", (_process != null ? _process.ToString() : "(null)") ));
         }
 
         /// <summary>

@@ -76,7 +76,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // Limited environment detected!
                 _limitedEnvironment = true;
             }
-            LogHelper.Log(String.Format("Serial port instantiated! (Limited Enironment={0}", _limitedEnvironment));
+            LogHelper.Log(LogLevel.Info, String.Format("Serial port instantiated! (Limited Enironment={0}", _limitedEnvironment));
 
             // Enable read intervall timer only, if ..
             // (a) Proper intervall is defined
@@ -178,7 +178,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     onDataReceived(this,
                       new SerialPortEventArgs(msg));
                 }
-                LogHelper.Log("(readData) Message received:" + msg.Trim().Replace('\r','-'));
+                LogHelper.Log(LogLevel.Info, "(readData) Message received:" + msg.Trim().Replace('\r','-'));
             }
 
             return msg;
@@ -206,7 +206,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // ignore timeout, finish read-out
             }
 
-            LogHelper.Log("(ReadByteData) Message received:" + rxString.Trim().Replace('\r', '-'));
+            LogHelper.Log(LogLevel.Info, "(ReadByteData) Message received:" + rxString.Trim().Replace('\r', '-'));
             return rxString;
         }
         

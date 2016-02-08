@@ -28,14 +28,14 @@ namespace NuvoControl.Server.FunctionServer
         {
             if (checkCommandType(cmdType))
             {
-                LogHelper.Log(String.Format(">>> Execute SendMail command on event {0}: SendMailCommand={1} / Function={2}", cmdType, _sendMailCommand.ToString(), function.ToString()));
+                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute SendMail command on event {0}: SendMailCommand={1} / Function={2}", cmdType, _sendMailCommand.ToString(), function.ToString()));
                 // Send mail ...
                 bool bOk = MailHelper.SendMail(_sendMailCommand.ToAddress,
                     replacePlaceHolders(_sendMailCommand.Subject, cmdType, function),
                     replacePlaceHolders(_sendMailCommand.Body, cmdType, function));
                 if (!bOk)
                 {
-                    LogHelper.Log(String.Format("    Execute SendMail FAILED!"));
+                    LogHelper.Log(LogLevel.Error, String.Format("    Execute SendMail FAILED!"));
                 }
             }
         }

@@ -245,7 +245,7 @@ namespace NuvoControl.Server.HostConsole
                     driver.Open(ENuvoSystem.NuVoEssentia, device.Id, device.Communication);
                     _protocolDrivers[device.Id] = driver;
 
-                    LogHelper.Log(String.Format(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString()));
+                    LogHelper.Log(LogLevel.Info, String.Format(">>>   driver {0} loaded ... Communication Parameter=[{1}]", device.Id, device.Communication.ToString()));
 
                     // Subscribe for events
                     driver.onCommandReceived += new ProtocolCommandReceivedEventHandler(_driver_onCommandReceived);
@@ -316,7 +316,7 @@ namespace NuvoControl.Server.HostConsole
             Console.WriteLine(">>> Instantiating the function server...");
 
             _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
-            LogHelper.Log(String.Format(">>>   Functions: {0}", _functionServer.ToString()));
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   Functions: {0}", _functionServer.ToString()));
         }
 
         /// <summary>
@@ -342,12 +342,12 @@ namespace NuvoControl.Server.HostConsole
             {
                 if (_options.portName != null)
                 {
-                    LogHelper.Log(String.Format(">>>   Override loaded configuration for 'Port Name', use {0} instead of {1}", _options.portName, device.Communication.Port));
+                    LogHelper.Log(LogLevel.Info, String.Format(">>>   Override loaded configuration for 'Port Name', use {0} instead of {1}", _options.portName, device.Communication.Port));
                     device.Communication.Port = _options.portName;
                 }
                 if (_options.baudRate > 0)
                 {
-                    LogHelper.Log(String.Format(">>>   Override loaded configuration for 'Baud Rate', use {0} instead of {1}", _options.baudRate, device.Communication.BaudRate));
+                    LogHelper.Log(LogLevel.Info, String.Format(">>>   Override loaded configuration for 'Baud Rate', use {0} instead of {1}", _options.baudRate, device.Communication.BaudRate));
                     device.Communication.BaudRate = _options.baudRate;
                 }
             }

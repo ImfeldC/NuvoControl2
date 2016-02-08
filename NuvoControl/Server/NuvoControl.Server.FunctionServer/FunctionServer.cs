@@ -111,7 +111,8 @@ namespace NuvoControl.Server.FunctionServer
             // Dispose all functions ...
             foreach (IConcreteFunction func in _concreteFunctions)
             {
-                func.Dispose();
+                if( func != null )
+                    func.Dispose();
             }
         }
 
