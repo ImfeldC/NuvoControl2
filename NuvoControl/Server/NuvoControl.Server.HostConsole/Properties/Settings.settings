@@ -2,14 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="NuvoControl.Server.HostConsole.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="NuvoControlKonfigurationFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">.\Config\NuvoControlKonfiguration.xml</Value>
-    </Setting>
     <Setting Name="NuvoControlRemoteKonfigurationFile" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ConfigurationCheckIntervall" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">10</Value>
+    </Setting>
+    <Setting Name="NuvoControlKonfigurationFile" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">./Config/NuvoControlKonfiguration.xml</Value>
     </Setting>
   </Settings>
 </SettingsFile>

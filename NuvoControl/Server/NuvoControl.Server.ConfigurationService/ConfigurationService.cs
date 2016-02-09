@@ -299,7 +299,7 @@ namespace NuvoControl.Server.ConfigurationService
         private void Initialize()
         {
             _configurationLoader = new ConfigurationLoader(_configurationFile);
-            if (_remoteConfigurationFile != null)
+            if (_remoteConfigurationFile != null && _remoteConfigurationFile != "" )
             {
                 _configurationLoader.AppendConfiguration(_remoteConfigurationFile);
             }

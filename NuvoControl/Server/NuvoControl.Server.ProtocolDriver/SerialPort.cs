@@ -76,7 +76,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 // Limited environment detected!
                 _limitedEnvironment = true;
             }
-            LogHelper.Log(LogLevel.Info, String.Format("Serial port instantiated! (Limited Enironment={0}", _limitedEnvironment));
+            LogHelper.Log(LogLevel.Info, String.Format("Serial port instantiated! (Limited Enironment={0})", _limitedEnvironment));
 
             // Enable read intervall timer only, if ..
             // (a) Proper intervall is defined

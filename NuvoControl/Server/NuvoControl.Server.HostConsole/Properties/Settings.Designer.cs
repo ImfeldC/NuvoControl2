@@ -25,16 +25,7 @@ namespace NuvoControl.Server.HostConsole.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute(".\\Config\\NuvoControlKonfiguration.xml")]
-        public string NuvoControlKonfigurationFile {
-            get {
-                return ((string)(this["NuvoControlKonfigurationFile"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string NuvoControlRemoteKonfigurationFile {
             get {
                 return ((string)(this["NuvoControlRemoteKonfigurationFile"]));
@@ -47,6 +38,15 @@ namespace NuvoControl.Server.HostConsole.Properties {
         public int ConfigurationCheckIntervall {
             get {
                 return ((int)(this["ConfigurationCheckIntervall"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("./Config/NuvoControlKonfiguration.xml")]
+        public string NuvoControlKonfigurationFile {
+            get {
+                return ((string)(this["NuvoControlKonfigurationFile"]));
             }
         }
     }
