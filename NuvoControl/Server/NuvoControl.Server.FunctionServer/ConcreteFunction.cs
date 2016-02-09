@@ -43,6 +43,12 @@ namespace NuvoControl.Server.FunctionServer
         /// <param name="function"></param>
         public ConcreteFunction(IZoneServer zoneServer, Function function)
         {
+            if (function == null)
+            {
+                onFunctionError();
+                throw new FunctionServerException("Function configuration is null. This is not allowed");
+            }
+
             _zoneServer = zoneServer;
             if (_zoneServer == null)
             {
@@ -60,7 +66,14 @@ namespace NuvoControl.Server.FunctionServer
         {
             foreach (Command cmd in _function.Commands)
             {
-                _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd, _zoneServer));
+                if( cmd != null )
+                {
+                    _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd, _zoneServer));
+                }
+                else 
+                {
+                    LogHelper.Log( LogLevel.Fatal, String.Format("Invalid command found in command list! Function={0}", _function.ToString()));
+                }
             }
         }
 
@@ -145,7 +158,7 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         protected void onFunctionError()
         {
-            LogHelper.Log(LogLevel.Debug, String.Format(">>> onFunctionError: {0}", _function.ToString()));
+            LogHelper.Log(LogLevel.Debug, String.Format(">>> onFunctionError: {0} [Function={1}]", this.ToString(), (_function!=null?_function.ToString():"<null>")));
             onFunctionEvent(eCommandType.onFunctionError);
         }
 
