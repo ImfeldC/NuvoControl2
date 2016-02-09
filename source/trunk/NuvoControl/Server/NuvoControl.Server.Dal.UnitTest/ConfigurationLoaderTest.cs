@@ -157,7 +157,7 @@ namespace NuvoControl.Server.Dal.UnitTest
             string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
+            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
 
             TestContext.WriteLine("Testing device communication parameters...");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Id, 100);
@@ -246,14 +246,14 @@ namespace NuvoControl.Server.Dal.UnitTest
             string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 1);
+            Assert.AreEqual("2.0", SystemConfiguration.VERSION);
+            Assert.AreEqual(5, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 4);
+            Assert.AreEqual("2.0", SystemConfiguration.VERSION);
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
         
         }
 
@@ -266,14 +266,14 @@ namespace NuvoControl.Server.Dal.UnitTest
             string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 1);
+            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
+            Assert.AreEqual(5, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemoteNoHW.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 4);
+            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
+            Assert.AreEqual(8, systemConfiguration.Functions.Count);
 
         }
 
@@ -286,14 +286,14 @@ namespace NuvoControl.Server.Dal.UnitTest
             string file = @"NuvoControlKonfiguration.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 1);
+            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
+            Assert.AreEqual(5, systemConfiguration.Functions.Count);
 
             string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "1.0");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 4);
+            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
         }
 
