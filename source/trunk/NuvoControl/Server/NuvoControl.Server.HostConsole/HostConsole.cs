@@ -116,6 +116,7 @@ namespace NuvoControl.Server.HostConsole
             try
             {
                 //LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile);
+                // Remote File: http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml
                 LoadConfigurationService(Properties.Settings.Default.NuvoControlKonfigurationFile, Properties.Settings.Default.NuvoControlRemoteKonfigurationFile);
             }
             catch (Exception exc)

@@ -188,27 +188,20 @@
     </Graphic>
     <Functions>
 
-      <AlarmFunction Id="14bdca34-ea36-4419-8cd4-788a73a81c93" ZoneId="100.2" Volume="25" AlarmTime="06:50" AlarmDuration="120" SourceId="100.1">
+      <!-- Real Functions -->
+
+      <AlarmFunction Id="11111111-0001-1111-1111-111111111111" ZoneId="100.2" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Monday" />
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" onValidityStart="True" onValidityEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d700">
-            <Recipients>
-              <Recipient name="christian@imfeld.net" type="to" />
-            </Recipients>
-            <Subject>
-              SendMailCommand (Alarm Monday only!): {OnFunction} Id={Command.Id} Machine={MachineName}.
-            </Subject>
-            <Body>
-              SendMailCommand Body: {Command.Id} on Machine={MachineName} \nOS={OperatingSystem} \nFunction={Function} \n({DateTime.Now})
-            </Body>
-          </Command>
+          <Command cmd="PlaySound" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0001-0001-1111-111111111111"
+                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
-      <AlarmFunction Id="9901106d-4811-48c3-a734-dab53f15d73d" ZoneId="100.2" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
+      <AlarmFunction Id="11111111-0002-1111-1111-111111111111" ZoneId="100.2" Volume="25" AlarmTime="06:40" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Tuesday" />
@@ -218,24 +211,24 @@
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" onValidityStart="True" onValidityEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d733">
-            <Recipients>
-              <Recipient name="christian@imfeld.net" type="to" />
-              <Recipient name="to1@imfeld.net" type="to" />
-              <Recipient name="to2@imfeld.net" type="to" />
-              <Recipient name="ccmail@imfeld.net" type="cc" />
-              <Recipient name="bccmail@imfeld.net" type="bcc" />
-            </Recipients>
-            <Subject>SendMailCommand (Alarm Tues-Fri only): {OnFunction} Id={Command.Id} Machine={MachineName}.</Subject>
-            <Body>
-              SendMailCommand Body: {Command.Id} on Machine={MachineName} \nOS={OperatingSystem} \nFunction={Function} \n({DateTime.Now})
-            </Body>
-          </Command>
-          <Command cmd="PlaySound" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d744" />
+          <Command cmd="PlaySound" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0002-0002-1111-111111111111"
+                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
 
-      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.3" SleepDuration="60">
+      <SleepFunction Id="11111111-0003-1111-1111-111111111111" ZoneId="100.2" SleepDuration="60">
+        <Validity ActiveFrom="20:00" ActiveTo="02:00"></Validity>
+        <Commands>
+          <Command cmd="PlaySound" onValidityStart="True" onValidityEnd="True" Id="11111111-0003-0003-1111-111111111111"
+                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+        </Commands>
+      </SleepFunction>
+
+
+
+      <!-- Test Functions -->
+      
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3786" ZoneId="100.12" SleepDuration="60">
         <Validity ActiveFrom="23:15" ActiveTo="04:00"></Validity>
         <Commands>
           <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" onValidityStart="True" onValidityEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d712">
@@ -252,7 +245,7 @@
         </Commands>
       </SleepFunction>
 
-      <SleepFunction Id="99999999-9999-9999-9999-999999999999" ZoneId="100.3" SleepDuration="5">
+      <SleepFunction Id="99999999-9999-9999-9999-999999999999" ZoneId="100.12" SleepDuration="5">
         <Validity ActiveFrom="14:00" ActiveTo="04:00"></Validity>
         <Commands>
           <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="99999999-9999-9999-9999-999999999999">
@@ -278,17 +271,7 @@
         </Commands>
       </SleepFunction>
 
-
-      <SleepFunction Id="99999999-9999-9999-9999-999999999991" ZoneId="100.1" SleepDuration="60">
-        <Validity ActiveFrom="20:00" ActiveTo="04:00"></Validity>
-        <Commands>
-          <Command cmd="PlaySound" onValidityStart="True" onValidityEnd="True" Id="99999999-9999-9999-9999-999999999991"
-                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
-        </Commands>
-      </SleepFunction>
-
-
-      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.3" SourceId="100.1" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
+      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.12" SourceId="100.1" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
         <Validity ActiveFrom="14:00" ActiveTo="04:00"></Validity>
         <Command cmd="PlaySound" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
                  url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
