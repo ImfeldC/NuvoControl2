@@ -29,7 +29,7 @@ namespace NuvoControl.Server.FunctionServer
             // onFunctionStart & onValidityStart configured to run ...
             if (checkCommandType(cmdType) && (cmdType == eCommandType.onFunctionStart | cmdType == eCommandType.onValidityStart) )
             {
-                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute PlaySound command on event {0}", cmdType));
+                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute PlaySound@START command on event {0}", cmdType));
                 LogHelper.Log(LogLevel.Trace, String.Format("      PlaySoundCommand={0} / Function={1}", _playSoundCommand.ToString(), function.ToString()));
 
                 if (EnvironmentHelper.isRunningOnLinux())
@@ -45,6 +45,9 @@ namespace NuvoControl.Server.FunctionServer
             // onFunctionEnd & onValidityEnd configured to run ...
             if (checkCommandType(cmdType) && (cmdType == eCommandType.onFunctionEnd | cmdType == eCommandType.onValidityEnd) )
             {
+                LogHelper.Log(LogLevel.Info, String.Format(">>> Execute PlaySound@END command on event {0}", cmdType));
+                LogHelper.Log(LogLevel.Trace, String.Format("      PlaySoundCommand={0} / Function={1}", _playSoundCommand.ToString(), function.ToString()));
+
                 killProcess();
             }
 
