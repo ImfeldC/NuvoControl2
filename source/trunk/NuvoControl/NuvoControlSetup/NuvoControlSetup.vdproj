@@ -2582,7 +2582,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:NuvoControl"
         "ProductCode" = "8:{80482C82-7AEF-46B0-9E3A-B87C224FB45E}"
-        "PackageCode" = "8:{31C9001D-21B6-4EC2-83A4-CDC9BD026F87}"
+        "PackageCode" = "8:{88B0268C-66B6-484F-B3D3-8AF63EA4B06E}"
         "UpgradeCode" = "8:{6994827F-3DA8-4DF9-9211-41E3BB6A0A56}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

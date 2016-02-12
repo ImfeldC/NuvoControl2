@@ -166,22 +166,22 @@
         </Floor>
       </Building>
       <Sources>
-        <Source Id="100.1" Name="Tuner A">
+        <Source Id="100.1" Name="DAB Hama DIR3100">
           <Picture RelativePath=".\Images\Tuner.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="100.2" Name="Tuner B">
+        <Source Id="100.2" Name="DAB">
           <Picture RelativePath=".\Images\Tuner.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="100.3" Name="CD Player">
+        <Source Id="100.3" Name="Logitec">
           <Picture RelativePath=".\Images\CDPlayer.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="100.4" Name="TV">
-          <Picture RelativePath=".\Images\TV.jpg" PictureType="jpg" />
+        <Source Id="100.4" Name="CD Player">
+          <Picture RelativePath=".\Images\CDPlayer.jpg" PictureType="jpg" />
         </Source>
         <Source Id="100.5" Name="AppleAirport">
           <Picture RelativePath=".\Images\AppleAirport.jpg" PictureType="jpg" />
         </Source>
-        <Source Id="100.6" Name="Media Server">
+        <Source Id="100.6" Name="RaspberryPi 2">
           <Picture RelativePath=".\Images\MediaServer.jpg" PictureType="jpg" />
         </Source>
       </Sources>
@@ -190,7 +190,7 @@
 
       <!-- Real Functions -->
 
-      <AlarmFunction Id="11111111-0001-1111-1111-111111111111" ZoneId="100.2" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
+      <AlarmFunction Id="11111111-0001-1111-1111-111111111111" ZoneId="100.3" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Monday" />
@@ -201,7 +201,7 @@
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
-      <AlarmFunction Id="11111111-0002-1111-1111-111111111111" ZoneId="100.2" Volume="25" AlarmTime="06:40" AlarmDuration="120" SourceId="100.1">
+      <AlarmFunction Id="11111111-0002-1111-1111-111111111111" ZoneId="100.3" Volume="25" AlarmTime="06:40" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Tuesday" />
@@ -216,11 +216,11 @@
         </Commands>
       </AlarmFunction>
 
-      <SleepFunction Id="11111111-0003-1111-1111-111111111111" ZoneId="100.2" SleepDuration="60">
+      <SleepFunction Id="11111111-0003-1111-1111-111111111111" ZoneId="100.3" SleepDuration="60">
         <Validity ActiveFrom="20:00" ActiveTo="02:00"></Validity>
         <Commands>
           <Command cmd="PlaySound" onValidityStart="True" onValidityEnd="True" Id="11111111-0003-0003-1111-111111111111"
-                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+                   url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
         </Commands>
       </SleepFunction>
 

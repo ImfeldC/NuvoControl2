@@ -370,7 +370,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
-            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Zone {1}  Command Received: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.Command.ToString()));
+            LogHelper.Log(LogLevel.Debug, String.Format(">>>   [{0}]  Zone {1}  Command Received: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.Command.ToString()));
         }
 
         #endregion
