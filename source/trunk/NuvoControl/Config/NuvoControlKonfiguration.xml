@@ -278,7 +278,7 @@
         <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                  process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
         
-        <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
+        <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.9" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
         
       </ZoneChangeFunction>
       
