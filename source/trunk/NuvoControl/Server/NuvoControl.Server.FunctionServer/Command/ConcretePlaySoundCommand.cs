@@ -32,6 +32,7 @@ namespace NuvoControl.Server.FunctionServer
             :base( command )
         {
             _playSoundCommand = command;
+            StartTime();
         }
 
         /// <summary>
@@ -111,9 +112,12 @@ namespace NuvoControl.Server.FunctionServer
         private void playSoundOnUnix()
         {
             killProcess();
-            _process = EnvironmentHelper.run_cmd("/usr/bin/mpg321", _playSoundCommand.Url);
+            // Call mpg321 to play sound on linux.
+            // Use quiet mode (-q) if verbose level is Info (or higher).
+            String args = String.Format("{0} {1}", (LogHelper.MinVerboseLogLevel<=LogLevel.Debug?"":"-q"), _playSoundCommand.Url);
+            _process = EnvironmentHelper.run_cmd("/usr/bin/mpg321", args );
             _isSoundPlaying = true;
-            LogHelper.Log(LogLevel.Info, String.Format("Play sound on Unix! Process={0}", (_process != null ? _process.ToString() : "(null)") ));
+            LogHelper.Log(LogLevel.Info, String.Format("Play sound on Unix! args={0} ProcessName={1}", args, (_process != null ? _process.ProcessName : "(null)") ));
         }
 
         #endregion
