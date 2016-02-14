@@ -86,7 +86,7 @@ namespace NuvoControl.Common
         /// <param name="logger">Logger to log the message.</param>
         public static void Log(LogLevel logLevel, string strMessage, ILog logger)
         {
-            if (Verbose && (logLevel >= _minVerboseLogLevel | _minVerboseLogLevel == LogLevel.All) )
+            if (Verbose && (logLevel >= _minVerboseLogLevel | logLevel == LogLevel.All) )
             {
                 Console.WriteLine(String.Format("{0} [{1}] {2}", DateTime.Now.ToString(), logLevel.ToString(), strMessage));
             }
