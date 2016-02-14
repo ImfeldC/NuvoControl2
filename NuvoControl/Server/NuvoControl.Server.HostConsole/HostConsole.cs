@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;     // used for Application
@@ -37,7 +38,7 @@ namespace NuvoControl.Server.HostConsole
                 Console.WriteLine(_options.GetUsage());
             }
 
-            _log.Trace(m => m("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
+            LogHelper.Log(LogLevel.Debug,String.Format("Check configuration timer started, each {0}[s]", Properties.Settings.Default.ConfigurationCheckIntervall));
             _timerCheckConfiguration.Interval = (Properties.Settings.Default.ConfigurationCheckIntervall < 30 ? 30 : Properties.Settings.Default.ConfigurationCheckIntervall) * 1000;
             _timerCheckConfiguration.Elapsed += new System.Timers.ElapsedEventHandler(_timerCheckConfiguration_Elapsed);
             _timerCheckConfiguration.Start();
@@ -54,8 +55,6 @@ namespace NuvoControl.Server.HostConsole
         }
 
         #region Fields
-
-        private static ILog _log = LogManager.GetCurrentClassLogger();
 
         private static Options _options = null;
 
