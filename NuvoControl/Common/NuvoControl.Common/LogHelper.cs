@@ -88,7 +88,7 @@ namespace NuvoControl.Common
         {
             if (Verbose && (logLevel >= _minVerboseLogLevel | logLevel == LogLevel.All) )
             {
-                Console.WriteLine(String.Format("{0} [{1}] {2}", DateTime.Now.ToString(), logLevel.ToString(), strMessage));
+                Console.WriteLine(String.Format("{0} [{1}] {2}", DateTime.Now.ToString(), logLevel.ToString()[0], strMessage));
             }
 
             switch (logLevel)

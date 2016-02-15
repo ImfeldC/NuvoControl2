@@ -112,6 +112,7 @@ namespace NuvoControl.Server.FunctionServer
         private void playSoundOnUnix()
         {
             killProcess();
+            killAllProcessesOnUnix();
             // Call mpg321 to play sound on linux.
             // Use quiet mode (-q) if verbose level is Info (or higher).
             String args = String.Format("{0} {1}", (LogHelper.MinVerboseLogLevel<=LogLevel.Debug?"":"-q"), _playSoundCommand.Url);
@@ -145,6 +146,25 @@ namespace NuvoControl.Server.FunctionServer
                 }
                 _isSoundPlaying = false;
                 LogHelper.Log(LogLevel.Info, String.Format("Play sound stopped! Process={0}", (_process != null ? _process.ToString() : "(null)")));
+            }
+        }
+
+
+        /// <summary>
+        /// Kill all processes on unix, which play sound.
+        /// </summary>
+        private void killAllProcessesOnUnix()
+        {
+            try
+            {
+                Process process = EnvironmentHelper.run_cmd("killall", "mpg321");
+                LogHelper.Log(LogLevel.Info, String.Format("Kill all processes on Unix! ProcessName={0}", (process != null ? process.ProcessName : "(null)")));
+                bool bRet = process.WaitForExit(1000);
+                LogHelper.Log((bRet ? LogLevel.Debug : LogLevel.Warn), String.Format("Kill all processes on Unix exited! ProcessName={0}", (process != null ? process.ProcessName : "(null)")));
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Exception in kill all processes on Unix!", exc);
             }
         }
 
