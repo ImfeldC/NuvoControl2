@@ -349,7 +349,9 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
-            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Zone {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.ZoneState.ToString()));
+            Zone zone = _configurationService.GetZoneKonfiguration(e.ZoneAddress);
+            LogHelper.Log(LogLevel.Info, String.Format( ">>>   [{0}]  Zone {1}({2}) Status Update: {3}", DateTime.Now.ToShortTimeString(), zone.Name, e.ZoneAddress.ToString(), e.ZoneState.ToStringShort()));
+            LogHelper.Log(LogLevel.Debug, String.Format(">>>   [{0}]  Zone {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.ZoneState.ToString()));
         }
 
         /// <summary>

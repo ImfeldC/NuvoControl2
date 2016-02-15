@@ -236,6 +236,16 @@ namespace NuvoControl.Common
         #endregion
 
         /// <summary>
+        /// Public alternative for the <c>ToString</c> method.
+        /// </summary>
+        /// <returns>String representing the content of this object.</returns>
+        public string ToStringShort()
+        {
+            return string.Format("Power={0} Source={1} Volume={2}",
+                (_powerStatus ? "ON" : "OFF"), _source.ToString(), _volume);
+        }
+
+        /// <summary>
         /// Public override for the <c>ToString</c> method.
         /// </summary>
         /// <returns>String representing the content of this object.</returns>
