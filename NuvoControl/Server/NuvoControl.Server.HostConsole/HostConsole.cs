@@ -351,7 +351,16 @@ namespace NuvoControl.Server.HostConsole
         {
             Zone zone = _configurationService.GetZoneKonfiguration(e.ZoneAddress);
             Source source = _configurationService.GetSourceKonfiguration(e.ZoneState.Source);
-            LogHelper.Log(LogLevel.Info, String.Format( ">>>   [{0}]  Zone '{1}'({2}) / Source '{3}' / Status Update: {4}", DateTime.Now.ToShortTimeString(), zone.Name, e.ZoneAddress.ToString(), source.Name, e.ZoneState.ToStringShort()));
+            if (e.ZoneState.PowerStatus == true)
+            {
+                // Zone is ON ...
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Zone '{1}'({2}) is ON -> Source '{3}' with Volume '{4}'", DateTime.Now.ToShortTimeString(), zone.Name, e.ZoneAddress.ToString(), source.Name, e.ZoneState.Volume));
+            }
+            else
+            {
+                // Zone is OFF ...
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Zone '{1}'({2}) is OFF", DateTime.Now.ToShortTimeString(), zone.Name, e.ZoneAddress.ToString() ));
+            }
             LogHelper.Log(LogLevel.Debug, String.Format(">>>   [{0}]  Zone {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.ZoneState.ToString()));
         }
 
