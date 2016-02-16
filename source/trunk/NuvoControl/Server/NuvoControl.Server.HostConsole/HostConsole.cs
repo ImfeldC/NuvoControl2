@@ -350,7 +350,8 @@ namespace NuvoControl.Server.HostConsole
         static void _driver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
             Zone zone = _configurationService.GetZoneKonfiguration(e.ZoneAddress);
-            LogHelper.Log(LogLevel.Info, String.Format( ">>>   [{0}]  Zone {1}({2}) Status Update: {3}", DateTime.Now.ToShortTimeString(), zone.Name, e.ZoneAddress.ToString(), e.ZoneState.ToStringShort()));
+            Source source = _configurationService.GetSourceKonfiguration(e.ZoneState.Source);
+            LogHelper.Log(LogLevel.Info, String.Format( ">>>   [{0}]  Zone '{1}'({2}) / Source '{3}' / Status Update: {4}", DateTime.Now.ToShortTimeString(), zone.Name, e.ZoneAddress.ToString(), source.Name, e.ZoneState.ToStringShort()));
             LogHelper.Log(LogLevel.Debug, String.Format(">>>   [{0}]  Zone {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.ZoneState.ToString()));
         }
 

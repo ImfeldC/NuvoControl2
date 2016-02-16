@@ -145,7 +145,7 @@ namespace NuvoControl.Server.FunctionServer
                     LogHelper.LogException("Cannot kill process in 'killProcess' method!", exc);
                 }
                 _isSoundPlaying = false;
-                LogHelper.Log(LogLevel.Info, String.Format("Play sound stopped! Process={0}", (_process != null ? _process.ToString() : "(null)")));
+                LogHelper.Log(LogLevel.Debug, String.Format("Play sound stopped! Process={0}", (_process != null ? _process.ToString() : "(null)")));
             }
         }
 
@@ -157,8 +157,9 @@ namespace NuvoControl.Server.FunctionServer
         {
             try
             {
-                Process process = EnvironmentHelper.run_cmd("killall", "mpg321");
-                LogHelper.Log(LogLevel.Info, String.Format("Kill all processes on Unix! ProcessName={0}", (process != null ? process.ProcessName : "(null)")));
+                String args = String.Format("{0} {1}", (LogHelper.MinVerboseLogLevel <= LogLevel.Debug ? "" : "-q"), "mpg321");
+                Process process = EnvironmentHelper.run_cmd("killall", args);
+                LogHelper.Log(LogLevel.Debug, String.Format("Kill all processes on Unix! args={0} ProcessName={1}", args, (_process != null ? _process.ProcessName : "(null)") ));
                 bool bRet = process.WaitForExit(1000);
                 LogHelper.Log((bRet ? LogLevel.Debug : LogLevel.Warn), String.Format("Kill all processes on Unix exited! ProcessName={0}", (process != null ? process.ProcessName : "(null)")));
             }

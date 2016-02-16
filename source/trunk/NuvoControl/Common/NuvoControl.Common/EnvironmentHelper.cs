@@ -74,7 +74,7 @@ namespace NuvoControl.Common
                 start.UseShellExecute = false;
                 start.RedirectStandardOutput = true;
                 process = Process.Start(start);
-                LogHelper.Log(LogLevel.Info, String.Format("   Process {0} {1} started .... id={2} [{3}]", cmd, args, process.Id, process.ToString()));
+                LogHelper.Log(LogLevel.Debug, String.Format("   Process {0} {1} started .... id={2} [{3}]", cmd, args, process.Id, process.ToString()));
 
                 /*
                 using (StreamReader reader = process.StandardOutput)
