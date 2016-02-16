@@ -165,6 +165,20 @@ namespace NuvoControl.Server.ConfigurationService
             return zones[0];
         }
 
+
+        public Source GetSourceKonfiguration(Address sourceId)
+        {
+            foreach (Source source in _systemConfiguration.Graphic.Sources)
+            {
+                if (source.Id == sourceId)
+                {
+                    return source;
+                }
+            }
+            return null;
+        }
+
+
         /// <summary>
         /// <see cref="IConfigure"/>
         /// </summary>
