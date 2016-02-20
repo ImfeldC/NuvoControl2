@@ -38,16 +38,10 @@ namespace NuvoControl.Common.Configuration
         #region Private Members
 
         /// <summary>
-        /// The address of the zone.
+        /// Zone device (with HW settings)
         /// </summary>
         [DataMember]
-        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
-        
-        /// <summary>
-        /// The name of the zone.
-        /// </summary>
-        [DataMember]
-        private string _name = String.Empty;
+        private Zone _zone;
 
         /// <summary>
         /// The file name of the zone picture.
@@ -95,8 +89,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="zoneControlCoordinate">The coordinatee of the zone control within the zone.</param>
         public ZoneGraphic(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates, Point zoneControlCoordinate)
         {
-            this._id = id;
-            this._name = name;
+            this._zone = new Zone(id, name);
             this._picturePath = picturePath;
             this._pictureType = pictureType;
             this._floorPlanCoordinates = floorPlanCoordinates;
@@ -112,7 +105,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         public Address Id
         {
-            get { return _id; }
+            get { return _zone.Id; }
         }
 
         /// <summary>
@@ -120,7 +113,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         public string Name
         {
-            get { return _name; }
+            get { return _zone.Name; }
         }
 
         /// <summary>
@@ -162,7 +155,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this zone.</returns>
         public override string ToString()
         {
-            return String.Format("Address={0}, Name={1}, Picture={2}/{3}, FloorPlanCoordinates=[{4}], ZoneControlCoordinate={5}", _id, _name, _picturePath, _pictureType, _floorPlanCoordinates.ToString<Point>(" / "), _zoneControlCoordinate);
+            return String.Format("Address={0}, Name={1}, Picture={2}/{3}, FloorPlanCoordinates=[{4}], ZoneControlCoordinate={5}", _zone.Id, _zone.Name, _picturePath, _pictureType, _floorPlanCoordinates.ToString<Point>(" / "), _zoneControlCoordinate);
         }
 
         #endregion
