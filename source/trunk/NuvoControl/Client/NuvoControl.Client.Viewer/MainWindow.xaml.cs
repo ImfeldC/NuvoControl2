@@ -221,14 +221,14 @@ namespace NuvoControl.Client.Viewer
             if (_graphic != null)
             {
                 ReadImage(_graphic.Building.PicturePath);
-                foreach (Source src in _graphic.Sources)
+                foreach (SourceGraphic src in _graphic.Sources)
                 {
                     //ReadImage(src.PicturePath);
                 }
                 foreach (Floor floor in _graphic.Building.Floors)
                 {
                     ReadImage(floor.FloorPlanPath);
-                    foreach (Zone zone in floor.Zones)
+                    foreach (ZoneGraphic zone in floor.Zones)
                     {
                         ReadImage(zone.PicturePath);
                     }

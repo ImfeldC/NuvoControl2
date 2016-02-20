@@ -46,7 +46,7 @@ namespace NuvoControl.Test.ConsoleClient
             ////////////////////////////////
             // ThingSpeak Test
             ////////////////////////////////
-
+/*
             LogHelper.Log(LogLevel.All, "Start ThingSpeak tests.... ");
 
             short TSResponse3 = 0;
@@ -60,7 +60,7 @@ namespace NuvoControl.Test.ConsoleClient
 
             LogHelper.Log(LogLevel.All, "End ThingSpeak tests....");
             LogHelper.Log(LogLevel.All, "");
-
+*/
 
             ////////////////////////////////
             // Play Sound Test

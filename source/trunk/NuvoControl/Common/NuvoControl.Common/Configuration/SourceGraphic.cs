@@ -32,7 +32,7 @@ namespace NuvoControl.Common.Configuration
     /// Defines graphical attributes of a source.
     /// </summary>
     [DataContract]
-    public class Source: IComparable<Source>
+    public class SourceGraphic: IComparable<SourceGraphic>
     {
         /// <summary>
         /// Maximum number of sources for a NuVo (Essentia) system.
@@ -72,7 +72,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public Source()
+        public SourceGraphic()
         {
         }
 
@@ -80,7 +80,7 @@ namespace NuvoControl.Common.Configuration
         /// Constructor
         /// </summary>
         /// <param name="id">The address of the source.</param>
-        public Source(Address id)
+        public SourceGraphic(Address id)
         {
             this._id = id;
         }
@@ -92,7 +92,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="name">The name of the source.</param>
         /// <param name="picturePath">The file name of the source picture.</param>
         /// <param name="pictureType">The file type of the source picture.</param>
-        public Source(Address id, string name, string picturePath, string pictureType)
+        public SourceGraphic(Address id, string name, string picturePath, string pictureType)
         {
             this._id = id;
             this._name = name;
@@ -162,7 +162,7 @@ namespace NuvoControl.Common.Configuration
             if (obj == null)
                 return false;
 
-            Source source = obj as Source;
+            SourceGraphic source = obj as SourceGraphic;
             if ((object)source == null)
                 return false;
 
@@ -175,7 +175,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         /// <param name="source">The source to compare with.</param>
         /// <returns>True if the specified source is equal to the current source; otherwise, false.</returns>
-        public bool Equals(Source source)
+        public bool Equals(SourceGraphic source)
         {
             if ((object)source == null)
                 return false;
@@ -190,7 +190,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="source1">Left hand side parameter.</param>
         /// <param name="source2">Reight hand side parameter</param>
         /// <returns>True, if the specified sources are equal; otherwise false.</returns>
-        public static bool operator ==(Source source1, Source source2)
+        public static bool operator ==(SourceGraphic source1, SourceGraphic source2)
         {
             if ((object)source1 == null)
                 return (object)source2 == null;
@@ -205,7 +205,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="source1">Left hand side parameter.</param>
         /// <param name="source2">Reight hand side parameter</param>
         /// <returns>True, if the specified sources are unequal; otherwise false.</returns>
-        public static bool operator !=(Source source1, Source source2)
+        public static bool operator !=(SourceGraphic source1, SourceGraphic source2)
         {
             return !(source1 == source2);
         }
@@ -240,7 +240,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="other">The source to compare with.</param>
         /// <returns>Less than zero, if the current instance is less than the parameter;
         /// zero, if the sources are equal; Greater than zero, if the current instance is greater than the parameter</returns>
-        public int CompareTo(Source other)
+        public int CompareTo(SourceGraphic other)
         {
             if (_id == other._id)
                 return 0;

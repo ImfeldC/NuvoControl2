@@ -19,7 +19,7 @@ namespace NuvoControl.Client.TestViewer.ConfigurationServiceReference {
         NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration();
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetZoneKonfiguration", ReplyAction="http://tempuri.org/IConfigure/GetZoneKonfigurationResponse")]
-        NuvoControl.Common.Configuration.Zone GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId);
+        NuvoControl.Common.Configuration.ZoneGraphic GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetFunction", ReplyAction="http://tempuri.org/IConfigure/GetFunctionResponse")]
         NuvoControl.Common.Configuration.Function GetFunction(System.Guid id);
@@ -62,7 +62,7 @@ namespace NuvoControl.Client.TestViewer.ConfigurationServiceReference {
             return base.Channel.GetGraphicConfiguration();
         }
         
-        public NuvoControl.Common.Configuration.Zone GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId) {
+        public NuvoControl.Common.Configuration.ZoneGraphic GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId) {
             return base.Channel.GetZoneKonfiguration(zoneId);
         }
         

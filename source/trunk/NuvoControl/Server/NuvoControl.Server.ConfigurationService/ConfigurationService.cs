@@ -141,11 +141,11 @@ namespace NuvoControl.Server.ConfigurationService
         /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>
-        public Zone GetZoneKonfiguration(Address zoneId)
+        public ZoneGraphic GetZoneKonfiguration(Address zoneId)
         {
             _log.Trace(m => m(String.Format("Configuration Service; GetZoneKonfiguration(ZoneId={0}).", zoneId.ToString())));
 
-            List<Zone> zones = new List<Zone>();
+            List<ZoneGraphic> zones = new List<ZoneGraphic>();
             foreach (Floor floor in _systemConfiguration.Graphic.Building.Floors)
             {
                 zones.AddRange((from zone in floor.Zones where zone.Id == zoneId select zone));
@@ -166,9 +166,9 @@ namespace NuvoControl.Server.ConfigurationService
         }
 
 
-        public Source GetSourceKonfiguration(Address sourceId)
+        public SourceGraphic GetSourceKonfiguration(Address sourceId)
         {
-            foreach (Source source in _systemConfiguration.Graphic.Sources)
+            foreach (SourceGraphic source in _systemConfiguration.Graphic.Sources)
             {
                 if (source.Id == sourceId)
                 {

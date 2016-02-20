@@ -24,17 +24,17 @@ namespace NuvoControl.Client.TestViewer.Controls
     {
         public event RoutedEventHandler _zoneStateChange;
 
-        private Zone _zone;
+        private ZoneGraphic _zone;
         private ZoneState _zoneStateCmd;
         private bool disableNotify = false;
-        private List<Source> _sources = new List<Source>();
+        private List<SourceGraphic> _sources = new List<SourceGraphic>();
 
         public ZoneControl()
         {
             InitializeComponent();
         }
 
-        public Zone Zone
+        public ZoneGraphic Zone
         {
             set
             {
@@ -59,7 +59,7 @@ namespace NuvoControl.Client.TestViewer.Controls
                     lblAck.Content = value.CommandUnacknowledged ? "Unacknowledged" : "Acknowledged";
                     prgVolume.Value = value.Volume;
                     btnPower.IsChecked = value.PowerStatus;
-                    int index = _sources.BinarySearch(new Source(value.Source));
+                    int index = _sources.BinarySearch(new SourceGraphic(value.Source));
                     if (index >= 0)
                         cbxSource.SelectedItem = _sources[index];
 
@@ -70,7 +70,7 @@ namespace NuvoControl.Client.TestViewer.Controls
         }
 
 
-        public List<Source> Sources
+        public List<SourceGraphic> Sources
         {
             set
             {
@@ -112,7 +112,7 @@ namespace NuvoControl.Client.TestViewer.Controls
         {
             if (_zoneStateChange != null && disableNotify == false)
             {
-                _zoneStateCmd.Source = (e.AddedItems[0] as Source).Id;
+                _zoneStateCmd.Source = (e.AddedItems[0] as SourceGraphic).Id;
                 _zoneStateChange(this, e);
             }
         }

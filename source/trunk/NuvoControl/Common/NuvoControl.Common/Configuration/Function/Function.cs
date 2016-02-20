@@ -88,7 +88,7 @@ namespace NuvoControl.Common.Configuration
         {
             this._id = id;
             this._zoneId = zoneId;
-            this._commands.AddRange( commands );
+            if( commands != null ) this._commands.AddRange( commands );
         }
 
         #endregion
@@ -120,7 +120,7 @@ namespace NuvoControl.Common.Configuration
         public override string ToString()
         {
             string strCommand = "";
-            if (_commands.Count() > 0)
+            if (_commands != null && _commands.Count() > 0)
             {
                 foreach (Command command in _commands)
                 {
@@ -128,7 +128,7 @@ namespace NuvoControl.Common.Configuration
                     strCommand += ",";
                 }
             }
-            return String.Format("Zone={0}, Guid={1}, Commands={2} [{3}]", ZoneId, Id, _commands.Count(), strCommand);
+            return String.Format("Zone={0}, Guid={1}, Commands={2} [{3}]", ZoneId, Id, (_commands != null ? _commands.Count().ToString() : "None"), strCommand);
         }
 
         #endregion

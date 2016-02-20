@@ -27,10 +27,13 @@ using System.Runtime.Serialization;
 namespace NuvoControl.Common.Configuration
 {
     /// <summary>
-    /// Zone Configuration class.
+    /// This is a system configuration class. 
+    /// 
+    /// It is a data structurer.
+    /// Defines graphical attributes of a zone.
     /// </summary>
     [DataContract]
-    public class Zone
+    public class ZoneGraphic
     {
         #region Private Members
 
@@ -77,7 +80,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public Zone()
+        public ZoneGraphic()
         {
         }
 
@@ -90,7 +93,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="pictureType">The file type of the zone picture.</param>
         /// <param name="floorPlanCoordinates">The coordinates of the zone within the floor plan.</param>
         /// <param name="zoneControlCoordinate">The coordinatee of the zone control within the zone.</param>
-        public Zone(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates, Point zoneControlCoordinate)
+        public ZoneGraphic(Address id, string name, string picturePath, string pictureType, List<Point> floorPlanCoordinates, Point zoneControlCoordinate)
         {
             this._id = id;
             this._name = name;

@@ -105,14 +105,14 @@ namespace NuvoControl.Client.TestViewer
 
         private void InstantiateZoneControls()
         {
-            List<Zone> allZones = GetAllZones(_graphicConfiguration);
+            List<ZoneGraphic> allZones = GetAllZones(_graphicConfiguration);
             int columCount;
             int rowCount;
             ConfigureMainGrid(allZones.Count, out columCount, out rowCount);
 
             int columnIndex = 0;
             int rowIndex = 0;
-            foreach (Zone zone in allZones)
+            foreach (ZoneGraphic zone in allZones)
             {
                 ZoneControl zoneCtrl = new ZoneControl();
                 zoneCtrl.Zone = zone;
@@ -205,9 +205,9 @@ namespace NuvoControl.Client.TestViewer
         }
 
 
-        private List<Zone> GetAllZones(Graphic graphic)
+        private List<ZoneGraphic> GetAllZones(Graphic graphic)
         {
-            List<Zone> allZones = new List<Zone>();
+            List<ZoneGraphic> allZones = new List<ZoneGraphic>();
             foreach (Floor floor in graphic.Building.Floors)
             {
                 allZones.AddRange(floor.Zones);

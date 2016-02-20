@@ -34,11 +34,11 @@ namespace NuvoControl.Client.Viewer.Converters
 
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if ((values[0] is Address) && (values[1] is List<Source>))
+            if ((values[0] is Address) && (values[1] is List<SourceGraphic>))
             {
                 Address address = (Address)values[0];
-                List<Source> sources = (List<Source>)values[1];
-                foreach (Source source in sources)
+                List<SourceGraphic> sources = (List<SourceGraphic>)values[1];
+                foreach (SourceGraphic source in sources)
                 {
                     if (address.Equals(source.Id))
                         return source.Name;
