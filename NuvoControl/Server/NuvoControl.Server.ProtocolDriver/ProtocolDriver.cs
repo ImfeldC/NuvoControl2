@@ -595,6 +595,16 @@ namespace NuvoControl.Server.ProtocolDriver
             sendCommandToDevice(zoneAddress, command);
         }
 
+        /// <summary>
+        /// Public method to play sound on specified source.
+        /// </summary>
+        /// <param name="sourceAddress">Source, where to play sound.</param>
+        /// <param name="URL">URL to play.</param>
+        public void CommandPlaySound(Address sourceAddress, string URL)
+        {
+            throw new System.NotImplementedException();
+        }
+
         #endregion
 
 

@@ -287,5 +287,11 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <param name="volumeLevel">Volume Level, which shall be set in the selected zone.</param>
         void CommandSetVolume(Address zoneAddress, int volumeLevel);
 
+        /// <summary>
+        /// Play the speified URL on the specified source.
+        /// </summary>
+        /// <param name="sourceAddress">Source, where to play the specified URL.</param>
+        /// <param name="URL">URL to play.</param>
+        void CommandPlaySound(Address sourceAddress, string URL);
     }
 }
