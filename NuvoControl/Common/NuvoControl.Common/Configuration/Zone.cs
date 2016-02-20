@@ -17,7 +17,7 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    class Zone
+    public class Zone
     {
 
         #region Private Members

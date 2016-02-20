@@ -272,9 +272,9 @@ namespace NuvoControl.Server.HostConsole
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
                 LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.ToString()));
-                foreach (int zoneId in device.Zones)
+                foreach (Zone zone in device.Zones)
                 {
-                    zoneControllers.Add(new ZoneController(new Address(device.Id, zoneId), _protocolDrivers[device.Id]));
+                    zoneControllers.Add(new ZoneController(new Address(device.Id, zone.Id.ObjectId), _protocolDrivers[device.Id]));
                 }
             }
             _zoneServer = new NuvoControl.Server.ZoneServer.ZoneServer(zoneControllers);
