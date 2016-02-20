@@ -60,6 +60,11 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         private List<Source> _sources = new List<Source>();
 
+        /// <summary>
+        /// All audio devices of the device.
+        /// </summary>
+        private List<AudioDevice> _audioDevices = new List<AudioDevice>();
+
         #endregion
 
         #region Constructors
@@ -72,13 +77,15 @@ namespace NuvoControl.Common.Configuration
         /// <param name="protocolDriver">The protocol driver to be used to communicate with the device.</param>
         /// <param name="zones">All zones of the device.</param>
         /// <param name="sources">All sources of the device.</param>
-        public Device(int id, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources)
+        /// <param name="audioDevices">All audio devices of the device.</param>
+        public Device(int id, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources, List<AudioDevice> audioDevices)
         {
             this._id = id;
             this._communication = communication;
             this._protocolDriver = protocolDriver;
             this._zones = zones;
             this._sources = sources;
+            this._audioDevices = audioDevices;
         }
 
         #endregion
@@ -125,6 +132,15 @@ namespace NuvoControl.Common.Configuration
             get { return _sources; }
         }
 
+        /// <summary>
+        /// All audio devices of the device.
+        /// </summary>
+        public List<AudioDevice> AudioDevices
+        {
+            get { return _audioDevices; }
+            set { _audioDevices = value; }
+        }
+
         #endregion
 
         /// <summary>
@@ -138,16 +154,28 @@ namespace NuvoControl.Common.Configuration
             strDevice += String.Format("Id={0} /", _id);
             strDevice += String.Format("Communication=[{0}] /", _communication.ToString());
             strDevice += String.Format("Protocol Driver=[{0}] /", _protocolDriver.ToString());
+
+            // all Zones ...
             strDevice += String.Format("Zones=[");
             foreach (Zone zone in _zones)
             {
                 strDevice += String.Format("Zone={0}, ", zone.ToString());
             }
             strDevice += String.Format("]");
+
+            // all Sources ...
             strDevice += String.Format("Sources=[");
             foreach (Source source in _sources)
             {
                 strDevice += String.Format("Source={0}, ", source.ToString());
+            }
+            strDevice += String.Format("]");
+
+            // all Audio Devices ...
+            strDevice += String.Format("AudioDevices=[");
+            foreach (AudioDevice audioDevice in _audioDevices)
+            {
+                strDevice += String.Format("Audio={0}, ", audioDevice.ToString());
             }
             strDevice += String.Format("]");
 

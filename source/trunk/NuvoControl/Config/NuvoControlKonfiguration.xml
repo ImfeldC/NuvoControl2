@@ -1,12 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<!-- sAuthors: C. Imfeld, B. Limacher-->
-<!-- Date: 17-Mar-2010 -->
+<!-- sAuthors: C. Imfeld, B. Limacher -->
+<!-- Date: 20-Feb-2016 -->
 <NuvoControl>
   <Configuration Version="2.1">
+    
     <Hardware>
       <Device Id="100">
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
         <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
+        <AudioDevices>
+          <AudioDevice Player="mpg321" DeviceType="" Device="" Name="Raspberry Pi on-board" SourceId="100.6" />
+        </AudioDevices>
         <Zones>
           <Zone Id="1" Name="Esszimmer" />
           <Zone Id="2" Name="Büro (EG)" />
@@ -31,6 +35,7 @@
         </Sources>
       </Device>
     </Hardware>
+    
     <Graphic>
       <Building Name="Unser Heim" Id="10000.1">
         <Picture RelativePath=".\Images\Building.png" PictureType="png"></Picture>
@@ -197,7 +202,7 @@
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="PlaySound" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0001-0001-1111-111111111111"
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0001-0001-1111-111111111111"
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
@@ -211,7 +216,7 @@
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="PlaySound" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0002-0002-1111-111111111111"
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0002-0002-1111-111111111111"
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
@@ -219,7 +224,7 @@
       <SleepFunction Id="11111111-0003-1111-1111-111111111111" ZoneId="100.3" SleepDuration="60">
         <Validity ActiveFrom="20:00" ActiveTo="02:00"></Validity>
         <Commands>
-          <Command cmd="PlaySound" onValidityStart="True" onValidityEnd="True" Id="11111111-0003-0003-1111-111111111111"
+          <Command cmd="PlaySound" SourceId="100.6" onValidityStart="True" onValidityEnd="True" Id="11111111-0003-0003-1111-111111111111"
                    url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
         </Commands>
       </SleepFunction>
@@ -260,7 +265,7 @@
             </Body>
           </Command>
           
-          <Command cmd="PlaySound" onFunctionStart="True" onFunctionEnd="True" Id="99999999-9999-9999-9999-999999999999" 
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="99999999-9999-9999-9999-999999999999" 
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
 
           <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
@@ -277,7 +282,7 @@
             <Day Name="Tuesday" />
           </Days>
         </Validity>
-        <Command cmd="PlaySound" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
+        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
                  url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                  process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />

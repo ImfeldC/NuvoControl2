@@ -357,7 +357,11 @@ namespace NuvoControl.Server.Dal
                         new Address((int)device.Attribute("Id"), (int)zone.Attribute("Id")), (string)zone.Attribute("Name") )).ToList<Zone>(),
                     (from source in device.Element("Sources").Elements("Source")
                     select new Source( 
-                        new Address((int)device.Attribute("Id"), (int)source.Attribute("Id")), (string)source.Attribute("Name") )).ToList<Source>()
+                        new Address((int)device.Attribute("Id"), (int)source.Attribute("Id")), (string)source.Attribute("Name") )).ToList<Source>(),
+                    (from audioDevice in device.Element("AudioDevices").Elements("AudioDevice")
+                    select new AudioDevice(
+                        new Address((string)audioDevice.Attribute("SourceId")), (string)audioDevice.Attribute("Name"),
+                        (string)audioDevice.Attribute("Player"), (string)audioDevice.Attribute("DeviceType"), (string)audioDevice.Attribute("Device"))).ToList<AudioDevice>()
                     );
 
             return nuvoDevices.ToList<Device>();
@@ -590,6 +594,7 @@ namespace NuvoControl.Server.Dal
                         command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
                         command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
                         command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
+                        command.Attribute("SourceId") != null ? new Address((string)command.Attribute("SourceId")) : new Address(),
                         command.Attribute("url") != null ? (string)command.Attribute("url") : ""
                     ));
                 allCommands = allCommands.Concat(playSoundCommands);

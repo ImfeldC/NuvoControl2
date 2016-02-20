@@ -73,6 +73,16 @@ namespace NuvoControl.Common.Configuration
 
 
         /// <summary>
+        /// Constructor, converts string (e.g. "100.6") into device and object id.
+        /// </summary>
+        /// <param name="address">Address (e.g. "100.6") which contains device and object id.</param>
+        public Address(string address)
+        {
+            this._deviceId = int.Parse(address.Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]);
+            this._objectId = int.Parse(address.Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1]);
+        }
+
+        /// <summary>
         /// Copy constructor
         /// </summary>
         /// <param name="id"></param>
