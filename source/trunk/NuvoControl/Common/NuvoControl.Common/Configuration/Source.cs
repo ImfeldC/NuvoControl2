@@ -1,19 +1,11 @@
 ﻿/**************************************************************************************************
  * 
- *   Copyright (C) 2009 by B. Limacher, Ch. Imfeld. All Rights Reserved.
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
  * 
  ***************************************************************************************************
  *
  *   Project:        NuvoControl
  *   SubProject:     NuvoControl.Common
- *   Author:         Bernhard Limacher
- *   Creation Date:  12.05.2009
- *   File Name:      Source.cs
- * 
- ***************************************************************************************************
- * 
- * Revisions:
- * 1) 12.05.2009, Bernhard Limacher: First implementation.
  * 
  **************************************************************************************************/
 
@@ -25,34 +17,26 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    /// <summary>
-    /// This is a system configuration class. 
-    /// 
-    /// It is a data structurer.
-    /// Defines graphical attributes of a source.
-    /// </summary>
-    [DataContract]
-    public class SourceGraphic: IComparable<SourceGraphic>
+    class Source : IComparable<Source>
     {
+        /// <summary>
+        /// Maximum number of sources for a NuVo (Essentia) system.
+        /// </summary>
+        public const int MAX_SOURCES = 6;
+
         #region Private Members
 
         /// <summary>
-        /// Source device (with HW settings)
+        /// The address of the source.
         /// </summary>
         [DataMember]
-        private Source _source;
+        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
         /// <summary>
-        /// The file name of the source picture.
+        /// The name of the source.
         /// </summary>
         [DataMember]
-        private string _picturePath = String.Empty;
-
-        /// <summary>
-        /// The file type of the source picture.
-        /// </summary>
-        [DataMember]
-        private string _pictureType = String.Empty;
+        private string _name = String.Empty;
 
         #endregion
 
@@ -61,7 +45,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Default Constructor.
         /// </summary>
-        public SourceGraphic()
+        public Source()
         {
         }
 
@@ -69,9 +53,9 @@ namespace NuvoControl.Common.Configuration
         /// Constructor
         /// </summary>
         /// <param name="id">The address of the source.</param>
-        public SourceGraphic(Address id)
+        public Source(Address id)
         {
-            this._source = new Source(id);
+            this._id = id;
         }
 
         /// <summary>
@@ -79,13 +63,10 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         /// <param name="id">The address of the source.</param>
         /// <param name="name">The name of the source.</param>
-        /// <param name="picturePath">The file name of the source picture.</param>
-        /// <param name="pictureType">The file type of the source picture.</param>
-        public SourceGraphic(Address id, string name, string picturePath, string pictureType)
+        public Source(Address id, string name)
         {
-            this._source = new Source(id, name);
-            this._picturePath = picturePath;
-            this._pictureType = pictureType;
+            this._id = id;
+            this._name = name;
         }
 
         #endregion
@@ -97,7 +78,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         public Address Id
         {
-            get { return _source.Id; }
+            get { return _id; }
         }
 
         /// <summary>
@@ -105,36 +86,20 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         public string Name
         {
-            get { return _source.Name; }
+            get { return _name; }
         }
 
-        /// <summary>
-        /// The file name of the source picture.
-        /// </summary>
-        public string PicturePath
-        {
-            get { return _picturePath; }
-        }
-
-
-        /// <summary>
-        /// The file type of the source picture.
-        /// </summary>
-        public string PictureType
-        {
-            get { return _pictureType; }
-        }
-
-/*
- * No longer used (after moved base class to Source.cs)
- * 
         /// <summary>
         /// Return true if the Source object is empty (not initialized).
         /// </summary>
         /// <returns>True if the source object is empty.</returns>
         public bool isEmpty()
         {
-            return _source.isEmpty();
+            if (_id.ObjectId == SystemConfiguration.ID_UNDEFINED && _id.DeviceId == SystemConfiguration.ID_UNDEFINED)
+            {
+                return true;
+            }
+            return false;
         }
 
 
@@ -148,11 +113,11 @@ namespace NuvoControl.Common.Configuration
             if (obj == null)
                 return false;
 
-            SourceGraphic source = obj as SourceGraphic;
+            Source source = obj as Source;
             if ((object)source == null)
                 return false;
 
-            return _source.Equals(source._source);
+            return (_id == source._id);
         }
 
 
@@ -161,9 +126,12 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         /// <param name="source">The source to compare with.</param>
         /// <returns>True if the specified source is equal to the current source; otherwise, false.</returns>
-        public bool Equals(SourceGraphic source)
+        public bool Equals(Source source)
         {
-            return _source.Equals(source._source);
+            if ((object)source == null)
+                return false;
+
+            return (_id == source._id);
         }
 
 
@@ -173,7 +141,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="source1">Left hand side parameter.</param>
         /// <param name="source2">Reight hand side parameter</param>
         /// <returns>True, if the specified sources are equal; otherwise false.</returns>
-        public static bool operator ==(SourceGraphic source1, SourceGraphic source2)
+        public static bool operator ==(Source source1, Source source2)
         {
             if ((object)source1 == null)
                 return (object)source2 == null;
@@ -188,11 +156,11 @@ namespace NuvoControl.Common.Configuration
         /// <param name="source1">Left hand side parameter.</param>
         /// <param name="source2">Reight hand side parameter</param>
         /// <returns>True, if the specified sources are unequal; otherwise false.</returns>
-        public static bool operator !=(SourceGraphic source1, SourceGraphic source2)
+        public static bool operator !=(Source source1, Source source2)
         {
             return !(source1 == source2);
         }
-*/
+
 
         /// <summary>
         /// Hash function for the address type.
@@ -200,7 +168,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Hash code</returns>
         public override int GetHashCode()
         {
-            return _source.Id.GetHashCode();
+            return _id.GetHashCode();
         }
 
 
@@ -210,12 +178,12 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this source.</returns>
         public override string ToString()
         {
-            return String.Format("[id={0}, name={1}]", _source.Id, _source.Name);
+            return String.Format("[id={0}, name={1}]", _id, _name);
         }
 
         #endregion
 
-        #region IComparable<SourceGraphic> Members
+        #region IComparable<Source> Members
 
         /// <summary>
         /// Compares the specified source with the current source
@@ -223,17 +191,25 @@ namespace NuvoControl.Common.Configuration
         /// <param name="other">The source to compare with.</param>
         /// <returns>Less than zero, if the current instance is less than the parameter;
         /// zero, if the sources are equal; Greater than zero, if the current instance is greater than the parameter</returns>
-        public int CompareTo(SourceGraphic other)
+        public int CompareTo(Source other)
         {
-            return _source.CompareTo(other._source);
+            if (_id == other._id)
+                return 0;
+
+            if (_id.DeviceId < other._id.DeviceId)
+                return -1;
+            else if (_id.DeviceId > other._id.DeviceId)
+                return 1;
+            else
+            {
+                if (_id.ObjectId < other._id.ObjectId)
+                    return -1;
+                else
+                    return 1;
+            }
+
         }
 
         #endregion
     }
 }
-
-/**************************************************************************************************
- * 
- *   Copyright (C) 2009 by B. Limacher, Ch. Imfeld. All Rights Reserved.
- * 
-**************************************************************************************************/

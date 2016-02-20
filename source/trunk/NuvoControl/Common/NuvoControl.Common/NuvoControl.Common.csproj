@@ -93,6 +93,7 @@
     <Compile Include="Configuration\Address.cs" />
     <Compile Include="Configuration\Command\SendMailCommand.cs" />
     <Compile Include="Configuration\Function\SleepFunction.cs" />
+    <Compile Include="Configuration\Source.cs" />
     <Compile Include="Configuration\SourceGraphic.cs" />
     <Compile Include="Configuration\Floor.cs" />
     <Compile Include="Configuration\Function\Function.cs" />
@@ -101,6 +102,7 @@
     <Compile Include="Configuration\Device.cs" />
     <Compile Include="Configuration\Command\StartProcessCommand.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
+    <Compile Include="Configuration\Zone.cs" />
     <Compile Include="Configuration\ZoneGraphic.cs" />
     <Compile Include="EnvironmentHelper.cs" />
     <Compile Include="ListExtensions.cs" />
