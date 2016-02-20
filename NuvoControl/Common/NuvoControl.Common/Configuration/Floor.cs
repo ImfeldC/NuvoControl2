@@ -64,7 +64,7 @@ namespace NuvoControl.Common.Configuration
         /// All zones of the floor
         /// </summary>
         [DataMember]
-        private List<Zone> _zones = new List<Zone>();
+        private List<ZoneGraphic> _zones = new List<ZoneGraphic>();
 
         #endregion
 
@@ -86,7 +86,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="floorPlanPath">The file name of the floor plan.</param>
         /// <param name="floorPlanType">The file type of the floor plan.</param>
         /// <param name="zones">All zones of the floor.</param>
-        public Floor(Address id, string name, string floorPlanPath, string floorPlanType, List<Zone> zones)
+        public Floor(Address id, string name, string floorPlanPath, string floorPlanType, List<ZoneGraphic> zones)
         {
             this._id = id;
             this._name = name;
@@ -134,7 +134,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All zones of the floor.
         /// </summary>
-        public List<Zone> Zones
+        public List<ZoneGraphic> Zones
         {
             get { return _zones; }
         }
@@ -145,7 +145,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this floor.</returns>
         public override string ToString()
         {
-            return String.Format("Name={0}, Id={1}, FloorPlanPath={2}, FloorPlanType={3}, Zones=[{4}]", _name, _id, _floorPlanPath, _floorPlanType, _zones.ToString<Zone>(" / "));
+            return String.Format("Name={0}, Id={1}, FloorPlanPath={2}, FloorPlanType={3}, Zones=[{4}]", _name, _id, _floorPlanPath, _floorPlanType, _zones.ToString<ZoneGraphic>(" / "));
         }
 
         #endregion

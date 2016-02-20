@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using Common.Logging;
+
 using NuvoControl.Server.ZoneServer;
 using NuvoControl.Common.Configuration;
-using Common.Logging;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.FunctionServer
 {
@@ -61,7 +64,14 @@ namespace NuvoControl.Server.FunctionServer
             DateTime aktTime = DateTime.Now;
             foreach (IConcreteFunction func in _concreteFunctions)
             {
-                func.calculateFunction(aktTime);
+                if (func != null)
+                {
+                    func.calculateFunction(aktTime);
+                }
+                else
+                {
+                    LogHelper.Log(LogLevel.Error, "Skip <null> pointer function. Do you miss a conrete function implementation?");
+                }
             }
         }
 
@@ -93,7 +103,7 @@ namespace NuvoControl.Server.FunctionServer
 
             foreach (IConcreteFunction func in _concreteFunctions)
             {
-                strFunctions += String.Format("f({0})=[{1}] ", i, func.Function.ToString());
+                strFunctions += String.Format("f({0})=[{1}] ", i, (func != null ? func.Function.ToString() : "<null>"));
                 i++;
             }
             strFunctions += "\n";

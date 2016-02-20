@@ -61,7 +61,7 @@ namespace NuvoControl.Server.ConfigurationService
         /// <param name="zoneId">The zone id.</param>
         /// <returns>Zone configuration.</returns>
         [OperationContract]
-        Zone GetZoneKonfiguration(Address zoneId);
+        ZoneGraphic GetZoneKonfiguration(Address zoneId);
 
         /// <summary>
         /// Returns the specified function.

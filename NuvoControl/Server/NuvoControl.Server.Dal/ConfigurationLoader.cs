@@ -317,6 +317,7 @@ namespace NuvoControl.Server.Dal
             functions.AddRange(ReadSleepFunctions().Cast<Function>());
             functions.AddRange(ReadAlarmFunctionsWithCommands().Cast<Function>());
             functions.AddRange(ReadAlarmFunctions().Cast<Function>());
+            functions.AddRange(ReadZoneChangeFunctions().Cast<Function>());
 
             _systemConfiguration = new SystemConfiguration(
                 new Hardware(ReadDevices()),
@@ -374,7 +375,7 @@ namespace NuvoControl.Server.Dal
                     (string)floor.Element("FloorPlan").Attribute("RelativePath"),
                     (string)floor.Element("FloorPlan").Attribute("PictureType"),
                     (from zone in floor.Element("Zones").Elements("Zone")
-                     select new Zone(
+                     select new ZoneGraphic(
                         new Address(int.Parse(((string)zone.Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                             int.Parse(((string)zone.Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                         (string)zone.Attribute("Name"),
@@ -382,7 +383,7 @@ namespace NuvoControl.Server.Dal
                         (string)zone.Element("Picture").Attribute("PictureType"),
                         (from pt in zone.Element("FloorPlanCoordinates").Elements("Point")
                          select new Point((int)pt.Attribute("x"), (int)pt.Attribute("y"))).ToList<Point>(),
-                         new Point((double)zone.Element("ZoneControlCoordinate").Attribute("x"), (double)zone.Element("ZoneControlCoordinate").Attribute("y")))).ToList<Zone>()
+                         new Point((double)zone.Element("ZoneControlCoordinate").Attribute("x"), (double)zone.Element("ZoneControlCoordinate").Attribute("y")))).ToList<ZoneGraphic>()
                      );
 
             return floors.ToList<Floor>();
@@ -393,11 +394,11 @@ namespace NuvoControl.Server.Dal
         /// Reads and creates the source objects based on the XML configuration file.
         /// </summary>
         /// <returns>The created source configuration objects.</returns>
-        private List<Source> ReadSourcesOfGraphic()
+        private List<SourceGraphic> ReadSourcesOfGraphic()
         {
-            IEnumerable<Source> sources =
+            IEnumerable<SourceGraphic> sources =
                 from source in _configuration.Root.Element("Configuration").Element("Graphic").Element("Sources").Elements("Source")
-                select new Source(
+                select new SourceGraphic(
                     new Address(int.Parse(((string)source.Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)source.Attribute("Id")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     (string)source.Attribute("Name"),
@@ -405,7 +406,7 @@ namespace NuvoControl.Server.Dal
                     (string)source.Element("Picture").Attribute("PictureType")
                      );
 
-            return sources.ToList<Source>();
+            return sources.ToList<SourceGraphic>();
         }
 
 
@@ -508,6 +509,31 @@ namespace NuvoControl.Server.Dal
             return functions.ToList<AlarmFunction>();
         }
 
+        /// <summary>
+        /// Reads and creates the zone change function objects based on the XML configuration file.
+        /// </summary>
+        /// <returns>The created zone change function configuration objects.</returns>
+        private List<ZoneChangeFunction> ReadZoneChangeFunctions()
+        {
+            // Load zone change functions
+            IEnumerable<ZoneChangeFunction> functions =
+                from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("ZoneChangeFunction")
+//                where function.Element("Commands") != null
+                select new ZoneChangeFunction(
+                    (Guid)function.Attribute("Id"),
+                    new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                        int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                    new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                        int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                    int.Parse((string)function.Attribute("Volume")),
+                    (from day in function.Element("Validity").Element("Days").Elements("Day")
+                     select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>(),
+                    readCommands(function)
+                    );
+
+            return functions.ToList<ZoneChangeFunction>();
+        }
+
 
 
         /// <summary>
@@ -519,87 +545,94 @@ namespace NuvoControl.Server.Dal
         {
             IEnumerable<Command> allCommands = null;
 
-            // Read SendMail commands, with three kind of mail address (to & cc & bcc)
-            IEnumerable<Command> sendMailCommands = (from command in function.Element("Commands").Elements("Command")
-                where command.Attribute("cmd").Value == "SendMail"
-                    && command.Element("Recipients") != null
-                select new SendMailCommand(
-                    (Guid)command.Attribute("Id"),
-                    command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
-                    command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
-                    command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
-                    command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
-                    command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
-                    command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
-                    command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
-                    (from recipient in command.Element("Recipients").Elements("Recipient")
-                    where recipient.Attribute("type").Value == "to"
-                    select new MailAddress( (string)recipient.Attribute("name"))),
-                    (from recipient in command.Element("Recipients").Elements("Recipient")
-                    where recipient.Attribute("type").Value == "cc"
-                    select new MailAddress((string)recipient.Attribute("name"))),
-                    (from recipient in command.Element("Recipients").Elements("Recipient")
-                    where recipient.Attribute("type").Value == "bcc"
-                    select new MailAddress((string)recipient.Attribute("name"))),
-                    (command.Element("Subject")!=null?(string)command.Element("Subject").Value:""),
-                    (command.Element("Body")!=null?(string)command.Element("Body").Value:"")
-                ));
-            allCommands = sendMailCommands;
+            if( function.Element("Commands") != null && function.Element("Commands").Elements("Command") != null )
+            {
 
-            // Read PlaySound command
-            IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
-                where command.Attribute("cmd").Value == "PlaySound"
-                select new PlaySoundCommand(
-                    (Guid)command.Attribute("Id"),
-                    command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
-                    command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
-                    command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
-                    command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
-                    command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
-                    command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
-                    command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
-                    command.Attribute("url") != null ? (string)command.Attribute("url") : ""
-                ));
-            allCommands = allCommands.Concat(playSoundCommands);
+                // Read SendMail commands, with three kind of mail address (to & cc & bcc)
+                IEnumerable<Command> sendMailCommands = (from command in function.Element("Commands").Elements("Command")
+                    where command.Attribute("cmd").Value == "SendMail"
+                        && command.Element("Recipients") != null
+                    select new SendMailCommand(
+                        (Guid)command.Attribute("Id"),
+                        command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
+                        command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
+                        command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
+                        command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
+                        command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
+                        command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
+                        command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
+                        (from recipient in command.Element("Recipients").Elements("Recipient")
+                        where recipient.Attribute("type").Value == "to"
+                        select new MailAddress( (string)recipient.Attribute("name"))),
+                        (from recipient in command.Element("Recipients").Elements("Recipient")
+                        where recipient.Attribute("type").Value == "cc"
+                        select new MailAddress((string)recipient.Attribute("name"))),
+                        (from recipient in command.Element("Recipients").Elements("Recipient")
+                        where recipient.Attribute("type").Value == "bcc"
+                        select new MailAddress((string)recipient.Attribute("name"))),
+                        (command.Element("Subject")!=null?(string)command.Element("Subject").Value:""),
+                        (command.Element("Body")!=null?(string)command.Element("Body").Value:"")
+                    ));
+                allCommands = sendMailCommands;
 
-            // Read StartProcess command
-            IEnumerable<Command> startProcessCommands = (from command in function.Element("Commands").Elements("Command")
-                where command.Attribute("cmd").Value == "StartProcess"
-                select new StartProcessCommand(
-                    (Guid)command.Attribute("Id"),
-                    command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
-                    command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
-                    command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
-                    command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
-                    command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
-                    command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
-                    command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
-                    (string)command.Attribute("process_cmd"),
-                    command.Attribute("process_arg") != null ? (string)command.Attribute("process_arg") : ""
-                ));
-            allCommands = allCommands.Concat(startProcessCommands);
+                // Read PlaySound command
+                IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
+                    where command.Attribute("cmd").Value == "PlaySound"
+                    select new PlaySoundCommand(
+                        (Guid)command.Attribute("Id"),
+                        command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
+                        command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
+                        command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
+                        command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
+                        command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
+                        command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
+                        command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
+                        command.Attribute("url") != null ? (string)command.Attribute("url") : ""
+                    ));
+                allCommands = allCommands.Concat(playSoundCommands);
 
-            // Read SendNuvoCommand commands
-            IEnumerable<Command> sendNuvoCommands = (from command in function.Element("Commands").Elements("Command")
-                where command.Attribute("cmd").Value == "SendNuvoCommand"
-                select new SendNuvoCommand(
-                    (Guid)command.Attribute("Id"),
-                    command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
-                    command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
-                    command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
-                    command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
-                    command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
-                    command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
-                    command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
-                    new Address(int.Parse(((string)command.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
-                        int.Parse(((string)command.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
-                    (string)command.Attribute("PowerStatus"),
-                    command.Attribute("SourceId") != null ? (string)command.Attribute("SourceId") : "",
-                    command.Attribute("Volume") != null ? (int)command.Attribute("Volume") : -1
-                ));
-            allCommands = allCommands.Concat(sendNuvoCommands);
+                // Read StartProcess command
+                IEnumerable<Command> startProcessCommands = (from command in function.Element("Commands").Elements("Command")
+                    where command.Attribute("cmd").Value == "StartProcess"
+                    select new StartProcessCommand(
+                        (Guid)command.Attribute("Id"),
+                        command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
+                        command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
+                        command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
+                        command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
+                        command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
+                        command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
+                        command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
+                        (string)command.Attribute("process_cmd"),
+                        command.Attribute("process_arg") != null ? (string)command.Attribute("process_arg") : ""
+                    ));
+                allCommands = allCommands.Concat(startProcessCommands);
 
-            return allCommands.ToList<Command>();
+                // Read SendNuvoCommand commands
+                IEnumerable<Command> sendNuvoCommands = (from command in function.Element("Commands").Elements("Command")
+                    where command.Attribute("cmd").Value == "SendNuvoCommand"
+                    select new SendNuvoCommand(
+                        (Guid)command.Attribute("Id"),
+                        command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
+                        command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
+                        command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
+                        command.Attribute("onValidityStart") != null ? (bool)command.Attribute("onValidityStart") : false,
+                        command.Attribute("onValidityEnd") != null ? (bool)command.Attribute("onValidityEnd") : false,
+                        command.Attribute("onUnix") != null ? (bool)command.Attribute("onUnix") : true,
+                        command.Attribute("onWindows") != null ? (bool)command.Attribute("onWindows") : true,
+                        new Address(int.Parse(((string)command.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
+                            int.Parse(((string)command.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
+                        (string)command.Attribute("PowerStatus"),
+                        command.Attribute("SourceId") != null ? (string)command.Attribute("SourceId") : "",
+                        command.Attribute("Volume") != null ? (int)command.Attribute("Volume") : -1
+                    ));
+                allCommands = allCommands.Concat(sendNuvoCommands);
+
+                return allCommands.ToList<Command>();
+            }
+
+            // no command section or command(s) found
+            return null;
         }
 
 

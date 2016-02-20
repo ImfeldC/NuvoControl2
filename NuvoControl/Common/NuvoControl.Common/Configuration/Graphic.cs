@@ -46,7 +46,7 @@ namespace NuvoControl.Common.Configuration
         /// All available sources of the NuvoControl system.
         /// </summary>
         [DataMember]
-        private List<Source> _sources = new List<Source>();
+        private List<SourceGraphic> _sources = new List<SourceGraphic>();
 
         #endregion
 
@@ -65,7 +65,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         /// <param name="building">The building containing the NuvoControl system.</param>
         /// <param name="sources">All available sources of the NuvoControl system.</param>
-        public Graphic(Building building, List<Source> sources)
+        public Graphic(Building building, List<SourceGraphic> sources)
         {
             this._building = building;
             this._sources = sources;
@@ -87,7 +87,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All available sources of the NuvoControl system.
         /// </summary>
-        public List<Source> Sources
+        public List<SourceGraphic> Sources
         {
             get { return _sources; }
         }
@@ -98,7 +98,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this Grpahic object.</returns>
         public override string ToString()
         {
-            return String.Format("Building=[{0}], Sources=[{1}]", _building.ToString(), _sources.ToString<Source>(" / "));
+            return String.Format("Building=[{0}], Sources=[{1}]", _building.ToString(), _sources.ToString<SourceGraphic>(" / "));
         }
 
         #endregion

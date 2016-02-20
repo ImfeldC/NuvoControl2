@@ -46,12 +46,12 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// All zones of a floor.
         /// </summary>
-        private List<Zone> _zones;
+        private List<ZoneGraphic> _zones;
 
         /// <summary>
         /// The currently shown zone in the zone view.
         /// </summary>
-        private Zone _activeZone;
+        private ZoneGraphic _activeZone;
 
         /// <summary>
         /// Thew zone state of the zone shown in the zone view.
@@ -61,7 +61,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// All available sources of the audio system.
         /// </summary>
-        private List<Source> _sources = new List<Source>();
+        private List<SourceGraphic> _sources = new List<SourceGraphic>();
 
         /// <summary>
         /// Collection view to the sources
@@ -109,7 +109,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         /// <param name="zones"></param>
         /// <param name="sources"></param>
-        public ZoneContext(List<Zone> zones, List<Source> sources)
+        public ZoneContext(List<ZoneGraphic> zones, List<SourceGraphic> sources)
         {
             _synchronizationContext = SynchronizationContext.Current;
 
@@ -391,7 +391,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// All audio sources
         /// </summary>
-        public List<Source> Sources
+        public List<SourceGraphic> Sources
         {
             get { return _sources; }
         }
@@ -409,11 +409,11 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// The currently selected source.
         /// </summary>
-        public Source SelectedSource
+        public SourceGraphic SelectedSource
         {
             get
             {
-                Source sourceItem = _sources.Find(delegate(Source source)
+                SourceGraphic sourceItem = _sources.Find(delegate(SourceGraphic source)
                 {
                     return (source.Id.Equals(_zoneState.Source)) ? true : false;
                 });
@@ -638,7 +638,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
             get
             {
                 List<NavigationItem> items = new List<NavigationItem>();
-                foreach (Zone zone in _zones)
+                foreach (ZoneGraphic zone in _zones)
                 {
                     items.Add(new NavigationItem(this, zone.Id, zone.Name));
                 }
@@ -703,7 +703,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         {
             _ignoreViewSelectionChange = true;
 
-            Zone tempZone = FindZone(id);
+            ZoneGraphic tempZone = FindZone(id);
             if (tempZone == null)
                 tempZone = _zones[0];
 
@@ -721,7 +721,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// Gets the next zone object of the zone context.
         /// </summary>
         /// <returns></returns>
-        private Zone GetNextZone()
+        private ZoneGraphic GetNextZone()
         {
             int index = _zones.IndexOf(_activeZone);
             if (index >= _zones.Count - 1)
@@ -735,7 +735,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// Gets the previous zone object of the zone context.
         /// </summary>
         /// <returns></returns>
-        private Zone GetPreviousZone()
+        private ZoneGraphic GetPreviousZone()
         {
             int index = _zones.IndexOf(_activeZone);
             if (index <= 0)
@@ -751,9 +751,9 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// </summary>
         /// <param name="id"></param>
         /// <returns>The found object; null if none found.</returns>
-        private Zone FindZone(Address id)
+        private ZoneGraphic FindZone(Address id)
         {
-            foreach (Zone zone in _zones)
+            foreach (ZoneGraphic zone in _zones)
             {
                 if (zone.Id.Equals(id))
                     return zone;

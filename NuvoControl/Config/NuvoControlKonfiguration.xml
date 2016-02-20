@@ -2,32 +2,32 @@
 <!-- sAuthors: C. Imfeld, B. Limacher-->
 <!-- Date: 17-Mar-2010 -->
 <NuvoControl>
-  <Configuration Version="2.0">
+  <Configuration Version="2.1">
     <Hardware>
       <Device Id="100">
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
         <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <Zones>
-          <Zone Id="1" />
-          <Zone Id="2" />
-          <Zone Id="3" />
-          <Zone Id="4" />
-          <Zone Id="5" />
-          <Zone Id="6" />
-          <Zone Id="7" />
-          <Zone Id="8" />
-          <Zone Id="9" />
-          <Zone Id="10" />
-          <Zone Id="11" />
-          <Zone Id="12" />
+          <Zone Id="1" Name="Esszimmer" />
+          <Zone Id="2" Name="Büro (EG)" />
+          <Zone Id="3" Name="Schlafzimmer" />
+          <Zone Id="4" Name="Wohnzimmer" />
+          <Zone Id="5" Name="Küche" />
+          <Zone Id="6" Name="Dusche" />
+          <Zone Id="7" Name="Bad/WC" />
+          <Zone Id="8" Name="Gästezimmer" />
+          <Zone Id="9" Name="Fernsehecke" />
+          <Zone Id="10" Name="Büro (Dach)" />
+          <Zone Id="11" Name="Balkon" />
+          <Zone Id="12" Name="(unused)" />
         </Zones>
         <Sources>
-          <Source Id="1" />
-          <Source Id="2" />
-          <Source Id="3" />
-          <Source Id="4" />
-          <Source Id="5" />
-          <Source Id="6" />
+          <Source Id="1" Name="DAB Hama DIR3100" />
+          <Source Id="2" Name="DAB" />
+          <Source Id="3" Name="Logitec" />
+          <Source Id="4" Name="CD Player" />
+          <Source Id="5" Name="AppleAirport" />
+          <Source Id="6" Name="RaspberryPi 2"/>
         </Sources>
       </Device>
     </Hardware>
@@ -271,8 +271,12 @@
         </Commands>
       </SleepFunction>
 
-      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.12" SourceId="100.1" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
-        <Validity ActiveFrom="14:00" ActiveTo="04:00"></Validity>
+      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.12" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
+        <Validity ActiveFrom="14:00" ActiveTo="04:00">
+          <Days>
+            <Day Name="Tuesday" />
+          </Days>
+        </Validity>
         <Command cmd="PlaySound" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
                  url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"

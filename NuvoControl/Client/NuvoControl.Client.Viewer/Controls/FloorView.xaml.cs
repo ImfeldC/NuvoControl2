@@ -54,9 +54,9 @@ namespace NuvoControl.Client.Viewer.Controls
         /// </summary>
         /// <param name="activeFloor">The foor for which to instantiate the zones.</param>
         /// <param name="sources">All sources</param>
-        public void LoadFloorZones(Floor activeFloor, List<Source> sources)
+        public void LoadFloorZones(Floor activeFloor, List<SourceGraphic> sources)
         {
-            foreach (Zone zone in activeFloor.Zones)
+            foreach (ZoneGraphic zone in activeFloor.Zones)
             {
                 CreateFloorZone(zone, sources);
             }
@@ -91,16 +91,16 @@ namespace NuvoControl.Client.Viewer.Controls
         /// </summary>
         /// <param name="zone">The zone to create.</param>
         /// <param name="sources">All available sources</param>
-        private void CreateFloorZone(Zone zone, List<Source> sources)
+        private void CreateFloorZone(ZoneGraphic zone, List<SourceGraphic> sources)
         {
             int xOffset;
             int yOffset;
             CalculateOffset(zone.FloorPlanCoordinates, out xOffset, out yOffset);
             List<Point> relativeCoordinates = ShiftCoordinates(zone.FloorPlanCoordinates, xOffset, yOffset);
-            Zone zoneMod = new Zone(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates, zone.ZoneControlCoordinate);
+            ZoneGraphic zoneMod = new ZoneGraphic(zone.Id, zone.Name, zone.PicturePath, zone.PictureType, relativeCoordinates, zone.ZoneControlCoordinate);
             ZoneControl zoneControl = new ZoneControl();
             ZoneState state = new ZoneState();
-            List<Zone> zones = new List<Zone>();
+            List<ZoneGraphic> zones = new List<ZoneGraphic>();
             zones.Add(zoneMod);
             ZoneContext zoneContext = new ZoneContext(zones, sources);
             zoneControl.DataContext = zoneContext;

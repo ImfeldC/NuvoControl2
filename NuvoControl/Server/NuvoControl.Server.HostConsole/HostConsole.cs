@@ -349,8 +349,8 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onZoneStatusUpdate(object sender, ProtocolZoneUpdatedEventArgs e)
         {
-            Zone zone = _configurationService.GetZoneKonfiguration(e.ZoneAddress);
-            Source source = _configurationService.GetSourceKonfiguration(e.ZoneState.Source);
+            ZoneGraphic zone = _configurationService.GetZoneKonfiguration(e.ZoneAddress);
+            SourceGraphic source = _configurationService.GetSourceKonfiguration(e.ZoneState.Source);
             if (e.ZoneState.PowerStatus == true)
             {
                 // Zone is ON ...

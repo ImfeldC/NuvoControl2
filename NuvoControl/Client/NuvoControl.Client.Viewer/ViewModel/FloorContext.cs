@@ -45,7 +45,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <summary>
         /// All available sources of the audio system.
         /// </summary>
-        private List<Source> _sources;
+        private List<SourceGraphic> _sources;
 
         /// <summary>
         /// The currently shown floor in the floor view.
@@ -82,7 +82,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
         /// <param name="floors">All floors of a building.</param>
         /// <param name="sources">All available sources of the audio system.</param>
         /// <param name="floorView">The notification handle to the floor view.</param>
-        public FloorContext(List<Floor> floors, List<Source> sources, IFloorViewNotification floorView)
+        public FloorContext(List<Floor> floors, List<SourceGraphic> sources, IFloorViewNotification floorView)
         {
             _floors = floors;
             _sources = sources;
@@ -400,7 +400,7 @@ namespace NuvoControl.Client.Viewer.ViewModel
     /// </summary>
     public interface IFloorViewNotification
     {
-        void LoadFloorZones(Floor activeFloor, List<Source> sources);
+        void LoadFloorZones(Floor activeFloor, List<SourceGraphic> sources);
         void UnloadFloorZones();
     }
 }

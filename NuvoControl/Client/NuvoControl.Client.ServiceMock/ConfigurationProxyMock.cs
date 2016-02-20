@@ -28,7 +28,7 @@ namespace NuvoControl.Client.ServiceMock
             return _configurationService.GetGraphicConfiguration();
         }
 
-        public Zone GetZoneKonfiguration(Address zoneId)
+        public ZoneGraphic GetZoneKonfiguration(Address zoneId)
         {
             throw new NotImplementedException();
         }
