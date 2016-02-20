@@ -155,7 +155,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this zone.</returns>
         public override string ToString()
         {
-            return String.Format("Address={0}, Name={1}, Picture={2}/{3}, FloorPlanCoordinates=[{4}], ZoneControlCoordinate={5}", _zone.Id, _zone.Name, _picturePath, _pictureType, _floorPlanCoordinates.ToString<Point>(" / "), _zoneControlCoordinate);
+            return String.Format("[{0}], Picture={1}/{2}, FloorPlanCoordinates=[{3}], ZoneControlCoordinate={4}", _zone.ToString(), _picturePath, _pictureType, _floorPlanCoordinates.ToString<Point>(" / "), _zoneControlCoordinate);
         }
 
         #endregion

@@ -467,7 +467,7 @@ namespace NuvoControl.Server.ConfigurationService
                 if (device == null)
                     return false;
 
-                List<int> zoneIds = (from zoneId in device.Zones where zoneId == address.ObjectId select zoneId).ToList<int>();
+                List<Zone> zoneIds = (from zoneId in device.Zones where zoneId.Id.ObjectId == address.ObjectId select zoneId).ToList<Zone>();
                 if (zoneIds.Count == 0)
                     return false;
 
@@ -493,7 +493,7 @@ namespace NuvoControl.Server.ConfigurationService
                 if (device == null)
                     return false;
 
-                List<int> sourceIds = (from sourceId in device.Sources where sourceId == address.ObjectId select sourceId).ToList<int>();
+                List<Source> sourceIds = (from sourceId in device.Sources where sourceId.Id.ObjectId == address.ObjectId select sourceId).ToList<Source>();
                 if (sourceIds.Count == 0)
                     return false;
 

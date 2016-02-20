@@ -53,12 +53,12 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All zones of the device.
         /// </summary>
-        private List<int> _zones = new List<int>();
+        private List<Zone> _zones = new List<Zone>();
 
         /// <summary>
         /// All sources of the device.
         /// </summary>
-        private List<int> _sources = new List<int>();
+        private List<Source> _sources = new List<Source>();
 
         #endregion
 
@@ -72,7 +72,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="protocolDriver">The protocol driver to be used to communicate with the device.</param>
         /// <param name="zones">All zones of the device.</param>
         /// <param name="sources">All sources of the device.</param>
-        public Device(int id, Communication communication, Protocol protocolDriver, List<int> zones, List<int> sources)
+        public Device(int id, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources)
         {
             this._id = id;
             this._communication = communication;
@@ -112,7 +112,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All zones of the device.
         /// </summary>
-        public List<int> Zones
+        public List<Zone> Zones
         {
             get { return _zones; }
         }
@@ -120,7 +120,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All sources of the device.
         /// </summary>
-        public List<int> Sources
+        public List<Source> Sources
         {
             get { return _sources; }
         }
@@ -139,15 +139,15 @@ namespace NuvoControl.Common.Configuration
             strDevice += String.Format("Communication=[{0}] /", _communication.ToString());
             strDevice += String.Format("Protocol Driver=[{0}] /", _protocolDriver.ToString());
             strDevice += String.Format("Zones=[");
-            foreach (int zone in _zones)
+            foreach (Zone zone in _zones)
             {
-                strDevice += String.Format("Zone={0}, ", zone);
+                strDevice += String.Format("Zone={0}, ", zone.ToString());
             }
             strDevice += String.Format("]");
             strDevice += String.Format("Sources=[");
-            foreach (int source in _sources)
+            foreach (Source source in _sources)
             {
-                strDevice += String.Format("Source={0}, ", source);
+                strDevice += String.Format("Source={0}, ", source.ToString());
             }
             strDevice += String.Format("]");
 

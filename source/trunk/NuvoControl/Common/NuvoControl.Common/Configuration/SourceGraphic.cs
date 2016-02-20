@@ -210,7 +210,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representation of this source.</returns>
         public override string ToString()
         {
-            return String.Format("[id={0}, name={1}]", _source.Id, _source.Name);
+            return String.Format("[id={0}, name={1}] {2}/{3}", _source.Id, _source.Name, _picturePath, _pictureType);
         }
 
         #endregion

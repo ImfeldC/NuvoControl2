@@ -352,13 +352,16 @@ namespace NuvoControl.Server.Dal
                     new Protocol((string)device.Element("ProtocolDriver").Attribute("Name"),
                         (string)device.Element("ProtocolDriver").Attribute("AssemblyName"),
                         (string)device.Element("ProtocolDriver").Attribute("ClassName")),
-                    (from zone in device.Element("Zones").Elements("Zone") select (int)zone.Attribute("Id")).ToList<int>(),
-                    (from source in device.Element("Sources").Elements("Source") select (int)source.Attribute("Id")).ToList<int>()
+                    (from zone in device.Element("Zones").Elements("Zone")
+                    select new Zone( 
+                        new Address((int)device.Attribute("Id"), (int)zone.Attribute("Id")), (string)zone.Attribute("Name") )).ToList<Zone>(),
+                    (from source in device.Element("Sources").Elements("Source")
+                    select new Source( 
+                        new Address((int)device.Attribute("Id"), (int)source.Attribute("Id")), (string)source.Attribute("Name") )).ToList<Source>()
                     );
 
             return nuvoDevices.ToList<Device>();
         }
-
 
         /// <summary>
         /// Reads and creates the floor objects based on the XML configuration file.

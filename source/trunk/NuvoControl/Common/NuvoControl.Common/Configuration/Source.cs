@@ -17,7 +17,7 @@ using System.Runtime.Serialization;
 
 namespace NuvoControl.Common.Configuration
 {
-    class Source : IComparable<Source>
+    public class Source : IComparable<Source>
     {
         /// <summary>
         /// Maximum number of sources for a NuVo (Essentia) system.
