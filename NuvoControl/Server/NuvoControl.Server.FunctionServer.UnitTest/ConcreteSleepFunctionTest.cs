@@ -284,8 +284,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             target.calculateFunction(nextTime);
 
             Assert.AreEqual(1, zoneServer._monitoredZones.Count);   // 1 zone monitored
-            Assert.AreEqual(1, zoneServer._zoneStates.Count);       // 1 command issued
-            Assert.AreEqual(false, zoneServer._zoneStates[new Address(100,1)].PowerStatus);   // switch off
+            Assert.AreEqual(1, zoneServer.ZoneStates.Count);       // 1 command issued
+            Assert.AreEqual(false, zoneServer.ZoneStates[new Address(100,1)].PowerStatus);   // switch off
         }
 
         /// <summary>
@@ -310,30 +310,30 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             // test 11:00 -> not active, no action
             DateTime simTime1 = new DateTime( DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 11, 00, 0);
             target.calculateFunction(simTime1);
-            Assert.AreEqual(0, zoneServerMock._zoneStates.Count);       // 0 command issued
+            Assert.AreEqual(0, zoneServerMock.ZoneStates.Count);       // 0 command issued
 
             // test 14:00 -> just active, switch off.
             DateTime simTime2 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 14, 00, 0);
             target.calculateFunction(simTime2);
-            Assert.AreEqual(1, zoneServerMock._zoneStates.Count);       // 1 command issued
+            Assert.AreEqual(1, zoneServerMock.ZoneStates.Count);       // 1 command issued
             zoneServerMock.ClearZoneStateList();
 
             // test 16:00 -> active, switch off.
             DateTime simTime3 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 16, 00, 0);
             target.calculateFunction(simTime3);
-            Assert.AreEqual(1, zoneServerMock._zoneStates.Count);       // 1 command issued
+            Assert.AreEqual(1, zoneServerMock.ZoneStates.Count);       // 1 command issued
             zoneServerMock.ClearZoneStateList();
 
             // test 18:00 -> still active, switch off.
             DateTime simTime4 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 18, 00, 0);
             target.calculateFunction(simTime4);
-            Assert.AreEqual(1, zoneServerMock._zoneStates.Count);       // 1 command issued
+            Assert.AreEqual(1, zoneServerMock.ZoneStates.Count);       // 1 command issued
             zoneServerMock.ClearZoneStateList();
 
             // test 20:00 -> not active, no action
             DateTime simTime5 = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 20, 00, 0);
             target.calculateFunction(simTime5);
-            Assert.AreEqual(0, zoneServerMock._zoneStates.Count);       // 0 command issued
+            Assert.AreEqual(0, zoneServerMock.ZoneStates.Count);       // 0 command issued
 
         }
 

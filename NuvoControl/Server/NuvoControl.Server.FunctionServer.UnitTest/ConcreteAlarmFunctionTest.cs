@@ -330,8 +330,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             target2.calculateFunction(new DateTime(2009, 9, 7, 12, 0, 0));
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(0, zoneServer1._zoneStates.Count);
-            Assert.AreEqual(0, zoneServer2._zoneStates.Count);
+            Assert.AreEqual(0, zoneServer1.ZoneStates.Count);
+            Assert.AreEqual(0, zoneServer2.ZoneStates.Count);
 
             // Monday (7.9.2009 11:00)
             zoneServer1.distributeZoneState(new ZoneState(new Address(100, 2), false, 20, ZoneQuality.Online));
@@ -340,10 +340,10 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             target2.calculateFunction(new DateTime(2009, 9, 7, 11, 0, 0));
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(1, zoneServer1._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer1._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100,3), zoneServer1._zoneStates[new Address(100, 1)].Source);
-            Assert.AreEqual(0, zoneServer2._zoneStates.Count);
+            Assert.AreEqual(1, zoneServer1.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer1.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100,3), zoneServer1.ZoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(0, zoneServer2.ZoneStates.Count);
             zoneServer1.ClearZoneStateList();
 
             // Tuesday (8.9.2009 11:00)
@@ -353,10 +353,10 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             target2.calculateFunction(new DateTime(2009, 9, 8, 11, 0, 0));
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(0, zoneServer1._zoneStates.Count);
-            Assert.AreEqual(1, zoneServer2._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer2._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 6), zoneServer2._zoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(0, zoneServer1.ZoneStates.Count);
+            Assert.AreEqual(1, zoneServer2.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer2.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 6), zoneServer2.ZoneStates[new Address(100, 1)].Source);
             zoneServer2.ClearZoneStateList();
 
             // Sunday (13.9.2009 11:00)
@@ -366,12 +366,12 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             target2.calculateFunction(new DateTime(2009, 9, 13, 11, 0, 0));
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(1, zoneServer1._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer1._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 3), zoneServer1._zoneStates[new Address(100, 1)].Source);
-            Assert.AreEqual(1, zoneServer2._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer2._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 6), zoneServer2._zoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer1.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer1.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 3), zoneServer1.ZoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer2.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer2.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 6), zoneServer2.ZoneStates[new Address(100, 1)].Source);
             zoneServer1.ClearZoneStateList();
             zoneServer2.ClearZoneStateList();
         }
@@ -443,12 +443,12 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(1, zoneServer1._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer1._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 3), zoneServer1._zoneStates[new Address(100, 1)].Source);
-            Assert.AreEqual(1, zoneServer2._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer2._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 6), zoneServer2._zoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer1.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer1.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 3), zoneServer1.ZoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer2.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer2.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 6), zoneServer2.ZoneStates[new Address(100, 1)].Source);
             zoneServer1.ClearZoneStateList();
             zoneServer2.ClearZoneStateList();
         }
@@ -521,8 +521,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(0, zoneServer1._zoneStates.Count);  // 0 command has been sent
-            Assert.AreEqual(0, zoneServer2._zoneStates.Count);  // 0 command has been sent
+            Assert.AreEqual(0, zoneServer1.ZoneStates.Count);  // 0 command has been sent
+            Assert.AreEqual(0, zoneServer2.ZoneStates.Count);  // 0 command has been sent
             zoneServer1.ClearZoneStateList();
             zoneServer2.ClearZoneStateList();
         }
@@ -595,12 +595,12 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
             Assert.AreEqual(1, zoneServer1._monitoredZones.Count);
             Assert.AreEqual(1, zoneServer2._monitoredZones.Count);
-            Assert.AreEqual(1, zoneServer1._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer1._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 3), zoneServer1._zoneStates[new Address(100, 1)].Source);
-            Assert.AreEqual(1, zoneServer2._zoneStates.Count);  // 1 command has been sent
-            Assert.AreEqual(true, zoneServer2._zoneStates[new Address(100, 1)].PowerStatus);
-            Assert.AreEqual(new Address(100, 6), zoneServer2._zoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer1.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer1.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 3), zoneServer1.ZoneStates[new Address(100, 1)].Source);
+            Assert.AreEqual(1, zoneServer2.ZoneStates.Count);  // 1 command has been sent
+            Assert.AreEqual(true, zoneServer2.ZoneStates[new Address(100, 1)].PowerStatus);
+            Assert.AreEqual(new Address(100, 6), zoneServer2.ZoneStates[new Address(100, 1)].Source);
             zoneServer1.ClearZoneStateList();
             zoneServer2.ClearZoneStateList();
         }

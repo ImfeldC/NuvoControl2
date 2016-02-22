@@ -12,7 +12,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
     class ZoneServerMock : IZoneServer
     {
         public bool _started = false;
-        public Dictionary<Address, ZoneState> _zoneStates = new Dictionary<Address, ZoneState>();
+        private Dictionary<Address, ZoneState> _zoneStates = new Dictionary<Address, ZoneState>();
+        private List<ZoneState> _zoneStateList = new List<ZoneState>();
         public Dictionary<Address, ZoneNotification> _monitoredZones = new Dictionary<Address, ZoneNotification>();
 
 
@@ -24,10 +25,22 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             }
         }
 
+        public Dictionary<Address, ZoneState> ZoneStates
+        {
+            get { return _zoneStates; }
+        }
+
+        public List<ZoneState> ZoneStateList
+        {
+            get { return _zoneStateList; }
+        }
+
+        /*
         public void RemoveFromZoneStateList(Address zoneId)
         {
             _zoneStates.Remove(zoneId);
         }
+        */
 
         public void ClearZoneStateList()
         {
@@ -53,7 +66,9 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
         public void SetZoneState(Address zoneId, ZoneState zoneState)
         {
+            _zoneStates.Remove(zoneId);
             _zoneStates.Add(zoneId, zoneState);
+            _zoneStateList.Add(zoneState);
         }
 
         public void Monitor(Address zoneId, ZoneNotification subscriber)
