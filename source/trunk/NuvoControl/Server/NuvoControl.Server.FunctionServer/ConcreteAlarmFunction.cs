@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.FunctionServer
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,6 +62,7 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="function">Configuration data for this alarm function.</param>
         /// <param name="zoneServer">Zone server, to get notification about zone changes.</param>
+        /// <param name="audioDrivers">Audio Drivers, in case a sound needs to be played.</param>
         public ConcreteAlarmFunction(AlarmFunction function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers)
             : base(zoneServer, function, audioDrivers)
         {
@@ -181,25 +193,16 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
-        /// <summary>
-        /// Method returns true, if the alarm function is active at the passed date/time
-        /// </summary>
-        /// <param name="aktTime">Date/time to check</param>
-        /// <returns>True, if function is active.</returns>
-        public bool isFunctionActiveToday( DateTime aktTime )
-        {
-            return _function.ValidOnDays.Contains( aktTime.DayOfWeek);
-        }
-
 
         #region IDisposable Members
 
         /// <summary>
         /// Method to dispose the object.
         /// </summary>
-        public void Dispose()
+        public new void Dispose()
         {
             unsubscribeZone(_function.ZoneId);
+            base.Dispose();
         }
 
         #endregion

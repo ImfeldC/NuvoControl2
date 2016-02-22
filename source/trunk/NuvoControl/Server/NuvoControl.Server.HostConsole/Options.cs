@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.HostConsole
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

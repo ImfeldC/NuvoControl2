@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.ProtocolDriver
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -73,7 +84,16 @@ namespace NuvoControl.Server.ProtocolDriver
         public void CommandPlaySound(string url)
         {
             _url = url;
-            playSound();
+            if (url != null && url != "")
+            {
+                // Play sound, if a URL is specified ...
+                playSound();
+            }
+            else
+            {
+                // Stop playing, if url is not specified ...
+                Close();
+            }
         }
 
         /// <summary>
@@ -164,7 +184,8 @@ namespace NuvoControl.Server.ProtocolDriver
                 {
                     try
                     {
-                        _process.Kill();
+                        if( !_process.HasExited )
+                            _process.Kill();
                         _process = null;
                     }
                     catch (System.InvalidOperationException exc)

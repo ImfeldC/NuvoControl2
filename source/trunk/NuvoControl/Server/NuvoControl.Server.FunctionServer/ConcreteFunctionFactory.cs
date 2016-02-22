@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.FunctionServer
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,6 +32,10 @@ namespace NuvoControl.Server.FunctionServer
             else if(typeof(AlarmFunction) == function.GetType())
             {
                 return new ConcreteAlarmFunction((AlarmFunction)function, zoneServer, audioDrivers);
+            }
+            else if (typeof(ZoneChangeFunction) == function.GetType())
+            {
+                return new ConcreteZoneChangeFunction((ZoneChangeFunction)function, zoneServer, audioDrivers);
             }
             return null;
         }

@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.FunctionServer
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -61,6 +72,7 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="function">Configuration data for this sleep function.</param>
         /// <param name="zoneServer">Zone server, to get notification about zone changes.</param>
+        /// <param name="audioDrivers">Audio Drivers, in case a sound needs to be played.</param>
         public ConcreteSleepFunction(SleepFunction function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers)
             : base(zoneServer, function, audioDrivers)
         {
@@ -109,8 +121,7 @@ namespace NuvoControl.Server.FunctionServer
         }
 
         /// <summary>
-        /// This method calculates (checks) if the function is active and if an action
-        /// is required.
+        /// This method calculates (checks) if the function is active and if an action is required.
         /// The method is called periodically.
         /// </summary>
         /// <param name="aktTime">Time, used for the calculation.</param>
@@ -174,27 +185,6 @@ namespace NuvoControl.Server.FunctionServer
             }
         }
 
-        /// <summary>
-        /// Returns true if the function is active right now.
-        /// Active means, the current time is within the function ValidFrom/ValidTo configuration
-        /// </summary>
-        /// <param name="aktTime">Current time</param>
-        /// <returns>true, if active</returns>
-        public bool isFunctionActiveRightNow(DateTime aktTime)
-        {
-            if (_function.ValidFrom < _function.ValidTo)
-            {
-                return (aktTime.TimeOfDay >= _function.ValidFrom) &&
-                       (aktTime.TimeOfDay <= _function.ValidTo);
-            }
-            else
-            {
-                // Handle them as a time range over midnight
-                return (aktTime.TimeOfDay >= _function.ValidFrom) ||
-                       (aktTime.TimeOfDay <= _function.ValidTo);
-            }
-        }
-
 
 
         #region IDisposable Members
@@ -202,7 +192,7 @@ namespace NuvoControl.Server.FunctionServer
         /// <summary>
         /// Method to dispose the object.
         /// </summary>
-        public void Dispose()
+        public new void Dispose()
         {
             unsubscribeZone(_function.ZoneId);
             base.Dispose();

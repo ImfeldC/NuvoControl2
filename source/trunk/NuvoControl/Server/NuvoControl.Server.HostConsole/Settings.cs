@@ -1,4 +1,16 @@
-﻿namespace NuvoControl.Server.HostConsole.Properties {
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.HostConsole
+ * 
+ **************************************************************************************************/
+
+
+namespace NuvoControl.Server.HostConsole.Properties {
     
     
     // This class allows you to handle specific events on the settings class:

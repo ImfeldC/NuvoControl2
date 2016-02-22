@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Server.FunctionServer
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -222,6 +233,43 @@ namespace NuvoControl.Server.FunctionServer
                 }
             }
         }
+
+        /// <summary>
+        /// Returns true if the function is active right now.
+        /// Active means, the current time is within the function ValidFrom/ValidTo configuration
+        /// </summary>
+        /// <param name="aktTime">Current time</param>
+        /// <returns>true, if active</returns>
+        public bool isFunctionActiveRightNow(DateTime aktTime)
+        {
+            if (_function.ValidFrom < _function.ValidTo)
+            {
+                return (aktTime.TimeOfDay >= _function.ValidFrom) &&
+                       (aktTime.TimeOfDay <= _function.ValidTo);
+            }
+            else
+            {
+                // Handle them as a time range over midnight
+                return (aktTime.TimeOfDay >= _function.ValidFrom) ||
+                       (aktTime.TimeOfDay <= _function.ValidTo);
+            }
+        }
+
+        /// <summary>
+        /// Method returns true, if the alarm function is active at the passed date/time
+        /// </summary>
+        /// <param name="aktTime">Date/time to check</param>
+        /// <returns>True, if function is active.</returns>
+        public bool isFunctionActiveToday(DateTime aktTime)
+        {
+            bool bRet = true;
+            if (_function.ValidOnDays != null)
+            {
+                bRet = _function.ValidOnDays.Contains(aktTime.DayOfWeek);
+            }
+            return bRet;
+        }
+
 
 
         #region IConcreteFunction Members
