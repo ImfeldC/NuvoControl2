@@ -209,6 +209,14 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
+        /// <summary>
+        /// <see cref="IZoneController"/>
+        /// </summary>
+        public IProtocol GetProtocolDriver()
+        {
+            return _protocolDriver;
+        }
+
         #endregion
 
         #region Protocol Driver Notifications

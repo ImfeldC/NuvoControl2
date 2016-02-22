@@ -72,6 +72,10 @@
       <Project>{2350F54C-FB02-4FA6-93AE-A2FF68A27EB8}</Project>
       <Name>NuvoControl.Server.FunctionServer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NuvoControl.Server.ProtocolDriver.Interface\NuvoControl.Server.ProtocolDriver.Interface.csproj">
+      <Project>{817F6C4B-65C6-4A90-966E-F76FD8AC4202}</Project>
+      <Name>NuvoControl.Server.ProtocolDriver.Interface</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.ZoneServer\NuvoControl.Server.ZoneServer.csproj">
       <Project>{A4C12624-2950-45AC-9A17-B83AD9427331}</Project>
       <Name>NuvoControl.Server.ZoneServer</Name>

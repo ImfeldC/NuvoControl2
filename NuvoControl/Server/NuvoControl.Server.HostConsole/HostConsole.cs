@@ -69,6 +69,11 @@ namespace NuvoControl.Server.HostConsole
         private static Dictionary<int, IProtocol> _protocolDrivers = new Dictionary<int, IProtocol>();
 
         /// <summary>
+        /// Private list holding all play sound drivers (for each audio device)
+        /// </summary>
+        private static Dictionary<int, IAudioDriver> _audioDrivers = new Dictionary<int, IAudioDriver>();
+
+        /// <summary>
         /// Holds a reference to the zone server.
         /// </summary>
         private static IZoneServer _zoneServer = null;
@@ -135,6 +140,15 @@ namespace NuvoControl.Server.HostConsole
 
             try
             {
+                LoadAudioDrivers();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Failed to load the audio drivers.", exc);
+            }
+
+            try
+            {
                 InstantiateZoneServer();
             }
             catch (Exception exc)
@@ -174,6 +188,15 @@ namespace NuvoControl.Server.HostConsole
 
             try
             {
+                UnloadAudioDrivers();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Failed to unload the audio drivers.", exc);
+            }
+
+            try
+            {
                 UnloadProtocolDrivers();
             }
             catch (Exception exc)
@@ -193,6 +216,7 @@ namespace NuvoControl.Server.HostConsole
         }
 
 
+        #region Load Configuration
         /// <summary>
         /// Reads the XML configuration file and instantiates accordingly the system configuration objects of NuvoControl.
         /// </summary>
@@ -216,8 +240,9 @@ namespace NuvoControl.Server.HostConsole
             _configurationService.Dispose();
             _configurationService = null;
         }
+        #endregion
 
-
+        #region Protocol Driver
         /// <summary>
         /// Loads the protocol drivers according to the NuvoControl system configuration.
         /// </summary>
@@ -259,8 +284,44 @@ namespace NuvoControl.Server.HostConsole
             }
             _protocolDrivers.Clear();
         }
+        #endregion
 
+        #region Audio Driver
+        /// <summary>
+        /// Loads the audio drivers according to the NuvoControl system configuration.
+        /// </summary>
+        private static void LoadAudioDrivers()
+        {
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Loading audio drivers..."));
 
+            foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
+            {
+                foreach (AudioDevice audioDevice in device.AudioDevices)
+                {
+                    LogHelper.Log(LogLevel.Info, String.Format(">>>   audio device {0} loaded ...", audioDevice.ToString()));
+                    _audioDrivers[audioDevice.SourceId.ObjectId] = new AudioDriver(audioDevice.SourceId, audioDevice);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unload the audio drivers.
+        /// </summary>
+        private static void UnloadAudioDrivers()
+        {
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload audio drivers..."));
+
+            foreach (int deviceId in _audioDrivers.Keys)
+            {
+                _audioDrivers[deviceId].Close();
+                //_audioDrivers[deviceId] = null;
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   audio driver {0} unloaded ...", deviceId));
+            }
+            _audioDrivers.Clear();
+        }
+        #endregion
+
+        #region Zone Server
         /// <summary>
         /// Instantiates the zone server. This object holds all zone controllers.
         /// </summary>
@@ -291,8 +352,9 @@ namespace NuvoControl.Server.HostConsole
             _zoneServer.ShutDown();
             _zoneServer = null;
         }
+        #endregion
 
-
+        #region Function Server
         /// <summary>
         /// Instantiates the function server. This object holds all functions.
         /// </summary>
@@ -300,7 +362,7 @@ namespace NuvoControl.Server.HostConsole
         {
             LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the function server..."));
 
-            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions);
+            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions, _audioDrivers);
             LogHelper.Log(LogLevel.Debug, String.Format(">>>   Functions: {0}", _functionServer.ToString()));
         }
 
@@ -314,7 +376,7 @@ namespace NuvoControl.Server.HostConsole
             _functionServer.Dispose();
             _functionServer = null;
         }
-
+        #endregion
 
         /// <summary>
         /// This methods evalutes the command line arguments (passed in Options) and overrides the settings read from configuration file.

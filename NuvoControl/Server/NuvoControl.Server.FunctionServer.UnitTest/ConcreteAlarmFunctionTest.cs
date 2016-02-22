@@ -5,6 +5,7 @@ using NuvoControl.Server.ZoneServer;
 using System;
 using System.Collections.Generic;
 using NuvoControl.Common;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.FunctionServer.UnitTest
 {
@@ -79,7 +80,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             {
                 AlarmFunction function = null;
                 IZoneServer zoneServer = null;
-                ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer);
+                Dictionary<int, IAudioDriver> audioDrivers = null;
+                ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer,audioDrivers);
             }
             catch (FunctionServerException)
             {
@@ -102,7 +104,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0), 
                 _dayOfWeeks);
             IZoneServer zoneServer = null;
-            ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer,audioDrivers);
         }
 
 
@@ -120,7 +123,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks);
             IZoneServer zoneServer = null;
-            ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer); 
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer,audioDrivers); 
             DateTime aktTime = DateTime.Now;
             bool actual = target.isFunctionActiveToday(aktTime);
             Assert.AreEqual(false, actual);
@@ -141,7 +145,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks);
             IZoneServer zoneServer = null;
-            ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer); 
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target = new ConcreteAlarmFunction(function, zoneServer,audioDrivers); 
             DateTime aktTime = DateTime.Now;
             bool actual = target.isFunctionActiveToday(aktTime);
             Assert.AreEqual(true, actual);
@@ -163,7 +168,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks1);
-            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer); 
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer,audioDrivers); 
 
             // (2) Full day list
             List<DayOfWeek> _dayOfWeeks2 = new List<DayOfWeek>();
@@ -179,7 +185,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks2);
-            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer); 
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer,audioDrivers); 
 
             // Monday
             Assert.AreEqual(false, target1.isFunctionActiveToday(new DateTime( 2009, 9, 7, 12, 0,0)));
@@ -230,7 +236,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks1);
-            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer,audioDrivers);
 
             // (2) Day list: Tuesday, Thursday, Saturday, Sunday
             List<DayOfWeek> _dayOfWeeks2 = new List<DayOfWeek>();
@@ -243,7 +250,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks2);
-            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer);
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer,audioDrivers);
 
             // Monday
             Assert.AreEqual(true, target1.isFunctionActiveToday(new DateTime(2009, 9, 7, 12, 0, 0)));
@@ -297,7 +304,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
-            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1,audioDrivers);
             #endregion
 
             // (2) Day list: Tuesday, Thursday, Saturday, Sunday
@@ -314,7 +322,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
-            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2);
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2,audioDrivers);
             #endregion
 
             // Monday (7.9.2009 12:00)
@@ -394,7 +402,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
-            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1,audioDrivers);
             #endregion
 
             // (2) Day list: Tuesday, Thursday, Saturday, Sunday
@@ -411,7 +420,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
-            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2);
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2,audioDrivers);
             #endregion
 
             ZoneState zoneStateOff1 = new ZoneState(new Address(100, 2), false, 20, ZoneQuality.Online);
@@ -471,7 +480,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
-            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1, audioDrivers);
             #endregion
 
             // (2) Day list: Tuesday, Thursday, Saturday, Sunday
@@ -488,7 +498,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
-            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2);
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2,audioDrivers);
             #endregion
 
             ZoneState zoneStateOff1 = new ZoneState(new Address(100, 2), false, 20, ZoneQuality.Online);
@@ -544,7 +554,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
             ZoneServerMock zoneServer1 = new ZoneServerMock();
-            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteAlarmFunction target1 = new ConcreteAlarmFunction(function1, zoneServer1, audioDrivers);
             #endregion
 
             // (2) Day list: Tuesday, Thursday, Saturday, Sunday
@@ -561,7 +572,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
             ZoneServerMock zoneServer2 = new ZoneServerMock();
-            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2);
+            ConcreteAlarmFunction target2 = new ConcreteAlarmFunction(function2, zoneServer2,audioDrivers);
             #endregion
 
             ZoneState zoneStateOff1 = new ZoneState(new Address(100, 2), false, 20, ZoneQuality.Online);

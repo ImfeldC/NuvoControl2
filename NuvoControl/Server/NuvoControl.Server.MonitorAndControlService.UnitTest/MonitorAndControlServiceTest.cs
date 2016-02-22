@@ -370,11 +370,6 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
             throw new System.NotImplementedException();
         }
 
-        public void CommandPlaySound(Address sourceAddress, string URL)
-        {
-            throw new System.NotImplementedException();
-        }
-
         public void SendCommand(Address zoneAddress, INuvoEssentiaSingleCommand command)
         {
             throw new System.NotImplementedException();

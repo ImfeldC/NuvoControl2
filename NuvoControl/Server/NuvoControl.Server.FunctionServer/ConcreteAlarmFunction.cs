@@ -6,6 +6,7 @@ using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
 using Common.Logging;
 using NuvoControl.Common;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.FunctionServer
 {
@@ -50,8 +51,8 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="function">Configuration data for this alarm function.</param>
         /// <param name="zoneServer">Zone server, to get notification about zone changes.</param>
-        public ConcreteAlarmFunction(AlarmFunction function, IZoneServer zoneServer)
-            : base(zoneServer, function)
+        public ConcreteAlarmFunction(AlarmFunction function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers)
+            : base(zoneServer, function, audioDrivers)
         {
             if (function == null)
             {

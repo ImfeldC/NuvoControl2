@@ -126,6 +126,11 @@ namespace NuvoControl.Server.ZoneServer
         /// Triggers the notification of all subscribed clients with the actual zone value/state.
         /// </summary>
         void NotifySubscribedClients();
+
+        /// <summary>
+        /// Returns the protocol driver of the specified device.
+        /// </summary>
+        IProtocol GetProtocolDriver();
     }
 }
 

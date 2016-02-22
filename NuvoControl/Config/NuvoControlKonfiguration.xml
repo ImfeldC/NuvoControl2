@@ -9,7 +9,9 @@
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
         <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <AudioDevices>
-          <AudioDevice Player="mpg321" DeviceType="" Device="" Name="Raspberry Pi on-board" SourceId="100.6" />
+          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:0,0" Name="Raspberry Pi on-board" SourceId="100.6" />
+          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:0,2" Name="(Reserve 1)" SourceId="100.5" />
+          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:0,3" Name="(Reserve 2)" SourceId="100.4" />
         </AudioDevices>
         <Zones>
           <Zone Id="1" Name="Esszimmer" />
@@ -265,8 +267,10 @@
             </Body>
           </Command>
           
-          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="99999999-9999-9999-9999-999999999999" 
+          <Command cmd="PlaySound" SourceId="100.6" onValidityStart="True" onValidityEnd="True" Id="99999999-9999-9999-9999-999999999999" 
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+          <Command cmd="PlaySound" SourceId="100.5" onValidityStart="True" onValidityEnd="True" Id="99999999-9999-9999-9999-999999999999"
+                   url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
 
           <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                    process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
@@ -282,8 +286,10 @@
             <Day Name="Tuesday" />
           </Days>
         </Validity>
-        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="99999999-9999-9999-9999-999999999999"
+        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="99999999-0001-9999-9999-999999999999"
                  url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+        <Command cmd="PlaySound" SourceId="100.5" onFunctionStart="True" Id="99999999-0002-9999-9999-999999999999"
+                 url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
         <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                  process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
         
