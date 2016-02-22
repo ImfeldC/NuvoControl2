@@ -8,6 +8,7 @@ using Common.Logging;
 using NuvoControl.Server.ZoneServer;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.FunctionServer
 {
@@ -21,6 +22,8 @@ namespace NuvoControl.Server.FunctionServer
         /// The zone server.
         /// </summary>
         private IZoneServer _zoneServer = null;
+
+        private Dictionary<int, IAudioDriver> _audioDrivers = null;
 
         /// <summary>
         /// Private list holding the concrete functions
@@ -40,9 +43,10 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="zoneServer">Zone server, to get/set zone state.</param>
         /// <param name="functions">Functions</param>
-        public FunctionServer(IZoneServer zoneServer, List<Function> functions)
+        public FunctionServer(IZoneServer zoneServer, List<Function> functions, Dictionary<int,IAudioDriver> audioDrivers)
         {
             _zoneServer = zoneServer;
+            _audioDrivers = audioDrivers;
 
             instantiateFunctions(functions);
 
@@ -80,7 +84,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             foreach( Function func in functions )
             {
-                _concreteFunctions.Add(ConcreteFunctionFactory.instantiateConcreteFuntion(func, _zoneServer));
+                _concreteFunctions.Add(ConcreteFunctionFactory.instantiateConcreteFuntion(func, _zoneServer, _audioDrivers));
             }
         }
 
@@ -98,12 +102,20 @@ namespace NuvoControl.Server.FunctionServer
         /// <returns>String of all functions.</returns>
         public override string ToString()
         {
-            int i = 0;
             string strFunctions = "";
 
+            int i = 0;
             foreach (IConcreteFunction func in _concreteFunctions)
             {
                 strFunctions += String.Format("f({0})=[{1}] ", i, (func != null ? func.Function.ToString() : "<null>"));
+                i++;
+            }
+            strFunctions += "\n";
+
+            i = 0;
+            foreach (int key in _audioDrivers.Keys)
+            {
+                strFunctions += String.Format("d({0})=[{1} ", i, _audioDrivers[key].ToString());
                 i++;
             }
             strFunctions += "\n";

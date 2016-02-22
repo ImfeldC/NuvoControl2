@@ -5,6 +5,7 @@ using System.Text;
 using NuvoControl.Server.ZoneServer;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.FunctionServer.UnitTest
 {
@@ -63,6 +64,11 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void RemoveMonitor(Address zoneId, ZoneNotification subscriber)
         {
             _monitoredZones.Remove(zoneId);
+        }
+
+        public IProtocol GetProtocolDriver(Address zoneId)
+        {
+            throw new System.NotImplementedException();
         }
 
         #endregion

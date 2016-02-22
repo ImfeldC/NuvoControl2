@@ -8,6 +8,7 @@ using Common.Logging;
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 
 namespace NuvoControl.Server.FunctionServer
@@ -23,6 +24,8 @@ namespace NuvoControl.Server.FunctionServer
         /// Private member to store zone server.
         /// </summary>
         protected IZoneServer _zoneServer = null;
+
+        protected Dictionary<int, IAudioDriver> _audioDrivers = null;
 
         /// <summary>
         /// Private member to hold the configuration data for the (base) function
@@ -41,7 +44,7 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="zoneServer"></param>
         /// <param name="function"></param>
-        public ConcreteFunction(IZoneServer zoneServer, Function function)
+        public ConcreteFunction(IZoneServer zoneServer, Function function, Dictionary<int, IAudioDriver> audioDrivers)
         {
             if (function == null)
             {
@@ -54,7 +57,10 @@ namespace NuvoControl.Server.FunctionServer
             {
                 _log.Warn(m => m("Zone Server not available, cannot monitor any zone ..."));
             }
+
+            _audioDrivers = audioDrivers;
             _function = function;
+
             instantiateConcreteCommands();
         }
 
@@ -68,7 +74,7 @@ namespace NuvoControl.Server.FunctionServer
             {
                 if( cmd != null )
                 {
-                    _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd, _zoneServer));
+                    _commands.Add(ConcreteCommandFactory.instantiateConcreteCommand(cmd, _zoneServer, _audioDrivers));
                 }
                 else 
                 {

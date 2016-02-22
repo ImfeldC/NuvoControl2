@@ -48,6 +48,13 @@ namespace NuvoControl.Server.ZoneServer
         /// </summary>
         void ShutDown();
 
+
+        /// <summary>
+        /// Returns the protocol driver of the specified device.
+        /// </summary>
+        /// <param name="DeviceId">The device id.</param>
+        IProtocol GetProtocolDriver(Address zoneId);
+
         /// <summary>
         /// Returns the value/state of the specified zone.
         /// </summary>

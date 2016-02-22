@@ -17,5 +17,8 @@
     <Setting Name="ReadIntervall" Type="System.UInt64" Scope="Application">
       <Value Profile="(Default)">5</Value>
     </Setting>
+    <Setting Name="RenewPlaySoundCommandIntervall" Type="System.Int32" Scope="Application">
+      <Value Profile="(Default)">60</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

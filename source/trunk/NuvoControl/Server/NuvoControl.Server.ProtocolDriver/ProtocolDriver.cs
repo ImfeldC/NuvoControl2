@@ -114,6 +114,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         private Dictionary<int, DictEntry> _deviceList = new Dictionary<int, DictEntry>();
 
+
         /// <summary>
         /// List of running single commands, over all devices.
         /// </summary>
@@ -593,16 +594,6 @@ namespace NuvoControl.Server.ProtocolDriver
                 convertAddressZone2EssentiaZone(zoneAddress),
                 NuvoEssentiaCommand.calcVolume2NuvoEssentia(volumeLevel));
             sendCommandToDevice(zoneAddress, command);
-        }
-
-        /// <summary>
-        /// Public method to play sound on specified source.
-        /// </summary>
-        /// <param name="sourceAddress">Source, where to play sound.</param>
-        /// <param name="URL">URL to play.</param>
-        public void CommandPlaySound(Address sourceAddress, string URL)
-        {
-            throw new System.NotImplementedException();
         }
 
         #endregion

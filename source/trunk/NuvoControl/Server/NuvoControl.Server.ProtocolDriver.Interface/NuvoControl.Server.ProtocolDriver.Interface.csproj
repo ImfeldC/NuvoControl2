@@ -63,6 +63,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IAudioDriver.cs" />
     <Compile Include="INuvoProtocol.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="SerialPortFactory.cs" />

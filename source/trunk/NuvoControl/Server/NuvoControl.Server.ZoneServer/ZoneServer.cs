@@ -26,6 +26,7 @@ using Common.Logging;
 
 using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 
 namespace NuvoControl.Server.ZoneServer
@@ -98,6 +99,14 @@ namespace NuvoControl.Server.ZoneServer
             }
         }
 
+        public IProtocol GetProtocolDriver(Address zoneId)
+        {
+            lock (this)
+            {
+                ValidateZone(zoneId);
+                return _zoneControllers[zoneId].GetProtocolDriver();
+            }
+        }
 
         /// <summary>
         /// <see cref="IZoneServer"/>

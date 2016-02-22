@@ -4,6 +4,8 @@ using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
 using System;
 using NuvoControl.Common;
+using NuvoControl.Server.ProtocolDriver.Interface;
+using System.Collections.Generic;
 
 namespace NuvoControl.Server.FunctionServer.UnitTest
 {
@@ -75,8 +77,9 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteSleepFunctionConstructorTest1()
         {
             SleepFunction function = new SleepFunction();
-            IZoneServer zoneServer = null; 
-            ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer);
+            IZoneServer zoneServer = null;
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer, audioDrivers);
         }
 
         /// <summary>
@@ -90,7 +93,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             {
                 SleepFunction function = null;
                 IZoneServer zoneServer = null;
-                ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer);
+                Dictionary<int, IAudioDriver> audioDrivers = null;
+                ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer,audioDrivers);
             }
             catch (FunctionServerException)
             {
@@ -111,7 +115,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100,1),
                 new TimeSpan(1,0,0),new TimeSpan(23,0,0), new TimeSpan(3,0,0));
             IZoneServer zoneServer = null;
-            ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer,audioDrivers);
             bool actual = false;
 
             // (a) Function is not active, current time is outside the validFrom/validTo range
@@ -157,7 +162,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100, 1),
                 new TimeSpan(1, 0, 0), new TimeSpan(6, 0, 0), new TimeSpan(9, 0, 0));
             IZoneServer zoneServer = null;
-            ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer,audioDrivers);
             bool actual = false;
 
             // (a) Function is not active, current time is outside the validFrom/validTo range
@@ -202,7 +208,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             SleepFunction function = new SleepFunction();
             IZoneServer zoneServer = null;
-            ConcreteSleepFunction_Accessor target = new ConcreteSleepFunction_Accessor(function,zoneServer);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteSleepFunction_Accessor target = new ConcreteSleepFunction_Accessor(function, zoneServer,audioDrivers);
             
             // notify the first time, the update time is set to the current update time            
             ZoneStateEventArgs e1 = new ZoneStateEventArgs( new NuvoControl.Common.ZoneState( new Address(100,1), true, 20, NuvoControl.Common.ZoneQuality.Online));
@@ -238,7 +245,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             {
                 SleepFunction function = new SleepFunction();
                 IZoneServer zoneServer = null;
-                ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer);
+                Dictionary<int, IAudioDriver> audioDrivers = null;
+                ConcreteSleepFunction target = new ConcreteSleepFunction(function, zoneServer,audioDrivers);
                 //target.notifyOnZoneUpdate();
                 DateTime aktTime = new DateTime();
                 target.calculateFunction(aktTime);
@@ -261,7 +269,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100,1),
                 new TimeSpan(1,0,0),new TimeSpan(0,0,0), new TimeSpan(23,59,59));
             ZoneServerMock zoneServer = new ZoneServerMock();
-            ConcreteSleepFunction_Accessor target = new ConcreteSleepFunction_Accessor(function, zoneServer);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteSleepFunction_Accessor target = new ConcreteSleepFunction_Accessor(function, zoneServer,audioDrivers);
 
             // notify the first time, the update time is set to the current update time            
             ZoneStateEventArgs e1 = new ZoneStateEventArgs(new NuvoControl.Common.ZoneState(new Address(100, 1), true, 20, NuvoControl.Common.ZoneQuality.Online));
@@ -289,7 +298,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100, 1),
                 new TimeSpan(1, 0, 0), new TimeSpan(14, 0, 0), new TimeSpan(18, 00, 00));
             ZoneServerMock zoneServerMock = new ZoneServerMock();
-            ConcreteSleepFunction_Accessor target = new ConcreteSleepFunction_Accessor(function, zoneServerMock);
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteSleepFunction_Accessor target = new ConcreteSleepFunction_Accessor(function, zoneServerMock,audioDrivers);
             Assert.AreEqual(1, zoneServerMock._monitoredZones.Count);   // 1 zone monitored
             
             // Distribute an 'old status. Simulate that the zone is ON since then.

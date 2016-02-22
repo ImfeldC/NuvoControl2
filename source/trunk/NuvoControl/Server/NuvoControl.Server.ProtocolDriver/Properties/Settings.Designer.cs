@@ -67,5 +67,14 @@ namespace NuvoControl.Server.ProtocolDriver.Properties {
                 return ((ulong)(this["ReadIntervall"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60")]
+        public int RenewPlaySoundCommandIntervall {
+            get {
+                return ((int)(this["RenewPlaySoundCommandIntervall"]));
+            }
+        }
     }
 }

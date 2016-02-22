@@ -8,6 +8,7 @@ using Common.Logging;
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using NuvoControl.Server.ZoneServer;
+using NuvoControl.Server.ProtocolDriver.Interface;
 
 
 namespace NuvoControl.Server.FunctionServer
@@ -60,8 +61,8 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="function">Configuration data for this sleep function.</param>
         /// <param name="zoneServer">Zone server, to get notification about zone changes.</param>
-        public ConcreteSleepFunction(SleepFunction function, IZoneServer zoneServer)
-            : base(zoneServer, function)
+        public ConcreteSleepFunction(SleepFunction function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers)
+            : base(zoneServer, function, audioDrivers)
         {
             if (function == null)
             {
