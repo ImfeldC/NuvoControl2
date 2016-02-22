@@ -54,6 +54,25 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private Address _zoneId = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
+        /// <summary>
+        /// Start time in which a function can be triggered.
+        /// </summary>
+        [DataMember]
+        protected TimeSpan _validFrom = new TimeSpan(0, 0, 0);
+
+        /// <summary>
+        /// End time in which a function can be triggered.
+        /// </summary>
+        [DataMember]
+        protected TimeSpan _validTo = new TimeSpan(23,59,59);
+
+        /// <summary>
+        /// The days, on which this functions is valid.
+        /// </summary>
+        [DataMember]
+        //protected List<DayOfWeek> _validOnDays = new List<DayOfWeek>();
+        protected List<DayOfWeek> _validOnDays = null;
+
         [DataMember]
         private List<Command> _commands = new List<Command>();
 
@@ -114,6 +133,37 @@ namespace NuvoControl.Common.Configuration
         }
 
         /// <summary>
+        /// Start time in which a sleep function can be triggered.
+        /// </summary>
+        public TimeSpan ValidFrom
+        {
+            get { return _validFrom; }
+        }
+
+        /// <summary>
+        /// End time in which a sleep function can be triggered.
+        /// </summary>
+        public TimeSpan ValidTo
+        {
+            get { return _validTo; }
+        }
+
+        /// <summary>
+        /// The days, on which this alarm is valid.
+        /// </summary>
+        public List<DayOfWeek> ValidOnDays
+        {
+            get { return _validOnDays; }
+        }
+
+
+        public List<Command> Commands
+        {
+            get { return _commands; }
+        }
+
+
+        /// <summary>
         /// Public override of ToString() method.
         /// </summary>
         /// <returns>Returns string representative.</returns>
@@ -132,11 +182,6 @@ namespace NuvoControl.Common.Configuration
         }
 
         #endregion
-
-        public List<Command> Commands
-        {
-            get { return _commands; }
-        }
 
     }
 }

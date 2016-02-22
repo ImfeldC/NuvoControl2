@@ -60,12 +60,6 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private int _volume = -1;
 
-        /// <summary>
-        /// The days, on which this alarm is valid.
-        /// </summary>
-        [DataMember]
-        private List<DayOfWeek> _validOnDays = new List<DayOfWeek>();
-
         #endregion
 
         #region Constructors
@@ -152,14 +146,6 @@ namespace NuvoControl.Common.Configuration
         public int Volume
         {
             get { return _volume; }
-        }
-
-        /// <summary>
-        /// The days, on which this alarm is valid.
-        /// </summary>
-        public List<DayOfWeek> ValidOnDays
-        {
-            get { return _validOnDays; }
         }
 
         /// <summary>

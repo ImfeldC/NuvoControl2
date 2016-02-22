@@ -42,18 +42,6 @@ namespace NuvoControl.Common.Configuration
         [DataMember]
         private TimeSpan _sleepDuration = new TimeSpan(1, 0, 0);
 
-        /// <summary>
-        /// Start time in which a sleep function can be triggered.
-        /// </summary>
-        [DataMember]
-        private TimeSpan _validFrom = new TimeSpan(11, 0, 0);
-
-        /// <summary>
-        /// End time in which a sleep function can be triggered.
-        /// </summary>
-        [DataMember]
-        private TimeSpan _validTo = new TimeSpan(04, 0, 0);
-
         #endregion
 
         #region Constructors
@@ -108,22 +96,6 @@ namespace NuvoControl.Common.Configuration
         public TimeSpan SleepDuration
         {
             get { return _sleepDuration; }
-        }
-
-        /// <summary>
-        /// Start time in which a sleep function can be triggered.
-        /// </summary>
-        public TimeSpan ValidFrom
-        {
-            get { return _validFrom; }
-        }
-
-        /// <summary>
-        /// End time in which a sleep function can be triggered.
-        /// </summary>
-        public TimeSpan ValidTo
-        {
-            get { return _validTo; }
         }
 
         /// <summary>
