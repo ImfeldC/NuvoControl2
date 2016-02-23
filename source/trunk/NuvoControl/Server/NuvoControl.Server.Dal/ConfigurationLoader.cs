@@ -533,8 +533,14 @@ namespace NuvoControl.Server.Dal
                     new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     int.Parse((string)function.Attribute("Volume")),
+                    (function.Attribute("OnStatusChange") != null ? (bool)function.Attribute("OnStatusChange") : false),
+                    (function.Attribute("OnSourceChange") != null ? (bool)function.Attribute("OnSourceChange") : false),
+                    (function.Attribute("OnVolumeChange") != null ? (bool)function.Attribute("OnVolumeChange") : false),
+                    (function.Attribute("OnQualityChange") != null ? (bool)function.Attribute("OnQualityChange") : false),
                     (from day in function.Element("Validity").Element("Days").Elements("Day")
                      select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>(),
+                    (function.Element("Validity").Attribute("ActiveFrom")!=null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveFrom")) : new TimeSpan() ),
+                    (function.Element("Validity").Attribute("ActiveTo") != null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveTo")) : new TimeSpan()),
                     readCommands(function)
                     );
 

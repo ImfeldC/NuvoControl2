@@ -286,17 +286,27 @@
             <Day Name="Tuesday" />
           </Days>
         </Validity>
-        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="99999999-0001-9999-9999-999999999999"
+        <Commands>
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="99999999-0001-9999-9999-999999999999"
                  url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
-        <Command cmd="PlaySound" SourceId="100.5" onFunctionStart="True" Id="99999999-0002-9999-9999-999999999999"
+          <Command cmd="PlaySound" SourceId="100.5" onFunctionStart="True" Id="99999999-0002-9999-9999-999999999999"
                  url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
-        <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
+          <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                  process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
         
-        <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.9" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
+          <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.9" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
+        </Commands>
         
       </ZoneChangeFunction>
-      
+
+      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.11" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" OnQualityChange="True" >
+        <Validity>
+          <Days>
+            <Day Name="Tuesday" />
+          </Days>
+        </Validity>
+      </ZoneChangeFunction>
+
     </Functions>
   </Configuration>
 </NuvoControl>
