@@ -242,16 +242,24 @@ namespace NuvoControl.Server.FunctionServer
         /// <returns>true, if active</returns>
         public bool isFunctionActiveRightNow(DateTime aktTime)
         {
-            if (_function.ValidFrom < _function.ValidTo)
+            if (_function.ValidFrom.Ticks > 0 && _function.ValidTo.Ticks > 0)
             {
-                return (aktTime.TimeOfDay >= _function.ValidFrom) &&
-                       (aktTime.TimeOfDay <= _function.ValidTo);
+                if (_function.ValidFrom < _function.ValidTo)
+                {
+                    return (aktTime.TimeOfDay >= _function.ValidFrom) &&
+                           (aktTime.TimeOfDay <= _function.ValidTo);
+                }
+                else
+                {
+                    // Handle them as a time range over midnight
+                    return (aktTime.TimeOfDay >= _function.ValidFrom) ||
+                           (aktTime.TimeOfDay <= _function.ValidTo);
+                }
             }
             else
             {
-                // Handle them as a time range over midnight
-                return (aktTime.TimeOfDay >= _function.ValidFrom) ||
-                       (aktTime.TimeOfDay <= _function.ValidTo);
+                // either ValidFrom and/or ValidTo is not valid ... return true
+                return true;
             }
         }
 

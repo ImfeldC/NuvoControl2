@@ -57,6 +57,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioDriverMock.cs" />
     <Compile Include="ConcreteAlarmFunctionTest.cs" />
     <Compile Include="ConcreteFunctionTest.cs" />
     <Compile Include="ConcreteSleepFunctionTest.cs" />

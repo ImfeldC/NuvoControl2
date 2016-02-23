@@ -308,10 +308,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<Command> commands = new List<Command>();
             commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, null, commands);
-            function.OnStatusChange = true;
-            function.OnSourceChange = true;
-            function.OnVolumeChange = true;
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
             IZoneServer zoneServer = null;
             Dictionary<int, IAudioDriver> audioDrivers = null;
             ConcreteZoneChangeFunction_Accessor target = new ConcreteZoneChangeFunction_Accessor(function, zoneServer, audioDrivers);
@@ -330,10 +327,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<Command> commands = new List<Command>();
             commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, null, commands);
-            function.OnStatusChange = true;
-            function.OnSourceChange = true;
-            function.OnVolumeChange = true;
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
             IZoneServer zoneServer = null;
             Dictionary<int, IAudioDriver> audioDrivers = null;
             ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
@@ -349,10 +343,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<Command> commands = new List<Command>();
             commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address("100.6"), 10, null, commands);
-            function.OnStatusChange = true;
-            function.OnSourceChange = true;
-            function.OnVolumeChange = true;
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = null;
             ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
@@ -372,10 +363,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<Command> commands = new List<Command>();
             commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address("100.6"), 10, null, commands);
-            function.OnStatusChange = true;
-            function.OnSourceChange = true;
-            function.OnVolumeChange = true;
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = null;
             ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
@@ -395,10 +383,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<Command> commands = new List<Command>();
             commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address("100.6"), 10, null, commands);
-            function.OnStatusChange = true;
-            function.OnSourceChange = true;
-            function.OnVolumeChange = true;
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = null;
             ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
@@ -407,6 +392,174 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
 
             Assert.AreEqual(4, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status, source and volume change
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, three commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest4()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, false, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+
+            Assert.AreEqual(3, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with source and volume change
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, three commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest5()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, false, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+
+            Assert.AreEqual(3, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status and volume change
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, three commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest6()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, true, true, false, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+
+            Assert.AreEqual(3, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status and source change
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, one commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest7()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address("100.6"), 10, null, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);     // OnValidityStart 
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, one commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest8()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address("100.6"), 10, null, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Online));
+
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);     // OnValidityStart 
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, two commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest9()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, false, false, false, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart + Quality change
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, no commands in zone state list
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest10()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = null;
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);     // ---
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, no commands in zone state list and no sound played
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest11()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new PlaySoundCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.2"), "http://www.imfeld.net/mp3_stream"));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                         // ---
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                // no URL was played
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);       // no URL was played
         }
 
 
