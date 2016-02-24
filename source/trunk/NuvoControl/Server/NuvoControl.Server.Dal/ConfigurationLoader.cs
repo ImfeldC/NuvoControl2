@@ -358,14 +358,34 @@ namespace NuvoControl.Server.Dal
                     (from source in device.Element("Sources").Elements("Source")
                     select new Source( 
                         new Address((int)device.Attribute("Id"), (int)source.Attribute("Id")), (string)source.Attribute("Name") )).ToList<Source>(),
-                    (from audioDevice in device.Element("AudioDevices").Elements("AudioDevice")
-                    select new AudioDevice(
-                        new Address((string)audioDevice.Attribute("SourceId")), (string)audioDevice.Attribute("Name"),
-                        (string)audioDevice.Attribute("Player"), (string)audioDevice.Attribute("DeviceType"), (string)audioDevice.Attribute("Device"))).ToList<AudioDevice>()
+                    readAudioDevcies(device)
                     );
 
             return nuvoDevices.ToList<Device>();
         }
+
+        /// <summary>
+        /// Private method to read audio devcies, as part of a devcie settings
+        /// </summary>
+        /// <param name="function">Parent device settings, which contains the audio devices</param>
+        /// <returns>List of audio devices read from device settings.</returns>
+        private List<AudioDevice> readAudioDevcies(XElement device)
+        {
+            IEnumerable<AudioDevice> allAudioDevices = null;
+
+            if (device.Element("AudioDevices") != null && device.Element("AudioDevices").Elements("AudioDevice") != null)
+            {
+                allAudioDevices = (from audioDevice in device.Element("AudioDevices").Elements("AudioDevice")
+                                   select new AudioDevice(
+                                       new Address((string)audioDevice.Attribute("SourceId")), (string)audioDevice.Attribute("Name"),
+                                       (string)audioDevice.Attribute("Player"), (string)audioDevice.Attribute("DeviceType"), (string)audioDevice.Attribute("Device")));
+                return allAudioDevices.ToList<AudioDevice>();
+            }
+
+            // no audio device section or audio device(s) found
+            return null;
+        }
+
 
         /// <summary>
         /// Reads and creates the floor objects based on the XML configuration file.

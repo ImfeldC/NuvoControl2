@@ -95,7 +95,7 @@ namespace NuvoControl.Server.ConfigurationService.UnitTest
         [TestMethod()]
         public void ValidateTest()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationService target = new ConfigurationService(file);
             Assert.AreEqual(true, target.Validate(), "Testing the successful validation of the XML configuration.");
         }
