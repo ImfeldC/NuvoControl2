@@ -34,11 +34,6 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             get { return _function; }
         }
 
-        public override bool Active
-        {
-            get { return isFunctionActiveRightNow(DateTime.Now) && isFunctionActiveToday(DateTime.Now); }
-        }
-
         public override void calculateFunction(DateTime aktTime)
         {
             throw new NotImplementedException();

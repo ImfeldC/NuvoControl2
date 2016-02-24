@@ -14,9 +14,14 @@ namespace NuvoControl.Server.FunctionServer
         Function Function { get; }
 
         /// <summary>
-        /// Returns true, if the function is active.
+        /// Returns true, if the function is active right now.
         /// </summary>
         bool Active { get; }
+
+        /// <summary>
+        /// Returns true, if the function is active at specfified time.
+        /// </summary>
+        bool isActiveAt(DateTime time);
 
         /// <summary>
         /// This method is periodically called, to re-calculate the current function.

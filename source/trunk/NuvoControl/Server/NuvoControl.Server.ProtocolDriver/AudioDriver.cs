@@ -101,6 +101,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         public void Close()
         {
+            _url = "";      // clear URL
             killProcess();
         }
 

@@ -235,8 +235,8 @@ namespace NuvoControl.Server.FunctionServer
         }
 
         /// <summary>
-        /// Returns true if the function is active right now.
-        /// Active means, the current time is within the function ValidFrom/ValidTo configuration
+        /// Returns true if the function is active at specified time.
+        /// Active means, the specified time is within the function ValidFrom/ValidTo configuration
         /// </summary>
         /// <param name="aktTime">Current time</param>
         /// <returns>true, if active</returns>
@@ -284,7 +284,26 @@ namespace NuvoControl.Server.FunctionServer
 
         public abstract Function Function { get; }
 
-        public abstract bool Active { get; }
+        /// <summary>
+        /// Returns true if the function is active right now.
+        /// </summary>
+        public bool Active
+        {
+            get
+            {
+                return isActiveAt(DateTime.Now);
+            }
+        }
+
+        /// <summary>
+        /// Returns true if the function is active at specified time.
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public bool isActiveAt(DateTime time)
+        {
+            return isFunctionActiveRightNow(time) && isFunctionActiveToday(time);
+        }
 
         public abstract void calculateFunction(DateTime aktTime);
 
@@ -301,5 +320,7 @@ namespace NuvoControl.Server.FunctionServer
                     cmd.Dispose();
             }
         }
+
+
     }
 }
