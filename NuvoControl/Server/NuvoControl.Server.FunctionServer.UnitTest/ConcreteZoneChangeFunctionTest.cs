@@ -257,7 +257,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
         ///<summary>
         /// A test for Active
-        /// Expected result: False, because valid ended 1h ago, even is all days are in list.
+        /// Expected result: False, because valid ended 1h ago, even if all days are in list.
         ///</summary>
         [TestMethod()]
         public void ActiveTest9()
@@ -270,7 +270,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             dayOfWeek.Add(DayOfWeek.Friday);
             dayOfWeek.Add(DayOfWeek.Saturday);
             dayOfWeek.Add(DayOfWeek.Sunday);
-            TimeSpan validFrom = new TimeSpan(0, 0, 0);
+            TimeSpan validFrom = new TimeSpan(0, 0, 1);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(DateTime.Now.Hour - 1, 59, 59);
             ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address(), new Address(), 0, dayOfWeek, validFrom, validTo, null);
             IZoneServer zoneServer = null;

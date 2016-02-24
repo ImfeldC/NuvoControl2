@@ -94,7 +94,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void ConfigurationLoaderConstructorTestWellFormedXml()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             Assert.IsTrue(true, "Testing the successful instantiation of the XML Document.");
         }
@@ -142,7 +142,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void ValidateTest()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             Assert.AreEqual(true, target.Validate(), "Testing the successful validation of the XML configuration version.");
         }
@@ -154,10 +154,10 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void GetConfigurationTest()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
+            Assert.AreEqual(SystemConfiguration.VERSION, "2.1");
 
             TestContext.WriteLine("Testing device communication parameters...");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Id, 100);
@@ -172,45 +172,45 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.ClassName, "NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver");
 
             TestContext.WriteLine("Testing device zone parameters...");
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones.Count, 12);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[0], 1);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[1], 2);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[2], 3);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[3], 4);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[4], 5);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[5], 6);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[6], 7);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[7], 8);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[8], 9);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[9], 10);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[10], 11);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Zones[11], 12);
+            Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones.Count);
+            Assert.AreEqual( 1, systemConfiguration.Hardware.Devices[0].Zones[0].Id.ObjectId);
+            Assert.AreEqual( 2, systemConfiguration.Hardware.Devices[0].Zones[1].Id.ObjectId);
+            Assert.AreEqual( 3, systemConfiguration.Hardware.Devices[0].Zones[2].Id.ObjectId);
+            Assert.AreEqual( 4, systemConfiguration.Hardware.Devices[0].Zones[3].Id.ObjectId);
+            Assert.AreEqual( 5, systemConfiguration.Hardware.Devices[0].Zones[4].Id.ObjectId);
+            Assert.AreEqual( 6, systemConfiguration.Hardware.Devices[0].Zones[5].Id.ObjectId);
+            Assert.AreEqual( 7, systemConfiguration.Hardware.Devices[0].Zones[6].Id.ObjectId);
+            Assert.AreEqual( 8, systemConfiguration.Hardware.Devices[0].Zones[7].Id.ObjectId);
+            Assert.AreEqual( 9, systemConfiguration.Hardware.Devices[0].Zones[8].Id.ObjectId);
+            Assert.AreEqual(10, systemConfiguration.Hardware.Devices[0].Zones[9].Id.ObjectId);
+            Assert.AreEqual(11, systemConfiguration.Hardware.Devices[0].Zones[10].Id.ObjectId);
+            Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones[11].Id.ObjectId);
 
             TestContext.WriteLine("Testing device source parameters...");
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources.Count, 6);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources[0], 1);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources[1], 2);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources[2], 3);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources[3], 4);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources[4], 5);
-            Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Sources[5], 6);
+            Assert.AreEqual(6, systemConfiguration.Hardware.Devices[0].Sources.Count);
+            Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].Sources[0].Id.ObjectId);
+            Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].Sources[1].Id.ObjectId);
+            Assert.AreEqual(3, systemConfiguration.Hardware.Devices[0].Sources[2].Id.ObjectId);
+            Assert.AreEqual(4, systemConfiguration.Hardware.Devices[0].Sources[3].Id.ObjectId);
+            Assert.AreEqual(5, systemConfiguration.Hardware.Devices[0].Sources[4].Id.ObjectId);
+            Assert.AreEqual(6, systemConfiguration.Hardware.Devices[0].Sources[5].Id.ObjectId);
 
             TestContext.WriteLine("Testing some graphic parameters...");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors.Count, 2);
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Name, "Wohnbereich");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].FloorPlanPath, @".\Images\Wohnbereich.bmp");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].FloorPlanType, "bmp");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones.Count, 9);
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].Id, new Address(100, 1));
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].Name, "Esszimmer");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].PicturePath, @".\Images\Esszimmer.jpg");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].PictureType, "jpg");
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates.Count, 4);
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].X, 485);
-            Assert.AreEqual(systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].Y, 210);
-            Assert.AreEqual(systemConfiguration.Graphic.Sources.Count, 6);
-            Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Id, new Address(100, 1));
-            Assert.AreEqual(systemConfiguration.Graphic.Sources[0].Name, "Tuner A");
+            Assert.AreEqual(2, systemConfiguration.Graphic.Building.Floors.Count);
+            Assert.AreEqual("Wohnbereich", systemConfiguration.Graphic.Building.Floors[0].Name);
+            Assert.AreEqual(@".\Images\Wohnbereich.bmp", systemConfiguration.Graphic.Building.Floors[0].FloorPlanPath);
+            Assert.AreEqual("bmp", systemConfiguration.Graphic.Building.Floors[0].FloorPlanType);
+            Assert.AreEqual(9, systemConfiguration.Graphic.Building.Floors[0].Zones.Count);
+            Assert.AreEqual(new Address(100, 1), systemConfiguration.Graphic.Building.Floors[0].Zones[0].Id);
+            Assert.AreEqual("Esszimmer", systemConfiguration.Graphic.Building.Floors[0].Zones[0].Name);
+            Assert.AreEqual(@".\Images\Esszimmer.jpg", systemConfiguration.Graphic.Building.Floors[0].Zones[0].PicturePath);
+            Assert.AreEqual("jpg", systemConfiguration.Graphic.Building.Floors[0].Zones[0].PictureType);
+            Assert.AreEqual(4, systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates.Count);
+            Assert.AreEqual(485, systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].X);
+            Assert.AreEqual(210, systemConfiguration.Graphic.Building.Floors[0].Zones[0].FloorPlanCoordinates[1].Y);
+            Assert.AreEqual(6, systemConfiguration.Graphic.Sources.Count);
+            Assert.AreEqual(new Address(100, 1), systemConfiguration.Graphic.Sources[0].Id);
+            Assert.AreEqual("DAB Hama DIR3100", systemConfiguration.Graphic.Sources[0].Name);
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PicturePath, @".\Images\Tuner.jpg");
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PictureType, "jpg");
 
@@ -243,17 +243,17 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void AppendConfigurationTest()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.0", SystemConfiguration.VERSION);
-            Assert.AreEqual(5, systemConfiguration.Functions.Count);
+            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.0", SystemConfiguration.VERSION);
-            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual(9, systemConfiguration.Functions.Count);
         
         }
 
@@ -263,17 +263,17 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void AppendConfigurationTestNoHW()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
-            Assert.AreEqual(5, systemConfiguration.Functions.Count);
+            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemoteNoHW.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
-            Assert.AreEqual(8, systemConfiguration.Functions.Count);
+            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual(10, systemConfiguration.Functions.Count);
 
         }
 
@@ -283,19 +283,35 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void LoadRemoteConfigurationTest()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
-            Assert.AreEqual(5, systemConfiguration.Functions.Count);
+            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
             string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "2.0");
-            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual(9, systemConfiguration.Functions.Count);
 
         }
+
+        /* Remote configuration file, is not supported!
+        /// <summary>
+        /// A test to load configuration from remote lcoation
+        /// </summary>
+        [TestMethod()]
+        public void LoadRemoteConfigurationOnlyTest()
+        {
+            string file = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
+            ConfigurationLoader target = new ConfigurationLoader(file);
+            SystemConfiguration systemConfiguration = target.GetConfiguration();
+            Assert.AreEqual("2.0", SystemConfiguration.VERSION);
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+        }
+        */
+
 
         /// <summary>
         /// A test to check if date/time of configuration file changed
@@ -303,7 +319,7 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void CheckConfigurationDateTimeTest()
         {
-            string file = @"NuvoControlKonfiguration.xml";
+            string file = @"NuvoControlKonfigurationUnitTest.xml";
             string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             target.AppendConfiguration(appendfile);
