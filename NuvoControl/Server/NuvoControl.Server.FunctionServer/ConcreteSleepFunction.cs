@@ -110,17 +110,6 @@ namespace NuvoControl.Server.FunctionServer
         }
 
         /// <summary>
-        /// Returns true if the function is active.
-        /// </summary>
-        public override bool Active
-        {
-            get
-            {
-                return isFunctionActiveRightNow(DateTime.Now);
-            }
-        }
-
-        /// <summary>
         /// This method calculates (checks) if the function is active and if an action is required.
         /// The method is called periodically.
         /// </summary>

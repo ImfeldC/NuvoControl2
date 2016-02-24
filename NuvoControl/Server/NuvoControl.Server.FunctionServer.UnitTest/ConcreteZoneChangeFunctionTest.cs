@@ -351,6 +351,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(1, zoneServer.ZoneStateList.Count);     // OnValidityStart
         }
 
@@ -370,6 +372,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), false, 10, ZoneQuality.Online));
+
+            target.calculateFunction(DateTime.Now);
 
             Assert.AreEqual(2, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status change
         }
@@ -391,6 +395,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(4, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status, source and volume change
         }
 
@@ -410,6 +416,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+
+            target.calculateFunction(DateTime.Now);
 
             Assert.AreEqual(3, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with source and volume change
         }
@@ -431,6 +439,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(3, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status and volume change
         }
 
@@ -451,6 +461,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(3, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart with power status and source change
         }
 
@@ -470,6 +482,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+
+            target.calculateFunction(DateTime.Now);
 
             Assert.AreEqual(1, zoneServer.ZoneStateList.Count);     // OnValidityStart 
         }
@@ -492,6 +506,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Online));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(1, zoneServer.ZoneStateList.Count);     // OnValidityStart 
         }
 
@@ -513,6 +529,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(2, zoneServer.ZoneStateList.Count);     // OnValidityStart & OnFunctionStart + Quality change
         }
 
@@ -533,6 +551,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            target.calculateFunction(DateTime.Now);
 
             Assert.AreEqual(0, zoneServer.ZoneStateList.Count);     // ---
         }
@@ -557,9 +577,216 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
             zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
 
+            target.calculateFunction(DateTime.Now);
+
             Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                         // ---
             Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                // no URL was played
             Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);       // no URL was played
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        /// Expected Result: No exeception, no commands in zone state list but sound playing
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest12()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new PlaySoundCommand(new Guid(), false, false, false, true, true, true, true, new Address("100.2"), "http://www.imfeld.net/mp3_stream"));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            target.calculateFunction(DateTime.Now);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            target.calculateFunction(DateTime.Now);
+
+            Assert.AreEqual(true, target.Active);                                                               // function is "active"
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // ---
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // URL is still playing
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest13()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new PlaySoundCommand(new Guid(), false, false, false, true, true, true, true, new Address("100.2"), "http://www.imfeld.net/mp3_stream"));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            target.calculateFunction(DateTime.Now);
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            target.calculateFunction(DateTime.Now);
+
+            Assert.AreEqual(true, target.Active);                                                               // function is "active"
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);                                                 // OnValidityStart
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // URL is still playing
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest14()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new PlaySoundCommand(new Guid(), false, false, false, true, true, true, true, new Address("100.2"), "http://www.imfeld.net/mp3_stream"));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(14,0,0), new TimeSpan(15,0,0), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            target.calculateFunction(new DateTime(2016,2,24,10,0,0) );
+            Assert.AreEqual(false, target.Active);                                                              // function is not active
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // no command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 12, 0, 0));
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 24, 12, 0, 0)));                     // function is not active
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // no command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 13, 59, 59));
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 24, 13, 59, 59)));                   // function is not active
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // no command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 14, 0, 0));
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 24, 14, 0, 0)));                      // function is active
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);                                                 // one command in queue
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // is playing
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 14, 0, 1));
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 24, 14, 0, 1)));                      // function not active
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);                                                 // no new command in queue
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is still playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // is playing
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 15, 0, 0));
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 24, 15, 0, 0)));                      // function is active
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);                                                 // one command in queue
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // is playing
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 15, 0, 1));
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 24, 15, 0, 1)));                     // function not active anymore
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);                                                 // second command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing anymore
+
+        }
+
+        ///<summary>
+        /// A test for ConcreteZoneChangeFunction command
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteZoneChangeFunctionCommandTest15()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new PlaySoundCommand(new Guid(), false, false, false, true, true, true, true, new Address("100.2"), "http://www.imfeld.net/mp3_stream"));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(14, 0, 0), new TimeSpan(15, 0, 0), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteZoneChangeFunction target = new ConcreteZoneChangeFunction(function, zoneServer, audioDrivers);
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 10, 0, 0));
+            Assert.AreEqual(false, target.Active);                                                              // function is not active
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // no command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 12, 0, 0));
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 24, 12, 0, 0)));                     // function is not active
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // no command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online));
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline));
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 13, 59, 59));
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 24, 13, 59, 59)));                   // function is not active
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);                                                 // no command in queue
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));  // Source + Volume + Quality change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online)); // Source + Status + Volume change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline)); // Source + Status + Quality change
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 14, 0, 0));
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 24, 14, 0, 0)));                      // function is active
+            Assert.AreEqual(10, zoneServer.ZoneStateList.Count);                                                 // 9 changes + 1 validity change
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // is playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));  // Source + Volume + Quality change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.5"), false, 20, ZoneQuality.Online)); // Source + Status + Volume change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Offline)); // Source + Status + Quality change
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 14, 0, 1));
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 24, 14, 0, 1)));                      // function not active
+            Assert.AreEqual(19, zoneServer.ZoneStateList.Count);                                                // 9 more command in queue
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is still playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // is playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));  // Source + Volume + Quality change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), false, 20, ZoneQuality.Online)); // Status + Volume change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Online));  // Source + Status change
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 15, 0, 0));
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 24, 15, 0, 0)));                      // function is active
+            Assert.AreEqual(26, zoneServer.ZoneStateList.Count);                                                // 7 more command in queue
+            Assert.AreEqual("http://www.imfeld.net/mp3_stream", ((AudioDriverMock)audioDrivers[2]).Url);        // URL is playing
+            Assert.AreEqual(true, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                                // is playing
+
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), true, 10, ZoneQuality.Online));  // Source + Volume change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.6"), false, 20, ZoneQuality.Online)); // Status + Volume change
+            zoneServer.distributeZoneState(new ZoneState(new Address("100.4"), true, 20, ZoneQuality.Online));  // Source + Status change
+
+            target.calculateFunction(new DateTime(2016, 2, 24, 15, 0, 1));
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 24, 15, 0, 1)));                     // function not active anymore
+            Assert.AreEqual(27, zoneServer.ZoneStateList.Count);                                                // + validity end command
+            Assert.AreEqual("", ((AudioDriverMock)audioDrivers[2]).Url);                                        // no URL is playing
+            Assert.AreEqual(false, ((AudioDriverMock)audioDrivers[2]).IsPlaying);                               // not playing anymore
+
         }
 
 

@@ -101,17 +101,6 @@ namespace NuvoControl.Server.FunctionServer
         }
 
         /// <summary>
-        /// Returns true if the function is active.
-        /// </summary>
-        public override bool Active
-        {
-            get
-            {
-                return isFunctionActiveToday( DateTime.Now );
-            }
-        }
-
-        /// <summary>
         /// This method calculates (checks) based on the passed date/time, if
         /// the alarm function is active and if an action needs to be done.
         /// </summary>

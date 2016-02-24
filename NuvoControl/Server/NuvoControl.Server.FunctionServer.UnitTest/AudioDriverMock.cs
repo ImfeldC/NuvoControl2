@@ -34,6 +34,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
 
         public void Close()
         {
+            _url = "";
             _isPlaying = false;
         }
 
