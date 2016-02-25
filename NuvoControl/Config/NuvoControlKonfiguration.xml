@@ -283,7 +283,7 @@
       <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.12" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
         <Validity ActiveFrom="14:00" ActiveTo="04:00">
           <Days>
-            <Day Name="Tuesday" />
+            <Day Name="Wednesday" />
           </Days>
         </Validity>
         <Commands>
@@ -294,7 +294,8 @@
           <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
                  process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
         
-          <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.9" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
+          <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.10" PowerStatus="ON" SourceId="100.3" Volume="22" Id="99999999-9999-9999-9999-999999999999" />
+          <Command cmd="SendNuvoCommand" onValidityStart="True"  onFunctionStart="True" ZoneId="100.11" PowerStatus="OFF" SourceId="100.3" Volume="33" Id="99999999-9999-9999-9999-999999999999" />
         </Commands>
         
       </ZoneChangeFunction>

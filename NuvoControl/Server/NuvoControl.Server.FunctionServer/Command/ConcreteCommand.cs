@@ -48,7 +48,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             get
             {
-                return _command.OnFunctionEnd;
+                return _command.OnFunctionError;
             }
         }
 

@@ -1,32 +1,104 @@
 ﻿using NuvoControl.Server.FunctionServer;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using NuvoControl.Common.Configuration;
-using NuvoControl.Common;
-using NuvoControl.Server.ZoneServer;
 using System.Collections.Generic;
+
+using Common.Logging;
+
+using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
+using NuvoControl.Server.ZoneServer;
 using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.FunctionServer.UnitTest
 {
 
+    /// <summary>
+    /// Test class (mock) for funcion
+    /// </summary>
     class FunctionTestClass : Function
     {
     }
 
+
+    /// <summary>
+    /// Test class (mock) for concrete function
+    /// </summary>
     class ConcreteFunctionTestClass : ConcreteFunction
     {
         private Function _function;
 
-        public ConcreteFunctionTestClass(IZoneServer zoneServer, Function function, Dictionary<int, IAudioDriver> audioDrivers):
+        /// <summary>
+        /// The new states of the zone.
+        /// Received in notification method and processed in calculate method.
+        /// </summary>
+        private List<ZoneState> _newZoneState = new List<ZoneState>();
+
+
+        public List<ZoneState> NewZoneState
+        {
+            get { return _newZoneState; }
+        }
+
+        /// <summary>
+        /// Public method to test onFunctionError()
+        /// </summary>
+        public new void onFunctionError()
+        {
+            LogHelper.Log(LogLevel.Debug, String.Format(">>> onFunctionError: {0} [Function={1}]", this.ToString(), (_function != null ? _function.ToString() : "<null>")));
+            base.onFunctionError();
+        }
+
+        /// <summary>
+        /// Public method to test onFunctionStart()
+        /// </summary>
+        public new void onFunctionStart()
+        {
+            LogHelper.Log(LogLevel.Debug, String.Format(">>> onFunctionStart: {0}", _function.ToString()));
+            base.onFunctionStart();
+        }
+
+        /// <summary>
+        /// Public method to test onFunctionEnd()
+        /// </summary>
+        public new void onFunctionEnd()
+        {
+            LogHelper.Log(LogLevel.Debug, String.Format(">>> onFunctionEnd: {0}", _function.ToString()));
+            base.onFunctionEnd();
+        }
+
+        /// <summary>
+        /// Public method to test onValidityStart()
+        /// </summary>
+        public new void onValidityStart()
+        {
+            LogHelper.Log(LogLevel.Debug, String.Format(">>> onValidityStart: {0}", _function.ToString()));
+            base.onValidityStart();
+        }
+
+        /// <summary>
+        /// Public method to test onValidityEnd()
+        /// </summary>
+        public new void onValidityEnd()
+        {
+            LogHelper.Log(LogLevel.Debug, String.Format(">>> onValidityEnd: {0}", _function.ToString()));
+            base.onValidityEnd();
+        }
+
+
+        #region ConcreteFunction methods
+
+        public ConcreteFunctionTestClass(Function function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers) :
             base(zoneServer, function, audioDrivers)
         {
             _function = function;
+            subscribeZone(_function.ZoneId);
         }
 
         protected override void notifyOnZoneUpdate(ZoneStateEventArgs e)
         {
-            throw new NotImplementedException();
+            // Store zone change, will be processed in calculate method
+            _newZoneState.Add(e.ZoneState);
         }
 
         public override Function Function
@@ -38,6 +110,9 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             throw new NotImplementedException();
         }
+
+        #endregion
+
     }
 
     
@@ -104,7 +179,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             IZoneServer zoneServer = null;
             Function function = new FunctionTestClass();
             Dictionary<int, IAudioDriver> audioDrivers = null;
-            ConcreteFunction target = new ConcreteFunctionTestClass(zoneServer, function, audioDrivers);
+            ConcreteFunction target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
             return target;
         }
 
@@ -133,7 +208,609 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         }
 
 
-/*
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest1()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);                   
+            Assert.AreEqual(true, target.isActiveAt(DateTime.Now));
+            Assert.AreEqual(true, target.isFunctionActiveToday(DateTime.Now));
+            Assert.AreEqual(true, target.isFunctionActiveToday(DateTime.Now));
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest2()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
+            dayOfWeek.Add(DayOfWeek.Monday);
+            dayOfWeek.Add(DayOfWeek.Tuesday);
+            dayOfWeek.Add(DayOfWeek.Wednesday);
+            dayOfWeek.Add(DayOfWeek.Thursday);
+            dayOfWeek.Add(DayOfWeek.Friday);
+            dayOfWeek.Add(DayOfWeek.Saturday);
+            dayOfWeek.Add(DayOfWeek.Sunday);
+            TimeSpan validFrom = new TimeSpan(0, 0, 1);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(23, 59, 59);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+            Assert.AreEqual(true, target.isActiveAt(DateTime.Now));
+            Assert.AreEqual(true, target.isFunctionActiveToday(DateTime.Now));
+            Assert.AreEqual(true, target.isFunctionActiveToday(DateTime.Now));
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest3()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
+            //dayOfWeek.Add(DayOfWeek.Monday); -> not valid on Monday
+            dayOfWeek.Add(DayOfWeek.Tuesday);
+            dayOfWeek.Add(DayOfWeek.Wednesday);
+            dayOfWeek.Add(DayOfWeek.Thursday);
+            dayOfWeek.Add(DayOfWeek.Friday);
+            dayOfWeek.Add(DayOfWeek.Saturday);
+            dayOfWeek.Add(DayOfWeek.Sunday);
+            TimeSpan validFrom = new TimeSpan(0, 0, 1);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(23, 59, 59);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // 22.02.2016 is Monday
+            //Assert.AreEqual(true, target.Active); --> works only with current date+time
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016,2,21,23,59,59)));
+            Assert.AreEqual(true, target.isFunctionActiveToday(new DateTime(2016, 2, 21, 23, 59, 59)));
+            Assert.AreEqual(true, target.isFunctionActiveRightNow(new DateTime(2016, 2, 21, 23, 59, 59)));
+
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 22, 0, 0, 0)));                  // considers TIME + DATE
+            Assert.AreEqual(false, target.isFunctionActiveToday(new DateTime(2016, 2, 22, 0, 0, 0)));       // considers only DATE
+            Assert.AreEqual(false, target.isFunctionActiveRightNow(new DateTime(2016, 2, 22, 0, 0, 0)));    // considers only TIME
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 22, 23, 59, 59)));
+            Assert.AreEqual(false, target.isFunctionActiveToday(new DateTime(2016, 2, 22, 23, 59, 59)));
+            Assert.AreEqual(true, target.isFunctionActiveRightNow(new DateTime(2016, 2, 22, 23, 59, 58)));  // considers only TIME
+            Assert.AreEqual(true, target.isFunctionActiveRightNow(new DateTime(2016, 2, 22, 23, 59, 59)));  // considers only TIME
+            
+            Assert.AreEqual(false, target.isActiveAt(new DateTime(2016, 2, 23, 0, 0, 0)));                  // considers TIME + DATE
+            Assert.AreEqual(true, target.isActiveAt(new DateTime(2016, 2, 23, 0, 0, 1)));                   // considers TIME + DATE
+            Assert.AreEqual(true, target.isFunctionActiveToday(new DateTime(2016, 2, 23, 0, 0, 0)));        // considers only DATE
+            Assert.AreEqual(true, target.isFunctionActiveToday(new DateTime(2016, 2, 23, 0, 0, 1)));        // considers only DATE
+            Assert.AreEqual(false, target.isFunctionActiveRightNow(new DateTime(2016, 2, 23, 0, 0, 0)));    // considers only TIME
+            Assert.AreEqual(true, target.isFunctionActiveRightNow(new DateTime(2016, 2, 23, 0, 0, 1)));     // considers only TIME
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest4()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
+            dayOfWeek.Add(DayOfWeek.Monday);
+            dayOfWeek.Add(DayOfWeek.Tuesday);
+            dayOfWeek.Add(DayOfWeek.Wednesday);
+            dayOfWeek.Add(DayOfWeek.Thursday);
+            dayOfWeek.Add(DayOfWeek.Friday);
+            dayOfWeek.Add(DayOfWeek.Saturday);
+            dayOfWeek.Add(DayOfWeek.Sunday);
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0,0,0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            target.onValidityStart();
+            target.onFunctionStart();
+            target.onFunctionEnd();
+            target.onValidityEnd();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest5()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
+            dayOfWeek.Add(DayOfWeek.Monday);
+            dayOfWeek.Add(DayOfWeek.Tuesday);
+            dayOfWeek.Add(DayOfWeek.Wednesday);
+            dayOfWeek.Add(DayOfWeek.Thursday);
+            dayOfWeek.Add(DayOfWeek.Friday);
+            dayOfWeek.Add(DayOfWeek.Saturday);
+            dayOfWeek.Add(DayOfWeek.Sunday);
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            target.onValidityStart();
+            target.onFunctionStart();
+            target.onFunctionEnd();
+            target.onValidityEnd();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(5, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(false, zoneServer.ZoneStateList[0].PowerStatus );
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest6a()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, true, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionStart();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest7a()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, true, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionEnd();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest8a()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, true, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onValidityStart();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest9a()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, true, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onValidityEnd();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest10a()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest6b()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, true, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onValidityStart();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onFunctionStart();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onFunctionEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onValidityEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest7b()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, true, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onValidityStart();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onFunctionStart();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onFunctionEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onValidityEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest8b()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, true, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onValidityStart();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onFunctionStart();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onFunctionEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onValidityEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest9b()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, true, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onValidityStart();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onFunctionStart();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onFunctionEnd();
+            Assert.AreEqual(0, zoneServer.ZoneStateList.Count);
+            target.onValidityEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest10b()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onValidityStart();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onFunctionStart();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onFunctionEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            target.onValidityEnd();
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+
+            // Check configuration and mock objects
+            Assert.AreEqual(1, target.Function.Commands.Count);
+            Assert.AreEqual(1, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+        }
+
+        /// <summary>
+        ///A test for concrete function
+        ///</summary>
+        [TestMethod()]
+        public void ConcreteFunctionTest11()
+        {
+            List<Command> commands = new List<Command>();
+            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.2"), "OFF", "100.5", 20));
+
+            List<DayOfWeek> dayOfWeek = null;
+            TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
+            TimeSpan validTo = new TimeSpan(0, 0, 0);
+
+            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneServerMock zoneServer = new ZoneServerMock();
+            Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
+            audioDrivers.Add(2, new AudioDriverMock());
+            ConcreteFunctionTestClass target = new ConcreteFunctionTestClass(function, zoneServer, audioDrivers);
+
+            // no validity defined -> per default valid
+            Assert.AreEqual(true, target.Active);
+
+            // execute events ...
+            target.onFunctionError();
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);
+            target.onValidityStart();
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);
+            target.onFunctionStart();
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);
+            target.onFunctionEnd();
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);
+            target.onValidityEnd();
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);
+
+            // Check configuration and mock objects
+            Assert.AreEqual(2, target.Function.Commands.Count);
+            Assert.AreEqual(2, zoneServer.ZoneStateList.Count);
+            Assert.AreEqual(true, zoneServer.ZoneStateList[0].PowerStatus);
+            Assert.AreEqual(false, zoneServer.ZoneStateList[1].PowerStatus);
+            Assert.AreEqual(6, zoneServer.ZoneStateList[0].Source.ObjectId);
+            Assert.AreEqual(5, zoneServer.ZoneStateList[1].Source.ObjectId);
+            Assert.AreEqual(2, zoneServer.ZoneStates.Count);
+            Assert.IsNotNull(zoneServer.ZoneStates[new Address("100.1")]);
+            Assert.IsNotNull(zoneServer.ZoneStates[new Address("100.2")]);
+        }
+
+
+        #region Disabled code, generated by unit test wizard
+
+        /*
         internal virtual ConcreteFunction_Accessor CreateConcreteFunction_Accessor()
         {
             // TODO: Instantiate an appropriate concrete class.
@@ -360,6 +1037,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             Assert.Inconclusive("A method that does not return a value cannot be verified.");
         }
  */
- 
+
+        #endregion
+
     }
 }
