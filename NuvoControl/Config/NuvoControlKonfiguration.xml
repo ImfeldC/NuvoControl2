@@ -10,8 +10,8 @@
         <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <AudioDevices>
           <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:0,0" Name="Raspberry Pi on-board" SourceId="100.6" />
-          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:0,2" Name="(Reserve 1)" SourceId="100.5" />
-          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:0,3" Name="(Reserve 2)" SourceId="100.4" />
+          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:1,0" Name="(Reserve 1)" SourceId="100.5" />
+          <AudioDevice Player="mpg321" DeviceType="alsa" Device="hw:2,0" Name="(Reserve 2)" SourceId="100.4" />
         </AudioDevices>
         <Zones>
           <Zone Id="1" Name="Esszimmer" />

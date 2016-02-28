@@ -17,9 +17,9 @@ namespace NuvoControl.Client.TestViewer.ConfigurationServiceReference {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetGraphicConfiguration", ReplyAction="http://tempuri.org/IConfigure/GetGraphicConfigurationResponse")]
         NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration();
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetZoneKonfiguration", ReplyAction="http://tempuri.org/IConfigure/GetZoneKonfigurationResponse")]
-        NuvoControl.Common.Configuration.ZoneGraphic GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId);
+
+        [System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IConfigure/GetZoneGraphicConfiguration", ReplyAction = "http://tempuri.org/IConfigure/GetZoneGraphicConfigurationResponse")]
+        NuvoControl.Common.Configuration.ZoneGraphic GetZoneGraphicConfiguration(NuvoControl.Common.Configuration.Address zoneId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetFunction", ReplyAction="http://tempuri.org/IConfigure/GetFunctionResponse")]
         NuvoControl.Common.Configuration.Function GetFunction(System.Guid id);
@@ -61,9 +61,10 @@ namespace NuvoControl.Client.TestViewer.ConfigurationServiceReference {
         public NuvoControl.Common.Configuration.Graphic GetGraphicConfiguration() {
             return base.Channel.GetGraphicConfiguration();
         }
-        
-        public NuvoControl.Common.Configuration.ZoneGraphic GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId) {
-            return base.Channel.GetZoneKonfiguration(zoneId);
+
+        public NuvoControl.Common.Configuration.ZoneGraphic GetZoneGraphicConfiguration(NuvoControl.Common.Configuration.Address zoneId)
+        {
+            return base.Channel.GetZoneGraphicConfiguration(zoneId);
         }
         
         public NuvoControl.Common.Configuration.Function GetFunction(System.Guid id) {

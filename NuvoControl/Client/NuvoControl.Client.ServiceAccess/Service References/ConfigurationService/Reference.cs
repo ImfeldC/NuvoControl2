@@ -83,9 +83,9 @@ namespace NuvoControl.Client.ServiceAccess.ConfigurationService {
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetImage", ReplyAction="http://tempuri.org/IConfigure/GetImageResponse")]
         NuvoControl.Common.Configuration.NuvoImage GetImage(string picturePath);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetZoneKonfiguration", ReplyAction="http://tempuri.org/IConfigure/GetZoneKonfigurationResponse")]
-        NuvoControl.Common.Configuration.ZoneGraphic GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId);
+
+        [System.ServiceModel.OperationContractAttribute(Action = "http://tempuri.org/IConfigure/GetZoneGraphicConfiguration", ReplyAction = "http://tempuri.org/IConfigure/GetZoneGraphicConfigurationResponse")]
+        NuvoControl.Common.Configuration.ZoneGraphic GetZoneGraphicConfiguration(NuvoControl.Common.Configuration.Address zoneId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetFunction", ReplyAction="http://tempuri.org/IConfigure/GetFunctionResponse")]
         NuvoControl.Common.Configuration.Function GetFunction(System.Guid id);
@@ -135,9 +135,10 @@ namespace NuvoControl.Client.ServiceAccess.ConfigurationService {
         public NuvoControl.Common.Configuration.NuvoImage GetImage(string picturePath) {
             return base.Channel.GetImage(picturePath);
         }
-        
-        public NuvoControl.Common.Configuration.ZoneGraphic GetZoneKonfiguration(NuvoControl.Common.Configuration.Address zoneId) {
-            return base.Channel.GetZoneKonfiguration(zoneId);
+
+        public NuvoControl.Common.Configuration.ZoneGraphic GetZoneGraphicConfiguration(NuvoControl.Common.Configuration.Address zoneId)
+        {
+            return base.Channel.GetZoneGraphicConfiguration(zoneId);
         }
         
         public NuvoControl.Common.Configuration.Function GetFunction(System.Guid id) {

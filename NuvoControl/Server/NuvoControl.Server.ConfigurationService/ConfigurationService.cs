@@ -136,14 +136,27 @@ namespace NuvoControl.Server.ConfigurationService
         }
 
 
+        public Zone GetZoneHWConfiguration(Address zoneId)
+        {
+            Device device = _systemConfiguration.Hardware.getDevice(zoneId);
+            foreach (Zone zone in device.Zones)
+            {
+                if (zone.Id == zoneId)
+                {
+                    return zone;
+                }
+            }
+            return null;
+        }
+
         /// <summary>
         /// <see cref="IConfigure"/>
         /// </summary>
         /// <param name="zoneId"></param>
         /// <returns></returns>
-        public ZoneGraphic GetZoneKonfiguration(Address zoneId)
+        public ZoneGraphic GetZoneGraphicConfiguration(Address zoneId)
         {
-            _log.Trace(m => m(String.Format("Configuration Service; GetZoneKonfiguration(ZoneId={0}).", zoneId.ToString())));
+            _log.Trace(m => m(String.Format("Configuration Service; GetZoneGrpahicConfiguration(ZoneId={0}).", zoneId.ToString())));
 
             List<ZoneGraphic> zones = new List<ZoneGraphic>();
             foreach (Floor floor in _systemConfiguration.Graphic.Building.Floors)
@@ -166,7 +179,20 @@ namespace NuvoControl.Server.ConfigurationService
         }
 
 
-        public SourceGraphic GetSourceKonfiguration(Address sourceId)
+        public Source GetSourceHWConfiguration(Address sourceId)
+        {
+            Device device = _systemConfiguration.Hardware.getDevice(sourceId);
+            foreach (Source source in device.Sources)
+            {
+                if (source.Id == sourceId)
+                {
+                    return source;
+                }
+            }
+            return null;
+        }
+
+        public SourceGraphic GetSourceGraphicConfiguration(Address sourceId)
         {
             foreach (SourceGraphic source in _systemConfiguration.Graphic.Sources)
             {
