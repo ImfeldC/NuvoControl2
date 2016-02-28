@@ -65,6 +65,23 @@ namespace NuvoControl.Common.Configuration
             get { return _devices; }
         }
 
+        /// <summary>
+        /// Returns the device related to the address
+        /// </summary>
+        /// <param name="address">Address</param>
+        /// <returns>Device related to the passed address</returns>
+        public Device getDevice(Address address)
+        {
+            foreach (Device device in _devices)
+            {
+                if (device.Id == address.DeviceId)
+                {
+                    return device;
+                }
+            }
+            return null;
+        }
+
         #endregion
     }
 }
