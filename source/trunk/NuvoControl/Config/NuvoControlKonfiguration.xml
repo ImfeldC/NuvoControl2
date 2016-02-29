@@ -29,11 +29,11 @@
         </Zones>
         <Sources>
           <Source Id="1" Name="DAB Hama DIR3100" />
-          <Source Id="2" Name="DAB" />
+          <Source Id="2" Name="AppleAirport" />
           <Source Id="3" Name="Logitec" />
           <Source Id="4" Name="CD Player" />
-          <Source Id="5" Name="AppleAirport" />
-          <Source Id="6" Name="RaspberryPi 2"/>
+          <Source Id="5" Name="Pi1 USB1" />
+          <Source Id="6" Name="Pi1 on-board"/>
         </Sources>
       </Device>
     </Hardware>
