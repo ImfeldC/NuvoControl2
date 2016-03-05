@@ -144,7 +144,11 @@ namespace NuvoControl.Common.Configuration
         public List<AudioDevice> AudioDevices
         {
             get { return _audioDevices; }
-            set { _audioDevices = value; }
+        }
+
+        public List<OSCDevice> OscDevices
+        {
+            get { return _oscDevices; }
         }
 
         #endregion

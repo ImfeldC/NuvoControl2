@@ -109,8 +109,8 @@ namespace Bespoke.Common.Osc
 		/// <param name="port">The UDP port to bind to.</param>
         /// <param name="consumeParsingExceptions">Specifies the behavior of handling parsing exceptions.</param>
 		/// <remarks>TransmissionType.Unicast.</remarks>
-        public OscServer(TransportType transportType, IPAddress ipAddress, int port, bool consumeParsingExceptions = true)
-			: this(transportType, ipAddress, port, null, TransmissionType.Unicast, consumeParsingExceptions)
+        public OscServer(TransportType transportType, IPAddress ipAddress, int port, bool consumeParsingExceptions = true, bool filterRegisteredMethods = true)
+            : this(transportType, ipAddress, port, null, TransmissionType.Unicast, consumeParsingExceptions, filterRegisteredMethods)
 		{
 		}
 
@@ -121,8 +121,8 @@ namespace Bespoke.Common.Osc
 		/// <param name="port">The UDP port to bind to.</param>
         /// <param name="consumeParsingExceptions">Specifies the behavior of handling parsing exceptions.</param>
 		/// <remarks>TransmissionType.Multicast.</remarks>
-		public OscServer(IPAddress multicastAddress, int port, bool consumeParsingExceptions = true)
-			: this(TransportType.Udp, IPAddress.Loopback, port, multicastAddress, TransmissionType.Multicast, consumeParsingExceptions)
+        public OscServer(IPAddress multicastAddress, int port, bool consumeParsingExceptions = true, bool filterRegisteredMethods = true)
+            : this(TransportType.Udp, IPAddress.Loopback, port, multicastAddress, TransmissionType.Multicast, consumeParsingExceptions, filterRegisteredMethods)
 		{
 		}
 
@@ -134,8 +134,8 @@ namespace Bespoke.Common.Osc
         /// <param name="transmissionType">The transmission type for the server to use.</param>
         /// <param name="consumeParsingExceptions">Specifies the behavior of handling parsing exceptions.</param>
         /// <remarks>Use this constructor for TransportType.Udp, and any TransmissionType except Multicast.</remarks>
-        public OscServer(IPAddress ipAddress, int port, TransmissionType transmissionType, bool consumeParsingExceptions = true)
-            : this(TransportType.Udp, ipAddress, port, null, transmissionType, consumeParsingExceptions)
+        public OscServer(IPAddress ipAddress, int port, TransmissionType transmissionType, bool consumeParsingExceptions = true, bool filterRegisteredMethods = true)
+            : this(TransportType.Udp, ipAddress, port, null, transmissionType, consumeParsingExceptions, filterRegisteredMethods)
         {
         }
 
@@ -149,7 +149,7 @@ namespace Bespoke.Common.Osc
 		/// <param name="transmissionType">The transmission type for the server to use.</param>
         /// <param name="consumeParsingExceptions">Specifies the behavior of handling parsing exceptions.</param>
 		/// <remarks>If ipAddress is specified, Unicast; otherwise, if multicastAddress is specified, Multicast.</remarks>
-		private OscServer(TransportType transportType, IPAddress ipAddress, int port, IPAddress multicastAddress, TransmissionType transmissionType, bool consumeParsingExceptions = true)
+        private OscServer(TransportType transportType, IPAddress ipAddress, int port, IPAddress multicastAddress, TransmissionType transmissionType, bool consumeParsingExceptions = true, bool filterRegisteredMethods = true)
 		{
             Assert.IsTrue(transportType == TransportType.Udp || transportType == TransportType.Tcp);
             if ((transportType == TransportType.Tcp) && (transmissionType != TransmissionType.Unicast))
@@ -170,7 +170,7 @@ namespace Bespoke.Common.Osc
 			}
 
 			mRegisteredMethods = new List<string>();
-			FilterRegisteredMethods = true;
+            FilterRegisteredMethods = filterRegisteredMethods;
             ConsumeParsingExceptions = consumeParsingExceptions;
             
             switch (TransportType)

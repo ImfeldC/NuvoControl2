@@ -10,12 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuvoControl.Server.HostConsole</RootNamespace>
     <AssemblyName>NuvoControl.Server.HostConsole</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -23,15 +24,17 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CommandLine">
@@ -61,6 +64,14 @@
     <Compile Include="Settings.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Bespoken\Bespoke.Common.Osc\Bespoke.Common.Osc.csproj">
+      <Project>{35d30dcb-74d1-40a2-9d22-40e1394ffc09}</Project>
+      <Name>Bespoke.Common.Osc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Bespoken\Bespoke.Common\Bespoke.Common.csproj">
+      <Project>{f8a1578f-bebe-4bbe-ab11-a0496bdb746a}</Project>
+      <Name>Bespoke.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
