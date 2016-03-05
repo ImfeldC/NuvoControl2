@@ -107,7 +107,6 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="NuvoControl.Client.WcfTestConsole_2_TemporaryKey.pfx" />
     <None Include="NuvoControl.TemporaryKey.pfx" />
     <None Include="packages.config" />
     <None Include="Properties\DataSources\NuvoControl.Common.Configuration.Function.datasource" />
