@@ -149,6 +149,7 @@
     <Content Include="..\..\Config\NuvoControlKonfiguration.xml">
       <Link>Config\NuvoControlKonfiguration.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="..\..\Images\BadWc.jpg">
       <Link>Images\BadWc.jpg</Link>

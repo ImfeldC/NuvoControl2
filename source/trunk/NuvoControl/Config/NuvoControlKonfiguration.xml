@@ -14,8 +14,8 @@
           <AudioDevice Id="3" Player="mpg321" DeviceType="alsa" Device="hw:2,0" Name="(Reserve 2)" SourceId="100.4" />
         </AudioDevices>
         <OSCDevices>
-          <OSCServer Id="1" Name="OSCServer1" ListenIPAddress="0.0.0.0"  ListenPort="8000" />
-          <OSCClient Id="2" Name="OSCClient1" SendIPAddress="192.168.1.1" SendPort="9000" />
+          <OSCServer Id="1" Name="OSCServer1" IPAddress="0.0.0.0"  Port="8000" />
+          <OSCClient Id="2" Name="OSCClient1" IPAddress="192.168.1.1" Port="9000" />
         </OSCDevices>
         <Zones>
           <Zone Id="1" Name="Esszimmer" />

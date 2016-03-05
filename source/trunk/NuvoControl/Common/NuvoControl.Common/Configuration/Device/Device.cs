@@ -65,6 +65,11 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         private List<AudioDevice> _audioDevices = new List<AudioDevice>();
 
+        /// <summary>
+        /// All OSC devices of the device
+        /// </summary>
+        private List<OSCDevice> _oscDevices = new List<OSCDevice>();
+
         #endregion
 
         #region Constructors
@@ -78,14 +83,15 @@ namespace NuvoControl.Common.Configuration
         /// <param name="zones">All zones of the device.</param>
         /// <param name="sources">All sources of the device.</param>
         /// <param name="audioDevices">All audio devices of the device.</param>
-        public Device(int id, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources, List<AudioDevice> audioDevices)
+        public Device(int id, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources, List<AudioDevice> audioDevices, List<OSCDevice> oscDevices)
         {
-            this._id = id;
-            this._communication = communication;
-            this._protocolDriver = protocolDriver;
-            this._zones = zones;
-            this._sources = sources;
-            this._audioDevices = audioDevices;
+            _id = id;
+            _communication = communication;
+            _protocolDriver = protocolDriver;
+            _zones = zones;
+            _sources = sources;
+            _audioDevices = audioDevices;
+            _oscDevices = oscDevices;
         }
 
         #endregion
@@ -172,12 +178,26 @@ namespace NuvoControl.Common.Configuration
             strDevice += String.Format("]");
 
             // all Audio Devices ...
-            strDevice += String.Format("AudioDevices=[");
-            foreach (AudioDevice audioDevice in _audioDevices)
+            if (_audioDevices != null)
             {
-                strDevice += String.Format("Audio={0}, ", audioDevice.ToString());
+                strDevice += String.Format("AudioDevices=[");
+                foreach (AudioDevice device in _audioDevices)
+                {
+                    strDevice += String.Format("Audio={0}, ", device.ToString());
+                }
+                strDevice += String.Format("]");
             }
-            strDevice += String.Format("]");
+
+            // all OSC Devices ...
+            if (_oscDevices != null)
+            { 
+                strDevice += String.Format("OSCDevices=[");
+                foreach (OSCDevice device in _oscDevices)
+                {
+                    strDevice += String.Format("OSC={0}, ", device.ToString());
+                }
+                strDevice += String.Format("]");
+            }
 
             return strDevice;
         }

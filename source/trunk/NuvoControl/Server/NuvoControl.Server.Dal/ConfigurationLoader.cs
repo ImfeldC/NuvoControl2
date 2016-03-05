@@ -358,7 +358,8 @@ namespace NuvoControl.Server.Dal
                     (from source in device.Element("Sources").Elements("Source")
                     select new Source( 
                         new Address((int)device.Attribute("Id"), (int)source.Attribute("Id")), (string)source.Attribute("Name") )).ToList<Source>(),
-                    readAudioDevcies(device)
+                    readAudioDevcies(device),
+                    readOSCDevcies(device)
                     );
 
             return nuvoDevices.ToList<Device>();
@@ -367,7 +368,7 @@ namespace NuvoControl.Server.Dal
         /// <summary>
         /// Private method to read audio devcies, as part of a devcie settings
         /// </summary>
-        /// <param name="function">Parent device settings, which contains the audio devices</param>
+        /// <param name="device">Parent device settings, which contains the audio devices</param>
         /// <returns>List of audio devices read from device settings.</returns>
         private List<AudioDevice> readAudioDevcies(XElement device)
         {
@@ -384,6 +385,39 @@ namespace NuvoControl.Server.Dal
 
             // no audio device section or audio device(s) found
             return null;
+        }
+
+        /// <summary>
+        /// Private method to read OSC devices, as part of a devcie settings
+        /// </summary>
+        /// <param name="device">Parent device settings, which contains the OSC devices</param>
+        /// <returns>List of OSC devices read from device settings.</returns>
+        private List<OSCDevice> readOSCDevcies(XElement device)
+        {
+            IEnumerable<OSCDevice> allOSCDevices = new List<OSCDevice>();
+
+            if (device.Element("OSCDevices") != null && device.Element("OSCDevices").Elements("OSCClient") != null)
+            {
+                IEnumerable<OSCDevice> allOSCClients = (from clientDevice in device.Element("OSCDevices").Elements("OSCClient")
+                                     select new OSCDevice(eOSCDeviceType.OSCClient, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")), 
+                                     (string)clientDevice.Attribute("Name"),
+                                     IPAddress.Parse((string)clientDevice.Attribute("IPAddress")), 
+                                     (int)clientDevice.Attribute("Port") ));
+                allOSCDevices = allOSCDevices.Concat(allOSCClients);
+            }
+
+            if (device.Element("OSCDevices") != null && device.Element("OSCDevices").Elements("OSCServer") != null)
+            {
+                IEnumerable<OSCDevice> allOSCServers = (from clientDevice in device.Element("OSCDevices").Elements("OSCServer")
+                                      select new OSCDevice(eOSCDeviceType.OSCServer, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
+                                      (string)clientDevice.Attribute("Name"),
+                                      IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
+                                      (int)clientDevice.Attribute("Port")));
+                allOSCDevices = allOSCDevices.Concat(allOSCServers);
+            }
+
+            // return list, or null if empty.
+            return (allOSCDevices.Count() > 0 ? allOSCDevices.ToList<OSCDevice>() : null);
         }
 
 
