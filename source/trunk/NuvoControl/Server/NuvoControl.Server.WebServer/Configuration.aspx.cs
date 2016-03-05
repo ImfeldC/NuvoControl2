@@ -34,7 +34,7 @@ namespace NuvoControl.Server.WebServer
             {
                 //_log.Trace(m => m("Read FLOOR with id={0}.", floor.Id));
                 TreeNode nodeFloor = new TreeNode(floor.Name);
-                foreach (Zone zone in floor.Zones)
+                foreach (ZoneGraphic zone in floor.Zones)
                 {
                     //_log.Trace(m => m("Zone found with id {0} with name {1}.", zone.Id.ToString(), zone.Name));
                     TreeNode nodeZone = new TreeNode(zone.Name);
@@ -51,7 +51,7 @@ namespace NuvoControl.Server.WebServer
             _log.Trace(m => m("LoadConfiguration started."));
 
             labelConfiguration.Text = "";
-            foreach (Zone zone in Global.ServiceManager.Zones)
+            foreach (ZoneGraphic zone in Global.ServiceManager.Zones)
             {
                 _log.Trace(m => m("Read zone configuration for zone with id {0}.", zone.Id));
                 labelConfiguration.Text += zone.ToString();

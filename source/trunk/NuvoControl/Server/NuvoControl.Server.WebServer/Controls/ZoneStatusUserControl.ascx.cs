@@ -40,7 +40,7 @@ namespace NuvoControl.Server.WebServer
                     // Set sources in drop-down list
                     listSources.Items.Clear();
                     listSources.Items.Add("-- select source --");
-                    foreach (Source source in serviceManager.Sources)
+                    foreach (SourceGraphic source in serviceManager.Sources)
                     {
                         listSources.Items.Add(source.Name);
                     }
