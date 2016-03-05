@@ -80,7 +80,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppInfoHelper.cs" />
-    <Compile Include="Configuration\AudioDevice.cs" />
+    <Compile Include="Configuration\Device\AudioDevice.cs" />
     <Compile Include="Configuration\Command\SendNuvoCommand.cs" />
     <Compile Include="CommonOptions.cs" />
     <Compile Include="Configuration\Command\Command.cs" />
@@ -90,6 +90,7 @@
     <Compile Include="Configuration\Function\ZoneChangeFunction.cs" />
     <Compile Include="Configuration\NuvoImage.cs" />
     <Compile Include="Configuration\Command\PlaySoundCommand.cs" />
+    <Compile Include="Configuration\Device\OSCDevice.cs" />
     <Compile Include="Configuration\Protocol.cs" />
     <Compile Include="Configuration\Address.cs" />
     <Compile Include="Configuration\Command\SendMailCommand.cs" />
@@ -100,7 +101,7 @@
     <Compile Include="Configuration\Function\Function.cs" />
     <Compile Include="Configuration\Graphic\Graphic.cs" />
     <Compile Include="Configuration\Hardware.cs" />
-    <Compile Include="Configuration\Device.cs" />
+    <Compile Include="Configuration\Device\Device.cs" />
     <Compile Include="Configuration\Command\StartProcessCommand.cs" />
     <Compile Include="Configuration\SystemConfiguration.cs" />
     <Compile Include="Configuration\Zone.cs" />
