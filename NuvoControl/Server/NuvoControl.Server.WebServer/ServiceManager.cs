@@ -54,8 +54,8 @@ namespace NuvoControl.Server.WebServer
         public ServiceManager()
         {
             _log.Trace(m => m("ServiceManager created."));
-            _zones = new List<Zone>();
-            _sources = new List<Source>();
+            _zones = new List<ZoneGraphic>();
+            _sources = new List<SourceGraphic>();
             _functions = new List<Function>();
         }
 
@@ -68,17 +68,17 @@ namespace NuvoControl.Server.WebServer
         /// <summary>
         /// Private member to store the availables zone configuration.
         /// </summary>
-        private List<Zone> _zones = null;
+        private List<ZoneGraphic> _zones = null;
 
         /// <summary>
         /// Private member to store the available source configuration.
         /// </summary>
-        private List<Source> _sources = null;
+        private List<SourceGraphic> _sources = null;
 
         /// <summary>
         /// Public access method to retrieve configured zones.
         /// </summary>
-        public List<Zone> Zones
+        public List<ZoneGraphic> Zones
         {
             get { return _zones; }
         }
@@ -86,7 +86,7 @@ namespace NuvoControl.Server.WebServer
         /// <summary>
         /// Public access method to retrieve configured sources.
         /// </summary>
-        public List<Source> Sources
+        public List<SourceGraphic> Sources
         {
             get { return _sources; }
         }
@@ -223,7 +223,7 @@ namespace NuvoControl.Server.WebServer
                 foreach (Floor floor in _graphic.Building.Floors)
                 {
                     _log.Trace(m => m("Read FLOOR with id={0}.", floor.Id));
-                    foreach (Zone zone in floor.Zones)
+                    foreach (ZoneGraphic zone in floor.Zones)
                     {
                         _log.Trace(m => m("Zone found with id {0} with name {1}.", zone.Id.ToString(), zone.Name));
                         _zones.Add(zone);
@@ -240,7 +240,7 @@ namespace NuvoControl.Server.WebServer
                 // read available sources (via graphic configuration)
                 // Root -> Graphic -> Source(s)
                 _sources.Clear();
-                foreach (Source source in _graphic.Sources)
+                foreach (SourceGraphic source in _graphic.Sources)
                 {
                     _log.Trace(m => m("SOURCE found with id {0}, with the name {1}.", source.Id.ToString(), source.Name));
                     _sources.Add(source);
@@ -264,7 +264,7 @@ namespace NuvoControl.Server.WebServer
                 cfgIfc.Endpoint.Address = _ConfigurationServiceHostAddress;
 
                 _functions.Clear();
-                foreach (Zone zone in _zones)
+                foreach (ZoneGraphic zone in _zones)
                 {
                     _log.Trace(m => m("read functions for Zone id {0} with name {1}.", zone.Id.ToString(), zone.Name));
 
@@ -374,17 +374,17 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         /// <param name="sourceId">Source Id</param>
         /// <returns>Source object. Returns an empty object in case the Source Id was not found.</returns>
-        public Source GetSource( Address sourceId )
+        public SourceGraphic GetSource( Address sourceId )
         {
-            foreach (Source source in _sources)
+            foreach (SourceGraphic source in _sources)
             {
                 if (source.Id == sourceId)
                 {
                     return source;
                  }
             }
-            _log.Warn(m => m("Source NOT found, with id {0}! _sources=[{1}]", sourceId.ToString(), _sources.ToString<Source>(" / ")));
-            return new Source();
+            _log.Warn(m => m("Source NOT found, with id {0}! _sources=[{1}]", sourceId.ToString(), _sources.ToString<SourceGraphic>(" / ")));
+            return new SourceGraphic();
         }
 
         /// <summary>
@@ -392,17 +392,17 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         /// <param name="sourceName">Source Name</param>
         /// <returns>Source object. Returns an empty object in case the Source Name was not found.</returns>
-        public Source GetSource(string sourceName)
+        public SourceGraphic GetSource(string sourceName)
         {
-            foreach (Source source in _sources)
+            foreach (SourceGraphic source in _sources)
             {
                 if (source.Name == sourceName)
                 {
                     return source;
                 }
             }
-            _log.Warn(m => m("Source NOT found, with name {0}! _sources=[{1}]", sourceName, _sources.ToString<Source>(" / ")));
-            return new Source();
+            _log.Warn(m => m("Source NOT found, with name {0}! _sources=[{1}]", sourceName, _sources.ToString<SourceGraphic>(" / ")));
+            return new SourceGraphic();
         }
 
         /// <summary>
@@ -410,17 +410,17 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         /// <param name="zoneId">Zone Id</param>
         /// <returns>Zone object. Returns an empty object in case the Zone Id was not found.</returns>
-        public Zone GetZone(Address zoneId)
+        public ZoneGraphic GetZone(Address zoneId)
         {
-            foreach (Zone zone in _zones)
+            foreach (ZoneGraphic zone in _zones)
             {
                 if (zone.Id == zoneId)
                 {
                     return zone;
                 }
             }
-            _log.Warn(m => m("Zone NOT found, with id {0}! _zones=[{1}]", zoneId.ToString(), _zones.ToString<Zone>(" / ")));
-            return new Zone();
+            _log.Warn(m => m("Zone NOT found, with id {0}! _zones=[{1}]", zoneId.ToString(), _zones.ToString<ZoneGraphic>(" / ")));
+            return new ZoneGraphic();
         }
 
         /// <summary>
@@ -428,17 +428,17 @@ namespace NuvoControl.Server.WebServer
         /// </summary>
         /// <param name="zoneId">Zone Name</param>
         /// <returns>Zone object. Returns an empty object in case the Zone Name was not found.</returns>
-        public Zone GetZone(string zoneName)
+        public ZoneGraphic GetZone(string zoneName)
         {
-            foreach (Zone zone in _zones)
+            foreach (ZoneGraphic zone in _zones)
             {
                 if (zone.Name == zoneName)
                 {
                     return zone;
                 }
             }
-            _log.Warn(m => m("Zone NOT found, with name {0}! _zones=[{1}]", zoneName, _zones.ToString<Zone>(" / ")));
-            return new Zone();
+            _log.Warn(m => m("Zone NOT found, with name {0}! _zones=[{1}]", zoneName, _zones.ToString<ZoneGraphic>(" / ")));
+            return new ZoneGraphic();
         }
 
         /// <summary>
@@ -459,10 +459,10 @@ namespace NuvoControl.Server.WebServer
             // Tweak: If a source is not configured, it needs to be added programmatically to the list, because it is still possible to select this source on the keypad.
             // If such an unconfigured source has been selected an error occurs, becuase the source is unkown!
             // ToDo: Implement this tweak on server side
-            Source source = GetSource(zoneState.Source);
+            SourceGraphic source = GetSource(zoneState.Source);
             if( source.isEmpty() )
             {
-                _sources.Add(new Source(zoneState.Source, String.Format("[{0}]",zoneState.Source), "n/a", "n/a"));
+                _sources.Add(new SourceGraphic(zoneState.Source, String.Format("[{0}]",zoneState.Source), "n/a", "n/a"));
                 _log.Trace(m => m("SOURCE added with id {0}.", zoneState.Source));
             }
             return zoneState;
@@ -475,7 +475,7 @@ namespace NuvoControl.Server.WebServer
         public List<ZoneState> GetAllZoneStates()
         {
             List<ZoneState> zoneStates = new List<ZoneState>();
-            foreach (Zone zone in _zones)
+            foreach (ZoneGraphic zone in _zones)
             {
                 zoneStates.Add(GetZoneState(zone.Id));
             }

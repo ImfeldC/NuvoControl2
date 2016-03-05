@@ -46,7 +46,7 @@ namespace NuvoControl.Server.WebServer
             if (!IsPostBack)
             {
                 // Init list with available zones
-                foreach (Zone zone in Global.ServiceManager.Zones)
+                foreach (ZoneGraphic zone in Global.ServiceManager.Zones)
                 {
                     listZones.Items.Add(zone.Name);
                 }
