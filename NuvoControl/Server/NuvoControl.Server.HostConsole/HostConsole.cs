@@ -17,6 +17,9 @@ using System.Text;
 
 using Common.Logging;
 
+using Bespoke.Common;
+using Bespoke.Common.Osc;
+
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 
@@ -26,6 +29,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ConfigurationService;
 using NuvoControl.Server.FunctionServer;
 using NuvoControl.Server.ZoneServer;
+using System.Net;
 
 
 
@@ -82,6 +86,11 @@ namespace NuvoControl.Server.HostConsole
         /// Private list holding all play sound drivers (for each audio device)
         /// </summary>
         private static Dictionary<int, IAudioDriver> _audioDrivers = new Dictionary<int, IAudioDriver>();
+
+        /// <summary>
+        /// Private list holding all OSC server drivers
+        /// </summary>
+        private static Dictionary<int, OscServer> _oscDrivers = new Dictionary<int, OscServer>();
 
         /// <summary>
         /// Holds a reference to the zone server.
@@ -159,6 +168,15 @@ namespace NuvoControl.Server.HostConsole
 
             try
             {
+                LoadOSCDrivers();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Failed to load the OSC drivers.", exc);
+            }
+
+            try
+            {
                 InstantiateZoneServer();
             }
             catch (Exception exc)
@@ -194,6 +212,15 @@ namespace NuvoControl.Server.HostConsole
             catch (Exception exc)
             {
                 LogHelper.LogException("Failed to unload the zone server.", exc);
+            }
+
+            try
+            {
+                UnloadOSCDrivers();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Failed to unload the OSC drivers.", exc);
             }
 
             try
@@ -331,6 +358,47 @@ namespace NuvoControl.Server.HostConsole
         }
         #endregion
 
+        #region OSC Driver
+        /// <summary>
+        /// Loads the OSC drivers according to the NuvoControl system configuration.
+        /// </summary>
+        private static void LoadOSCDrivers()
+        {
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Loading OSC drivers..."));
+
+            foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
+            {
+                foreach (OSCDevice oscDevice in device.OscDevices)
+                {
+                    if (oscDevice.DeviceType == eOSCDeviceType.OSCServer)
+                    {
+                        LogHelper.Log(LogLevel.Info, String.Format(">>>   OSC device {0} loaded ...", oscDevice.ToString()));
+                        _oscDrivers[oscDevice.DeviceId.ObjectId] = new OscServer(TransportType.Udp, oscDevice.IpAddress, oscDevice.Port, true, false);
+                        _oscDrivers[oscDevice.DeviceId.ObjectId].BundleReceived += new EventHandler<OscBundleReceivedEventArgs>(oscServer_BundleReceived);
+                        _oscDrivers[oscDevice.DeviceId.ObjectId].MessageReceived += new EventHandler<OscMessageReceivedEventArgs>(oscServer_MessageReceived);
+                        _oscDrivers[oscDevice.DeviceId.ObjectId].ReceiveErrored += new EventHandler<ExceptionEventArgs>(oscServer_ReceiveErrored);
+                        _oscDrivers[oscDevice.DeviceId.ObjectId].Start();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Unload the OSC drivers.
+        /// </summary>
+        private static void UnloadOSCDrivers()
+        {
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload OSC drivers..."));
+
+            foreach (int deviceId in _oscDrivers.Keys)
+            {
+                _oscDrivers[deviceId].Stop();
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   OSC driver {0} unloaded ...", deviceId));
+            }
+            _oscDrivers.Clear();
+        }
+        #endregion
+
         #region Zone Server
         /// <summary>
         /// Instantiates the zone server. This object holds all zone controllers.
@@ -458,6 +526,54 @@ namespace NuvoControl.Server.HostConsole
 
         #endregion
 
+
+        #region OSC Server Events
+
+        private static int sBundlesReceivedCount = 0;
+        private static int sMessagesReceivedCount = 0;
+
+        private static void oscServer_BundleReceived(object sender, OscBundleReceivedEventArgs e)
+        {
+            sBundlesReceivedCount++;
+
+            OscBundle bundle = e.Bundle;
+            Console.WriteLine(string.Format("\nBundle Received [{0}:{1}]: Nested Bundles: {2} Nested Messages: {3}", bundle.SourceEndPoint.Address, bundle.TimeStamp, bundle.Bundles.Count, bundle.Messages.Count));
+            Console.WriteLine("Total Bundles Received: {0}", sBundlesReceivedCount);
+        }
+
+        private static void oscServer_MessageReceived(object sender, OscMessageReceivedEventArgs e)
+        {
+            sMessagesReceivedCount++;
+
+            OscMessage message = e.Message;
+
+            Console.WriteLine(string.Format("\nMessage Received [{0}]: {1}", message.SourceEndPoint.Address, message.Address));
+            Console.WriteLine(string.Format("Message contains {0} objects.", message.Data.Count));
+
+            for (int i = 0; i < message.Data.Count; i++)
+            {
+                string dataString;
+
+                if (message.Data[i] == null)
+                {
+                    dataString = "Nil";
+                }
+                else
+                {
+                    dataString = (message.Data[i] is byte[] ? BitConverter.ToString((byte[])message.Data[i]) : message.Data[i].ToString());
+                }
+                Console.WriteLine(string.Format("[{0}]: {1}", i, dataString));
+            }
+
+            Console.WriteLine("Total Messages Received: {0}", sMessagesReceivedCount);
+        }
+
+        private static void oscServer_ReceiveErrored(object sender, ExceptionEventArgs e)
+        {
+            Console.WriteLine("Error during reception of packet: {0}", e.Exception.Message);
+        }
+
+        #endregion
 
     }
 }

@@ -125,9 +125,6 @@ namespace NuvoControl.Common.Configuration
             get { return _pictureType; }
         }
 
-/*
- * No longer used (after moved base class to Source.cs)
- * 
         /// <summary>
         /// Return true if the Source object is empty (not initialized).
         /// </summary>
@@ -138,6 +135,9 @@ namespace NuvoControl.Common.Configuration
         }
 
 
+/*
+ * No longer used (after moved base class to Source.cs)
+ * 
         /// <summary>
         /// Determines wether the specified object equals the current object.
         /// </summary>
