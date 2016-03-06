@@ -215,8 +215,8 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest1()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, null, new TimeSpan(), new TimeSpan(), commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -240,7 +240,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest2()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
             dayOfWeek.Add(DayOfWeek.Monday);
@@ -253,7 +253,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             TimeSpan validFrom = new TimeSpan(0, 0, 1);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(23, 59, 59);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -277,7 +277,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest3()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
             //dayOfWeek.Add(DayOfWeek.Monday); -> not valid on Monday
@@ -290,7 +290,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             TimeSpan validFrom = new TimeSpan(0, 0, 1);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(23, 59, 59);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -329,7 +329,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest4()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, false, false, true, true, new Address("100.1"), "OFF", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
             dayOfWeek.Add(DayOfWeek.Monday);
@@ -342,7 +342,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0,0,0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -370,7 +370,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest5()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), true, true, true, true, true, true, true, new Address("100.1"), "OFF", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = new List<DayOfWeek>();
             dayOfWeek.Add(DayOfWeek.Monday);
@@ -383,7 +383,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -412,13 +412,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest6a()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, true, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, true, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -443,13 +443,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest7a()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, true, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, true, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -474,13 +474,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest8a()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, true, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, true, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -505,13 +505,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest9a()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, true, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, false, true, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -536,13 +536,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest10a()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -567,13 +567,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest6b()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, true, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, true, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -607,13 +607,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest7b()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, true, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, true, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -647,13 +647,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest8b()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, true, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, true, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -687,13 +687,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest9b()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), false, false, false, false, true, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), false, false, false, false, true, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -727,13 +727,13 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest10b()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());
@@ -767,14 +767,14 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         public void ConcreteFunctionTest11()
         {
             List<Command> commands = new List<Command>();
-            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
-            commands.Add(new SendNuvoCommand(new Guid(), true, false, false, false, false, true, true, new Address("100.2"), "OFF", "100.5", 20));
+            commands.Add(new SendNuvoCommand(new SimpleId(), true, false, false, false, false, true, true, new Address("100.1"), "ON", "100.6", 10));
+            commands.Add(new SendNuvoCommand(new SimpleId(), true, false, false, false, false, true, true, new Address("100.2"), "OFF", "100.5", 20));
 
             List<DayOfWeek> dayOfWeek = null;
             TimeSpan validFrom = new TimeSpan(0, 0, 0);     // NOTE: (0,0,0) is considered as "not set" (not used)
             TimeSpan validTo = new TimeSpan(0, 0, 0);
 
-            ZoneChangeFunction function = new ZoneChangeFunction(new Guid(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
+            ZoneChangeFunction function = new ZoneChangeFunction(new SimpleId(), new Address("100.1"), new Address(), 0, true, true, true, true, dayOfWeek, validFrom, validTo, commands);
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = new Dictionary<int, IAudioDriver>();
             audioDrivers.Add(2, new AudioDriverMock());

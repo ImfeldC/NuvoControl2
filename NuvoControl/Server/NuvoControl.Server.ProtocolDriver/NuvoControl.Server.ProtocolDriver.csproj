@@ -91,6 +91,7 @@
     <Compile Include="SerialPort.cs" />
     <Compile Include="SerialPortQueue.cs" />
     <Compile Include="Settings.cs" />
+    <Compile Include="TouchOscDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">

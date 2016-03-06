@@ -28,9 +28,15 @@ namespace NuvoControl.Common.Configuration
     {
         #region Private Members
 
-        private Address _sourceId = new Address();
+        /// <summary>
+        /// The address of the audio device.
+        /// </summary>
+        [DataMember]
+        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
         private string _name = "";
+
+        private Address _sourceId = new Address();
 
         private string _player = "";
 
@@ -52,13 +58,15 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Standard Constructor
         /// </summary>
+        /// <param name="id">Id of this audio device.</param>
         /// <param name="sourceId">Source where to play the sound.</param>
         /// <param name="name">Name of the audio device.</param>
         /// <param name="player">Player (command, process, ...) to use for this audio device (e.g. "mpg321")</param>
         /// <param name="deviceType">Device type, where to play the sound.</param>
         /// <param name="device">Device, where to play the sound.</param>
-        public AudioDevice(Address sourceId, string name, string player, string deviceType, string device)
+        public AudioDevice(Address id, Address sourceId, string name, string player, string deviceType, string device)
         {
+            _id = id;
             _sourceId = sourceId;
             _name = name;
             _player = player;
@@ -70,16 +78,24 @@ namespace NuvoControl.Common.Configuration
 
         #region Public Interface
 
-        public Address SourceId
+        /// <summary>
+        /// The address of the audio device.
+        /// </summary>
+        public Address Id
         {
-            get { return _sourceId; }
-            set { _sourceId = value; }
+            get { return _id; }
         }
 
         public string Name
         {
             get { return _name; }
             set { _name = value; }
+        }
+
+        public Address SourceId
+        {
+            get { return _sourceId; }
+            set { _sourceId = value; }
         }
 
         public string Player

@@ -320,6 +320,7 @@ namespace NuvoControl.Server.Dal
             functions.AddRange(ReadZoneChangeFunctions().Cast<Function>());
 
             _systemConfiguration = new SystemConfiguration(
+                (string)_configuration.Root.Element("Configuration").Attribute("Version"),
                 new Hardware(ReadDevices()),
                 new Graphic(
                     new Building(
@@ -378,6 +379,7 @@ namespace NuvoControl.Server.Dal
             {
                 allAudioDevices = (from audioDevice in device.Element("AudioDevices").Elements("AudioDevice")
                                    select new AudioDevice(
+                                       new Address((int)device.Attribute("Id"), (int)audioDevice.Attribute("Id")),
                                        new Address((string)audioDevice.Attribute("SourceId")), (string)audioDevice.Attribute("Name"),
                                        (string)audioDevice.Attribute("Player"), (string)audioDevice.Attribute("DeviceType"), (string)audioDevice.Attribute("Device")));
                 return allAudioDevices.ToList<AudioDevice>();
@@ -399,20 +401,24 @@ namespace NuvoControl.Server.Dal
             if (device.Element("OSCDevices") != null && device.Element("OSCDevices").Elements("OSCClient") != null)
             {
                 IEnumerable<OSCDevice> allOSCClients = (from clientDevice in device.Element("OSCDevices").Elements("OSCClient")
-                                     select new OSCDevice(eOSCDeviceType.OSCClient, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")), 
-                                     (string)clientDevice.Attribute("Name"),
-                                     IPAddress.Parse((string)clientDevice.Attribute("IPAddress")), 
-                                     (int)clientDevice.Attribute("Port") ));
+                                     select new OSCDevice(
+                                         new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")), 
+                                         eOSCDeviceType.OSCClient, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")), 
+                                         (string)clientDevice.Attribute("Name"),
+                                         IPAddress.Parse((string)clientDevice.Attribute("IPAddress")), 
+                                         (int)clientDevice.Attribute("Port") ));
                 allOSCDevices = allOSCDevices.Concat(allOSCClients);
             }
 
             if (device.Element("OSCDevices") != null && device.Element("OSCDevices").Elements("OSCServer") != null)
             {
                 IEnumerable<OSCDevice> allOSCServers = (from clientDevice in device.Element("OSCDevices").Elements("OSCServer")
-                                      select new OSCDevice(eOSCDeviceType.OSCServer, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
-                                      (string)clientDevice.Attribute("Name"),
-                                      IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
-                                      (int)clientDevice.Attribute("Port")));
+                                      select new OSCDevice(
+                                         new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
+                                         eOSCDeviceType.OSCServer, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
+                                         (string)clientDevice.Attribute("Name"),
+                                         IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
+                                         (int)clientDevice.Attribute("Port")));
                 allOSCDevices = allOSCDevices.Concat(allOSCServers);
             }
 
@@ -482,7 +488,7 @@ namespace NuvoControl.Server.Dal
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("SleepFunction")
                 where function.Element("Commands") != null
                 select new SleepFunction(
-                    (Guid)function.Attribute("Id"),
+                    new SimpleId((string)function.Attribute("Id")),
                     new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     new TimeSpan(0, (int)function.Attribute("SleepDuration"), 0),
@@ -505,7 +511,7 @@ namespace NuvoControl.Server.Dal
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("SleepFunction")
                 where function.Element("Commands") == null
                 select new SleepFunction(
-                    (Guid)function.Attribute("Id"),
+                    new SimpleId((string)function.Attribute("Id")),
                     new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     new TimeSpan(0, (int)function.Attribute("SleepDuration"), 0),
@@ -528,7 +534,7 @@ namespace NuvoControl.Server.Dal
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("AlarmFunction")
                     where function.Element("Commands") != null
                     select new AlarmFunction(
-                        (Guid)function.Attribute("Id"),
+                        new SimpleId((string)function.Attribute("Id")),
                         new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                             int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                         new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
@@ -555,7 +561,7 @@ namespace NuvoControl.Server.Dal
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("AlarmFunction")
                 where function.Element("Commands") == null
                 select new AlarmFunction(
-                    (Guid)function.Attribute("Id"),
+                    new SimpleId((string)function.Attribute("Id")),
                     new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
@@ -581,7 +587,7 @@ namespace NuvoControl.Server.Dal
                 from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("ZoneChangeFunction")
 //                where function.Element("Commands") != null
                 select new ZoneChangeFunction(
-                    (Guid)function.Attribute("Id"),
+                    new SimpleId((string)function.Attribute("Id")),
                     new Address(int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
                         int.Parse(((string)function.Attribute("ZoneId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[1])),
                     new Address(int.Parse(((string)function.Attribute("SourceId")).Split(new char[] { SystemConfiguration.ID_SEPARATOR })[0]),
@@ -620,7 +626,7 @@ namespace NuvoControl.Server.Dal
                     where command.Attribute("cmd").Value == "SendMail"
                         && command.Element("Recipients") != null
                     select new SendMailCommand(
-                        (Guid)command.Attribute("Id"),
+                        new SimpleId((string)command.Attribute("Id")),
                         command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
                         command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
                         command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
@@ -646,7 +652,7 @@ namespace NuvoControl.Server.Dal
                 IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
                     where command.Attribute("cmd").Value == "PlaySound"
                     select new PlaySoundCommand(
-                        (Guid)command.Attribute("Id"),
+                        new SimpleId((string)command.Attribute("Id")),
                         command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
                         command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
                         command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
@@ -663,7 +669,7 @@ namespace NuvoControl.Server.Dal
                 IEnumerable<Command> startProcessCommands = (from command in function.Element("Commands").Elements("Command")
                     where command.Attribute("cmd").Value == "StartProcess"
                     select new StartProcessCommand(
-                        (Guid)command.Attribute("Id"),
+                        new SimpleId((string)command.Attribute("Id")),
                         command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
                         command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
                         command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,
@@ -680,7 +686,7 @@ namespace NuvoControl.Server.Dal
                 IEnumerable<Command> sendNuvoCommands = (from command in function.Element("Commands").Elements("Command")
                     where command.Attribute("cmd").Value == "SendNuvoCommand"
                     select new SendNuvoCommand(
-                        (Guid)command.Attribute("Id"),
+                        new SimpleId((string)command.Attribute("Id")),
                         command.Attribute("onFunctionError") != null ? (bool)command.Attribute("onFunctionError") : false,
                         command.Attribute("onFunctionStart") != null ? (bool)command.Attribute("onFunctionStart") : false,
                         command.Attribute("onFunctionEnd") != null ? (bool)command.Attribute("onFunctionEnd") : false,

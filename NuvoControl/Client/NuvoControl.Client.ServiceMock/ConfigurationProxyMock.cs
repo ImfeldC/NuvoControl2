@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
+
 using NuvoControl.Client.ServiceAccess.ConfigurationService;
+
 
 namespace NuvoControl.Client.ServiceMock
 {
@@ -33,7 +36,7 @@ namespace NuvoControl.Client.ServiceMock
             throw new NotImplementedException();
         }
 
-        public Function GetFunction(Guid id)
+        public Function GetFunction(SimpleId id)
         {
             throw new NotImplementedException();
         }

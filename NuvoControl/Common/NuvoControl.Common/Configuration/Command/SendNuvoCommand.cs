@@ -31,7 +31,7 @@ namespace NuvoControl.Common.Configuration
             get { return _volume; }
         }
 
-        public SendNuvoCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
+        public SendNuvoCommand(SimpleId id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
             Address ZoneId, string PowerStatus, string SourceId, int Volume)
             :base(id, eCommand.PlaySound, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd, onUnix, onWindows)
         {

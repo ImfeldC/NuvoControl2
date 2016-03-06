@@ -50,7 +50,7 @@ namespace NuvoControl.Common.Configuration
         /// The id of the command.
         /// </summary>
         [DataMember]
-        private Guid _id = Guid.NewGuid();
+        private SimpleId _id = SimpleId.NewGuid();
 
         /// <summary>
         /// The command to be executed.
@@ -174,7 +174,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
         /// <param name="onUnix">True, if command shall be exceuted on Unix systems. Default=True</param>
         /// <param name="onWindows">True, if command shall be executed on Windows systems. Default=True</param>
-        public Command(Guid id, eCommand command, 
+        public Command(SimpleId id, eCommand command, 
             bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd,
             bool onUnix, bool onWindows)
         {
@@ -192,7 +192,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Accessor for the command id.
         /// </summary>
-        public Guid Id
+        public SimpleId Id
         {
             get { return _id; }
         }

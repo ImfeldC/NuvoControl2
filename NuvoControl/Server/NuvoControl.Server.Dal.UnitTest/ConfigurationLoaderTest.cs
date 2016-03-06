@@ -28,6 +28,7 @@ using System.Xml;
 using System.Windows;
 
 using NuvoControl.Server.Dal;
+using NuvoControl.Common;
 
 namespace NuvoControl.Server.Dal.UnitTest
 {
@@ -142,6 +143,9 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void ValidateTest()
         {
+            // If the system configuration version changes, you need to adapt/review this test case
+            Assert.AreEqual("3.0", SystemConfiguration.VERSION);
+
             string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             Assert.AreEqual(true, target.Validate(), "Testing the successful validation of the XML configuration version.");
@@ -154,10 +158,13 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void GetConfigurationTest()
         {
+            // If the system configuration version changes, you need to adapt/review this test case
+            Assert.AreEqual("3.0", SystemConfiguration.VERSION);
+
             string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual(SystemConfiguration.VERSION, "2.1");
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
 
             TestContext.WriteLine("Testing device communication parameters...");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].Id, 100);
@@ -170,6 +177,24 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.Name, "Nuvo Essentia Protokoll Driver");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.AssemblyName, "NuvoControl.Server.ProtocolDriver");
             Assert.AreEqual(systemConfiguration.Hardware.Devices[0].ProtocolDriver.ClassName, "NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver");
+
+            TestContext.WriteLine("Testing audio driver parameters...");
+            Assert.AreEqual(3, systemConfiguration.Hardware.Devices[0].AudioDevices.Count);
+            Assert.AreEqual(new Address(100,1), systemConfiguration.Hardware.Devices[0].AudioDevices[0].Id);
+            Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].AudioDevices[0].Id.ObjectId);
+            Assert.AreEqual(new Address(100, 2), systemConfiguration.Hardware.Devices[0].AudioDevices[1].Id);
+            Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].AudioDevices[1].Id.ObjectId);
+            Assert.AreEqual(3, systemConfiguration.Hardware.Devices[0].AudioDevices[2].Id.ObjectId);
+            Assert.AreEqual("hw:0,0", systemConfiguration.Hardware.Devices[0].AudioDevices[0].Device);
+
+            TestContext.WriteLine("Testing osc driver parameters...");
+            Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].OscDevices.Count);
+            Assert.AreEqual(eOSCDeviceType.OSCClient, systemConfiguration.Hardware.Devices[0].OscDevices[0].DeviceType);
+            Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].OscDevices[0].Id.ObjectId);
+            Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[0].Port);
+            Assert.AreEqual(eOSCDeviceType.OSCServer, systemConfiguration.Hardware.Devices[0].OscDevices[1].DeviceType);
+            Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].OscDevices[1].Id.ObjectId);
+            Assert.AreEqual(8000, systemConfiguration.Hardware.Devices[0].OscDevices[1].Port);
 
             TestContext.WriteLine("Testing device zone parameters...");
             Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones.Count);
@@ -214,25 +239,28 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PicturePath, @".\Images\Tuner.jpg");
             Assert.AreEqual(systemConfiguration.Graphic.Sources[0].PictureType, "jpg");
 
-            /*
+            
             TestContext.WriteLine("Testing some function parameters...");
-            Assert.AreEqual(systemConfiguration.Functions.Count, 3);
+            Assert.AreEqual(7, systemConfiguration.Functions.Count);
             SleepFunction sleepFct = systemConfiguration.Functions[0] as SleepFunction;
-            Assert.AreEqual(sleepFct.Id, new Guid("2445f69e-a5a7-465e-95be-9179913d3786"));
-            Assert.AreEqual(sleepFct.ZoneId, new Address(100, 3));
-            Assert.AreEqual(sleepFct.SleepDuration, new TimeSpan(0, 60, 0));
-            Assert.AreEqual(sleepFct.ValidFrom, new TimeSpan(23, 15, 0));
-            Assert.AreEqual(sleepFct.ValidTo, new TimeSpan(4, 0, 0));
-            AlarmFunction alarmFct = systemConfiguration.Functions[1] as AlarmFunction;
-            Assert.AreEqual(alarmFct.Id, new Guid("14bdca34-ea36-4419-8cd4-788a73a81c93"));
-            Assert.AreEqual(alarmFct.ZoneId, new Address(100, 2));
-            Assert.AreEqual(alarmFct.AlarmTime, new TimeSpan(7, 0, 0));
-            Assert.AreEqual(alarmFct.AlarmDuration, new TimeSpan(0, 10, 0));
-            Assert.AreEqual(alarmFct.SourceId, new Address(100, 2));
-            Assert.AreEqual(alarmFct.ValidOnDays.Count, 2);
-            Assert.AreEqual(alarmFct.ValidOnDays[0], DayOfWeek.Monday);
-            Assert.AreEqual(alarmFct.ValidOnDays[1], DayOfWeek.Tuesday);
-            */
+            Assert.AreEqual(new SimpleId("2445f69e-a5a7-465e-95be-9179913d3780"), sleepFct.Id);
+            Assert.AreEqual(new Address(100, 3), sleepFct.ZoneId);
+            Assert.AreEqual(new TimeSpan(0, 60, 0), sleepFct.SleepDuration);
+            Assert.AreEqual(new TimeSpan(20, 00, 0), sleepFct.ValidFrom);
+            Assert.AreEqual(new TimeSpan(2, 0, 0), sleepFct.ValidTo);
+            AlarmFunction alarmFct = systemConfiguration.Functions[3] as AlarmFunction;
+            Assert.AreEqual(new SimpleId("11111111-0001-1111-1111-111111111111"), alarmFct.Id);
+            Assert.AreEqual(new Address(100, 2), alarmFct.ZoneId);
+            Assert.AreEqual(new TimeSpan(6, 45, 0), alarmFct.AlarmTime);
+            Assert.AreEqual(new TimeSpan(2, 0, 0), alarmFct.AlarmDuration);
+            Assert.AreEqual(new Address(100, 1), alarmFct.SourceId);
+            Assert.AreEqual(1, alarmFct.ValidOnDays.Count);
+            Assert.AreEqual(DayOfWeek.Monday, alarmFct.ValidOnDays[0]);
+            ZoneChangeFunction zonechangeFct = systemConfiguration.Functions[6] as ZoneChangeFunction;
+            Assert.AreEqual(new SimpleId("1234"), zonechangeFct.Id);
+            Assert.AreEqual(1, zonechangeFct.ValidOnDays.Count);
+            Assert.AreEqual(DayOfWeek.Tuesday, zonechangeFct.ValidOnDays[0]);
+            
 
         }
 
@@ -243,16 +271,19 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void AppendConfigurationTest()
         {
+            // If the system configuration version changes, you need to adapt/review this test case
+            Assert.AreEqual("3.0", SystemConfiguration.VERSION);
+
             string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
             Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
             Assert.AreEqual(9, systemConfiguration.Functions.Count);
         
         }
@@ -263,16 +294,19 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void AppendConfigurationTestNoHW()
         {
+            // If the system configuration version changes, you need to adapt/review this test case
+            Assert.AreEqual("3.0", SystemConfiguration.VERSION);
+
             string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
             Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemoteNoHW.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
             Assert.AreEqual(10, systemConfiguration.Functions.Count);
 
         }
@@ -283,16 +317,19 @@ namespace NuvoControl.Server.Dal.UnitTest
         [TestMethod()]
         public void LoadRemoteConfigurationTest()
         {
+            // If the system configuration version changes, you need to adapt/review this test case
+            Assert.AreEqual("3.0", SystemConfiguration.VERSION);
+
             string file = @"NuvoControlKonfigurationUnitTest.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
             Assert.AreEqual(7, systemConfiguration.Functions.Count);
 
             string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
-            Assert.AreEqual("2.1", SystemConfiguration.VERSION);
+            Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
             Assert.AreEqual(9, systemConfiguration.Functions.Count);
 
         }

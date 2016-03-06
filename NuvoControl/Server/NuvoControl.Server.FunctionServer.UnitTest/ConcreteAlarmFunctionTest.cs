@@ -99,7 +99,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<DayOfWeek> _dayOfWeeks = new List<DayOfWeek>();
             AlarmFunction function = new AlarmFunction(
-                Guid.NewGuid(), 
+                SimpleId.NewGuid(), 
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0), 
                 _dayOfWeeks);
@@ -118,7 +118,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         {
             List<DayOfWeek> _dayOfWeeks = new List<DayOfWeek>();
             AlarmFunction function = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks);
@@ -140,7 +140,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             List<DayOfWeek> _dayOfWeeks = new List<DayOfWeek>();
             _dayOfWeeks.Add(DateTime.Now.DayOfWeek);
             AlarmFunction function = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks);
@@ -164,7 +164,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             // (1) Empty day list
             List<DayOfWeek> _dayOfWeeks1 = new List<DayOfWeek>();
             AlarmFunction function1 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks1);
@@ -181,7 +181,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Saturday);
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks2);
@@ -232,7 +232,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Friday);
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks1);
@@ -246,7 +246,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Saturday);
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 1), 50,
                 new TimeSpan(6, 0, 0), new TimeSpan(0, 45, 0),
                 _dayOfWeeks2);
@@ -299,7 +299,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Friday);
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
@@ -317,7 +317,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Saturday);
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
@@ -397,7 +397,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Friday);
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
@@ -415,7 +415,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Saturday);
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
@@ -475,7 +475,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Friday);
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
@@ -493,7 +493,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Saturday);
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);
@@ -549,7 +549,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks1.Add(DayOfWeek.Friday);
             _dayOfWeeks1.Add(DayOfWeek.Sunday);
             AlarmFunction function1 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 3), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks1);
@@ -567,7 +567,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
             _dayOfWeeks2.Add(DayOfWeek.Saturday);
             _dayOfWeeks2.Add(DayOfWeek.Sunday);
             AlarmFunction function2 = new AlarmFunction(
-                Guid.NewGuid(),
+                SimpleId.NewGuid(),
                 new Address(100, 1), new Address(100, 6), 50,
                 new TimeSpan(10, 0, 0), new TimeSpan(1, 45, 0),
                 _dayOfWeeks2);

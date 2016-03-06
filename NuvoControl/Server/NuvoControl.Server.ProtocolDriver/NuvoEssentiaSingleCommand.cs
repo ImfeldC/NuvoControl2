@@ -154,7 +154,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private string _profileFilename = null;
         private Profile _profile;
 
-        Guid _guid;
+        SimpleId _simpleId;
         DateTime _createDateTime;
         DateTime _sendDateTime;
         DateTime _receiveDateTime;
@@ -420,7 +420,7 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             _command = command;
             _createDateTime = DateTime.Now;
-            _guid = Guid.NewGuid();
+            _simpleId = SimpleId.NewGuid();
 
             for (int i = 0; i < _irCarrierFrequencySource.Length; i++)
             {
@@ -555,7 +555,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <returns>True, if the objects are identical.</returns>
         public int CompareTo(object obj)
         {
-            return this._guid.CompareTo(((NuvoEssentiaSingleCommand)obj)._guid);
+            string id1 = this._simpleId.ToString();
+            string id2 = ((NuvoEssentiaSingleCommand)obj)._simpleId.ToString();
+            return ( String.Compare(id1, id2) );
         }
 
         #endregion
@@ -565,9 +567,9 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// See base interface INuvoEssentiaSingleCommand for more information.
         /// </summary>
-        public Guid Guid
+        public SimpleId Guid
         {
-            get { return _guid; }
+            get { return _simpleId; }
         }
 
         /// <summary>
@@ -1816,7 +1818,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <returns>String representing the content of this object.</returns>
         public override string ToString()
         {
-            return String.Format("Command={0}, ZoneId={1}, PowerStatus={2}, Valid={3}, Finished={4}, Guid={5}.",Command, ZoneId, PowerStatus, Valid, Finished, Guid);
+            return String.Format("Command={0}, ZoneId={1}, PowerStatus={2}, Valid={3}, Finished={4}, Id={5}.",Command, ZoneId, PowerStatus, Valid, Finished, Guid);
         }
     }
 

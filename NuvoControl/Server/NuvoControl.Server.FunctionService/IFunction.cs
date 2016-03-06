@@ -30,7 +30,7 @@ namespace NuvoControl.Server.FunctionService
     public interface IFunctionNotification
     {
         [OperationContract(IsOneWay = true)]
-        void OnFunctionStateChanged(Guid functionId);
+        void OnFunctionStateChanged(SimpleId functionId);
     }
 
 

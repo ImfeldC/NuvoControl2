@@ -55,7 +55,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onWindows">True, if command shall be executed on Windows systems. Default=True</param>
         /// <param name="sourceId">Source Id, on which to play the sound.</param>
         /// <param name="url">URL to play.</param>
-        public PlaySoundCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
+        public PlaySoundCommand(SimpleId id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
             Address sourceId, string url)
             : base(id, eCommand.PlaySound, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd, onUnix, onWindows)
         {

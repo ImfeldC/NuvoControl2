@@ -197,6 +197,7 @@
         </Source>
       </Sources>
     </Graphic>
+    
     <Functions>
 
       <!-- Real Functions -->
@@ -312,6 +313,16 @@
         </Validity>
       </ZoneChangeFunction>
 
+      <OscEventFunction Id="123" OscDevice="100.1" OnEvent="/ping" Value="1">
+        <Validity>
+          <Days>
+            <Day Name="Tuesday" />
+          </Days>
+        </Validity>
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="123-1" />
+        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"  Id="123-2" />
+      </OscEventFunction>
+      
     </Functions>
   </Configuration>
 </NuvoControl>

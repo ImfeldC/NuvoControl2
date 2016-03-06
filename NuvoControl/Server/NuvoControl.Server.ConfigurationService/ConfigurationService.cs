@@ -210,21 +210,21 @@ namespace NuvoControl.Server.ConfigurationService
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public Function GetFunction(Guid id)
+        public Function GetFunction(SimpleId id)
         {
-            _log.Trace(m => m(String.Format("Configuration Service; GetFunction(Guid={0}).", id.ToString())));
+            _log.Trace(m => m(String.Format("Configuration Service; GetFunction(Id={0}).", id.ToString())));
 
             // Search function with the specified Guid
             foreach (Function function in _systemConfiguration.Functions)
             {
                 if (function.Id == id)
                 {
-                    _log.Trace(m => m(String.Format("Function with Guid={0} found: {1}.", id.ToString(), function.ToString())));
+                    _log.Trace(m => m(String.Format("Function with Id={0} found: {1}.", id.ToString(), function.ToString())));
                     return function;
                 }
             }
 
-            _log.Warn(m => m(String.Format("Function with Guid={0} NOT found: {1}.", id.ToString(), _systemConfiguration.Functions.ToString<Function>(" / "))));
+            _log.Warn(m => m(String.Format("Function with Id={0} NOT found: {1}.", id.ToString(), _systemConfiguration.Functions.ToString<Function>(" / "))));
             return null;
         }
 
