@@ -489,18 +489,21 @@ namespace NuvoControl.Server.ConfigurationService
         {
             foreach (Address address in ids)
             {
-                Device device = DoesDeviceExist(address);
-                if (device == null)
-                    return false;
-
-                List<Zone> zoneIds = (from zoneId in device.Zones where zoneId.Id.ObjectId == address.ObjectId select zoneId).ToList<Zone>();
-                if (zoneIds.Count == 0)
-                    return false;
-
-                if (zoneIds.Count > 1)
+                if (address != new Address())
                 {
-                    _log.ErrorFormat("There is more than one zone with the same Id = {0} in the same device = {1}.", address.ObjectId, address.DeviceId);
-                    throw new Exception(String.Format("There is more than one zone with the same Id = {0} in the same device {1}.", address.DeviceId, address.DeviceId));
+                    Device device = DoesDeviceExist(address);
+                    if (device == null)
+                        return false;
+
+                    List<Zone> zoneIds = (from zoneId in device.Zones where zoneId.Id.ObjectId == address.ObjectId select zoneId).ToList<Zone>();
+                    if (zoneIds.Count == 0)
+                        return false;
+
+                    if (zoneIds.Count > 1)
+                    {
+                        _log.ErrorFormat("There is more than one zone with the same Id = {0} in the same device = {1}.", address.ObjectId, address.DeviceId);
+                        throw new Exception(String.Format("There is more than one zone with the same Id = {0} in the same device {1}.", address.DeviceId, address.DeviceId));
+                    }
                 }
             }
             return true;
