@@ -21,9 +21,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using NuvoControl.Common.Configuration;
 using System.ServiceModel;
+
+using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
 
 namespace NuvoControl.Server.ConfigurationService
 {
@@ -69,7 +70,7 @@ namespace NuvoControl.Server.ConfigurationService
         /// <param name="id">The function id.</param>
         /// <returns>The specified function.</returns>
         [OperationContract]
-        Function GetFunction(Guid id);
+        Function GetFunction(SimpleId id);
 
         /// <summary>
         /// Returns all functions which are applied to the specified zone.

@@ -46,7 +46,7 @@ namespace NuvoControl.Common.Configuration
         /// The id of the function.
         /// </summary>
         [DataMember]
-        private Guid _id = Guid.NewGuid();
+        private SimpleId _id = SimpleId.NewGuid();
 
         /// <summary>
         /// The address of the zone, which this function is applied for.
@@ -92,7 +92,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         /// <param name="id">The function id.</param>
         /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
-        public Function(Guid id, Address zoneId)
+        public Function(SimpleId id, Address zoneId)
         {
             this._id = id;
             this._zoneId = zoneId;
@@ -103,7 +103,7 @@ namespace NuvoControl.Common.Configuration
         /// </summary>
         /// <param name="id">The function id.</param>
         /// <param name="zoneId">The address of the zone, which this function is applied for.</param>
-        public Function(Guid id, Address zoneId, List<Command> commands)
+        public Function(SimpleId id, Address zoneId, List<Command> commands)
         {
             this._id = id;
             this._zoneId = zoneId;
@@ -118,7 +118,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Accessor for the function id.
         /// </summary>
-        public Guid Id
+        public SimpleId Id
         {
             get { return _id; }
         }
@@ -178,7 +178,7 @@ namespace NuvoControl.Common.Configuration
                     strCommand += ",";
                 }
             }
-            return String.Format("Zone={0}, Guid={1}, Commands={2} [{3}]", ZoneId, Id, (_commands != null ? _commands.Count().ToString() : "None"), strCommand);
+            return String.Format("Zone={0}, Id={1}, Commands={2} [{3}]", ZoneId, Id, (_commands != null ? _commands.Count().ToString() : "None"), strCommand);
         }
 
         #endregion

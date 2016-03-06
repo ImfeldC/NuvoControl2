@@ -38,7 +38,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Public constant defining the system configuration version.
         /// </summary>
-        public const string VERSION = "2.1";
+        public const string VERSION = "3.0";
 
         /// <summary>
         /// Public constant defining 'ID Undefined'.
@@ -54,6 +54,11 @@ namespace NuvoControl.Common.Configuration
         #endregion
 
         #region Private Members
+
+        /// <summary>
+        /// The version of the configuration (read from xml file)
+        /// </summary>
+        private string _configurationVersion = "";
 
         /// <summary>
         /// The connected hardware (devices)
@@ -78,11 +83,13 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="configurationVersion">The version of the configuration file.</param>
         /// <param name="hardware">The connected hardware (devices)</param>
         /// <param name="graphic">Specifies graphical attributes of the system.</param>
         /// <param name="functions">Specifies all functions (alarm and sleep) of the system.</param>
-        public SystemConfiguration(Hardware hardware, Graphic graphic, List<Function> functions)
+        public SystemConfiguration(string configurationVersion, Hardware hardware, Graphic graphic, List<Function> functions)
         {
+            this._configurationVersion = configurationVersion;
             this._hardware = hardware;
             this._graphic = graphic;
             this._functions = functions;
@@ -91,6 +98,14 @@ namespace NuvoControl.Common.Configuration
         #endregion
 
         #region Public Interface
+
+        /// <summary>
+        /// Returns the version of the configuration file.
+        /// </summary>
+        public string ConfigurationVersion
+        {
+            get { return _configurationVersion; }
+        }
 
         /// <summary>
         /// The connected hardware (devices)

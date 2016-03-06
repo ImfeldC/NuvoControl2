@@ -21,7 +21,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="onValidityEnd">True, if command shall be executed at validity end.</param>
         /// <param name="onUnix">True, if command shall be exceuted on Unix systems. Default=True</param>
         /// <param name="onWindows">True, if command shall be executed on Windows systems. Default=True</param>
-        public StartProcessCommand(Guid id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
+        public StartProcessCommand(SimpleId id, bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, bool onUnix, bool onWindows,
             string process_cmd, string process_arg)
             :base(id, eCommand.PlaySound, onFunctionError, onFunctionStart, onFunctionEnd, onValidityStart, onValidityEnd, onUnix, onWindows)
         {

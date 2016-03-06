@@ -61,7 +61,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="sleepDuration">The duration of the sleep function.</param>
         /// <param name="validFrom">Start time in which a sleep function can be triggered.</param>
         /// <param name="validTo">End time in which a sleep function can be triggered.</param>
-        public SleepFunction(Guid id, Address zoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
+        public SleepFunction(SimpleId id, Address zoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo)
             : base(id, zoneId)
         {
             this._sleepDuration = sleepDuration;
@@ -78,7 +78,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="validFrom">Start time in which a sleep function can be triggered.</param>
         /// <param name="validTo">End time in which a sleep function can be triggered.</param>
         /// <param name="commands">List of commands, to be executed by this function.</param>
-        public SleepFunction(Guid id, Address zoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
+        public SleepFunction(SimpleId id, Address zoneId, TimeSpan sleepDuration, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
             : base(id, zoneId, commands)
         {
             this._sleepDuration = sleepDuration;

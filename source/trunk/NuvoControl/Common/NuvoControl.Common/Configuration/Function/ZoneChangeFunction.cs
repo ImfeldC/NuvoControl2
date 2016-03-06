@@ -76,25 +76,25 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
-        public ZoneChangeFunction(Guid id, Address zoneId, Address sourceId, int volumeThreshold, List<DayOfWeek> validOnDays, List<Command> commands)
+        public ZoneChangeFunction(SimpleId id, Address zoneId, Address sourceId, int volumeThreshold, List<DayOfWeek> validOnDays, List<Command> commands)
             : base(id, zoneId, commands)
         {
             initMembers(id, zoneId, sourceId, volumeThreshold, false, false, false, false, validOnDays, new TimeSpan(), new TimeSpan(), commands);
         }
 
-        public ZoneChangeFunction(Guid id, Address zoneId, Address sourceId, int volumeThreshold, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
+        public ZoneChangeFunction(SimpleId id, Address zoneId, Address sourceId, int volumeThreshold, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
             : base(id, zoneId, commands)
         {
             initMembers(id, zoneId, sourceId, volumeThreshold, false, false, false, false, validOnDays, validFrom, validTo, commands);
         }
 
-        public ZoneChangeFunction(Guid id, Address zoneId, Address sourceId, int volumeThreshold, bool OnStatusChange, bool OnSourceChange, bool OnVolumeChange, bool OnQualityChange, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
+        public ZoneChangeFunction(SimpleId id, Address zoneId, Address sourceId, int volumeThreshold, bool OnStatusChange, bool OnSourceChange, bool OnVolumeChange, bool OnQualityChange, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
             : base(id, zoneId, commands)
         {
             initMembers(id, zoneId, sourceId, volumeThreshold, OnStatusChange, OnSourceChange, OnVolumeChange, OnQualityChange, validOnDays, validFrom, validTo, commands);
         }
 
-        private void initMembers(Guid id, Address zoneId, Address sourceId, int volumeThreshold, bool OnStatusChange, bool OnSourceChange, bool OnVolumeChange, bool OnQualityChange, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
+        private void initMembers(SimpleId id, Address zoneId, Address sourceId, int volumeThreshold, bool OnStatusChange, bool OnSourceChange, bool OnVolumeChange, bool OnQualityChange, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
         {
             this._sourceId = sourceId;
             this._volumeThreshold = volumeThreshold;

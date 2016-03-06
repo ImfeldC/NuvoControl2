@@ -16,11 +16,13 @@
  * 
  **************************************************************************************************/
 
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using NuvoControl.Common;
+
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
@@ -39,7 +41,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// Returns a unique GUID for this command instance.
         /// This allows to identify a running command exactly.
         /// </summary>
-        Guid Guid { get; }
+        SimpleId Guid { get; }
 
         /// <summary>
         /// Returns the NuvoEssentia command.

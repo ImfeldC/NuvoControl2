@@ -95,7 +95,7 @@ namespace NuvoControl.Common
         #endregion
 
         [DataMember]
-        private Guid _guid;
+        private SimpleId _id;
 
         [DataMember]
         private ZoneQuality _zoneQuality = ZoneQuality.Offline;
@@ -123,7 +123,7 @@ namespace NuvoControl.Common
         /// </summary>
         public ZoneState()
         {
-            _guid = Guid.NewGuid();
+            _id = SimpleId.NewGuid();
             _lastUpdate = DateTime.Now;
             _zoneQuality = ZoneQuality.Offline;  // Default Value
         }
@@ -153,13 +153,13 @@ namespace NuvoControl.Common
         {
             if (sourceZoneState == null)
             {
-                _guid = Guid.NewGuid();
+                _id = SimpleId.NewGuid();
                 _lastUpdate = DateTime.Now;
                 _zoneQuality = ZoneQuality.Offline;  // Default Value
             }
             else
             {
-                _guid = sourceZoneState._guid;
+                _id = sourceZoneState._id;
                 _lastUpdate = sourceZoneState._lastUpdate;
                 _zoneQuality = sourceZoneState._zoneQuality;
                 _source = sourceZoneState._source;

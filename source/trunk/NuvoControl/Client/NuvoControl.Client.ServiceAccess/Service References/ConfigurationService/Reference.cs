@@ -88,7 +88,7 @@ namespace NuvoControl.Client.ServiceAccess.ConfigurationService {
         NuvoControl.Common.Configuration.ZoneGraphic GetZoneGraphicConfiguration(NuvoControl.Common.Configuration.Address zoneId);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetFunction", ReplyAction="http://tempuri.org/IConfigure/GetFunctionResponse")]
-        NuvoControl.Common.Configuration.Function GetFunction(System.Guid id);
+        NuvoControl.Common.Configuration.Function GetFunction(NuvoControl.Common.SimpleId id);
         
         [System.ServiceModel.OperationContractAttribute(Action="http://tempuri.org/IConfigure/GetFunctions", ReplyAction="http://tempuri.org/IConfigure/GetFunctionsResponse")]
         NuvoControl.Common.Configuration.Function[] GetFunctions(NuvoControl.Common.Configuration.Address zoneId);
@@ -140,8 +140,9 @@ namespace NuvoControl.Client.ServiceAccess.ConfigurationService {
         {
             return base.Channel.GetZoneGraphicConfiguration(zoneId);
         }
-        
-        public NuvoControl.Common.Configuration.Function GetFunction(System.Guid id) {
+
+        public NuvoControl.Common.Configuration.Function GetFunction(NuvoControl.Common.SimpleId id)
+        {
             return base.Channel.GetFunction(id);
         }
         

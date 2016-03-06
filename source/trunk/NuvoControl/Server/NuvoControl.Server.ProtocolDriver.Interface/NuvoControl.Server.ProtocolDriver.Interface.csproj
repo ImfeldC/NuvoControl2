@@ -65,6 +65,7 @@
     </Compile>
     <Compile Include="IAudioDriver.cs" />
     <Compile Include="INuvoProtocol.cs" />
+    <Compile Include="IOscDriver.cs" />
     <Compile Include="NamespaceDoc.cs" />
     <Compile Include="SerialPortFactory.cs" />
     <Compile Include="INuvoEssentiaCommand.cs" />

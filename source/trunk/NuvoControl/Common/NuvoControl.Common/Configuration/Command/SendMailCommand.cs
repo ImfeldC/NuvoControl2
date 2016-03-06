@@ -66,7 +66,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="bccAddress"></param>
         /// <param name="subject"></param>
         /// <param name="body"></param>
-        public SendMailCommand(Guid id, 
+        public SendMailCommand(SimpleId id, 
             bool onFunctionError, bool onFunctionStart, bool onFunctionEnd, bool onValidityStart, bool onValidityEnd, 
             bool onUnix, bool onWindows,
             IEnumerable<MailAddress> toAddress, IEnumerable<MailAddress> ccAddress, IEnumerable<MailAddress> bccAddress,

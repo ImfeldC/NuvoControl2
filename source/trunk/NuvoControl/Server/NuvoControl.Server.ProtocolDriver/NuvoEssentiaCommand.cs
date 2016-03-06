@@ -39,7 +39,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// </summary>
         private List<INuvoEssentiaSingleCommand> _commandList = new List<INuvoEssentiaSingleCommand>();
 
-        Guid _guid;
+        SimpleId _id;
         DateTime _createDateTime;
 
         #region Nuvo Essentia Values
@@ -122,7 +122,7 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             _commandList.Clear();
             _createDateTime = DateTime.Now;
-            _guid = Guid.NewGuid();
+            _id = SimpleId.NewGuid();
         }
 
         /// <summary>

@@ -81,7 +81,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="alarmTime">Alarm time.</param>
         /// <param name="alarmDuration">Duration of the alarm.</param>
         /// <param name="validOnDays">The days, on which this alarm is valid.</param>
-        public AlarmFunction(Guid id, Address zoneId, Address sourceId, int volume, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
+        public AlarmFunction(SimpleId id, Address zoneId, Address sourceId, int volume, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays)
             : base(id, zoneId)
         {
             this._alarmTime = alarmTime;
@@ -102,7 +102,7 @@ namespace NuvoControl.Common.Configuration
         /// <param name="alarmDuration">Duration of the alarm.</param>
         /// <param name="validOnDays">The days, on which this alarm is valid.</param>
         /// <param name="commands">List of commands, to be executed by this function.</param>
-        public AlarmFunction(Guid id, Address zoneId, Address sourceId, int volume, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays, List<Command> commands)
+        public AlarmFunction(SimpleId id, Address zoneId, Address sourceId, int volume, TimeSpan alarmTime, TimeSpan alarmDuration, List<DayOfWeek> validOnDays, List<Command> commands)
             : base(id, zoneId, commands)
         {
             this._alarmTime = alarmTime;

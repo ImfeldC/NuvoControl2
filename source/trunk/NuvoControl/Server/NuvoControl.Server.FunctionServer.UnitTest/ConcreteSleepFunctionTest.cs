@@ -112,7 +112,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         [TestMethod()]
         public void isFunctionActiveRightNowTest1()
         {
-            SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100,1),
+            SleepFunction function = new SleepFunction(SimpleId.NewGuid(), new Address(100, 1),
                 new TimeSpan(1,0,0),new TimeSpan(23,0,0), new TimeSpan(3,0,0));
             IZoneServer zoneServer = null;
             Dictionary<int, IAudioDriver> audioDrivers = null;
@@ -159,7 +159,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         [TestMethod()]
         public void isFunctionActiveRightNowTest2()
         {
-            SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100, 1),
+            SleepFunction function = new SleepFunction(SimpleId.NewGuid(), new Address(100, 1),
                 new TimeSpan(1, 0, 0), new TimeSpan(6, 0, 0), new TimeSpan(9, 0, 0));
             IZoneServer zoneServer = null;
             Dictionary<int, IAudioDriver> audioDrivers = null;
@@ -266,7 +266,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         [DeploymentItem("NuvoControl.Server.FunctionServer.dll")]
         public void calculateFunctionTest2()
         {
-            SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100,1),
+            SleepFunction function = new SleepFunction(SimpleId.NewGuid(), new Address(100, 1),
                 new TimeSpan(1,0,0),new TimeSpan(0,0,0), new TimeSpan(23,59,59));
             ZoneServerMock zoneServer = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = null;
@@ -295,7 +295,7 @@ namespace NuvoControl.Server.FunctionServer.UnitTest
         [DeploymentItem("NuvoControl.Server.FunctionServer.dll")]
         public void calculateFunctionTest3()
         {
-            SleepFunction function = new SleepFunction(Guid.NewGuid(), new Address(100, 1),
+            SleepFunction function = new SleepFunction(SimpleId.NewGuid(), new Address(100, 1),
                 new TimeSpan(1, 0, 0), new TimeSpan(14, 0, 0), new TimeSpan(18, 00, 00));
             ZoneServerMock zoneServerMock = new ZoneServerMock();
             Dictionary<int, IAudioDriver> audioDrivers = null;

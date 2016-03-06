@@ -27,6 +27,12 @@ namespace NuvoControl.Common.Configuration
 
         #region Private Members
 
+        /// <summary>
+        /// The address of the osc device.
+        /// </summary>
+        [DataMember]
+        private Address _id = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
+
         private eOSCDeviceType _deviceType = eOSCDeviceType.OSCServer;
 
         private Address _deviceId = new Address();
@@ -52,8 +58,9 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Standard Constructor
         /// </summary>
-        public OSCDevice(eOSCDeviceType deviceType, Address deviceId, string name, IPAddress ipAddress, int port)
+        public OSCDevice(Address id, eOSCDeviceType deviceType, Address deviceId, string name, IPAddress ipAddress, int port)
         {
+            _id = id;
             _deviceType = deviceType;
             _deviceId = deviceId;
             _name = name;
@@ -65,6 +72,14 @@ namespace NuvoControl.Common.Configuration
 
 
         #region Public Interface
+
+        /// <summary>
+        /// The address of the osc device.
+        /// </summary>
+        public Address Id
+        {
+            get { return _id; }
+        }
 
         public eOSCDeviceType DeviceType
         {
