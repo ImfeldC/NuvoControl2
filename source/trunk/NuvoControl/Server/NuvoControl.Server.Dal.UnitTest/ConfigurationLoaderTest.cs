@@ -241,13 +241,15 @@ namespace NuvoControl.Server.Dal.UnitTest
 
             
             TestContext.WriteLine("Testing some function parameters...");
-            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+            Assert.AreEqual(8, systemConfiguration.Functions.Count);
             SleepFunction sleepFct = systemConfiguration.Functions[0] as SleepFunction;
             Assert.AreEqual(new SimpleId("2445f69e-a5a7-465e-95be-9179913d3780"), sleepFct.Id);
             Assert.AreEqual(new Address(100, 3), sleepFct.ZoneId);
             Assert.AreEqual(new TimeSpan(0, 60, 0), sleepFct.SleepDuration);
             Assert.AreEqual(new TimeSpan(20, 00, 0), sleepFct.ValidFrom);
             Assert.AreEqual(new TimeSpan(2, 0, 0), sleepFct.ValidTo);
+            Assert.AreEqual(1, sleepFct.Commands.Count);
+
             AlarmFunction alarmFct = systemConfiguration.Functions[3] as AlarmFunction;
             Assert.AreEqual(new SimpleId("11111111-0001-1111-1111-111111111111"), alarmFct.Id);
             Assert.AreEqual(new Address(100, 2), alarmFct.ZoneId);
@@ -256,12 +258,20 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(new Address(100, 1), alarmFct.SourceId);
             Assert.AreEqual(1, alarmFct.ValidOnDays.Count);
             Assert.AreEqual(DayOfWeek.Monday, alarmFct.ValidOnDays[0]);
+            Assert.AreEqual(1, alarmFct.Commands.Count);
+
             ZoneChangeFunction zonechangeFct = systemConfiguration.Functions[6] as ZoneChangeFunction;
             Assert.AreEqual(new SimpleId("1234"), zonechangeFct.Id);
             Assert.AreEqual(1, zonechangeFct.ValidOnDays.Count);
             Assert.AreEqual(DayOfWeek.Tuesday, zonechangeFct.ValidOnDays[0]);
-            
+            Assert.AreEqual(0, zonechangeFct.Commands.Count);
 
+            OscEventFunction oscFunc = systemConfiguration.Functions[7] as OscEventFunction;
+            Assert.AreEqual(new SimpleId("999"), oscFunc.Id);
+            Assert.AreEqual(1, oscFunc.ValidOnDays.Count);
+            Assert.AreEqual(DayOfWeek.Friday, oscFunc.ValidOnDays[0]);
+            Assert.AreEqual(2, oscFunc.Commands.Count);
+           
         }
 
     
@@ -278,13 +288,13 @@ namespace NuvoControl.Server.Dal.UnitTest
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
-            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+            Assert.AreEqual(8, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
-            Assert.AreEqual(9, systemConfiguration.Functions.Count);
+            Assert.AreEqual(10, systemConfiguration.Functions.Count);
         
         }
 
@@ -301,13 +311,13 @@ namespace NuvoControl.Server.Dal.UnitTest
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
-            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+            Assert.AreEqual(8, systemConfiguration.Functions.Count);
 
             string appendfile = @"NuvoControlKonfigurationRemoteNoHW.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
-            Assert.AreEqual(10, systemConfiguration.Functions.Count);
+            Assert.AreEqual(11, systemConfiguration.Functions.Count);
 
         }
 
@@ -324,13 +334,13 @@ namespace NuvoControl.Server.Dal.UnitTest
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
-            Assert.AreEqual(7, systemConfiguration.Functions.Count);
+            Assert.AreEqual(8, systemConfiguration.Functions.Count);
 
             string appendfile = @"http://www.imfeld.net/publish/configuration/NuvoControlKonfigurationRemote.xml";
             target.AppendConfiguration(appendfile);
             systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
-            Assert.AreEqual(9, systemConfiguration.Functions.Count);
+            Assert.AreEqual(10, systemConfiguration.Functions.Count);
 
         }
 

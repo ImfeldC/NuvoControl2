@@ -319,6 +319,10 @@ namespace NuvoControl.Server.Dal
             functions.AddRange(ReadAlarmFunctions().Cast<Function>());
             functions.AddRange(ReadZoneChangeFunctions().Cast<Function>());
 
+            List<OscEventFunction> oscEventFunctions = ReadOscEventFunctions();
+            if (oscEventFunctions != null )
+                functions.AddRange(oscEventFunctions.Cast<Function>());
+
             _systemConfiguration = new SystemConfiguration(
                 (string)_configuration.Root.Element("Configuration").Attribute("Version"),
                 new Hardware(ReadDevices()),
@@ -607,6 +611,30 @@ namespace NuvoControl.Server.Dal
             return functions.ToList<ZoneChangeFunction>();
         }
 
+        /// <summary>
+        /// Reads and creates the osc event function objects based on the XML configuration file.
+        /// </summary>
+        /// <returns>The created osc event function configuration objects.</returns>
+        private List<OscEventFunction> ReadOscEventFunctions()
+        {
+            // Load zone change functions
+            IEnumerable<OscEventFunction> functions =
+                from function in _configuration.Root.Element("Configuration").Element("Functions").Elements("OscEventFunction")
+                select new OscEventFunction(
+                    new SimpleId((string)function.Attribute("Id")),
+                    new Address((string)function.Attribute("OscDevice")),
+                    (string)function.Attribute("OscEvent"),
+                    int.Parse((string)function.Attribute("OscValue")),
+                    (from day in function.Element("Validity").Element("Days").Elements("Day")
+                     select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>(),
+                    (function.Element("Validity").Attribute("ActiveFrom") != null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveFrom")) : new TimeSpan()),
+                    (function.Element("Validity").Attribute("ActiveTo") != null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveTo")) : new TimeSpan()),
+                    readCommands(function)
+                    );
+
+            return ( (functions != null) ? functions.ToList<OscEventFunction>() : null);
+        }
+
 
 
         /// <summary>
@@ -616,13 +644,26 @@ namespace NuvoControl.Server.Dal
         /// <returns>List of commands read from function.</returns>
         private List<Command> readCommands(XElement function)
         {
-            IEnumerable<Command> allCommands = null;
+            IEnumerable<Command> allCommands = new List<Command>();
 
+            // Allow the <command/> definitions, either as part of the <commands> block, or as item of <function/> element.
+            IEnumerable<XElement> commands = null;
             if( function.Element("Commands") != null && function.Element("Commands").Elements("Command") != null )
+            {
+                // The commands are within <Commands> block
+                commands = function.Element("Commands").Elements("Command");
+            }
+            else if (function.Elements("Command") != null)
+            {
+                // The commands are direct in the <function> block (no <commands> block used)
+                commands = function.Elements("Command");
+            }
+
+            if( commands != null )
             {
 
                 // Read SendMail commands, with three kind of mail address (to & cc & bcc)
-                IEnumerable<Command> sendMailCommands = (from command in function.Element("Commands").Elements("Command")
+                IEnumerable<Command> sendMailCommands = (from command in commands
                     where command.Attribute("cmd").Value == "SendMail"
                         && command.Element("Recipients") != null
                     select new SendMailCommand(
@@ -646,10 +687,10 @@ namespace NuvoControl.Server.Dal
                         (command.Element("Subject")!=null?(string)command.Element("Subject").Value:""),
                         (command.Element("Body")!=null?(string)command.Element("Body").Value:"")
                     ));
-                allCommands = sendMailCommands;
+                allCommands = allCommands.Concat(sendMailCommands);
 
                 // Read PlaySound command
-                IEnumerable<Command> playSoundCommands = (from command in function.Element("Commands").Elements("Command")
+                IEnumerable<Command> playSoundCommands = (from command in commands
                     where command.Attribute("cmd").Value == "PlaySound"
                     select new PlaySoundCommand(
                         new SimpleId((string)command.Attribute("Id")),
@@ -666,7 +707,7 @@ namespace NuvoControl.Server.Dal
                 allCommands = allCommands.Concat(playSoundCommands);
 
                 // Read StartProcess command
-                IEnumerable<Command> startProcessCommands = (from command in function.Element("Commands").Elements("Command")
+                IEnumerable<Command> startProcessCommands = (from command in commands
                     where command.Attribute("cmd").Value == "StartProcess"
                     select new StartProcessCommand(
                         new SimpleId((string)command.Attribute("Id")),
@@ -683,7 +724,7 @@ namespace NuvoControl.Server.Dal
                 allCommands = allCommands.Concat(startProcessCommands);
 
                 // Read SendNuvoCommand commands
-                IEnumerable<Command> sendNuvoCommands = (from command in function.Element("Commands").Elements("Command")
+                IEnumerable<Command> sendNuvoCommands = (from command in commands
                     where command.Attribute("cmd").Value == "SendNuvoCommand"
                     select new SendNuvoCommand(
                         new SimpleId((string)command.Attribute("Id")),
