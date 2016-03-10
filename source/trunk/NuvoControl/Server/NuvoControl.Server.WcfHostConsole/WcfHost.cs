@@ -506,7 +506,7 @@ namespace NuvoControl.Server.WcfHostConsole
             LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the function server..."));
 
             //TODO: Instantiate the audio drivers
-            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions,null);
+            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions,null,null);
             //_functionServer.StartUp();
         }
 

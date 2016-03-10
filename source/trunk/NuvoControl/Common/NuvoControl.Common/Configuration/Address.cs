@@ -113,6 +113,14 @@ namespace NuvoControl.Common.Configuration
             get { return _deviceId; }
         }
 
+        /// <summary>
+        /// Returns true in case the address is empty.
+        /// </summary>
+        /// <returns></returns>
+        public bool isEmpty()
+        {
+            return ((_deviceId == SystemConfiguration.ID_UNDEFINED) && (_objectId == SystemConfiguration.ID_UNDEFINED));
+        }
 
         /// <summary>
         /// Determines wether the specified object equals the current object.

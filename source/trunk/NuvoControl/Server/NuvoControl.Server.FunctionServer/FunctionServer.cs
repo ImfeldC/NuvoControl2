@@ -37,6 +37,12 @@ namespace NuvoControl.Server.FunctionServer
         private Dictionary<int, IAudioDriver> _audioDrivers = null;
 
         /// <summary>
+        /// Private list holding all OSC server drivers
+        /// </summary>
+        private static Dictionary<int, IOscDriver> _oscDrivers = null;
+
+
+        /// <summary>
         /// Private list holding the concrete functions
         /// </summary>
         private List<IConcreteFunction> _concreteFunctions = new List<IConcreteFunction>();
@@ -54,10 +60,11 @@ namespace NuvoControl.Server.FunctionServer
         /// </summary>
         /// <param name="zoneServer">Zone server, to get/set zone state.</param>
         /// <param name="functions">Functions</param>
-        public FunctionServer(IZoneServer zoneServer, List<Function> functions, Dictionary<int,IAudioDriver> audioDrivers)
+        public FunctionServer(IZoneServer zoneServer, List<Function> functions, Dictionary<int, IAudioDriver> audioDrivers, Dictionary<int, IOscDriver> oscDrivers)
         {
             _zoneServer = zoneServer;
             _audioDrivers = audioDrivers;
+            _oscDrivers = oscDrivers;
 
             instantiateFunctions(functions);
 
@@ -95,7 +102,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             foreach( Function func in functions )
             {
-                _concreteFunctions.Add(ConcreteFunctionFactory.instantiateConcreteFuntion(func, _zoneServer, _audioDrivers));
+                _concreteFunctions.Add(ConcreteFunctionFactory.instantiateConcreteFuntion(func, _zoneServer, _audioDrivers, _oscDrivers));
             }
         }
 

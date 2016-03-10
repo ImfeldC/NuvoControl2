@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NuvoControl.Server.ProtocolDriver</RootNamespace>
     <AssemblyName>NuvoControl.Server.ProtocolDriver</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SccProjectName>Rational ClearCase</SccProjectName>
     <SccLocalPath>Rational ClearCase</SccLocalPath>
@@ -31,6 +31,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\NuvoControl.Server.ProtocolDriver.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -40,6 +41,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\NuvoControl.Server.ProtocolDriver.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AMS.Profile, Version=2.0.3427.39950, Culture=neutral, processorArchitecture=MSIL">
@@ -94,6 +96,14 @@
     <Compile Include="TouchOscDriver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Bespoken\Bespoke.Common.Osc\Bespoke.Common.Osc.csproj">
+      <Project>{35d30dcb-74d1-40a2-9d22-40e1394ffc09}</Project>
+      <Name>Bespoke.Common.Osc</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Bespoken\Bespoke.Common\Bespoke.Common.csproj">
+      <Project>{f8a1578f-bebe-4bbe-ab11-a0496bdb746a}</Project>
+      <Name>Bespoke.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Common\NuvoControl.Common\NuvoControl.Common.csproj">
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
