@@ -23,7 +23,7 @@ namespace NuvoControl.Server.FunctionServer
 {
     class ConcreteFunctionFactory
     {
-        public static IConcreteFunction instantiateConcreteFuntion(Function function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers)
+        public static IConcreteFunction instantiateConcreteFuntion(Function function, IZoneServer zoneServer, Dictionary<int, IAudioDriver> audioDrivers, Dictionary<int, IOscDriver> oscDrivers)
         {
             if (typeof(SleepFunction) == function.GetType())
             {
@@ -36,6 +36,10 @@ namespace NuvoControl.Server.FunctionServer
             else if (typeof(ZoneChangeFunction) == function.GetType())
             {
                 return new ConcreteZoneChangeFunction((ZoneChangeFunction)function, zoneServer, audioDrivers);
+            }
+            else if (typeof(OscEventFunction) == function.GetType())
+            {
+                return new ConcreteOscEventFunction((OscEventFunction)function, zoneServer, audioDrivers, oscDrivers);
             }
             return null;
         }

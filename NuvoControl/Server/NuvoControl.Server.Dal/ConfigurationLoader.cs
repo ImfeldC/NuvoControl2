@@ -624,11 +624,13 @@ namespace NuvoControl.Server.Dal
                     new SimpleId((string)function.Attribute("Id")),
                     new Address((string)function.Attribute("OscDevice")),
                     (string)function.Attribute("OscEvent"),
-                    int.Parse((string)function.Attribute("OscValue")),
-                    (from day in function.Element("Validity").Element("Days").Elements("Day")
-                     select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>(),
-                    (function.Element("Validity").Attribute("ActiveFrom") != null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveFrom")) : new TimeSpan()),
-                    (function.Element("Validity").Attribute("ActiveTo") != null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveTo")) : new TimeSpan()),
+                    (function.Attribute("OscLabel") != null ? (string)function.Attribute("OscLabel") : ""),
+                    (function.Attribute("OscValue") != null ? int.Parse((string)function.Attribute("OscValue")) : -1),
+                    (function.Element("Validity")!=null && function.Element("Validity").Element("Days")!=null?
+                      (from day in function.Element("Validity").Element("Days").Elements("Day")
+                      select (DayOfWeek)Enum.Parse(typeof(DayOfWeek), (string)day.Attribute("Name"))).ToList<DayOfWeek>() : null),
+                    (function.Element("Validity")!=null && function.Element("Validity").Attribute("ActiveFrom")!=null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveFrom")) : new TimeSpan()),
+                    (function.Element("Validity")!=null && function.Element("Validity").Attribute("ActiveTo")!=null ? TimeSpan.Parse((string)function.Element("Validity").Attribute("ActiveTo")) : new TimeSpan()),
                     readCommands(function)
                     );
 

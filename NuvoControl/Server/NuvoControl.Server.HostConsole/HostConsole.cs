@@ -17,9 +17,6 @@ using System.Text;
 
 using Common.Logging;
 
-using Bespoke.Common;
-using Bespoke.Common.Osc;
-
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 
@@ -29,7 +26,6 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ConfigurationService;
 using NuvoControl.Server.FunctionServer;
 using NuvoControl.Server.ZoneServer;
-using System.Net;
 
 
 
@@ -90,7 +86,7 @@ namespace NuvoControl.Server.HostConsole
         /// <summary>
         /// Private list holding all OSC server drivers
         /// </summary>
-        private static Dictionary<int, OscServer> _oscDrivers = new Dictionary<int, OscServer>();
+        private static Dictionary<int, IOscDriver> _oscDrivers = new Dictionary<int, IOscDriver>();
 
         /// <summary>
         /// Holds a reference to the zone server.
@@ -335,7 +331,7 @@ namespace NuvoControl.Server.HostConsole
             {
                 foreach (AudioDevice audioDevice in device.AudioDevices)
                 {
-                    LogHelper.Log(LogLevel.Info, String.Format(">>>   audio device {0} loaded ...", audioDevice.ToString()));
+                    LogHelper.Log(LogLevel.Info, String.Format(">>>   audio device {0} loaded ...", audioDevice.Id.ToString()));
                     _audioDrivers[audioDevice.SourceId.ObjectId] = new AudioDriver(audioDevice.SourceId, audioDevice);
                 }
             }
@@ -370,15 +366,10 @@ namespace NuvoControl.Server.HostConsole
             {
                 foreach (OSCDevice oscDevice in device.OscDevices)
                 {
-                    if (oscDevice.DeviceType == eOSCDeviceType.OSCServer)
-                    {
-                        LogHelper.Log(LogLevel.Info, String.Format(">>>   OSC device {0} loaded ...", oscDevice.ToString()));
-                        _oscDrivers[oscDevice.DeviceId.ObjectId] = new OscServer(TransportType.Udp, oscDevice.IpAddress, oscDevice.Port, true, false);
-                        _oscDrivers[oscDevice.DeviceId.ObjectId].BundleReceived += new EventHandler<OscBundleReceivedEventArgs>(oscServer_BundleReceived);
-                        _oscDrivers[oscDevice.DeviceId.ObjectId].MessageReceived += new EventHandler<OscMessageReceivedEventArgs>(oscServer_MessageReceived);
-                        _oscDrivers[oscDevice.DeviceId.ObjectId].ReceiveErrored += new EventHandler<ExceptionEventArgs>(oscServer_ReceiveErrored);
-                        _oscDrivers[oscDevice.DeviceId.ObjectId].Start();
-                    }
+                    LogHelper.Log(LogLevel.Info, String.Format(">>>   OSC device {0} loaded ...", oscDevice.DeviceId.ToString()));
+                    _oscDrivers[oscDevice.DeviceId.ObjectId] = new TouchOscDriver(oscDevice);
+                    _oscDrivers[oscDevice.DeviceId.ObjectId].onOscEventReceived += new OscEventReceivedEventHandler(HostConsole_onOscEventReceived);
+                    _oscDrivers[oscDevice.DeviceId.ObjectId].Start();
                 }
             }
         }
@@ -440,7 +431,7 @@ namespace NuvoControl.Server.HostConsole
         {
             LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the function server..."));
 
-            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions, _audioDrivers);
+            _functionServer = new NuvoControl.Server.FunctionServer.FunctionServer(_zoneServer, _configurationService.SystemConfiguration.Functions, _audioDrivers, _oscDrivers);
             LogHelper.Log(LogLevel.Debug, String.Format(">>>   Functions: {0}", _functionServer.ToString()));
         }
 
@@ -511,7 +502,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onDeviceStatusUpdate(object sender, ProtocolDeviceUpdatedEventArgs e)
         {
-            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Device {1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.DeviceId.ToString(), e.DeviceQuality.ToString()));
+            LogHelper.Log(LogLevel.Info, String.Format(">>>   [{0}]  Device={1}  Status Update: {2}", DateTime.Now.ToShortTimeString(), e.DeviceId.ToString(), e.DeviceQuality.ToString()));
         }
 
         /// <summary>
@@ -521,7 +512,7 @@ namespace NuvoControl.Server.HostConsole
         /// <param name="e">Event arguments, returned by the sender.</param>
         static void _driver_onCommandReceived(object sender, ProtocolCommandReceivedEventArgs e)
         {
-            LogHelper.Log(LogLevel.Debug, String.Format(">>>   [{0}]  Zone {1}  Command Received: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.Command.ToString()));
+            LogHelper.Log(LogLevel.Debug, String.Format(">>>   [{0}]  Zone={1}  Command Received: {2}", DateTime.Now.ToShortTimeString(), e.ZoneAddress.ToString(), e.Command.ToString()));
         }
 
         #endregion
@@ -529,48 +520,9 @@ namespace NuvoControl.Server.HostConsole
 
         #region OSC Server Events
 
-        private static int sBundlesReceivedCount = 0;
-        private static int sMessagesReceivedCount = 0;
-
-        private static void oscServer_BundleReceived(object sender, OscBundleReceivedEventArgs e)
+        static void HostConsole_onOscEventReceived(object sender, OscEventReceivedEventArgs e)
         {
-            sBundlesReceivedCount++;
-
-            OscBundle bundle = e.Bundle;
-            Console.WriteLine(string.Format("\nBundle Received [{0}:{1}]: Nested Bundles: {2} Nested Messages: {3}", bundle.SourceEndPoint.Address, bundle.TimeStamp, bundle.Bundles.Count, bundle.Messages.Count));
-            Console.WriteLine("Total Bundles Received: {0}", sBundlesReceivedCount);
-        }
-
-        private static void oscServer_MessageReceived(object sender, OscMessageReceivedEventArgs e)
-        {
-            sMessagesReceivedCount++;
-
-            OscMessage message = e.Message;
-
-            Console.WriteLine(string.Format("\nMessage Received [{0}]: {1}", message.SourceEndPoint.Address, message.Address));
-            Console.WriteLine(string.Format("Message contains {0} objects.", message.Data.Count));
-
-            for (int i = 0; i < message.Data.Count; i++)
-            {
-                string dataString;
-
-                if (message.Data[i] == null)
-                {
-                    dataString = "Nil";
-                }
-                else
-                {
-                    dataString = (message.Data[i] is byte[] ? BitConverter.ToString((byte[])message.Data[i]) : message.Data[i].ToString());
-                }
-                Console.WriteLine(string.Format("[{0}]: {1}", i, dataString));
-            }
-
-            Console.WriteLine("Total Messages Received: {0}", sMessagesReceivedCount);
-        }
-
-        private static void oscServer_ReceiveErrored(object sender, ExceptionEventArgs e)
-        {
-            Console.WriteLine("Error during reception of packet: {0}", e.Exception.Message);
+            LogHelper.Log(LogLevel.Info, String.Format(">->   [{0}]  Device={1} OscEvent:{2}/Value={3}", DateTime.Now.ToShortTimeString(), e.OscDevice, (e.OscEvent==null?"<null>":e.OscEvent.ToString()), e.OscValue ));
         }
 
         #endregion

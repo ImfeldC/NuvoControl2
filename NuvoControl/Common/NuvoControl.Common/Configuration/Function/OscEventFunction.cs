@@ -35,10 +35,16 @@ namespace NuvoControl.Common.Configuration
         private Address _oscDevice = new Address(SystemConfiguration.ID_UNDEFINED, SystemConfiguration.ID_UNDEFINED);
 
         /// <summary>
+        /// Related osc label (item)
+        /// </summary>
+        [DataMember]
+        private string _oscLabel = "";
+
+        /// <summary>
         /// Related osc message (event)
         /// </summary>
         [DataMember]
-        private string _onEvent = "";
+        private string _oscEvent = "";
 
         /// <summary>
         /// Values related to the osc event
@@ -58,21 +64,23 @@ namespace NuvoControl.Common.Configuration
         {
         }
 
-        public OscEventFunction(SimpleId id, Address oscDevice, string oscEvent, int oscValue, List<DayOfWeek> validOnDays, List<Command> commands)
+        public OscEventFunction(SimpleId id, Address oscDevice, string oscEvent, string oscLabel, int oscValue, List<DayOfWeek> validOnDays, List<Command> commands)
             : base(id, new Address(), commands)
         {
-            initMembers(oscDevice, oscEvent, oscValue, validOnDays, new TimeSpan(), new TimeSpan(), commands);
+            initMembers(oscDevice, oscEvent, oscLabel, oscValue, validOnDays, new TimeSpan(), new TimeSpan(), commands);
         }
 
-        public OscEventFunction(SimpleId id, Address oscDevice, string oscEvent, int oscValue, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
+        public OscEventFunction(SimpleId id, Address oscDevice, string oscEvent, string oscLabel, int oscValue, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
             : base(id, new Address(), commands)
         {
-            initMembers(oscDevice, oscEvent, oscValue, validOnDays, validFrom, validTo, commands);
+            initMembers(oscDevice, oscEvent, oscLabel, oscValue, validOnDays, validFrom, validTo, commands);
         }
 
-        private void initMembers(Address oscDevice, string oscEvent, int oscValue, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
+        private void initMembers(Address oscDevice, string oscEvent, string oscLabel, int oscValue, List<DayOfWeek> validOnDays, TimeSpan validFrom, TimeSpan validTo, List<Command> commands)
         {
             _oscDevice = oscDevice;
+            _oscEvent = oscEvent;
+            _oscLabel = oscLabel;
             _oscValue = oscValue;
             if (validOnDays != null)
                 this._validOnDays = validOnDays;
@@ -91,9 +99,14 @@ namespace NuvoControl.Common.Configuration
             get { return _oscDevice; }
         }
 
-        public string OnEvent
+        public string OscEvent
         {
-            get { return _onEvent; }
+            get { return _oscEvent; }
+        }
+
+        public string OscLabel
+        {
+            get { return _oscLabel; }
         }
 
         public int OscValue
@@ -110,7 +123,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>Returns string representative.</returns>
         public override string ToString()
         {
-            return String.Format("OscEventFunction: OscDevice={0}, OscEvent={1}, OscValue={2}, Valid from={3} to={4}, {5}", OscDevice.ToString(), OnEvent, OscValue, ValidFrom, ValidTo, base.ToString());
+            return String.Format("OscEventFunction: OscDevice={0}, OscEvent={1}, OscLabel={2}, OscValue={3}, Valid from={5} to={5}, {6}", OscDevice.ToString(), OscEvent, OscLabel, OscValue, ValidFrom, ValidTo, base.ToString());
         }
 
     }

@@ -161,7 +161,7 @@ namespace NuvoControl.Server.Dal.UnitTest
             // If the system configuration version changes, you need to adapt/review this test case
             Assert.AreEqual("3.0", SystemConfiguration.VERSION);
 
-            string file = @"NuvoControlKonfigurationUnitTest.xml";
+            string file = @"NuvoControlKonfigurationUnitTest2.xml";
             ConfigurationLoader target = new ConfigurationLoader(file);
             SystemConfiguration systemConfiguration = target.GetConfiguration();
             Assert.AreEqual("3.0", systemConfiguration.ConfigurationVersion);
@@ -241,7 +241,7 @@ namespace NuvoControl.Server.Dal.UnitTest
 
             
             TestContext.WriteLine("Testing some function parameters...");
-            Assert.AreEqual(8, systemConfiguration.Functions.Count);
+            Assert.AreEqual(12, systemConfiguration.Functions.Count);
             SleepFunction sleepFct = systemConfiguration.Functions[0] as SleepFunction;
             Assert.AreEqual(new SimpleId("2445f69e-a5a7-465e-95be-9179913d3780"), sleepFct.Id);
             Assert.AreEqual(new Address(100, 3), sleepFct.ZoneId);
@@ -267,11 +267,25 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(0, zonechangeFct.Commands.Count);
 
             OscEventFunction oscFunc = systemConfiguration.Functions[7] as OscEventFunction;
-            Assert.AreEqual(new SimpleId("999"), oscFunc.Id);
+            Assert.AreEqual(new SimpleId("504"), oscFunc.Id);
             Assert.AreEqual(1, oscFunc.ValidOnDays.Count);
             Assert.AreEqual(DayOfWeek.Friday, oscFunc.ValidOnDays[0]);
             Assert.AreEqual(2, oscFunc.Commands.Count);
-           
+
+            OscEventFunction oscFunc2 = systemConfiguration.Functions[8] as OscEventFunction;
+            Assert.AreEqual(new SimpleId("505"), oscFunc2.Id);
+            Assert.AreEqual("/4/toggle3", oscFunc2.OscLabel);
+            Assert.AreEqual(null, oscFunc2.ValidOnDays);
+            Assert.AreEqual(1, oscFunc2.Commands.Count);
+
+            OscEventFunction oscFunc3 = systemConfiguration.Functions[9] as OscEventFunction;
+            Assert.AreEqual(new SimpleId("506"), oscFunc3.Id);
+            Assert.AreEqual("/4/toggle5", oscFunc3.OscLabel);
+            Assert.AreEqual("100.1", oscFunc3.OscDevice.ToString());
+            Assert.AreEqual("SwitchOff", oscFunc3.OscEvent);
+            Assert.AreEqual(null, oscFunc3.ValidOnDays);
+            Assert.AreEqual(1, oscFunc3.Commands.Count);
+
         }
 
     

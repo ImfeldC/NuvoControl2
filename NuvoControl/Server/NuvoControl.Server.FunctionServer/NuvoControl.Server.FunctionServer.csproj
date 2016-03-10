@@ -69,6 +69,7 @@
     <Compile Include="ConcreteFunctionFactory.cs" />
     <Compile Include="Command\ConcretePlaySoundCommand.cs" />
     <Compile Include="Command\ConcreteSendMailCommand.cs" />
+    <Compile Include="ConcreteOscEventFunction.cs" />
     <Compile Include="ConcreteSleepFunction.cs" />
     <Compile Include="ConcreteZoneChangeFunction.cs" />
     <Compile Include="FunctionServer.cs" />

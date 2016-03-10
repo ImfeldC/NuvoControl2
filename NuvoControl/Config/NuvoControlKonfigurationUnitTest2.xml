@@ -2,7 +2,7 @@
 <!-- sAuthors: C. Imfeld, B. Limacher -->
 <!-- Date: 20-Feb-2016 -->
 <NuvoControl>
-  <Configuration Version="2.1">
+  <Configuration Version="3.0">
     
     <Hardware>
       <Device Id="100">
@@ -10,11 +10,11 @@
         <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <AudioDevices>
           <AudioDevice Id="1" Player="mpg321" DeviceType="alsa" Device="hw:0,0" Name="Raspberry Pi on-board" SourceId="100.6" />
-          <AudioDevice Id="2" Player="mpg321" DeviceType="alsa" Device="hw:1,0" Name="(Reserve 1)" SourceId="100.5" />
-          <AudioDevice Id="3" Player="mpg321" DeviceType="alsa" Device="hw:2,0" Name="(Reserve 2)" SourceId="100.4" />
+          <AudioDevice Id="2" Player="mpg321" DeviceType="alsa" Device="hw:0,2" Name="(Reserve 1)" SourceId="100.5" />
+          <AudioDevice Id="3" Player="mpg321" DeviceType="alsa" Device="hw:0,3" Name="(Reserve 2)" SourceId="100.4" />
         </AudioDevices>
         <OSCDevices>
-          <OSCServer Id="1" Name="OSCServer1" IPAddress="0.0.0.0"  Port="8000"></OSCServer>  
+          <OSCServer Id="1" Name="OSCServer1" IPAddress="0.0.0.0"  Port="8000" />
           <OSCClient Id="2" Name="OSCClient1" IPAddress="192.168.1.1" Port="9000" />
         </OSCDevices>
         <Zones>
@@ -33,11 +33,11 @@
         </Zones>
         <Sources>
           <Source Id="1" Name="DAB Hama DIR3100" />
-          <Source Id="2" Name="AppleAirport" />
+          <Source Id="2" Name="DAB" />
           <Source Id="3" Name="Logitec" />
           <Source Id="4" Name="CD Player" />
-          <Source Id="5" Name="Pi1 USB1" />
-          <Source Id="6" Name="Pi1 on-board"/>
+          <Source Id="5" Name="AppleAirport" />
+          <Source Id="6" Name="RaspberryPi 2"/>
         </Sources>
       </Device>
     </Hardware>
@@ -197,23 +197,22 @@
         </Source>
       </Sources>
     </Graphic>
-    
     <Functions>
 
       <!-- Real Functions -->
 
-      <AlarmFunction Id="001" ZoneId="100.3" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
+      <AlarmFunction Id="11111111-0001-1111-1111-111111111111" ZoneId="100.2" Volume="25" AlarmTime="06:45" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Monday" />
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="001-1"
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0001-0001-1111-111111111111"
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
-      <AlarmFunction Id="002" ZoneId="100.3" Volume="25" AlarmTime="06:40" AlarmDuration="120" SourceId="100.1">
+      <AlarmFunction Id="11111111-0002-1111-1111-111111111111" ZoneId="100.3" Volume="25" AlarmTime="06:40" AlarmDuration="120" SourceId="100.1">
         <Validity>
           <Days>
             <Day Name="Tuesday" />
@@ -223,15 +222,15 @@
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="002-1"
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" onFunctionEnd="True" Id="11111111-0002-0002-1111-111111111111"
                    url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
         </Commands>
       </AlarmFunction>
 
-      <SleepFunction Id="003" ZoneId="100.3" SleepDuration="60">
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3780" ZoneId="100.3" SleepDuration="60">
         <Validity ActiveFrom="20:00" ActiveTo="02:00"></Validity>
         <Commands>
-          <Command cmd="PlaySound" SourceId="100.6" onValidityStart="True" onValidityEnd="True" Id="003-1"
+          <Command cmd="PlaySound" SourceId="100.6" onValidityStart="True" onValidityEnd="True" Id="11111111-0003-0003-1111-111111111111"
                    url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
         </Commands>
       </SleepFunction>
@@ -240,10 +239,10 @@
 
       <!-- Test Functions -->
       
-      <SleepFunction Id="500" ZoneId="100.12" SleepDuration="60">
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3781" ZoneId="100.12" SleepDuration="60">
         <Validity ActiveFrom="23:15" ActiveTo="04:00"></Validity>
         <Commands>
-          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" onValidityStart="True" onValidityEnd="True" Id="500-1">
+          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" onValidityStart="True" onValidityEnd="True" Id="9901106d-4811-48c3-a734-dab53f15d712">
             <Recipients>
               <Recipient name="christian@imfeld.net" type="to" />
             </Recipients>
@@ -257,10 +256,10 @@
         </Commands>
       </SleepFunction>
 
-      <SleepFunction Id="501" ZoneId="100.12" SleepDuration="5">
+      <SleepFunction Id="2445f69e-a5a7-465e-95be-9179913d3782" ZoneId="100.12" SleepDuration="5">
         <Validity ActiveFrom="14:00" ActiveTo="04:00"></Validity>
         <Commands>
-          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="501-1">
+          <Command cmd="SendMail" onFunctionError="True" onFunctionStart="True" onFunctionEnd="True" Id="99999999-9999-9999-9999-999999999999">
             <Recipients>
               <Recipient name="christian@imfeld.net" type="to" />
             </Recipients>
@@ -272,32 +271,39 @@
             </Body>
           </Command>
           
-          <Command cmd="PlaySound" SourceId="100.6" onValidityStart="True" onValidityEnd="True" Id="501-2" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
-          <Command cmd="PlaySound" SourceId="100.5" onValidityStart="True" onValidityEnd="True" Id="501-3" url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
-          <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="501-4" process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
-          <Command cmd="SendNuvoCommand" onValidityStart="True" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.1" Volume="25" Id="501-5" />
+          <Command cmd="PlaySound" SourceId="100.6" onValidityStart="True" onValidityEnd="True" Id="99999999-9999-9999-9999-999999999999" 
+                   url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+          <Command cmd="PlaySound" SourceId="100.5" onValidityStart="True" onValidityEnd="True" Id="99999999-9999-9999-9999-999999999999"
+                   url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
+
+          <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
+                   process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
+
+          <Command cmd="SendNuvoCommand" onValidityStart="True" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
 
         </Commands>
       </SleepFunction>
 
-      <ZoneChangeFunction  Id="502" ZoneId="100.12" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
+      <ZoneChangeFunction  Id="99999999-9999-9999-9999-999999999999" ZoneId="100.12" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" >
         <Validity ActiveFrom="14:00" ActiveTo="04:00">
           <Days>
-            <Day Name="Wednesday" />
+            <Day Name="Tuesday" />
           </Days>
         </Validity>
         <Commands>
-          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="502-1" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
-          <Command cmd="PlaySound" SourceId="100.5" onFunctionStart="True" Id="502-2" url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
-          <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="502-3" process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
+          <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" Id="99999999-0001-9999-9999-999999999999"
+                 url="http://stream.srg-ssr.ch/m/drs3/mp3_128"/>
+          <Command cmd="PlaySound" SourceId="100.5" onFunctionStart="True" Id="99999999-0002-9999-9999-999999999999"
+                 url="http://stream.srg-ssr.ch/m/drs1/mp3_128"/>
+          <Command cmd="StartProcess" onFunctionStart="True" onUnix="True" onWindows="False"  Id="99999999-9999-9999-9999-999999999999"
+                 process_cmd="/usr/bin/mpg321" process_arg="http://stream.srg-ssr.ch/m/drs3/mp3_128" />
         
-          <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.10" PowerStatus="ON" SourceId="100.3" Volume="22" Id="502-4" />
-          <Command cmd="SendNuvoCommand" onValidityStart="True"  onFunctionStart="True" ZoneId="100.11" PowerStatus="OFF" SourceId="100.3" Volume="33" Id="502-5" />
+          <Command cmd="SendNuvoCommand" onFunctionStart="True" ZoneId="100.9" PowerStatus="ON" SourceId="100.1" Volume="25" Id="99999999-9999-9999-9999-999999999999" />
         </Commands>
         
       </ZoneChangeFunction>
 
-      <ZoneChangeFunction  Id="503" ZoneId="100.11" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" OnQualityChange="True" >
+      <ZoneChangeFunction  Id="1234" ZoneId="100.11" SourceId="100.1" Volume="10" OnStatusChange="True" OnSourceChange="True" OnVolumeChange="False" OnQualityChange="True" >
         <Validity>
           <Days>
             <Day Name="Tuesday" />
@@ -308,7 +314,7 @@
       <OscEventFunction Id="504" OscDevice="100.1" OscEvent="Ping">
         <Validity>
           <Days>
-            <Day Name="Tuesday" />
+            <Day Name="Friday" />
           </Days>
         </Validity>
         <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="504-1" />
@@ -316,18 +322,21 @@
       </OscEventFunction>
 
       <OscEventFunction Id="505" OscDevice="100.1" OscEvent="SwitchOn" OscLabel="/4/toggle3">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.3" Volume="22" Id="505-1" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="505-1" />
       </OscEventFunction>
-      <OscEventFunction Id="506" OscDevice="100.1" OscEvent="SwitchOff" OscLabel="/4/toggle3">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="OFF" SourceId="100.3" Volume="22" Id="506-1" />
+      <OscEventFunction Id="506" OscDevice="100.1" OscEvent="SwitchOff" OscLabel="/4/toggle5">
+        <Validity/>
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="506-1" />
       </OscEventFunction>
       <OscEventFunction Id="507" OscDevice="100.1" OscEvent="SetValue" OscLabel="/4/toggle3" OscValue="50">
+        <Validity/>
         <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="507-1" />
       </OscEventFunction>
       <OscEventFunction Id="508" OscDevice="100.1" OscEvent="SetValue" OscLabel="/4/toggle3" OscValue="100">
+        <Validity/>
         <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="508-1" />
       </OscEventFunction>
-
+      
     </Functions>
   </Configuration>
 </NuvoControl>
