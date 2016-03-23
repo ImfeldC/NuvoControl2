@@ -68,6 +68,48 @@
       <Name>NuvoControl.Server.Dal</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationNotDistinctSources.xml">
+      <Link>Config\NuvoControlKonfigurationNotDistinctSources.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationNotDistinctZones.xml">
+      <Link>Config\NuvoControlKonfigurationNotDistinctZones.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationNotWellFormed.xml">
+      <Link>Config\NuvoControlKonfigurationNotWellFormed.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationRemote.xml">
+      <Link>Config\NuvoControlKonfigurationRemote.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationRemoteNoHW.xml">
+      <Link>Config\NuvoControlKonfigurationRemoteNoHW.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationUnitTest.xml">
+      <Link>Config\NuvoControlKonfigurationUnitTest.xml</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
