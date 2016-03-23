@@ -73,6 +73,55 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="..\..\Config\NuvoControlKonfiguration.xml">
+      <Link>Config\NuvoControlKonfiguration.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidSourceIdInGraphic.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidZoneIdInGraphic.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml">
+      <Link>Config\NuvoControlKonfigurationInvalidZoneIdInSleepFunction.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationNotDistinctSources.xml">
+      <Link>Config\NuvoControlKonfigurationNotDistinctSources.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationNotDistinctZones.xml">
+      <Link>Config\NuvoControlKonfigurationNotDistinctZones.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationNotWellFormed.xml">
+      <Link>Config\NuvoControlKonfigurationNotWellFormed.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationRemote.xml">
+      <Link>Config\NuvoControlKonfigurationRemote.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationRemoteNoHW.xml">
+      <Link>Config\NuvoControlKonfigurationRemoteNoHW.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationUnitTest.xml">
+      <Link>Config\NuvoControlKonfigurationUnitTest.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\Config\NuvoControlKonfigurationUnitTest2.xml">
+      <Link>Config\NuvoControlKonfigurationUnitTest2.xml</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="AuthoringTests.txt" />
     <Content Include="NuvoControl.ico" />
   </ItemGroup>
