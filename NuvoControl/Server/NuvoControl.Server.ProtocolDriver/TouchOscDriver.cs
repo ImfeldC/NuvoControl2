@@ -120,6 +120,10 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 return new OscEvent(OscEvent.eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
             }
+            if (message.Address.IndexOf("xy") > 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.SetValues, message.Address, double.Parse(convertDataString(message.Data[0])), double.Parse(convertDataString(message.Data[1])));
+            }
             return null;
         }
 

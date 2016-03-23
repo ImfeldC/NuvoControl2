@@ -16,13 +16,15 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             Ping = 0,
             SwitchOn = 1,
             SwitchOff = 2,
-            SetValue = 3
+            SetValue = 3,
+            SetValues = 4
         }
 
         private eOscEvent _oscEvent;
         private string _oscLabel;
         private int _intValue;
         private double _doubleValue;
+        private double[] _doubleValues = new double[2];
 
         public OscEvent(eOscEvent oscEvent, string oscLabel)
         {
@@ -30,6 +32,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _oscLabel = oscLabel;
             _intValue = -1;
             _doubleValue = -1.0;
+            _doubleValues[0] = -1.0;
+            _doubleValues[1] = -1.0;
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, int value)
@@ -38,6 +42,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _oscLabel = oscLabel;
             _intValue = value;
             _doubleValue = -1.0;
+            _doubleValues[0] = -1.0;
+            _doubleValues[1] = -1.0;
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value)
@@ -46,6 +52,18 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _oscLabel = oscLabel;
             _intValue = -1;
             _doubleValue = value;
+            _doubleValues[0] = -1.0;
+            _doubleValues[1] = -1.0;
+        }
+
+        public OscEvent(eOscEvent oscEvent, string oscLabel, double value1, double value2)
+        {
+            _oscEvent = oscEvent;
+            _oscLabel = oscLabel;
+            _intValue = -1;
+            _doubleValue = -1.0;
+            _doubleValues[0] = value1;
+            _doubleValues[1] = value2;
         }
 
         public eOscEvent OscCommand
@@ -64,7 +82,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <returns>String of the osc event.</returns>
         public override string ToString()
         {
-            return String.Format("[{0}.{1}.{2}/{3}]", _oscEvent.ToString(), _oscLabel, _intValue, _doubleValue);
+            return String.Format("[{0}-{1}-{2}]", _oscEvent.ToString(), _oscLabel, (_intValue>-1?_intValue.ToString():(_doubleValue>-1.0?_doubleValue.ToString():(_doubleValues[0]>-1.0?String.Format("{0}+{1}",_doubleValues[0],_doubleValues[1]):"na"))));
         }
 
     }
@@ -86,12 +104,11 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         private Address _oscDevice;
         private OscEvent _oscEvent;
-        private int _oscValue;
+        private int _oscValue = -1;
 
         /// <summary>
         /// Constructor for the argument class.
         /// </summary>
-        /// <param name="zoneAddress">Osc device address, where the associated event belongs to.</param>
         public OscEventReceivedEventArgs(Address oscDevice, OscEvent oscEvent)
         {
             _oscDevice = oscDevice;
