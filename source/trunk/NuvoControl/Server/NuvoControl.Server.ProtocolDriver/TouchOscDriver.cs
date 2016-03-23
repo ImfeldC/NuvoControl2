@@ -108,7 +108,23 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 return new OscEvent( OscEvent.eOscEvent.Ping, message.Address );
             }
-            if( message.Address.IndexOf("toggle")>0)
+            if (String.Compare(message.Address, "/1") == 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 1);
+            }
+            if (String.Compare(message.Address, "/2") == 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 2);
+            }
+            if (String.Compare(message.Address, "/3") == 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 3);
+            }
+            if (String.Compare(message.Address, "/4") == 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 4);
+            }
+            if (message.Address.IndexOf("toggle") > 0)
             {
                 return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? OscEvent.eOscEvent.SwitchOn : OscEvent.eOscEvent.SwitchOff), message.Address);
             }
@@ -120,10 +136,15 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 return new OscEvent(OscEvent.eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
             }
+            if (message.Address.IndexOf("rotary") > 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
+            }
             if (message.Address.IndexOf("xy") > 0)
             {
                 return new OscEvent(OscEvent.eOscEvent.SetValues, message.Address, double.Parse(convertDataString(message.Data[0])), double.Parse(convertDataString(message.Data[1])));
             }
+            LogHelper.Log(LogLevel.Warn, string.Format("[OSC] Unknown message: {0}", message.Address));
             return null;
         }
 
