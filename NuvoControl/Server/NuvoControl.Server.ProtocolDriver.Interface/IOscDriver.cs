@@ -14,10 +14,11 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         public enum eOscEvent
         {
             Ping = 0,
-            SwitchOn = 1,
-            SwitchOff = 2,
-            SetValue = 3,
-            SetValues = 4
+            TabChange = 1,
+            SwitchOn = 2,
+            SwitchOff = 3,
+            SetValue = 4,
+            SetValues = 5
         }
 
         private eOscEvent _oscEvent;

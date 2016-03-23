@@ -311,7 +311,7 @@
             <Day Name="Wednesday" />
           </Days>
         </Validity>
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="504-1" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.3" Volume="22" Id="504-1" />
         <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"  Id="504-2" />
       </OscEventFunction>
 
@@ -322,10 +322,10 @@
         <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="OFF" SourceId="100.3" Volume="22" Id="506-1" />
       </OscEventFunction>
       <OscEventFunction Id="507" OscDevice="100.1" OscEvent="SetValue" OscLabel="/1/fader1" OscValue="50">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="507-1" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.3" Volume="22" Id="507-1" />
       </OscEventFunction>
       <OscEventFunction Id="508" OscDevice="100.1" OscEvent="SetValue" OscLabel="/1/fader1" OscValue="100">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="ON" SourceId="100.3" Volume="22" Id="508-1" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.3" Volume="22" Id="508-1" />
       </OscEventFunction>
 
     </Functions>
