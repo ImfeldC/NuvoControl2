@@ -25,7 +25,7 @@ namespace Transmitter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.119")]
+        [global::System.Configuration.DefaultSettingValueAttribute("192.168.1.126")]
         public string IPAddress {
             get {
                 return ((string)(this["IPAddress"]));
@@ -37,7 +37,7 @@ namespace Transmitter.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5103")]
+        [global::System.Configuration.DefaultSettingValueAttribute("9000")]
         public int Port {
             get {
                 return ((int)(this["Port"]));

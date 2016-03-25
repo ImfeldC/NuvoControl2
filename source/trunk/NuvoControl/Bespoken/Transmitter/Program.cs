@@ -32,8 +32,12 @@ namespace Transmitter
             DemoType demoType = GetDemoType();
             ITransmitter transmitter = Activator.CreateInstance(transmitters[demoType]) as ITransmitter;
 
-            OscBundle bundle = CreateTestBundle();
-            transmitter.Start(bundle);
+            //OscBundle bundle = CreateTestBundle();
+            //transmitter.Start(bundle);
+
+            IPEndPoint sourceEndPoint = new IPEndPoint(Program.ipAddress, Properties.Settings.Default.Port);
+            OscMessage labelMessage = new OscMessage(sourceEndPoint, LabelMethod, "Hello");
+            transmitter.Start(labelMessage);
 
             // Stop the transmitter, and exit, when a key is pressed.
             Console.ReadKey();
@@ -69,7 +73,7 @@ namespace Transmitter
             //Program.ipAddress = IPAddress.Loopback;
             IPEndPoint sourceEndPoint = new IPEndPoint(Program.ipAddress, Properties.Settings.Default.Port);
             OscBundle bundle = new OscBundle(sourceEndPoint);
-
+/*
             OscBundle nestedBundle = new OscBundle(sourceEndPoint);
             OscMessage nestedMessage = new OscMessage(sourceEndPoint, TestMethod);
             nestedMessage.AppendNil();
@@ -94,6 +98,10 @@ namespace Transmitter
 
             OscMessage pingMessage = new OscMessage(sourceEndPoint, PingMethod);
             bundle.Append(pingMessage);
+*/
+
+            OscMessage labelMessage = new OscMessage(sourceEndPoint, LabelMethod);
+            bundle.Append(labelMessage);
 
             return bundle;
         }
@@ -101,5 +109,6 @@ namespace Transmitter
         private static readonly string AliveMethod = "/osctest/alive";
         private static readonly string TestMethod = "/osctest/test";
         private static readonly string PingMethod = "/ping";
+        private static readonly string LabelMethod = "/NuvoControl.Control/ZoneName";
     }
 }
