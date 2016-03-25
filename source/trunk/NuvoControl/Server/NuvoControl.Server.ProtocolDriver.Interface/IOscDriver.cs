@@ -17,8 +17,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             TabChange = 1,
             SwitchOn = 2,
             SwitchOff = 3,
-            SetValue = 4,
-            SetValues = 5
+            ValueUp = 4,
+            ValueDown = 5,
+            SetValue = 6,
+            SetValues = 7
         }
 
         private eOscEvent _oscEvent;
