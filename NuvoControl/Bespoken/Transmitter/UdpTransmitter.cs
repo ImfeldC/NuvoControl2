@@ -38,10 +38,18 @@ namespace Transmitter
 
                 while (cancellationToken.IsCancellationRequested == false)
                 {
-                    packet.Send(Destination);
+                    IPEndPoint sourceEndPoint = new IPEndPoint(Program.ipAddress, Properties.Settings.Default.Port);
+                    OscMessage labelMessage = new OscMessage(sourceEndPoint, "/NuvoControl.Control/ZoneName", String.Format("Hello {0}",transmissionCount));
+                    labelMessage.Send(Destination);
 
                     Console.Clear();
                     Console.WriteLine("Osc Transmitter: Udp");
+                    Console.WriteLine("with IP Address={0} on Port={1}", Destination.Address, Destination.Port);
+                    Console.WriteLine("IsBundle={0}", labelMessage.IsBundle);
+                    if (!packet.IsBundle)
+                    {
+                        Console.WriteLine("Packet={0}", labelMessage.ToString());
+                    }
                     Console.WriteLine("Transmission Count: {0}\n", ++transmissionCount);
                     Console.WriteLine("Press any key to exit.");
 
