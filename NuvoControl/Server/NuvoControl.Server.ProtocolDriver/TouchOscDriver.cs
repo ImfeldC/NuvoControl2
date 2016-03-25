@@ -28,6 +28,41 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
+    /// <summary>
+    /// This class implements the driver to support messages from/to OSCTouch.
+    /// 
+    /// Full list of controls see:
+    /// http://hexler.net/docs/touchosc-controls-reference
+    ///
+    /// Example of two default layouts:
+    /// 
+    /// Automat5:
+    ///- Push Button: --
+    ///- Toggle Button: /toggle
+    ///- XY Pad: /xy
+    ///- Fader: /fader
+    ///- Rotary: /rotary
+    ///- Encoder: /encoder
+    ///- Multi-Toggle: /multitoggle
+    ///- Multi-XY: --
+    ///- Multi-Push: /multipush
+    ///- Multi-Fader: /multifader 
+    ///- 3 tabs
+    ///
+    ///BeatMachine:
+    ///- Push Button: /push
+    ///- Toggle Button: /toggle
+    ///- XY Pad: /xy
+    ///- Fader: /fader
+    ///- Rotary: /rotary
+    ///- Encoder: --
+    ///- Multi-Toggle: /multitoggle
+    ///- Multi-XY: --
+    ///- Multi-Push: --
+    ///- Multi-Fader: /multifader
+    ///- 4 tabs
+    ///
+    /// </summary>
     public class TouchOscDriver : IOscDriver
     {
         public event OscEventReceivedEventHandler onOscEventReceived;
@@ -85,7 +120,7 @@ namespace NuvoControl.Server.ProtocolDriver
                 LogHelper.Log(LogLevel.Debug, string.Format("[OSC] {0}: Value={1}", i, convertDataString(e.Message.Data[i])));
             }
 
-            OscEvent oscEvent = processTouchOscMessage(e.Message);
+            OscEvent oscEvent = processTouchOscMessageFromDefaultLayouts(e.Message);
             if (oscEvent != null)
             {
                 LogHelper.Log(LogLevel.Info, string.Format("[OSC] OscEvent={0}", oscEvent.ToString()));
@@ -102,27 +137,16 @@ namespace NuvoControl.Server.ProtocolDriver
             LogHelper.Log(LogLevel.Error, string.Format("[OSC] Error during reception of osc packet: {0}", e.Exception.Message));
         }
 
-        private OscEvent processTouchOscMessage(OscMessage message)
+        /// <summary>
+        /// Method to process messages send from default layouts (out-of-the-box)
+        /// </summary>
+        /// <param name="message">Message from TouchOSC</param>
+        /// <returns>OSC event class, or null if not known</returns>
+        private OscEvent processTouchOscMessageFromDefaultLayouts(OscMessage message)
         {
             if( String.Compare(message.Address,"/ping")==0)
             {
                 return new OscEvent( OscEvent.eOscEvent.Ping, message.Address );
-            }
-            if (String.Compare(message.Address, "/1") == 0)
-            {
-                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 1);
-            }
-            if (String.Compare(message.Address, "/2") == 0)
-            {
-                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 2);
-            }
-            if (String.Compare(message.Address, "/3") == 0)
-            {
-                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 3);
-            }
-            if (String.Compare(message.Address, "/4") == 0)
-            {
-                return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, 4);
             }
             if (message.Address.IndexOf("toggle") > 0)
             {
@@ -144,6 +168,20 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 return new OscEvent(OscEvent.eOscEvent.SetValues, message.Address, double.Parse(convertDataString(message.Data[0])), double.Parse(convertDataString(message.Data[1])));
             }
+            if (message.Address.IndexOf("encoder") > 0)
+            {
+                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? OscEvent.eOscEvent.ValueUp : (int.Parse(convertDataString(message.Data[0])) == 0 ? OscEvent.eOscEvent.ValueDown : OscEvent.eOscEvent.SetValue)), message.Address, int.Parse(convertDataString(message.Data[0])));
+            }
+
+            // check for tab changes
+            for (int i = 0; i < 15; i++ )
+            {
+                if (String.Compare(message.Address, String.Format("/{0}",i)) == 0)
+                {
+                    return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, i);
+                }
+            }
+
             LogHelper.Log(LogLevel.Warn, string.Format("[OSC] Unknown message: {0}", message.Address));
             return null;
         }

@@ -96,6 +96,7 @@
     <Content Include="..\..\Config\NuvoControlKonfiguration.xml">
       <Link>Config\NuvoControlKonfiguration.xml</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <Content Include="..\..\Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml">
       <Link>Config\NuvoControlKonfigurationInvalidSourceIdInAlarmFunction.xml</Link>
