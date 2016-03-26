@@ -40,11 +40,11 @@ namespace Transmitter
                 {
                     IPEndPoint sourceEndPoint = new IPEndPoint(Program.ipAddress, Properties.Settings.Default.Port);
                     OscMessage labelMessage = new OscMessage(sourceEndPoint, "/NuvoControl.Control/ZoneName", String.Format("Hello {0}",transmissionCount));
-                    labelMessage.Send(Destination);
+                    labelMessage.Send(sourceEndPoint);
 
                     Console.Clear();
                     Console.WriteLine("Osc Transmitter: Udp");
-                    Console.WriteLine("with IP Address={0} on Port={1}", Destination.Address, Destination.Port);
+                    Console.WriteLine("with IP Address={0} on Port={1}", sourceEndPoint.Address, sourceEndPoint.Port);
                     Console.WriteLine("IsBundle={0}", labelMessage.IsBundle);
                     if (!packet.IsBundle)
                     {

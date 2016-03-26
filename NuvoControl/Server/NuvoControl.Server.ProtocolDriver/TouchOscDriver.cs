@@ -70,12 +70,18 @@ namespace NuvoControl.Server.ProtocolDriver
         private OSCDevice _oscDevice;
         private OscServer _oscServer;
 
+        private int _sendMsgCounter = 0;
+
         public TouchOscDriver(OSCDevice oscDevice)
         {
             _oscDevice = oscDevice;
             if (_oscDevice.DeviceType == eOSCDeviceType.OSCServer)
             {
-                _oscServer = new OscServer(TransportType.Udp, oscDevice.IpAddress, oscDevice.Port, true, false);
+                _oscServer = new OscServer(TransportType.Udp, oscDevice.IpAddress, oscDevice.ListenPort, true, false);
+            }
+            else if( _oscDevice.DeviceType == eOSCDeviceType.OSCClient)
+            {
+                sendMessage("OSC Server started...", oscDevice.IpAddress, oscDevice.SendPort);
             }
         }
 
@@ -92,9 +98,14 @@ namespace NuvoControl.Server.ProtocolDriver
 
         public void Stop()
         {
-            if (_oscServer != null)
+            if (_oscDevice.DeviceType == eOSCDeviceType.OSCServer && _oscServer != null)
             {
                 _oscServer.Stop();
+                _oscDevice = null;
+            }
+            else if (_oscDevice.DeviceType == eOSCDeviceType.OSCClient)
+            {
+                sendMessage("OSC Server stopped...", _oscDevice.IpAddress, _oscDevice.SendPort);
             }
         }
 
@@ -120,14 +131,31 @@ namespace NuvoControl.Server.ProtocolDriver
                 LogHelper.Log(LogLevel.Debug, string.Format("[OSC] {0}: Value={1}", i, convertDataString(e.Message.Data[i])));
             }
 
-            OscEvent oscEvent = processTouchOscMessageFromDefaultLayouts(e.Message);
+            OscEvent oscEvent = processTouchOscMessageForNuvoControl(e.Message);
             if (oscEvent != null)
             {
-                LogHelper.Log(LogLevel.Info, string.Format("[OSC] OscEvent={0}", oscEvent.ToString()));
+                LogHelper.Log(LogLevel.Info, string.Format("[OSC] NuvoControl OscEvent={0}", oscEvent.ToString()));
                 //raise the event, and pass data to next layer
                 if (onOscEventReceived != null)
                 {
                     onOscEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent));
+                }
+            }
+            else
+            { 
+                oscEvent = processTouchOscMessageFromDefaultLayouts(e.Message);
+                if (oscEvent != null)
+                {
+                    LogHelper.Log(LogLevel.Info, string.Format("[OSC] OscEvent={0}", oscEvent.ToString()));
+                    //raise the event, and pass data to next layer
+                    if (onOscEventReceived != null)
+                    {
+                        onOscEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent));
+                    }
+                }
+                else
+                {
+                    LogHelper.Log(LogLevel.Warn, string.Format("[OSC] Unknown message: {0}", e.Message.Address));
                 }
             }
         }
@@ -135,6 +163,41 @@ namespace NuvoControl.Server.ProtocolDriver
         private void oscServer_ReceiveErrored(object sender, ExceptionEventArgs e)
         {
             LogHelper.Log(LogLevel.Error, string.Format("[OSC] Error during reception of osc packet: {0}", e.Exception.Message));
+        }
+
+        /// <summary>
+        /// Method to process messages send for specific NuvoControl layout
+        /// </summary>
+        /// <param name="message">Message from TouchOSC</param>
+        /// <returns>OSC event class, or null if not known</returns>
+        private OscEvent processTouchOscMessageForNuvoControl(OscMessage message)
+        {
+
+            if (String.Compare(message.Address, "/ping") == 0)
+            {
+                return new OscEvent(OscEvent.eOscEvent.Ping, message.Address);
+            }
+            if (message.Address.IndexOf("/NuvoControl") == 0)
+            {
+                sendMessage(String.Format("{0}", message.Address), message.SourceEndPoint.Address, _oscDevice.SendPort);
+                return new OscEvent(OscEvent.eOscEvent.NuvoControl, message.Address, double.Parse(convertDataString(message.Data[0])));
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Send message to osc device to address default "/NuvoControl.Control/message"
+        /// </summary>
+        /// <param name="strMessage">Message to send.</param>
+        /// <param name="ipAddress">IP address of the osc device.</param>
+        /// <param name="port">Port of the osc device.</param>
+        private void sendMessage( string strMessage, IPAddress ipAddress, int port )
+        {
+            _sendMsgCounter++;
+            IPEndPoint sourceEndPoint = new IPEndPoint(ipAddress, port);
+            OscMessage labelMessage = new OscMessage(sourceEndPoint, "/NuvoControl.Control/message", String.Format("{0} [{1}]", strMessage, _sendMsgCounter));
+            labelMessage.Send(sourceEndPoint);
         }
 
         /// <summary>
@@ -182,10 +245,14 @@ namespace NuvoControl.Server.ProtocolDriver
                 }
             }
 
-            LogHelper.Log(LogLevel.Warn, string.Format("[OSC] Unknown message: {0}", message.Address));
             return null;
         }
 
+        /// <summary>
+        /// Converts message data to string.
+        /// </summary>
+        /// <param name="data">Data to convert.</param>
+        /// <returns>Converted data as string.</returns>
         private string convertDataString(object data)
         {
             string dataString;

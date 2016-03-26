@@ -409,8 +409,9 @@ namespace NuvoControl.Server.Dal
                                          new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")), 
                                          eOSCDeviceType.OSCClient, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")), 
                                          (string)clientDevice.Attribute("Name"),
-                                         IPAddress.Parse((string)clientDevice.Attribute("IPAddress")), 
-                                         (int)clientDevice.Attribute("Port") ));
+                                         IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
+                                         (clientDevice.Attribute("ListenPort") != null ? (int)clientDevice.Attribute("ListenPort") : -1),
+                                         (clientDevice.Attribute("SendPort") != null ? (int)clientDevice.Attribute("SendPort") : -1)));
                 allOSCDevices = allOSCDevices.Concat(allOSCClients);
             }
 
@@ -422,7 +423,8 @@ namespace NuvoControl.Server.Dal
                                          eOSCDeviceType.OSCServer, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
                                          (string)clientDevice.Attribute("Name"),
                                          IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
-                                         (int)clientDevice.Attribute("Port")));
+                                         (clientDevice.Attribute("ListenPort")!=null ? (int)clientDevice.Attribute("ListenPort") : -1),
+                                         (clientDevice.Attribute("SendPort")!=null ? (int)clientDevice.Attribute("SendPort") : -1) ));
                 allOSCDevices = allOSCDevices.Concat(allOSCServers);
             }
 
