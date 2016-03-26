@@ -20,7 +20,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             ValueUp = 4,
             ValueDown = 5,
             SetValue = 6,
-            SetValues = 7
+            SetValues = 7,
+            NuvoControl = 8
         }
 
         private eOscEvent _oscEvent;
@@ -29,42 +30,42 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         private double _doubleValue;
         private double[] _doubleValues = new double[2];
 
+        private void initMembers()
+        {
+            _intValue = int.MinValue;
+            _doubleValue = double.NaN;
+            _doubleValues[0] = double.NaN;
+            _doubleValues[1] = double.NaN;
+        }
+
         public OscEvent(eOscEvent oscEvent, string oscLabel)
         {
+            initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
-            _intValue = -1;
-            _doubleValue = -1.0;
-            _doubleValues[0] = -1.0;
-            _doubleValues[1] = -1.0;
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, int value)
         {
+            initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
             _intValue = value;
-            _doubleValue = -1.0;
-            _doubleValues[0] = -1.0;
-            _doubleValues[1] = -1.0;
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value)
         {
+            initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
-            _intValue = -1;
             _doubleValue = value;
-            _doubleValues[0] = -1.0;
-            _doubleValues[1] = -1.0;
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value1, double value2)
         {
+            initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
-            _intValue = -1;
-            _doubleValue = -1.0;
             _doubleValues[0] = value1;
             _doubleValues[1] = value2;
         }
@@ -85,7 +86,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <returns>String of the osc event.</returns>
         public override string ToString()
         {
-            return String.Format("[{0}-{1}-{2}]", _oscEvent.ToString(), _oscLabel, (_intValue>-1?_intValue.ToString():(_doubleValue>-1.0?_doubleValue.ToString():(_doubleValues[0]>-1.0?String.Format("{0}+{1}",_doubleValues[0],_doubleValues[1]):"na"))));
+            return String.Format("[{0}-{1}-{2}]", _oscEvent.ToString(), _oscLabel, (_intValue>int.MinValue?_intValue.ToString():(_doubleValue!=double.NaN?_doubleValue.ToString():(_doubleValues[0]!=double.NaN?String.Format("{0}+{1}",_doubleValues[0],_doubleValues[1]):"na"))));
         }
 
     }

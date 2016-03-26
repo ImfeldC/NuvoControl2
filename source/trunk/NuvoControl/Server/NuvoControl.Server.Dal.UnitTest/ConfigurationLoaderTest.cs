@@ -191,10 +191,12 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].OscDevices.Count);
             Assert.AreEqual(eOSCDeviceType.OSCClient, systemConfiguration.Hardware.Devices[0].OscDevices[0].DeviceType);
             Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].OscDevices[0].Id.ObjectId);
-            Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[0].Port);
+            Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[0].SendPort);
+            Assert.AreEqual(-1, systemConfiguration.Hardware.Devices[0].OscDevices[0].ListenPort);
             Assert.AreEqual(eOSCDeviceType.OSCServer, systemConfiguration.Hardware.Devices[0].OscDevices[1].DeviceType);
             Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].OscDevices[1].Id.ObjectId);
-            Assert.AreEqual(8000, systemConfiguration.Hardware.Devices[0].OscDevices[1].Port);
+            Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[1].SendPort);
+            Assert.AreEqual(8000, systemConfiguration.Hardware.Devices[0].OscDevices[1].ListenPort);
 
             TestContext.WriteLine("Testing device zone parameters...");
             Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones.Count);

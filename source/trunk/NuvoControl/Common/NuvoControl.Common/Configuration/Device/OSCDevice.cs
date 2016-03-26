@@ -41,7 +41,8 @@ namespace NuvoControl.Common.Configuration
 
         private IPAddress _ipAddress = null;
 
-        private int _port = 0;
+        private int _listenPort = -1;
+        private int _sendPort = -1;
 
         #endregion
 
@@ -58,14 +59,15 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Standard Constructor
         /// </summary>
-        public OSCDevice(Address id, eOSCDeviceType deviceType, Address deviceId, string name, IPAddress ipAddress, int port)
+        public OSCDevice(Address id, eOSCDeviceType deviceType, Address deviceId, string name, IPAddress ipAddress, int listenPort, int sendPort)
         {
             _id = id;
             _deviceType = deviceType;
             _deviceId = deviceId;
             _name = name;
             _ipAddress = ipAddress;
-            _port = port;
+            _listenPort = listenPort;
+            _sendPort = sendPort;
         }
 
         #endregion
@@ -101,9 +103,14 @@ namespace NuvoControl.Common.Configuration
             get { return _ipAddress; }
         }
 
-        public int Port
+        public int ListenPort
         {
-            get { return _port; }
+            get { return _listenPort; }
+        }
+
+        public int SendPort
+        {
+            get { return _sendPort; }
         }
 
         #endregion
@@ -115,7 +122,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representative of this class.</returns>
         public override string ToString()
         {
-            return String.Format("Name={0}, Id={1}, Type={2}, IPAddress={3}, Port={4}", _name, _deviceId.ToString(), _deviceType.ToString(), _ipAddress.ToString(), _port);
+            return String.Format("Name={0}, Id={1}, Type={2}, IPAddress={3}, ListenPort={4}, SendPort={5}", _name, _deviceId.ToString(), _deviceType.ToString(), _ipAddress.ToString(), _listenPort, _sendPort);
         }
 
     }
