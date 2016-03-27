@@ -1,4 +1,15 @@
-﻿using System;
+﻿/**************************************************************************************************
+ * 
+ *   Copyright (C) 2016 by Ch. Imfeld. All Rights Reserved.
+ * 
+ ***************************************************************************************************
+ *
+ *   Project:        NuvoControl
+ *   SubProject:     NuvoControl.Common
+ * 
+ **************************************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -44,6 +55,8 @@ namespace NuvoControl.Common.Configuration
         private int _listenPort = -1;
         private int _sendPort = -1;
 
+        private List<OSCDeviceLayout> _oscDeviceLayouts = null;
+
         #endregion
 
 
@@ -59,7 +72,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// Standard Constructor
         /// </summary>
-        public OSCDevice(Address id, eOSCDeviceType deviceType, Address deviceId, string name, IPAddress ipAddress, int listenPort, int sendPort)
+        public OSCDevice(Address id, eOSCDeviceType deviceType, Address deviceId, string name, IPAddress ipAddress, int listenPort, int sendPort, List<OSCDeviceLayout> oscDeviceLayouts)
         {
             _id = id;
             _deviceType = deviceType;
@@ -68,6 +81,7 @@ namespace NuvoControl.Common.Configuration
             _ipAddress = ipAddress;
             _listenPort = listenPort;
             _sendPort = sendPort;
+            _oscDeviceLayouts = oscDeviceLayouts;
         }
 
         #endregion
@@ -113,6 +127,11 @@ namespace NuvoControl.Common.Configuration
             get { return _sendPort; }
         }
 
+        public List<OSCDeviceLayout> OscDeviceLayouts
+        {
+            get { return _oscDeviceLayouts; }
+        }
+
         #endregion
 
 
@@ -122,7 +141,7 @@ namespace NuvoControl.Common.Configuration
         /// <returns>String representative of this class.</returns>
         public override string ToString()
         {
-            return String.Format("Name={0}, Id={1}, Type={2}, IPAddress={3}, ListenPort={4}, SendPort={5}", _name, _deviceId.ToString(), _deviceType.ToString(), _ipAddress.ToString(), _listenPort, _sendPort);
+            return String.Format("Name={0}, Id={1}, Type={2}, IPAddress={3}, ListenPort={4}, SendPort={5}, Layout={6}", _name, _deviceId.ToString(), _deviceType.ToString(), _ipAddress.ToString(), _listenPort, _sendPort, _oscDeviceLayouts.Count());
         }
 
     }

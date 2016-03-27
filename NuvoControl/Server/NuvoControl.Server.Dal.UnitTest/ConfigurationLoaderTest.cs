@@ -188,15 +188,23 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual("hw:0,0", systemConfiguration.Hardware.Devices[0].AudioDevices[0].Device);
 
             TestContext.WriteLine("Testing osc driver parameters...");
-            Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].OscDevices.Count);
+            Assert.AreEqual(3, systemConfiguration.Hardware.Devices[0].OscDevices.Count);
+            // OSC Client 1
             Assert.AreEqual(eOSCDeviceType.OSCClient, systemConfiguration.Hardware.Devices[0].OscDevices[0].DeviceType);
             Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].OscDevices[0].Id.ObjectId);
             Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[0].SendPort);
             Assert.AreEqual(-1, systemConfiguration.Hardware.Devices[0].OscDevices[0].ListenPort);
-            Assert.AreEqual(eOSCDeviceType.OSCServer, systemConfiguration.Hardware.Devices[0].OscDevices[1].DeviceType);
-            Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].OscDevices[1].Id.ObjectId);
-            Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[1].SendPort);
-            Assert.AreEqual(8000, systemConfiguration.Hardware.Devices[0].OscDevices[1].ListenPort);
+            // OSC Server
+            Assert.AreEqual(eOSCDeviceType.OSCServer, systemConfiguration.Hardware.Devices[0].OscDevices[2].DeviceType);
+            Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].OscDevices[2].Id.ObjectId);
+            Assert.AreEqual(9000, systemConfiguration.Hardware.Devices[0].OscDevices[2].SendPort);
+            Assert.AreEqual(8000, systemConfiguration.Hardware.Devices[0].OscDevices[2].ListenPort);
+            // OSC Client 2
+            Assert.AreEqual(eOSCDeviceType.OSCClient, systemConfiguration.Hardware.Devices[0].OscDevices[1].DeviceType);
+            Assert.AreEqual(3, systemConfiguration.Hardware.Devices[0].OscDevices[1].Id.ObjectId);
+            Assert.AreEqual(9002, systemConfiguration.Hardware.Devices[0].OscDevices[1].SendPort);
+            Assert.AreEqual(-1, systemConfiguration.Hardware.Devices[0].OscDevices[1].ListenPort);
+            Assert.AreEqual(18, systemConfiguration.Hardware.Devices[0].OscDevices[1].OscDeviceLayouts.Count);
 
             TestContext.WriteLine("Testing device zone parameters...");
             Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones.Count);

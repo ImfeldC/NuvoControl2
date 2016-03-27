@@ -70,7 +70,7 @@ namespace NuvoControl.Server.ProtocolDriver
         private OSCDevice _oscDevice;
         private OscServer _oscServer;
 
-        private int _sendMsgCounter = 0;
+        private int _sendDebugMsgCounter = 0;
 
         public TouchOscDriver(OSCDevice oscDevice)
         {
@@ -81,18 +81,23 @@ namespace NuvoControl.Server.ProtocolDriver
             }
             else if( _oscDevice.DeviceType == eOSCDeviceType.OSCClient)
             {
-                sendMessage("OSC Server started...", oscDevice.IpAddress, oscDevice.SendPort);
             }
         }
 
+        #region OSC Server Events
+
         public void Start()
         {
-            if (_oscServer != null)
+            if (_oscDevice.DeviceType == eOSCDeviceType.OSCServer && _oscServer != null)
             {
                 _oscServer.BundleReceived += new EventHandler<OscBundleReceivedEventArgs>(oscServer_BundleReceived);
                 _oscServer.MessageReceived += new EventHandler<OscMessageReceivedEventArgs>(oscServer_MessageReceived);
                 _oscServer.ReceiveErrored += new EventHandler<ExceptionEventArgs>(oscServer_ReceiveErrored);
                 _oscServer.Start();
+            }
+            else if (_oscDevice.DeviceType == eOSCDeviceType.OSCClient)
+            {
+                sendDebugMessage(String.Format("Server started, connected to {0} ...", _oscDevice.Name), _oscDevice.IpAddress, _oscDevice.SendPort);
             }
         }
 
@@ -105,12 +110,27 @@ namespace NuvoControl.Server.ProtocolDriver
             }
             else if (_oscDevice.DeviceType == eOSCDeviceType.OSCClient)
             {
-                sendMessage("OSC Server stopped...", _oscDevice.IpAddress, _oscDevice.SendPort);
+                sendDebugMessage(String.Format("Server stopped, disconnect from {0} ...", _oscDevice.Name), _oscDevice.IpAddress, _oscDevice.SendPort);
             }
         }
 
 
-        #region OSC Server Events
+        /// <summary>
+        /// Send an osc message to the client.
+        /// </summary>
+        /// <param name="strAddress">Address to send the message.</param>
+        /// <param name="strMessage">Message to send.</param>
+        public void SendMessage(string strAddress, string strMessage)
+        {
+            if(_oscDevice.DeviceType == eOSCDeviceType.OSCClient && _oscDevice.SendPort > -1)
+            {
+                sendMessage(strAddress, strMessage, _oscDevice.IpAddress, _oscDevice.SendPort);
+            }
+        }
+
+        #endregion
+
+        #region Private Members + Methods
 
         private static int sBundlesReceivedCount = 0;
         private static int sMessagesReceivedCount = 0;
@@ -179,7 +199,7 @@ namespace NuvoControl.Server.ProtocolDriver
             }
             if (message.Address.IndexOf("/NuvoControl") == 0)
             {
-                sendMessage(String.Format("{0}", message.Address), message.SourceEndPoint.Address, _oscDevice.SendPort);
+                sendDebugMessage(String.Format("{0}", message.Address), message.SourceEndPoint.Address, _oscDevice.SendPort);
                 return new OscEvent(OscEvent.eOscEvent.NuvoControl, message.Address, double.Parse(convertDataString(message.Data[0])));
             }
 
@@ -192,12 +212,24 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="strMessage">Message to send.</param>
         /// <param name="ipAddress">IP address of the osc device.</param>
         /// <param name="port">Port of the osc device.</param>
-        private void sendMessage( string strMessage, IPAddress ipAddress, int port )
+        private void sendDebugMessage( string strMessage, IPAddress ipAddress, int port )
         {
-            _sendMsgCounter++;
+            _sendDebugMsgCounter++;
+            sendMessage( "/NuvoControl.Control/message", String.Format("{0} [{1}]", strMessage, _sendDebugMsgCounter), ipAddress, port );
+        }
+
+        /// <summary>
+        /// Send message to osc device.
+        /// </summary>
+        /// <param name="strAddress">Address where to send the message.</param>
+        /// <param name="strMessage">Message to send.</param>
+        /// <param name="ipAddress">IP address of the osc device.</param>
+        /// <param name="port">Port of the osc device.</param>
+        private void sendMessage(string strAddress, string strMessage, IPAddress ipAddress, int port)
+        {
             IPEndPoint sourceEndPoint = new IPEndPoint(ipAddress, port);
-            OscMessage labelMessage = new OscMessage(sourceEndPoint, "/NuvoControl.Control/message", String.Format("{0} [{1}]", strMessage, _sendMsgCounter));
-            labelMessage.Send(sourceEndPoint);
+            OscMessage oscMessage = new OscMessage(sourceEndPoint, strAddress, strMessage);
+            oscMessage.Send(sourceEndPoint);
         }
 
         /// <summary>
@@ -277,6 +309,19 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             throw new NotImplementedException();
         }
+
+        public void UnRegisterMethod(OscEvent oscEvent)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ClearMethods()
+        {
+            throw new NotImplementedException();
+        }
+
+
+
 
     }
 }

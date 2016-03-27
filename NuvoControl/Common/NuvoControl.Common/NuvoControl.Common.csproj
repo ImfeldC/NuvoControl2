@@ -84,6 +84,7 @@
     <Compile Include="Configuration\Command\SendNuvoCommand.cs" />
     <Compile Include="CommonOptions.cs" />
     <Compile Include="Configuration\Command\Command.cs" />
+    <Compile Include="Configuration\Device\OSCDeviceLayout.cs" />
     <Compile Include="Configuration\Function\AlarmFunction.cs" />
     <Compile Include="Configuration\Function\OscEventFunction.cs" />
     <Compile Include="Configuration\Graphic\Building.cs" />
