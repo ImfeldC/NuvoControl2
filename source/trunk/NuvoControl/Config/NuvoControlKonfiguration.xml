@@ -14,9 +14,32 @@
           <AudioDevice Id="3" Player="mpg321" DeviceType="alsa" Device="hw:2,0" Name="(Reserve 2)" SourceId="100.4" />
         </AudioDevices>
         <OSCDevices>
-          <OSCServer Id="1" Name="OSCServer1" IPAddress="0.0.0.0"  ListenPort="8000" SendPort="9000"></OSCServer>  
-          <OSCClient Id="2" Name="OSCClient1" IPAddress="192.168.1.126" SendPort="9000" />
-          <OSCClient Id="3" Name="OSCClient2" IPAddress="192.168.1.126" SendPort="9000" />
+          <OSCServer Id="1" Name="Server1" IPAddress="0.0.0.0"  ListenPort="8000" SendPort="9000"></OSCServer>  
+          <OSCClient Id="2" Name="Client1" IPAddress="192.168.1.126" SendPort="9000" />
+          <OSCClient Id="3" Name="Client2" IPAddress="192.168.1.126" SendPort="9000">
+            <Zones>
+              <Zone Id="1"  ZoneName="NuvoControl.Control/ZoneName" ZoneStatus="NuvoControl.Control/status" ZoneSourceName="" ZoneSourceSelection="NuvoControl.Control/source" ZoneVolume="NuvoControl.Control/volume" ZoneBass="NuvoControl.Control/bass" ZoneTreble="NuvoControl.Control/treble" ZoneKeyPadLock="NuvoControl.Control/keypadlock"/>
+              <Zone Id="2"  ZoneName="NuvoControl/Zone2/ZoneName"  ZoneStatus="NuvoControl/Zone2/Status"  ZoneSourceName="NuvoControl/Zone2/SourceName"  ZoneSourceSelection="NuvoControl/Zone2/SourceSelection"  ZoneVolume="NuvoControl/Zone2/Volume"  ZoneBass="NuvoControl/Zone2/Bass"  ZoneTreble="NuvoControl/Zone2/Treble"  ZoneKeyPadLock="NuvoControl/Zone2/KeyPadLock"/>
+              <Zone Id="3"  ZoneName="NuvoControl/Zone3/ZoneName"  ZoneStatus="NuvoControl/Zone3/Status"  ZoneSourceName="NuvoControl/Zone3/SourceName"  ZoneSourceSelection="NuvoControl/Zone3/SourceSelection"  ZoneVolume="NuvoControl/Zone3/Volume"  ZoneBass="NuvoControl/Zone3/Bass"  ZoneTreble="NuvoControl/Zone3/Treble"  ZoneKeyPadLock="NuvoControl/Zone3/KeyPadLock"/>
+              <Zone Id="4"  ZoneName="NuvoControl/Zone4/ZoneName"  ZoneStatus="NuvoControl/Zone4/Status"  ZoneSourceName="NuvoControl/Zone4/SourceName"  ZoneSourceSelection="NuvoControl/Zone4/SourceSelection"  ZoneVolume="NuvoControl/Zone4/Volume"  ZoneBass="NuvoControl/Zone4/Bass"  ZoneTreble="NuvoControl/Zone4/Treble"  ZoneKeyPadLock="NuvoControl/Zone4/KeyPadLock"/>
+              <Zone Id="5"  ZoneName="NuvoControl/Zone5/ZoneName"  ZoneStatus="NuvoControl/Zone5/Status"  ZoneSourceName="NuvoControl/Zone5/SourceName"  ZoneSourceSelection="NuvoControl/Zone5/SourceSelection"  ZoneVolume="NuvoControl/Zone5/Volume"  ZoneBass="NuvoControl/Zone5/Bass"  ZoneTreble="NuvoControl/Zone5/Treble"  ZoneKeyPadLock="NuvoControl/Zone5/KeyPadLock"/>
+              <Zone Id="6"  ZoneName="NuvoControl/Zone6/ZoneName"  ZoneStatus="NuvoControl/Zone6/Status"  ZoneSourceName="NuvoControl/Zone6/SourceName"  ZoneSourceSelection="NuvoControl/Zone6/SourceSelection"  ZoneVolume="NuvoControl/Zone6/Volume"  ZoneBass="NuvoControl/Zone6/Bass"  ZoneTreble="NuvoControl/Zone6/Treble"  ZoneKeyPadLock="NuvoControl/Zone6/KeyPadLock"/>
+              <Zone Id="7"  ZoneName="NuvoControl/Zone7/ZoneName"  ZoneStatus="NuvoControl/Zone7/Status"  ZoneSourceName="NuvoControl/Zone7/SourceName"  ZoneSourceSelection="NuvoControl/Zone7/SourceSelection"  ZoneVolume="NuvoControl/Zone7/Volume"  ZoneBass="NuvoControl/Zone7/Bass"  ZoneTreble="NuvoControl/Zone7/Treble"  ZoneKeyPadLock="NuvoControl/Zone7/KeyPadLock"/>
+              <Zone Id="8"  ZoneName="NuvoControl/Zone8/ZoneName"  ZoneStatus="NuvoControl/Zone8/Status"  ZoneSourceName="NuvoControl/Zone8/SourceName"  ZoneSourceSelection="NuvoControl/Zone8/SourceSelection"  ZoneVolume="NuvoControl/Zone8/Volume"  ZoneBass="NuvoControl/Zone8/Bass"  ZoneTreble="NuvoControl/Zone8/Treble"  ZoneKeyPadLock="NuvoControl/Zone8/KeyPadLock"/>
+              <Zone Id="9"  ZoneName="NuvoControl/Zone9/ZoneName"  ZoneStatus="NuvoControl/Zone9/Status"  ZoneSourceName="NuvoControl/Zone9/SourceName"  ZoneSourceSelection="NuvoControl/Zone9/SourceSelection"  ZoneVolume="NuvoControl/Zone9/Volume"  ZoneBass="NuvoControl/Zone9/Bass"  ZoneTreble="NuvoControl/Zone9/Treble"  ZoneKeyPadLock="NuvoControl/Zone9/KeyPadLock"/>
+              <Zone Id="10" ZoneName="NuvoControl/Zone10/ZoneName" ZoneStatus="NuvoControl/Zone10/Status" ZoneSourceName="NuvoControl/Zone10/SourceName" ZoneSourceSelection="NuvoControl/Zone10/SourceSelection" ZoneVolume="NuvoControl/Zone10/Volume" ZoneBass="NuvoControl/Zone10/Bass" ZoneTreble="NuvoControl/Zone10/Treble" ZoneKeyPadLock="NuvoControl/Zone10/KeyPadLock"/>
+              <Zone Id="11" ZoneName="NuvoControl/Zone11/ZoneName" ZoneStatus="NuvoControl/Zone11/Status" ZoneSourceName="NuvoControl/Zone11/SourceName" ZoneSourceSelection="NuvoControl/Zone11/SourceSelection" ZoneVolume="NuvoControl/Zone11/Volume" ZoneBass="NuvoControl/Zone11/Bass" ZoneTreble="NuvoControl/Zone11/Treble" ZoneKeyPadLock="NuvoControl/Zone11/KeyPadLock"/>
+              <Zone Id="12" ZoneName="NuvoControl/Zone12/ZoneName" ZoneStatus="NuvoControl/Zone12/Status" ZoneSourceName="NuvoControl/Zone12/SourceName" ZoneSourceSelection="NuvoControl/Zone12/SourceSelection" ZoneVolume="NuvoControl/Zone12/Volume" ZoneBass="NuvoControl/Zone12/Bass" ZoneTreble="NuvoControl/Zone12/Treble" ZoneKeyPadLock="NuvoControl/Zone12/KeyPadLock"/>
+            </Zones>
+            <Sources>
+              <Source Id="1" SourceName="NuvoControl/Source1/SourceName" />
+              <Source Id="2" SourceName="NuvoControl/Source2/SourceName" />
+              <Source Id="3" SourceName="NuvoControl/Source3/SourceName" />
+              <Source Id="4" SourceName="NuvoControl/Source4/SourceName" />
+              <Source Id="5" SourceName="NuvoControl/Source5/SourceName" />
+              <Source Id="6" SourceName="NuvoControl/Source6/SourceName" />
+            </Sources>
+          </OSCClient>
         </OSCDevices>
         <Zones>
           <Zone Id="1" Name="Esszimmer" />
@@ -35,8 +58,8 @@
         <Sources>
           <Source Id="1" Name="DAB Hama DIR3100" />
           <Source Id="2" Name="AppleAirport" />
-          <Source Id="3" Name="Logitec" />
-          <Source Id="4" Name="CD Player" />
+          <Source Id="3" Name="CD Player" />
+          <Source Id="4" Name="Pi1 USB2" />
           <Source Id="5" Name="Pi1 USB1" />
           <Source Id="6" Name="Pi1 on-board"/>
         </Sources>

@@ -364,7 +364,7 @@ namespace NuvoControl.Server.Dal
                     select new Source( 
                         new Address((int)device.Attribute("Id"), (int)source.Attribute("Id")), (string)source.Attribute("Name") )).ToList<Source>(),
                     readAudioDevcies(device),
-                    readOSCDevcies(device)
+                    readOSCDevices(device)
                     );
 
             return nuvoDevices.ToList<Device>();
@@ -398,7 +398,7 @@ namespace NuvoControl.Server.Dal
         /// </summary>
         /// <param name="device">Parent device settings, which contains the OSC devices</param>
         /// <returns>List of OSC devices read from device settings.</returns>
-        private List<OSCDevice> readOSCDevcies(XElement device)
+        private List<OSCDevice> readOSCDevices(XElement device)
         {
             IEnumerable<OSCDevice> allOSCDevices = new List<OSCDevice>();
 
@@ -411,20 +411,22 @@ namespace NuvoControl.Server.Dal
                                          (string)clientDevice.Attribute("Name"),
                                          IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
                                          (clientDevice.Attribute("ListenPort") != null ? (int)clientDevice.Attribute("ListenPort") : -1),
-                                         (clientDevice.Attribute("SendPort") != null ? (int)clientDevice.Attribute("SendPort") : -1)));
+                                         (clientDevice.Attribute("SendPort") != null ? (int)clientDevice.Attribute("SendPort") : -1),
+                                         readOSCDeviceLayout(clientDevice)   ));
                 allOSCDevices = allOSCDevices.Concat(allOSCClients);
             }
 
             if (device.Element("OSCDevices") != null && device.Element("OSCDevices").Elements("OSCServer") != null)
             {
-                IEnumerable<OSCDevice> allOSCServers = (from clientDevice in device.Element("OSCDevices").Elements("OSCServer")
+                IEnumerable<OSCDevice> allOSCServers = (from serverDevice in device.Element("OSCDevices").Elements("OSCServer")
                                       select new OSCDevice(
-                                         new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
-                                         eOSCDeviceType.OSCServer, new Address((int)device.Attribute("Id"), (int)clientDevice.Attribute("Id")),
-                                         (string)clientDevice.Attribute("Name"),
-                                         IPAddress.Parse((string)clientDevice.Attribute("IPAddress")),
-                                         (clientDevice.Attribute("ListenPort")!=null ? (int)clientDevice.Attribute("ListenPort") : -1),
-                                         (clientDevice.Attribute("SendPort")!=null ? (int)clientDevice.Attribute("SendPort") : -1) ));
+                                         new Address((int)device.Attribute("Id"), (int)serverDevice.Attribute("Id")),
+                                         eOSCDeviceType.OSCServer, new Address((int)device.Attribute("Id"), (int)serverDevice.Attribute("Id")),
+                                         (string)serverDevice.Attribute("Name"),
+                                         IPAddress.Parse((string)serverDevice.Attribute("IPAddress")),
+                                         (serverDevice.Attribute("ListenPort")!=null ? (int)serverDevice.Attribute("ListenPort") : -1),
+                                         (serverDevice.Attribute("SendPort")!=null ? (int)serverDevice.Attribute("SendPort") : -1),
+                                         readOSCDeviceLayout(serverDevice)  ));
                 allOSCDevices = allOSCDevices.Concat(allOSCServers);
             }
 
@@ -432,6 +434,47 @@ namespace NuvoControl.Server.Dal
             return (allOSCDevices.Count() > 0 ? allOSCDevices.ToList<OSCDevice>() : null);
         }
 
+
+        private List<OSCDeviceLayout> readOSCDeviceLayout( XElement oscDevice )
+        {
+            List<OSCDeviceLayout> oscDeviceLayouts = new List<OSCDeviceLayout>();
+
+            // Load layout for Zones ...
+            if (oscDevice.Element("Zones") != null)
+            {
+                foreach (XElement zone in oscDevice.Element("Zones").Elements("Zone"))
+                {
+                    OSCDeviceLayout oscDeviceLayout = new OSCDeviceLayout(eOSCDeviceLayoutType.Zone, (int)zone.Attribute("Id"));
+                    foreach (XAttribute attr in zone.Attributes())
+                    {
+                        if (attr.Name.ToString() != "Id")
+                        {
+                            oscDeviceLayout.AddLayoutEntry((eOSCDeviceLayoutAddress)Enum.Parse(typeof(eOSCDeviceLayoutAddress), attr.Name.ToString()), attr.Value);
+                        }
+                    }
+                    oscDeviceLayouts.Add(oscDeviceLayout);
+                }
+            }
+
+            // Load layout for Sources ...
+            if (oscDevice.Element("Sources") != null)
+            {
+                foreach (XElement source in oscDevice.Element("Sources").Elements("Source"))
+                {
+                    OSCDeviceLayout oscDeviceLayout = new OSCDeviceLayout(eOSCDeviceLayoutType.Source, (int)source.Attribute("Id"));
+                    foreach (XAttribute attr in source.Attributes())
+                    {
+                        if (attr.Name.ToString() != "Id")
+                        {
+                            oscDeviceLayout.AddLayoutEntry((eOSCDeviceLayoutAddress)Enum.Parse(typeof(eOSCDeviceLayoutAddress), attr.Name.ToString()), attr.Value);
+                        }
+                    }
+                    oscDeviceLayouts.Add(oscDeviceLayout);
+                }
+            }
+
+            return oscDeviceLayouts;
+        }
 
         /// <summary>
         /// Reads and creates the floor objects based on the XML configuration file.

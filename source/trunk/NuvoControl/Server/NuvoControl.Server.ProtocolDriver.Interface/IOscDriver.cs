@@ -150,18 +150,52 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
     public interface IOscDriver
     {
+        /// Server (receiver) methods
+
         /// <summary>
         /// This event is raised in case a osc event has been recieved from the underlying device.
         /// </summary>
         event OscEventReceivedEventHandler onOscEventReceived;
 
 
-        void RegisterMethod( OscEvent oscEvent );
+        /// <summary>
+        /// Register an Osc method.
+        /// </summary>
+        /// <param name="oscEvent">The Osc event to register.</param>
+        void RegisterMethod(OscEvent oscEvent);
 
+		/// <summary>
+		/// Unregister an Osc method.
+		/// </summary>
+        /// <param name="oscEvent">The Osc event to unregister.</param>
+        void UnRegisterMethod(OscEvent oscEvent);
+
+		/// <summary>
+		/// Unregister all Osc events.
+		/// </summary>
+		void ClearMethods();
+
+
+        /// <summary>
+        /// Start listening for incoming Osc packets.
+        /// </summary>
+        /// <remarks>This is a non-blocking (asynchronous) call.</remarks>
         void Start();
 
+        /// <summary>
+        /// Stop listening for Osc packets.
+        /// </summary>
         void Stop();
 
+
+        /// Client (sender) methods
+
+        /// <summary>
+        /// Send an osc message to the client.
+        /// </summary>
+        /// <param name="strAddress">Address to send the message.</param>
+        /// <param name="strMessage">Message to send.</param>
+        void SendMessage(string strAddress, string strMessage);
 
     }
 }
