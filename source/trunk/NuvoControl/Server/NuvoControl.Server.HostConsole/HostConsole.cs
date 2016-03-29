@@ -26,6 +26,7 @@ using NuvoControl.Server.ProtocolDriver.Interface;
 using NuvoControl.Server.ConfigurationService;
 using NuvoControl.Server.FunctionServer;
 using NuvoControl.Server.ZoneServer;
+using NuvoControl.Server.OscServer;
 
 
 
@@ -92,6 +93,11 @@ namespace NuvoControl.Server.HostConsole
         /// Holds a reference to the zone server.
         /// </summary>
         private static IZoneServer _zoneServer = null;
+
+        /// <summary>
+        /// Holds the reference to the osc server.
+        /// </summary>
+        private static NuvoControl.Server.OscServer.OscServer _oscServer = null;
 
         /// <summary>
         /// Holds a reference to the function server.
@@ -182,6 +188,15 @@ namespace NuvoControl.Server.HostConsole
 
             try
             {
+                InstantiateOscServer();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Failed to create the osc server.", exc);
+            }
+
+            try
+            {
                 InstantiateFunctionServer();
             }
             catch (Exception exc)
@@ -199,6 +214,15 @@ namespace NuvoControl.Server.HostConsole
             catch (Exception exc)
             {
                 LogHelper.LogException("Failed to unload the function server.", exc);
+            }
+
+            try
+            {
+                UnloadOscServer();
+            }
+            catch (Exception exc)
+            {
+                LogHelper.LogException("Failed to unload the osc server.", exc);
             }
 
             try
@@ -423,6 +447,39 @@ namespace NuvoControl.Server.HostConsole
         }
         #endregion
 
+        #region OSC Server
+        /// <summary>
+        /// Instantiates the osc server. This object holds all osc device controllers.
+        /// </summary>
+        private static void InstantiateOscServer()
+        {
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Instantiating the osc server..."));
+
+            List<OscDeviceController> oscDeviceControllers = new List<OscDeviceController>();
+            foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
+            {
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.ToString()));
+                foreach (OSCDevice oscDevice in device.OscDevices)
+                {
+                    oscDeviceControllers.Add(new OscDeviceController(new Address(device.Id, oscDevice.DeviceId.ObjectId), oscDevice, _protocolDrivers[device.Id], _oscDrivers[oscDevice.DeviceId.ObjectId]));
+                }
+            }
+            _oscServer = new OscServer.OscServer(oscDeviceControllers);
+            _oscServer.Start();
+        }
+
+        /// <summary>
+        /// Unload the osc server. This object holds all osc device controllers.
+        /// </summary>
+        private static void UnloadOscServer()
+        {
+            LogHelper.Log(LogLevel.Info, String.Format(">>> Unload the osc server..."));
+
+            _oscServer.Stop();
+            _oscServer = null;
+        }
+        #endregion
+
         #region Function Server
         /// <summary>
         /// Instantiates the function server. This object holds all functions.
@@ -522,7 +579,7 @@ namespace NuvoControl.Server.HostConsole
 
         static void HostConsole_onOscEventReceived(object sender, OscEventReceivedEventArgs e)
         {
-            LogHelper.Log(LogLevel.Info, String.Format(">->   [{0}]  Device={1} OscEvent:{2}/Value={3}", DateTime.Now.ToShortTimeString(), e.OscDevice, (e.OscEvent==null?"<null>":e.OscEvent.ToString()), e.OscValue ));
+            LogHelper.Log(LogLevel.Info, String.Format(">->   [{0}]  Device={1} OscEvent:{2}", DateTime.Now.ToShortTimeString(), e.OscDevice, (e.OscEvent==null?"<null>":e.OscEvent.ToString()) ));
         }
 
         #endregion

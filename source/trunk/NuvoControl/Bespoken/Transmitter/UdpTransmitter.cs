@@ -39,7 +39,7 @@ namespace Transmitter
                 while (cancellationToken.IsCancellationRequested == false)
                 {
                     IPEndPoint sourceEndPoint = new IPEndPoint(Program.ipAddress, Properties.Settings.Default.Port);
-                    OscMessage labelMessage = new OscMessage(sourceEndPoint, "/NuvoControl.Control/ZoneName", String.Format("Hello {0}",transmissionCount));
+                    OscMessage labelMessage = new OscMessage(sourceEndPoint, "/NuvoControl/ZoneName", String.Format("Hello {0}",transmissionCount));
                     labelMessage.Send(sourceEndPoint);
 
                     Console.Clear();
