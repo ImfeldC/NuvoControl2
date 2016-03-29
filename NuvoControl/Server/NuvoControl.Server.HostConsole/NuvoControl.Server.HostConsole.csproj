@@ -76,6 +76,10 @@
       <Project>{2C8F1A31-ADF8-4BF1-BCA7-032007ED6C61}</Project>
       <Name>NuvoControl.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\NuvoControl.Server.OscServer\NuvoControl.Server.OscServer.csproj">
+      <Project>{9a1bf150-83ff-4df7-998f-187a6b71e47a}</Project>
+      <Name>NuvoControl.Server.OscServer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NuvoControl.Server.ConfigurationService\NuvoControl.Server.ConfigurationService.csproj">
       <Project>{D44A08E5-4C37-4DD6-BBEE-25D0D9F10FA1}</Project>
       <Name>NuvoControl.Server.ConfigurationService</Name>

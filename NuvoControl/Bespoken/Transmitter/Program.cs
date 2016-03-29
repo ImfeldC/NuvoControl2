@@ -109,6 +109,6 @@ namespace Transmitter
         private static readonly string AliveMethod = "/osctest/alive";
         private static readonly string TestMethod = "/osctest/test";
         private static readonly string PingMethod = "/ping";
-        private static readonly string LabelMethod = "/NuvoControl.Control/ZoneName";
+        private static readonly string LabelMethod = "/NuvoControl/ZoneName";
     }
 }

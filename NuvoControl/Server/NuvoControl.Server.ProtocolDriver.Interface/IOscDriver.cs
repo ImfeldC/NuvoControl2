@@ -2,33 +2,39 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Net;
 
 using NuvoControl.Common.Configuration;
 
 
+
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
+    public enum eOscEvent
+    {
+        Ping = 0,
+        TabChange = 1,
+        SwitchOn = 2,
+        SwitchOff = 3,
+        ValueUp = 4,
+        ValueDown = 5,
+        SetValue = 6,
+        SetValues = 7,
+        NuvoControl = 8
+    }
 
     public class OscEvent
     {
-        public enum eOscEvent
-        {
-            Ping = 0,
-            TabChange = 1,
-            SwitchOn = 2,
-            SwitchOff = 3,
-            ValueUp = 4,
-            ValueDown = 5,
-            SetValue = 6,
-            SetValues = 7,
-            NuvoControl = 8
-        }
-
         private eOscEvent _oscEvent;
         private string _oscLabel;
         private int _intValue;
         private double _doubleValue;
         private double[] _doubleValues = new double[2];
+        /// <summary>
+        /// The contents of the packet.
+        /// </summary>
+        protected List<object> mData;
+
 
         private void initMembers()
         {
@@ -36,6 +42,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _doubleValue = double.NaN;
             _doubleValues[0] = double.NaN;
             _doubleValues[1] = double.NaN;
+            mData = new List<object>();
+            mData.Clear();
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel)
@@ -51,6 +59,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
             _intValue = value;
+            mData.Add(value);
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value)
@@ -59,6 +68,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
             _doubleValue = value;
+            mData.Add(value);
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value1, double value2)
@@ -68,6 +78,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             _oscLabel = oscLabel;
             _doubleValues[0] = value1;
             _doubleValues[1] = value2;
+            mData.Add(value1);
+            mData.Add(value2);
         }
 
         public eOscEvent OscCommand
@@ -78,6 +90,14 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         public string OscLabel
         {
             get { return _oscLabel; }
+        }
+
+        public IList<object> OscData
+        {
+            get
+            {
+                return mData.AsReadOnly();
+            }
         }
 
         /// <summary>
@@ -92,6 +112,7 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     }
 
     #region OscEventReceived
+
     /// <summary>
     /// Public delegate used in case a osc event is received.
     /// </summary>
@@ -108,15 +129,16 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         private Address _oscDevice;
         private OscEvent _oscEvent;
-        private int _oscValue = -1;
+        private IPEndPoint _SourceEndPoint;
 
         /// <summary>
         /// Constructor for the argument class.
         /// </summary>
-        public OscEventReceivedEventArgs(Address oscDevice, OscEvent oscEvent)
+        public OscEventReceivedEventArgs(Address oscDevice, OscEvent oscEvent, IPEndPoint SourceEndPoint)
         {
             _oscDevice = oscDevice;
             _oscEvent = oscEvent;
+            _SourceEndPoint = SourceEndPoint;
         }
 
         /// <summary>
@@ -140,12 +162,13 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             get { return _oscEvent; }
         }
 
-        public int OscValue
+        public IPEndPoint SourceEndPoint
         {
-            get { return _oscValue; }
+            get { return _SourceEndPoint; }
         }
 
     }
+
     #endregion
 
     public interface IOscDriver
@@ -156,6 +179,11 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// This event is raised in case a osc event has been recieved from the underlying device.
         /// </summary>
         event OscEventReceivedEventHandler onOscEventReceived;
+
+        /// <summary>
+        /// This event is raised in case a osc event (from Nuvo layout) has been recieved from the underlying device.
+        /// </summary>
+        event OscEventReceivedEventHandler onOscNuvoEventReceived;
 
 
         /// <summary>
@@ -193,9 +221,15 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <summary>
         /// Send an osc message to the client.
         /// </summary>
-        /// <param name="strAddress">Address to send the message.</param>
-        /// <param name="strMessage">Message to send.</param>
-        void SendMessage(string strAddress, string strMessage);
+        /// <param name="address">Address to send the message.</param>
+        /// <param name="value">Message or value to send.</param>
+        void SendMessage(string address, object value);
+
+        /// <summary>
+        /// Send an osc message to the client.
+        /// </summary>
+        /// <param name="oscEvent">Osc event to send (incl. message and values).</param>
+        void SendMessage(OscEvent oscEvent);
 
     }
 }

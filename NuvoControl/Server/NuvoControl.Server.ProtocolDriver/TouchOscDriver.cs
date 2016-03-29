@@ -66,6 +66,7 @@ namespace NuvoControl.Server.ProtocolDriver
     public class TouchOscDriver : IOscDriver
     {
         public event OscEventReceivedEventHandler onOscEventReceived;
+        public event OscEventReceivedEventHandler onOscNuvoEventReceived;
 
         private OSCDevice _oscDevice;
         private OscServer _oscServer;
@@ -83,6 +84,7 @@ namespace NuvoControl.Server.ProtocolDriver
             {
             }
         }
+
 
         #region OSC Server Events
 
@@ -118,19 +120,32 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <summary>
         /// Send an osc message to the client.
         /// </summary>
-        /// <param name="strAddress">Address to send the message.</param>
-        /// <param name="strMessage">Message to send.</param>
-        public void SendMessage(string strAddress, string strMessage)
+        /// <param name="address">Address to send the message.</param>
+        /// <param name="value">Message or value to send.</param>
+        public void SendMessage(string address, object value)
         {
             if(_oscDevice.DeviceType == eOSCDeviceType.OSCClient && _oscDevice.SendPort > -1)
             {
-                sendMessage(strAddress, strMessage, _oscDevice.IpAddress, _oscDevice.SendPort);
+                sendOscMessage(address, value, _oscDevice.IpAddress, _oscDevice.SendPort);
+            }
+        }
+
+        /// <summary>
+        /// Send an osc message to the client.
+        /// </summary>
+        /// <param name="oscEvent">Osc event to send (incl. message and values).</param>
+        public void SendMessage(OscEvent oscEvent)
+        {
+            if (_oscDevice.DeviceType == eOSCDeviceType.OSCClient && _oscDevice.SendPort > -1)
+            {
+                sendOscMessage(oscEvent.OscLabel, oscEvent.OscData, _oscDevice.IpAddress, _oscDevice.SendPort);
             }
         }
 
         #endregion
 
-        #region Private Members + Methods
+
+        #region OSC Event Methods
 
         private static int sBundlesReceivedCount = 0;
         private static int sMessagesReceivedCount = 0;
@@ -156,9 +171,13 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 LogHelper.Log(LogLevel.Info, string.Format("[OSC] NuvoControl OscEvent={0}", oscEvent.ToString()));
                 //raise the event, and pass data to next layer
+                if (onOscNuvoEventReceived != null)
+                {
+                    onOscNuvoEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent, e.Message.SourceEndPoint));
+                }
                 if (onOscEventReceived != null)
                 {
-                    onOscEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent));
+                    onOscEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent, e.Message.SourceEndPoint));
                 }
             }
             else
@@ -170,7 +189,7 @@ namespace NuvoControl.Server.ProtocolDriver
                     //raise the event, and pass data to next layer
                     if (onOscEventReceived != null)
                     {
-                        onOscEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent));
+                        onOscEventReceived(this, new OscEventReceivedEventArgs(_oscDevice.DeviceId, oscEvent, e.Message.SourceEndPoint));
                     }
                 }
                 else
@@ -185,6 +204,11 @@ namespace NuvoControl.Server.ProtocolDriver
             LogHelper.Log(LogLevel.Error, string.Format("[OSC] Error during reception of osc packet: {0}", e.Exception.Message));
         }
 
+        #endregion
+
+
+        #region Private Members + Methods
+
         /// <summary>
         /// Method to process messages send for specific NuvoControl layout
         /// </summary>
@@ -195,19 +219,19 @@ namespace NuvoControl.Server.ProtocolDriver
 
             if (String.Compare(message.Address, "/ping") == 0)
             {
-                return new OscEvent(OscEvent.eOscEvent.Ping, message.Address);
+                return new OscEvent(eOscEvent.Ping, message.Address);
             }
             if (message.Address.IndexOf("/NuvoControl") == 0)
             {
                 sendDebugMessage(String.Format("{0}", message.Address), message.SourceEndPoint.Address, _oscDevice.SendPort);
-                return new OscEvent(OscEvent.eOscEvent.NuvoControl, message.Address, double.Parse(convertDataString(message.Data[0])));
+                return new OscEvent(eOscEvent.NuvoControl, message.Address, double.Parse(convertDataString(message.Data[0])));
             }
 
             return null;
         }
 
         /// <summary>
-        /// Send message to osc device to address default "/NuvoControl.Control/message"
+        /// Send message to osc device to address default "/NuvoControl/message"
         /// </summary>
         /// <param name="strMessage">Message to send.</param>
         /// <param name="ipAddress">IP address of the osc device.</param>
@@ -215,22 +239,41 @@ namespace NuvoControl.Server.ProtocolDriver
         private void sendDebugMessage( string strMessage, IPAddress ipAddress, int port )
         {
             _sendDebugMsgCounter++;
-            sendMessage( "/NuvoControl.Control/message", String.Format("{0} [{1}]", strMessage, _sendDebugMsgCounter), ipAddress, port );
+            sendOscMessage("/NuvoControl/message", String.Format("{0} [{1}]", strMessage, _sendDebugMsgCounter), ipAddress, port);
         }
 
         /// <summary>
         /// Send message to osc device.
         /// </summary>
-        /// <param name="strAddress">Address where to send the message.</param>
-        /// <param name="strMessage">Message to send.</param>
+        /// <param name="address">Address where to send the message.</param>
+        /// <param name="value">Message or value to send.</param>
         /// <param name="ipAddress">IP address of the osc device.</param>
         /// <param name="port">Port of the osc device.</param>
-        private void sendMessage(string strAddress, string strMessage, IPAddress ipAddress, int port)
+        private void sendOscMessage(string address, object data, IPAddress ipAddress, int port)
+        {
+            List<object> listdata = new List<object>();
+            listdata.Add(data);
+            sendOscMessage(address, listdata, ipAddress, port);
+        }
+
+        /// <summary>
+        /// Send message to osc device.
+        /// </summary>
+        /// <param name="address">Address where to send the message.</param>
+        /// <param name="value">List of Message(s) or value(s) to send.</param>
+        /// <param name="ipAddress">IP address of the osc device.</param>
+        /// <param name="port">Port of the osc device.</param>
+        private void sendOscMessage(string address, IList<object> data, IPAddress ipAddress, int port)
         {
             IPEndPoint sourceEndPoint = new IPEndPoint(ipAddress, port);
-            OscMessage oscMessage = new OscMessage(sourceEndPoint, strAddress, strMessage);
+            OscMessage oscMessage = new OscMessage(sourceEndPoint, address);
+            foreach (object value in data)
+            {
+                oscMessage.Append(value);
+            }
             oscMessage.Send(sourceEndPoint);
         }
+
 
         /// <summary>
         /// Method to process messages send from default layouts (out-of-the-box)
@@ -241,31 +284,31 @@ namespace NuvoControl.Server.ProtocolDriver
         {
             if( String.Compare(message.Address,"/ping")==0)
             {
-                return new OscEvent( OscEvent.eOscEvent.Ping, message.Address );
+                return new OscEvent( eOscEvent.Ping, message.Address );
             }
             if (message.Address.IndexOf("toggle") > 0)
             {
-                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? OscEvent.eOscEvent.SwitchOn : OscEvent.eOscEvent.SwitchOff), message.Address);
+                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? eOscEvent.SwitchOn : eOscEvent.SwitchOff), message.Address);
             }
             if (message.Address.IndexOf("push") > 0)
             {
-                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? OscEvent.eOscEvent.SwitchOn : OscEvent.eOscEvent.SwitchOff), message.Address);
+                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? eOscEvent.SwitchOn : eOscEvent.SwitchOff), message.Address);
             }
             if (message.Address.IndexOf("fader") > 0)
             {
-                return new OscEvent(OscEvent.eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
+                return new OscEvent(eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
             }
             if (message.Address.IndexOf("rotary") > 0)
             {
-                return new OscEvent(OscEvent.eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
+                return new OscEvent(eOscEvent.SetValue, message.Address, double.Parse(convertDataString(message.Data[0])));
             }
             if (message.Address.IndexOf("xy") > 0)
             {
-                return new OscEvent(OscEvent.eOscEvent.SetValues, message.Address, double.Parse(convertDataString(message.Data[0])), double.Parse(convertDataString(message.Data[1])));
+                return new OscEvent(eOscEvent.SetValues, message.Address, double.Parse(convertDataString(message.Data[0])), double.Parse(convertDataString(message.Data[1])));
             }
             if (message.Address.IndexOf("encoder") > 0)
             {
-                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? OscEvent.eOscEvent.ValueUp : (int.Parse(convertDataString(message.Data[0])) == 0 ? OscEvent.eOscEvent.ValueDown : OscEvent.eOscEvent.SetValue)), message.Address, int.Parse(convertDataString(message.Data[0])));
+                return new OscEvent((int.Parse(convertDataString(message.Data[0])) == 1 ? eOscEvent.ValueUp : (int.Parse(convertDataString(message.Data[0])) == 0 ? eOscEvent.ValueDown : eOscEvent.SetValue)), message.Address, int.Parse(convertDataString(message.Data[0])));
             }
 
             // check for tab changes
@@ -273,7 +316,7 @@ namespace NuvoControl.Server.ProtocolDriver
             {
                 if (String.Compare(message.Address, String.Format("/{0}",i)) == 0)
                 {
-                    return new OscEvent(OscEvent.eOscEvent.TabChange, message.Address, i);
+                    return new OscEvent(eOscEvent.TabChange, message.Address, i);
                 }
             }
 
@@ -302,7 +345,6 @@ namespace NuvoControl.Server.ProtocolDriver
         }
 
         #endregion
-
 
 
         public void RegisterMethod(OscEvent oscEvent)

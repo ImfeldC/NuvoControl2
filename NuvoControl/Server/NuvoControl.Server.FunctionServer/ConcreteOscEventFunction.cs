@@ -100,7 +100,7 @@ namespace NuvoControl.Server.FunctionServer
         {
             if ((String.Compare(_function.OscLabel, e.OscEvent.OscLabel) == 0) && (String.Compare(_function.OscEvent,e.OscEvent.OscCommand.ToString())==0))
             {
-                LogHelper.Log(LogLevel.Info, String.Format("---   [{0}]  Device={1} OscEvent:{2}/Value={3}", DateTime.Now.ToShortTimeString(), e.OscDevice, (e.OscEvent == null ? "<null>" : e.OscEvent.ToString()), e.OscValue));
+                LogHelper.Log(LogLevel.Info, String.Format("---   [{0}]  Device={1} OscEvent:{2}", DateTime.Now.ToShortTimeString(), e.OscDevice, (e.OscEvent == null ? "<null>" : e.OscEvent.ToString())));
                 onFunctionStart();
             }
         }

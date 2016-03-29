@@ -16,9 +16,9 @@
         <OSCDevices>
           <OSCServer Id="1" Name="Server1" IPAddress="0.0.0.0"  ListenPort="8000" SendPort="9000"></OSCServer>  
           <OSCClient Id="2" Name="Client1" IPAddress="192.168.1.126" SendPort="9000" />
-          <OSCClient Id="3" Name="Client2" IPAddress="192.168.1.126" SendPort="9000">
+          <OSCClient Id="3" Name="Client2" IPAddress="192.168.1.127" SendPort="9000">
             <Zones>
-              <Zone Id="1"  ZoneName="NuvoControl.Control/ZoneName" ZoneStatus="NuvoControl.Control/status" ZoneSourceName="" ZoneSourceSelection="NuvoControl.Control/source" ZoneVolume="NuvoControl.Control/volume" ZoneBass="NuvoControl.Control/bass" ZoneTreble="NuvoControl.Control/treble" ZoneKeyPadLock="NuvoControl.Control/keypadlock"/>
+              <Zone Id="1"  ZoneName="NuvoControl/ZoneName" ZoneStatus="NuvoControl/status" ZoneSourceName="" ZoneSourceSelection="NuvoControl/source" ZoneVolume="NuvoControl/volume" ZoneBass="NuvoControl/bass" ZoneTreble="NuvoControl/treble" ZoneKeyPadLock="NuvoControl/keypadlock"/>
               <Zone Id="2"  ZoneName="NuvoControl/Zone2/ZoneName"  ZoneStatus="NuvoControl/Zone2/Status"  ZoneSourceName="NuvoControl/Zone2/SourceName"  ZoneSourceSelection="NuvoControl/Zone2/SourceSelection"  ZoneVolume="NuvoControl/Zone2/Volume"  ZoneBass="NuvoControl/Zone2/Bass"  ZoneTreble="NuvoControl/Zone2/Treble"  ZoneKeyPadLock="NuvoControl/Zone2/KeyPadLock"/>
               <Zone Id="3"  ZoneName="NuvoControl/Zone3/ZoneName"  ZoneStatus="NuvoControl/Zone3/Status"  ZoneSourceName="NuvoControl/Zone3/SourceName"  ZoneSourceSelection="NuvoControl/Zone3/SourceSelection"  ZoneVolume="NuvoControl/Zone3/Volume"  ZoneBass="NuvoControl/Zone3/Bass"  ZoneTreble="NuvoControl/Zone3/Treble"  ZoneKeyPadLock="NuvoControl/Zone3/KeyPadLock"/>
               <Zone Id="4"  ZoneName="NuvoControl/Zone4/ZoneName"  ZoneStatus="NuvoControl/Zone4/Status"  ZoneSourceName="NuvoControl/Zone4/SourceName"  ZoneSourceSelection="NuvoControl/Zone4/SourceSelection"  ZoneVolume="NuvoControl/Zone4/Volume"  ZoneBass="NuvoControl/Zone4/Bass"  ZoneTreble="NuvoControl/Zone4/Treble"  ZoneKeyPadLock="NuvoControl/Zone4/KeyPadLock"/>
