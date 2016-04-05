@@ -9,26 +9,15 @@
  * 
  **************************************************************************************************/
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Forms;     // used for Application
-using System.Text;
-
 using Common.Logging;
-
 using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
-
+using NuvoControl.Server.OscServer;
 using NuvoControl.Server.ProtocolDriver;
 using NuvoControl.Server.ProtocolDriver.Interface;
-
-using NuvoControl.Server.ConfigurationService;
-using NuvoControl.Server.FunctionServer;
 using NuvoControl.Server.ZoneServer;
-using NuvoControl.Server.OscServer;
-
-
+using System;
+using System.Collections.Generic;
 
 
 namespace NuvoControl.Server.HostConsole
@@ -461,7 +450,7 @@ namespace NuvoControl.Server.HostConsole
                 LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.ToString()));
                 foreach (OSCDevice oscDevice in device.OscDevices)
                 {
-                    oscDeviceControllers.Add(new OscDeviceController(new Address(device.Id, oscDevice.DeviceId.ObjectId), oscDevice, _protocolDrivers[device.Id], _oscDrivers[oscDevice.DeviceId.ObjectId]));
+                    oscDeviceControllers.Add(new OscDeviceController(new Address(device.Id, oscDevice.DeviceId.ObjectId), oscDevice, _protocolDrivers[device.Id], _oscDrivers[oscDevice.DeviceId.ObjectId], device.Zones, device.Sources));
                 }
             }
             _oscServer = new OscServer.OscServer(oscDeviceControllers);

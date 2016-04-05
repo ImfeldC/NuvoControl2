@@ -1,12 +1,10 @@
-﻿using System.Threading;
-using System.Collections.Generic;
-
-using NuvoControl.Server.MonitorAndControlService;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NuvoControl.Server.ZoneServer;
-using NuvoControl.Server.ProtocolDriver.Interface;
-using NuvoControl.Common.Configuration;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
+using NuvoControl.Server.ProtocolDriver.Interface;
+using NuvoControl.Server.ZoneServer;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace NuvoControl.Server.MonitorAndControlService.UnitTest
 {
@@ -376,6 +374,89 @@ namespace NuvoControl.Server.MonitorAndControlService.UnitTest
         }
 
         public void SendCommand(Address zoneAddress, INuvoEssentiaCommand command)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Starts volume up command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to start the volume up command.</param>
+        public void CommandRampVolumeUP(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Starts volume down command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to start the volume down command.</param>
+        public void CommandRampVolumeDOWN(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Stops any volume up/down command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to stop any volume up/down command.</param>
+        public void CommandStopRampVolume(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Mute zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to mute.</param>
+        public void CommandMuteON(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Unmute zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to unmute.</param>
+        public void CommandMuteOFF(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set bass level in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set the bass level.</param>
+        /// <param name="bassLevel">Bass level to set.</param>
+        public void CommandSetBassLevel(Address zoneAddress, int bassLevel)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set treble level in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set the treble level.</param>
+        /// <param name="trebleLevel">Treble level to set.</param>
+        public void CommandSetTrebleLevel(Address zoneAddress, int trebleLevel)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Set keypad lock in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set keypad lock.</param>
+        public void CommandSetKeypadLockON(Address zoneAddress)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
+        /// Reset keypad lock in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to reset keypad lock.</param>
+        public void CommandSetKeypadLockOFF(Address zoneAddress)
         {
             throw new System.NotImplementedException();
         }

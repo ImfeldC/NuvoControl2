@@ -122,6 +122,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Common.UnitTest
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuvoControl.Server.OscServer", "NuvoControl.Server.OscServer\NuvoControl.Server.OscServer.csproj", "{9A1BF150-83FF-4DF7-998F-187A6B71E47A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TouchOSC Template", "TouchOSC Template", "{F3FACBFA-5121-4200-9B65-5A050D5E3CEB}"
+	ProjectSection(SolutionItems) = preProject
+		NuvoControl.1.touchosc = NuvoControl.1.touchosc
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SubversionScc) = preSolution
 		Svn-Managed = True
@@ -642,6 +647,7 @@ Global
 		{4F887C29-862B-428A-A021-5878079DC73E} = {F4F9242F-D99E-4CFD-ACD0-346B347855C8}
 		{835E1D83-BF61-4AB9-9BBC-B62836F8F7B2} = {C4D004E8-15CA-4E89-B0CE-88F9290FE23E}
 		{9A1BF150-83FF-4DF7-998F-187A6B71E47A} = {9D46B0CC-8007-469D-BE8A-7C14EE109FA6}
+		{F3FACBFA-5121-4200-9B65-5A050D5E3CEB} = {4D3BB3D4-A8C6-4145-88F3-355FF74233CA}
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = NuvoControl9.vsmdi
