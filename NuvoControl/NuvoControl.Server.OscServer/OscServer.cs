@@ -9,16 +9,12 @@
  * 
  **************************************************************************************************/
 
+using Common.Logging;
+using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using Common.Logging;
-
-using NuvoControl.Common.Configuration;
-using NuvoControl.Server.ProtocolDriver;
+using System.Threading;
 
 
 namespace NuvoControl.Server.OscServer
@@ -41,6 +37,11 @@ namespace NuvoControl.Server.OscServer
         /// Holds the osc device controller per Id
         /// </summary>
         private Dictionary<Address, OscDeviceController> _oscDeviceControllers = new Dictionary<Address, OscDeviceController>();
+
+        /// <summary>
+        /// Private member to hold the timer used to periodically update (blink) the server status LED
+        /// </summary>
+        private System.Timers.Timer _timerUpdateServerStatus = new System.Timers.Timer();
 
         private int adhocDeviceIdCounter = 999;
 
@@ -71,7 +72,9 @@ namespace NuvoControl.Server.OscServer
             {
                 oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Start ... {0}", oscDeviceController.OscDeviceId));
                 oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 1.0);
+                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/NuvoStatus", 0.25);
             }
+            StartTime();
         }
 
         public void Stop()
@@ -84,6 +87,38 @@ namespace NuvoControl.Server.OscServer
                 oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/NuvoStatus", 0.0);
             }
         }
+
+
+
+        #region Timer: Update Server Status LED
+
+        private void StartTime()
+        {
+            LogHelper.Log(LogLevel.Debug, String.Format("Renew play sound command, each {0}[min]", Properties.Settings.Default.UpdateServerStatusLEDIntervall));
+            _timerUpdateServerStatus.Interval = (Properties.Settings.Default.UpdateServerStatusLEDIntervall < 2 ? 2 : Properties.Settings.Default.UpdateServerStatusLEDIntervall) * 1000;
+            _timerUpdateServerStatus.Elapsed += new System.Timers.ElapsedEventHandler(_timerUpdateServerStatus_Elapsed);
+            _timerUpdateServerStatus.Start();
+        }
+
+        /// <summary>
+        /// Periodic timer routine to update server status (LED)
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void _timerUpdateServerStatus_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            _log.Trace(m => m(String.Format("OscServer: Server Status ... ")));
+            foreach (OscDeviceController oscDeviceController in _oscDeviceControllers.Values)
+            {
+                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Server ping at {0}", DateTime.Now));
+                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 0.25);
+                Thread.Sleep(500);
+                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 1.0);
+            }
+        }
+
+        #endregion
+
 
 
         private static int sMessagesReceivedCount = 0;
