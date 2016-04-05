@@ -81,6 +81,7 @@ namespace NuvoControl.Server.OscServer
             {
                 oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Stop ... {0}", oscDeviceController.OscDeviceId));
                 oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 0.0);
+                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/NuvoStatus", 0.0);
             }
         }
 
@@ -112,17 +113,14 @@ namespace NuvoControl.Server.OscServer
                 }
             }
 
-            // If not known ...
+            // If client was/is not known ...
             if (!bKnown)
             {
                 // ... create "ad-hoc" controller, to start updating this client, assuming the client listen to port 9000
                 _log.Trace(m => m("OSCS.onOscNuvoEventReceived: Client {0} not known, add with id={1}!", e.SourceEndPoint, adhocDeviceIdCounter));
                 Address address = new Address(e.OscDeviceId, adhocDeviceIdCounter);
                 OSCDevice oscDevice = new OSCDevice(address, eOSCDeviceType.OSCClient, address, String.Format("AdHocClient{0}",adhocDeviceIdCounter), e.SourceEndPoint.Address, 8000, 9000, null);
-                OscDeviceController adhocOscDeviceController = new OscDeviceController(address, 
-                    oscDevice, 
-                    _oscDeviceControllers[e.OscDevice].GetProtocolDriver(),
-                    new TouchOscDriver(oscDevice) );
+                OscDeviceController adhocOscDeviceController = new OscDeviceController(address, oscDevice, _oscDeviceControllers[e.OscDevice]);
                 _oscDeviceControllers.Add(address, adhocOscDeviceController);
                 adhocDeviceIdCounter--;
             }

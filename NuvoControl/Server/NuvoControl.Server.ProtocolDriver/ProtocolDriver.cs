@@ -12,17 +12,15 @@
  **************************************************************************************************/
 
 
+using Common.Logging;
+using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
+using NuvoControl.Server.ProtocolDriver.Interface;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO.Ports;
-using Common.Logging;
-using NuvoControl.Server.ProtocolDriver.Interface;
-using NuvoControl.Common.Configuration;
-using NuvoControl.Common;
-using System.Timers;
 using System.Threading;
+using System.Timers;
 
 namespace NuvoControl.Server.ProtocolDriver
 {
@@ -588,6 +586,125 @@ namespace NuvoControl.Server.ProtocolDriver
                 ENuvoEssentiaCommands.SetVolume,
                 convertAddressZone2EssentiaZone(zoneAddress),
                 NuvoEssentiaCommand.calcVolume2NuvoEssentia(volumeLevel));
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Starts volume up command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to start the volume up command.</param>
+        public void CommandRampVolumeUP(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.RampVolumeUP,
+                convertAddressZone2EssentiaZone(zoneAddress));
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Starts volume down command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to start the volume down command.</param>
+        public void CommandRampVolumeDOWN(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.RampVolumeDOWN,
+                convertAddressZone2EssentiaZone(zoneAddress));
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Stops any volume up/down command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to stop any volume up/down command.</param>
+        public void CommandStopRampVolume(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.StopRampVolume,
+                convertAddressZone2EssentiaZone(zoneAddress));
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Mute zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to mute.</param>
+        public void CommandMuteON(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.MuteON,
+                convertAddressZone2EssentiaZone(zoneAddress));
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Unmute zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to unmute.</param>
+        public void CommandMuteOFF(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.MuteOFF,
+                convertAddressZone2EssentiaZone(zoneAddress));
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Set bass level in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set the bass level.</param>
+        /// <param name="bassLevel">Bass level to set.</param>
+        public void CommandSetBassLevel(Address zoneAddress, int bassLevel)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.SetBassLevel,
+                convertAddressZone2EssentiaZone(zoneAddress), bassLevel, -1 );
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Set treble level in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set the treble level.</param>
+        /// <param name="trebleLevel">Treble level to set.</param>
+        public void CommandSetTrebleLevel(Address zoneAddress, int trebleLevel)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.SetTrebleLevel,
+                convertAddressZone2EssentiaZone(zoneAddress), -1, trebleLevel);
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Set keypad lock in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set keypad lock.</param>
+        public void CommandSetKeypadLockON(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.SetKeypadLockON,
+                convertAddressZone2EssentiaZone(zoneAddress) );
+            sendCommandToDevice(zoneAddress, command);
+        }
+
+        /// <summary>
+        /// Reset keypad lock in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to reset keypad lock.</param>
+        public void CommandSetKeypadLockOFF(Address zoneAddress)
+        {
+            checkZoneDeviceId(zoneAddress.DeviceId);
+            INuvoEssentiaSingleCommand command = new NuvoEssentiaSingleCommand(
+                ENuvoEssentiaCommands.SetKeypadLockOFF,
+                convertAddressZone2EssentiaZone(zoneAddress));
             sendCommandToDevice(zoneAddress, command);
         }
 

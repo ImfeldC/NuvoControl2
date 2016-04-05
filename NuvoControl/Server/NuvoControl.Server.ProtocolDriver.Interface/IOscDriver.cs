@@ -27,9 +27,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
     {
         private eOscEvent _oscEvent;
         private string _oscLabel;
-        private int _intValue;
-        private double _doubleValue;
-        private double[] _doubleValues = new double[2];
+        private int _zoneId;
+        private int _sourceId;
         /// <summary>
         /// The contents of the packet.
         /// </summary>
@@ -38,10 +37,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         private void initMembers()
         {
-            _intValue = int.MinValue;
-            _doubleValue = double.NaN;
-            _doubleValues[0] = double.NaN;
-            _doubleValues[1] = double.NaN;
+            _zoneId = -1;
+            _sourceId = -1;
             mData = new List<object>();
             mData.Clear();
         }
@@ -51,6 +48,8 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
+            _zoneId = parseZoneId(_oscLabel);
+            _sourceId = parseSourceId(_oscLabel);
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, int value)
@@ -58,8 +57,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
-            _intValue = value;
             mData.Add(value);
+            _zoneId = parseZoneId(_oscLabel);
+            _sourceId = parseSourceId(_oscLabel);
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value)
@@ -67,8 +67,9 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
-            _doubleValue = value;
             mData.Add(value);
+            _zoneId = parseZoneId(_oscLabel);
+            _sourceId = parseSourceId(_oscLabel);
         }
 
         public OscEvent(eOscEvent oscEvent, string oscLabel, double value1, double value2)
@@ -76,10 +77,10 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             initMembers();
             _oscEvent = oscEvent;
             _oscLabel = oscLabel;
-            _doubleValues[0] = value1;
-            _doubleValues[1] = value2;
             mData.Add(value1);
             mData.Add(value2);
+            _zoneId = parseZoneId(_oscLabel);
+            _sourceId = parseSourceId(_oscLabel);
         }
 
         public eOscEvent OscCommand
@@ -94,10 +95,22 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
 
         public IList<object> OscData
         {
-            get
-            {
-                return mData.AsReadOnly();
-            }
+            get { return mData.AsReadOnly(); }
+        }
+
+        public int getOscData
+        {
+            get { return Convert.ToInt32(mData[0]); }
+        }
+
+        public int getZoneId
+        {
+            get { return _zoneId; }
+        }
+
+        public int getSourceId
+        {
+            get { return _sourceId; }
         }
 
         /// <summary>
@@ -106,7 +119,49 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <returns>String of the osc event.</returns>
         public override string ToString()
         {
-            return String.Format("[{0}-{1}-{2}]", _oscEvent.ToString(), _oscLabel, (_intValue>int.MinValue?_intValue.ToString():(_doubleValue!=double.NaN?_doubleValue.ToString():(_doubleValues[0]!=double.NaN?String.Format("{0}+{1}",_doubleValues[0],_doubleValues[1]):"na"))));
+            return String.Format("[{0}-{1}]", _oscEvent.ToString(), _oscLabel);
+        }
+
+        /// <summary>
+        /// Private method, which retrievs the zone id from the osc message string
+        /// </summary>
+        /// <param name="oscLabel">Osc message string.</param>
+        /// <returns>Zone id found in the message, otherwise -1 is returned.</returns>
+        private int parseZoneId( string oscLabel )
+        {
+            int len = 4;    // "Zone" = 4 characters
+            string[] parts = oscLabel.Split('/');
+            foreach (string part in parts)
+            {
+                if ((part.IndexOf("Zone") == 0) && (part.Length == len+1 || part.Length == len+2 ))
+                {
+                    return int.Parse(part.Substring(len));
+                }
+            }
+            return -1;
+        }
+
+        /// <summary>
+        /// Private method, which retrievs the source id from the osc message string
+        /// </summary>
+        /// <param name="oscLabel">Osc message string.</param>
+        /// <returns>Source id found in the message, otherwise -1 is returned.</returns>
+        private int parseSourceId(string oscLabel)
+        {
+            int len = 6;    // "Source" = 6 characters
+            string[] parts = oscLabel.Split('/');
+            foreach (string part in parts)
+            {
+                if (part.IndexOf("SourceSelection") == 0)
+                {
+                    return int.Parse(parts[5]);
+                }
+                if ((part.IndexOf("Source") == 0) && (part.Length == len + 1 || part.Length == len + 2))
+                {
+                    return int.Parse(part.Substring(len));
+                }
+            }
+            return -1;
         }
 
     }

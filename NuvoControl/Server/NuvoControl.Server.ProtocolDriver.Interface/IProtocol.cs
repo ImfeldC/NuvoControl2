@@ -17,12 +17,9 @@
  **************************************************************************************************/
 
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NuvoControl.Common.Configuration;
 using NuvoControl.Common;
+using NuvoControl.Common.Configuration;
+using System;
 
 namespace NuvoControl.Server.ProtocolDriver.Interface
 {
@@ -286,5 +283,61 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
         /// <param name="zoneAddress">Zone address, where to set the volume level.</param>
         /// <param name="volumeLevel">Volume Level, which shall be set in the selected zone.</param>
         void CommandSetVolume(Address zoneAddress, int volumeLevel);
+
+        /// <summary>
+        /// Starts volume up command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to start the volume up command.</param>
+        void CommandRampVolumeUP(Address zoneAddress);
+
+        /// <summary>
+        /// Starts volume down command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to start the volume down command.</param>
+        void CommandRampVolumeDOWN(Address zoneAddress);
+
+        /// <summary>
+        /// Stops any volume up/down command in the specified zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, where to stop any volume up/down command.</param>
+        void CommandStopRampVolume(Address zoneAddress);
+
+        /// <summary>
+        /// Mute zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to mute.</param>
+        void CommandMuteON(Address zoneAddress);
+
+        /// <summary>
+        /// Unmute zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to unmute.</param>
+        void CommandMuteOFF(Address zoneAddress);
+
+        /// <summary>
+        /// Set bass level in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set the bass level.</param>
+        /// <param name="bassLevel">Bass level to set.</param>
+        void CommandSetBassLevel(Address zoneAddress, int bassLevel);
+
+        /// <summary>
+        /// Set treble level in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set the treble level.</param>
+        /// <param name="trebleLevel">Treble level to set.</param>
+        void CommandSetTrebleLevel(Address zoneAddress, int trebleLevel);
+
+        /// <summary>
+        /// Set keypad lock in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to set keypad lock.</param>
+        void CommandSetKeypadLockON(Address zoneAddress);
+
+        /// <summary>
+        /// Reset keypad lock in a zone.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to reset keypad lock.</param>
+        void CommandSetKeypadLockOFF(Address zoneAddress);
     }
 }

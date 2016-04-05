@@ -7,7 +7,7 @@
     <Hardware>
       <Device Id="100">
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
-        <Communication Port="COM52" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
+        <Communication Port="COM1" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <AudioDevices>
           <AudioDevice Id="1" Player="mpg321" DeviceType="alsa" Device="hw:0,0" Name="Raspberry Pi on-board" SourceId="100.6" />
           <AudioDevice Id="2" Player="mpg321" DeviceType="alsa" Device="hw:1,0" Name="(Reserve 1)" SourceId="100.5" />
@@ -56,7 +56,7 @@
           <Zone Id="12" Name="(unused)" />
         </Zones>
         <Sources>
-          <Source Id="1" Name="DAB Hama DIR3100" />
+          <Source Id="1" Name="DAB Hama" />
           <Source Id="2" Name="AppleAirport" />
           <Source Id="3" Name="CD Player" />
           <Source Id="4" Name="Pi1 USB2" />
