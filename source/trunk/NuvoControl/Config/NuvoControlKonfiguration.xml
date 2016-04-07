@@ -16,7 +16,7 @@
         <OSCDevices>
           <OSCServer Id="1" Name="Server1" IPAddress="0.0.0.0"  ListenPort="8000" SendPort="9000"></OSCServer>  
           <OSCClient Id="2" Name="Client1" IPAddress="192.168.1.126" SendPort="9000" />
-          <OSCClient Id="3" Name="Client2" IPAddress="192.168.1.127" SendPort="9000">
+          <OSCClient Id="3" Name="Client2" IPAddress="192.168.1.122" SendPort="9000">
             <Zones>
               <Zone Id="1"  ZoneName="NuvoControl/ZoneName" ZoneStatus="NuvoControl/status" ZoneSourceName="" ZoneSourceSelection="NuvoControl/source" ZoneVolume="NuvoControl/volume" ZoneBass="NuvoControl/bass" ZoneTreble="NuvoControl/treble" ZoneKeyPadLock="NuvoControl/keypadlock"/>
               <Zone Id="2"  ZoneName="NuvoControl/Zone2/ZoneName"  ZoneStatus="NuvoControl/Zone2/Status"  ZoneSourceName="NuvoControl/Zone2/SourceName"  ZoneSourceSelection="NuvoControl/Zone2/SourceSelection"  ZoneVolume="NuvoControl/Zone2/Volume"  ZoneBass="NuvoControl/Zone2/Bass"  ZoneTreble="NuvoControl/Zone2/Treble"  ZoneKeyPadLock="NuvoControl/Zone2/KeyPadLock"/>

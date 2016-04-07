@@ -108,12 +108,15 @@ namespace NuvoControl.Server.OscServer
         void _timerUpdateServerStatus_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             _log.Trace(m => m(String.Format("OscServer: Server Status ... ")));
-            foreach (OscDeviceController oscDeviceController in _oscDeviceControllers.Values)
+            lock (_oscDeviceControllers)
             {
-                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Server ping at {0}", DateTime.Now));
-                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 0.25);
-                Thread.Sleep(500);
-                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 1.0);
+                foreach (OscDeviceController oscDeviceController in _oscDeviceControllers.Values)
+                {
+                    //oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Server ping at {0}", DateTime.Now));
+                    oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 0.25);
+                    Thread.Sleep(500);
+                    oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 1.0);
+                }
             }
         }
 
@@ -137,10 +140,10 @@ namespace NuvoControl.Server.OscServer
             bool bKnown = false;
             foreach (OscDeviceController oscDeviceController in _oscDeviceControllers.Values)
             {
-                // forward message to known clients
-                oscDeviceController.GetOscDriver().SendMessage(e.OscEvent);
-                // forward (debug) message to known clients
-                oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Notify {0}/{1}: {2}", sMessagesReceivedCount, oscDeviceController.OscDeviceId, e.OscEvent.ToString()));
+                // forward message to clients
+                oscDeviceController.processOscNuvoEventForClients(new Address(e.OscDeviceId, e.OscEvent.getZoneId), e.OscEvent);
+                // forward (debug) message to clients
+                //oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Notify {0}/{1}: {2}", sMessagesReceivedCount, oscDeviceController.OscDeviceId, e.OscEvent.ToString()));
                 // Check if client is "known"
                 if( String.Compare(oscDeviceController.OscDevice.IpAddress.ToString(), e.SourceEndPoint.Address.ToString()) == 0 )
                 {
@@ -153,11 +156,14 @@ namespace NuvoControl.Server.OscServer
             {
                 // ... create "ad-hoc" controller, to start updating this client, assuming the client listen to port 9000
                 _log.Trace(m => m("OSCS.onOscNuvoEventReceived: Client {0} not known, add with id={1}!", e.SourceEndPoint, adhocDeviceIdCounter));
-                Address address = new Address(e.OscDeviceId, adhocDeviceIdCounter);
-                OSCDevice oscDevice = new OSCDevice(address, eOSCDeviceType.OSCClient, address, String.Format("AdHocClient{0}",adhocDeviceIdCounter), e.SourceEndPoint.Address, 8000, 9000, null);
-                OscDeviceController adhocOscDeviceController = new OscDeviceController(address, oscDevice, _oscDeviceControllers[e.OscDevice]);
-                _oscDeviceControllers.Add(address, adhocOscDeviceController);
-                adhocDeviceIdCounter--;
+                lock (_oscDeviceControllers)
+                {
+                    Address address = new Address(e.OscDeviceId, adhocDeviceIdCounter);
+                    OSCDevice oscDevice = new OSCDevice(address, eOSCDeviceType.OSCClient, address, String.Format("AdHocClient{0}", adhocDeviceIdCounter), e.SourceEndPoint.Address, 8000, 9000, null);
+                    OscDeviceController adhocOscDeviceController = new OscDeviceController(address, oscDevice, _oscDeviceControllers[e.OscDevice]);
+                    _oscDeviceControllers.Add(address, adhocOscDeviceController);
+                    adhocDeviceIdCounter--;
+                }
             }
         }
 

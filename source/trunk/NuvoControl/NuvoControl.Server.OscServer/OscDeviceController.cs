@@ -62,7 +62,7 @@ namespace NuvoControl.Server.OscServer
         /// <summary>
         /// All zones of the device.
         /// </summary>
-        private List<Zone> _zones = new List<Zone>();
+        private Dictionary<Address, Zone> _zones = new Dictionary<Address, Zone>();
 
         /// <summary>
         /// All sources of the device.
@@ -70,9 +70,19 @@ namespace NuvoControl.Server.OscServer
         private List<Source> _sources = new List<Source>();
 
         /// <summary>
-        /// The current zone state.
+        /// The list with current device quality (status)
         /// </summary>
-        private ZoneState _zoneState = new ZoneState();
+        private Dictionary<int, ZoneQuality> _deviceQualityList = new Dictionary<int, ZoneQuality>();
+
+        /// <summary>
+        /// The list with current zone states.
+        /// </summary>
+        private Dictionary<Address, ZoneState> _zoneStateList = new Dictionary<Address, ZoneState>();
+
+        /// <summary>
+        /// Private member to store generic zone id
+        /// </summary>
+        private int _genericZoneId = -1;
 
         #endregion
 
@@ -85,7 +95,7 @@ namespace NuvoControl.Server.OscServer
         /// <param name="oscDevice">The osc device configuration of this osc device.</param>
         /// <param name="protocolDriver">The associated protocol driver to command the device (NuvoEssentia) of the zone</param>
         /// <param name="oscDriver">The associated osc driver to command the osc device.</param>
-        public OscDeviceController(Address oscDeviceId, OSCDevice oscDevice, IProtocol protocolDriver, IOscDriver oscDriver, List<Zone> zones, List<Source> sources)
+        public OscDeviceController(Address oscDeviceId, OSCDevice oscDevice, IProtocol protocolDriver, IOscDriver oscDriver, Dictionary<Address,Zone> zones, List<Source> sources)
         {
             this._oscDeviceId = oscDeviceId;
             this._oscDevice = oscDevice;
@@ -171,33 +181,44 @@ namespace NuvoControl.Server.OscServer
             {
                 _oscDriver.SendMessage("/NuvoControl/message", String.Format("Zone {0} Update at {1}", e.ZoneAddress, DateTime.Now));
 
-                if (e.ZoneState.ZoneQuality == ZoneQuality.Online)
-                {
-                    string zoneBaseAdress = String.Format("/NuvoControl/Zone{0}", e.ZoneAddress.ObjectId);
-                    // Zone is "online" ...
-                    _oscDriver.SendMessage(String.Format("{0}/Status", zoneBaseAdress), (e.ZoneState.PowerStatus ? 1.0 : 0.0));
-                    _oscDriver.SendMessage(String.Format("{0}/Volume", zoneBaseAdress), e.ZoneState.Volume);
-                    _oscDriver.SendMessage(String.Format("{0}/SourceSelection/1/{1}", zoneBaseAdress, e.ZoneState.Source.ObjectId), 1);
-                    _oscDriver.SendMessage(String.Format("{0}/message", zoneBaseAdress), String.Format("Zone {0} Update at {1}", e.ZoneAddress, DateTime.Now));
-                }
+                // Update "dynamic" text (dynamic data)
+                UpdateZoneStateOnOscClient(e.ZoneAddress, e.ZoneState);
 
                 // Init "static" text (configuration data)
                 updateConfigurationDataOnOscClient();
             }
-            UpdateZoneStateFromDriver(e.ZoneState);
+            StoreZoneStateFromDriver(e.ZoneAddress, e.ZoneState);
         }
 
-        private void UpdateZoneStateFromDriver(ZoneState newState)
+        /// <summary>
+        /// Update the "dynamic" content on the osc client, based on the zone state
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, to be updated.</param>
+        /// <param name="newState">Zone state, to send to the osc client.</param>
+        private void UpdateZoneStateOnOscClient(Address zoneAddress, ZoneState newState)
         {
-            _zoneState.ZoneQuality = newState.ZoneQuality;
             if (newState.ZoneQuality == ZoneQuality.Online)
             {
-                _zoneState.Volume = newState.Volume;
-                _zoneState.Source = newState.Source;
-                _zoneState.PowerStatus = newState.PowerStatus;
-                _zoneState.LastUpdate = newState.LastUpdate;
+                // Zone is "online" ...
+                string zoneBaseAdress = String.Format("/NuvoControl/Zone{0}", zoneAddress.ObjectId);
+                _oscDriver.SendMessage(String.Format("{0}/Status", zoneBaseAdress), (newState.PowerStatus ? 1.0 : 0.0));
+                _oscDriver.SendMessage(String.Format("{0}/Volume", zoneBaseAdress), newState.Volume);
+                _oscDriver.SendMessage(String.Format("{0}/SourceSelection/1/{1}", zoneBaseAdress, newState.Source.ObjectId), 1);
+                _oscDriver.SendMessage(String.Format("{0}/message", zoneBaseAdress), String.Format("Zone {0} Update at {1}", zoneAddress, DateTime.Now));
+
+                _oscDriver.SendMessage(String.Format("/NuvoControl/ZoneStatus/{0}/1", zoneAddress.ObjectId), (newState.PowerStatus ? 1.0 : 0.0));
             }
-            _zoneState.CommandUnacknowledged = false;
+        }
+
+        /// <summary>
+        /// Private method to store the zone status received from nuvo control.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address, of the zone status.</param>
+        /// <param name="newState">Zone state, to be stored.</param>
+        private void StoreZoneStateFromDriver(Address zoneAddress, ZoneState newState)
+        {
+            _zoneStateList[zoneAddress] = newState;
+            _zoneStateList[zoneAddress].CommandUnacknowledged = false;
         }
 
         /// <summary>
@@ -215,7 +236,7 @@ namespace NuvoControl.Server.OscServer
                 _oscDriver.SendMessage(new OscEvent(eOscEvent.SetValue, "/NuvoControl/NuvoStatus", (e.DeviceQuality == ZoneQuality.Online ? 1.0 : 0.25)));
 
                 // update the device quality. Which in this case means, update the zone quality
-                _zoneState.ZoneQuality = e.DeviceQuality;
+                _deviceQualityList[e.DeviceId] = e.DeviceQuality;
                 // Init "static" text (configuration data)
                 updateConfigurationDataOnOscClient();
             }
@@ -223,104 +244,115 @@ namespace NuvoControl.Server.OscServer
 
         /// <summary>
         /// Private event handler method, to handle an osc nuvo event message.
+        /// NOTE: Only osc servers with a defined <ListenPort> will received osc messages. 
+        /// Simple clients with <SendPort> only, will not receive messages.
         /// </summary>
         /// <param name="sender">Pointer, to the sender of the event.</param>
         /// <param name="e">Event Argument, contains the osc nuvo event message.</param>
         private void _oscDriver_onOscNuvoEventReceived(object sender, OscEventReceivedEventArgs e)
         {
             _log.Trace(m => m("OSCC.onOscNuvoEventReceived: Osc Device (with id {0}) osc event received: {1}", e.OscDevice, e.OscEvent.ToString()));
+            processOscNuvoEventAsServer(new Address(e.OscDeviceId, e.OscEvent.getZoneId), e.OscEvent);
+        }
 
-            if( e.OscEvent.OscCommand == eOscEvent.NuvoControl )
+
+        /// <summary>
+        /// Private method which handles the osc messages for the server.
+        /// </summary>
+        /// <param name="zoneAddress">Zone Address.</param>
+        /// <param name="oscEvent">Osc event.</param>
+        private void processOscNuvoEventAsServer(Address zoneAddress, OscEvent oscEvent)
+        {
+            if (oscEvent.OscCommand == eOscEvent.NuvoControl)
             {
-
-                if( e.OscEvent.OscLabel.Contains("/Status") )
+                if (oscEvent.OscLabel.Contains("/Status"))
                 {
-                    if (e.OscEvent.getOscData == 0)
+                    if (oscEvent.getOscData == 0)
                     {
-                        _protocolDriver.CommandSwitchZoneOFF(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandSwitchZoneOFF(zoneAddress);
                     }
-                    else if (e.OscEvent.getOscData == 1)
+                    else if (oscEvent.getOscData == 1)
                     {
-                        _protocolDriver.CommandSwitchZoneON(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandSwitchZoneON(zoneAddress);
                     }
                     else
                     {
                         // Trace error, received an unkown status
                     }
                 }
-                else if (e.OscEvent.OscLabel.Contains("/SourceSelection"))
+                else if (oscEvent.OscLabel.Contains("/SourceSelection"))
                 {
-                    if (e.OscEvent.getOscData == 0)
+                    if (oscEvent.getOscData == 0)
                     {
                         // ignore message with value 0, as this is only the "disable" message for the previous selected source
                     }
-                    else if (e.OscEvent.getOscData == 1)
+                    else if (oscEvent.getOscData == 1)
                     {
-                        _protocolDriver.CommandSetSource(new Address(e.OscDeviceId, e.OscEvent.getZoneId), new Address(e.OscDeviceId, e.OscEvent.getSourceId));
+                        _protocolDriver.CommandSetSource(zoneAddress, new Address(zoneAddress.DeviceId, oscEvent.getSourceId));
                     }
                     else
                     {
                         // Trace error, received an unkown source command
                     }
                 }
-                else if (e.OscEvent.OscLabel.Contains("/VolumeUp"))
+                else if (oscEvent.OscLabel.Contains("/VolumeUp"))
                 {
-                    if (e.OscEvent.getOscData == 0)
+                    if (oscEvent.getOscData == 0)
                     {
-                        _protocolDriver.CommandStopRampVolume(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandStopRampVolume(zoneAddress);
                     }
-                    else if (e.OscEvent.getOscData == 1)
+                    else if (oscEvent.getOscData == 1)
                     {
-                        _protocolDriver.CommandRampVolumeUP(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandRampVolumeUP(zoneAddress);
                     }
                     else
                     {
                         // Trace error, received an unkown source command
                     }
                 }
-                else if (e.OscEvent.OscLabel.Contains("/VolumeDown"))
+                else if (oscEvent.OscLabel.Contains("/VolumeDown"))
                 {
-                    if (e.OscEvent.getOscData == 0)
+                    if (oscEvent.getOscData == 0)
                     {
-                        _protocolDriver.CommandStopRampVolume(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandStopRampVolume(zoneAddress);
                     }
-                    else if (e.OscEvent.getOscData == 1)
+                    else if (oscEvent.getOscData == 1)
                     {
-                        _protocolDriver.CommandRampVolumeDOWN(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandRampVolumeDOWN(zoneAddress);
                     }
                     else
                     {
                         // Trace error, received an unkown source command
                     }
                 }
-                else if (e.OscEvent.OscLabel.Contains("/Volume"))
+                else if (oscEvent.OscLabel.Contains("/Volume"))
                 {
-                    _protocolDriver.CommandSetVolume(new Address(e.OscDeviceId, e.OscEvent.getZoneId), e.OscEvent.getOscData);
+                    _protocolDriver.CommandSetVolume(zoneAddress, oscEvent.getOscData);
                 }
-                else if (e.OscEvent.OscLabel.Contains("/Mute"))
+                else if (oscEvent.OscLabel.Contains("/Mute"))
                 {
-                    if (e.OscEvent.getOscData == 0)
+                    if (oscEvent.getOscData == 0)
                     {
-                        _protocolDriver.CommandMuteOFF(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandMuteOFF(zoneAddress);
                     }
-                    else if (e.OscEvent.getOscData == 1)
+                    else if (oscEvent.getOscData == 1)
                     {
-                        _protocolDriver.CommandMuteON(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandMuteON(zoneAddress);
                     }
                     else
                     {
                         // Trace error, received an unkown status
                     }
                 }
-                else if (e.OscEvent.OscLabel.Contains("/KeyPadLock"))
+                else if (oscEvent.OscLabel.Contains("/KeyPadLock"))
                 {
-                    if (e.OscEvent.getOscData == 0)
+                    if (oscEvent.getOscData == 0)
                     {
-                        _protocolDriver.CommandSetKeypadLockOFF(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandSetKeypadLockOFF(zoneAddress);
                     }
-                    else if (e.OscEvent.getOscData == 1)
+                    else if (oscEvent.getOscData == 1)
                     {
-                        _protocolDriver.CommandSetKeypadLockON(new Address(e.OscDeviceId, e.OscEvent.getZoneId));
+                        _protocolDriver.CommandSetKeypadLockON(zoneAddress);
                     }
                     else
                     {
@@ -328,9 +360,38 @@ namespace NuvoControl.Server.OscServer
                     }
                 }
             }
-            
-            // Init "static" text (configuration data)
-            updateConfigurationDataOnOscClient();
+        }
+
+        /// <summary>
+        /// Public method called by the osc server, to process osc event messages.
+        /// </summary>
+        /// <param name="zoneAddress">Zone address</param>
+        /// <param name="oscEvent">Osc event</param>
+        public void processOscNuvoEventForClients(Address zoneAddress, OscEvent oscEvent)
+        {
+            // forward message to client
+            _oscDriver.SendMessage(oscEvent);
+            // forward (debug) message to client
+            _oscDriver.SendMessage("/NuvoControl/message", String.Format("Notify {0}: {1}", _oscDeviceId, oscEvent.ToString()));
+
+            bool bGeneric = false;
+            if (oscEvent.OscLabel.Contains("/Generic"))
+            {
+                if (oscEvent.OscLabel.Contains("/ZoneSelection"))
+                {
+                    if (oscEvent.getOscData == 0)
+                    {
+                        // ignore message with value 0, as this is only the "disable" message for the previous selected source
+                    }
+                    else if (oscEvent.getOscData == 1)
+                    {
+                        _genericZoneId = oscEvent.getZoneId;
+                        _oscDriver.SendMessage(String.Format("/NuvoControl/Generic/ZoneName"), _zones[zoneAddress].Name);
+                        _oscDriver.SendMessage("/NuvoControl/message", String.Format("Zone '{0}' selected", _zones[zoneAddress].Name));
+                    }
+                }
+                bGeneric = true;
+            }
         }
 
         #endregion
@@ -344,7 +405,7 @@ namespace NuvoControl.Server.OscServer
         {
             if( _oscDriver != null )
             {
-                foreach( Zone zone in _zones)
+                foreach( Zone zone in _zones.Values)
                 {
                     string zoneBaseAdress = String.Format("/NuvoControl/Zone{0}", zone.Id.ObjectId);
                     _oscDriver.SendMessage(String.Format("{0}/Name", zoneBaseAdress), zone.Name);
@@ -353,6 +414,20 @@ namespace NuvoControl.Server.OscServer
                 {
                     string sourceBaseAdress = String.Format("/NuvoControl/Source{0}", source.Id.ObjectId);
                     _oscDriver.SendMessage(String.Format("{0}/Name", sourceBaseAdress), source.Name);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Private method to update the "dynamic" data on osc clients
+        /// </summary>
+        private void updateZoneStatusOnOscClient()
+        {
+            if (_oscDriver != null)
+            {
+                foreach( Address zoneAddress in _zoneStateList.Keys)
+                {
+                    UpdateZoneStateOnOscClient(zoneAddress, _zoneStateList[zoneAddress]);
                 }
             }
         }

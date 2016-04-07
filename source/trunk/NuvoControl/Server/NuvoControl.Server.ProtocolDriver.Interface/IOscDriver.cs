@@ -133,7 +133,11 @@ namespace NuvoControl.Server.ProtocolDriver.Interface
             string[] parts = oscLabel.Split('/');
             foreach (string part in parts)
             {
-                if ((part.IndexOf("Zone") == 0) && (part.Length == len+1 || part.Length == len+2 ))
+                if (part.IndexOf("ZoneSelection") == 0)
+                {
+                    return int.Parse(parts[4]);
+                }
+                if ((part.IndexOf("Zone") == 0) && (part.Length == len + 1 || part.Length == len + 2))
                 {
                     return int.Parse(part.Substring(len));
                 }
