@@ -477,7 +477,7 @@ namespace NuvoControl.Server.WcfHostConsole
             List<IZoneController> zoneControllers = new List<IZoneController>();
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
-                foreach (Zone zone in device.Zones)
+                foreach (Zone zone in device.ZoneList)
                 {
                     zoneControllers.Add(new ZoneController(new Address(device.Id, zone.Id.ObjectId), _protocolDrivers[device.Id]));
                 }

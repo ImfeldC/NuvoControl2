@@ -207,19 +207,19 @@ namespace NuvoControl.Server.Dal.UnitTest
             Assert.AreEqual(18, systemConfiguration.Hardware.Devices[0].OscDevices[1].OscDeviceLayouts.Count);
 
             TestContext.WriteLine("Testing device zone parameters...");
-            Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones.Count);
-            Assert.AreEqual( 1, systemConfiguration.Hardware.Devices[0].Zones[0].Id.ObjectId);
-            Assert.AreEqual( 2, systemConfiguration.Hardware.Devices[0].Zones[1].Id.ObjectId);
-            Assert.AreEqual( 3, systemConfiguration.Hardware.Devices[0].Zones[2].Id.ObjectId);
-            Assert.AreEqual( 4, systemConfiguration.Hardware.Devices[0].Zones[3].Id.ObjectId);
-            Assert.AreEqual( 5, systemConfiguration.Hardware.Devices[0].Zones[4].Id.ObjectId);
-            Assert.AreEqual( 6, systemConfiguration.Hardware.Devices[0].Zones[5].Id.ObjectId);
-            Assert.AreEqual( 7, systemConfiguration.Hardware.Devices[0].Zones[6].Id.ObjectId);
-            Assert.AreEqual( 8, systemConfiguration.Hardware.Devices[0].Zones[7].Id.ObjectId);
-            Assert.AreEqual( 9, systemConfiguration.Hardware.Devices[0].Zones[8].Id.ObjectId);
-            Assert.AreEqual(10, systemConfiguration.Hardware.Devices[0].Zones[9].Id.ObjectId);
-            Assert.AreEqual(11, systemConfiguration.Hardware.Devices[0].Zones[10].Id.ObjectId);
-            Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].Zones[11].Id.ObjectId);
+            Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].ZoneList.Count);
+            Assert.AreEqual(1, systemConfiguration.Hardware.Devices[0].ZoneList[0].Id.ObjectId);
+            Assert.AreEqual(2, systemConfiguration.Hardware.Devices[0].ZoneList[1].Id.ObjectId);
+            Assert.AreEqual(3, systemConfiguration.Hardware.Devices[0].ZoneList[2].Id.ObjectId);
+            Assert.AreEqual(4, systemConfiguration.Hardware.Devices[0].ZoneList[3].Id.ObjectId);
+            Assert.AreEqual(5, systemConfiguration.Hardware.Devices[0].ZoneList[4].Id.ObjectId);
+            Assert.AreEqual(6, systemConfiguration.Hardware.Devices[0].ZoneList[5].Id.ObjectId);
+            Assert.AreEqual(7, systemConfiguration.Hardware.Devices[0].ZoneList[6].Id.ObjectId);
+            Assert.AreEqual(8, systemConfiguration.Hardware.Devices[0].ZoneList[7].Id.ObjectId);
+            Assert.AreEqual(9, systemConfiguration.Hardware.Devices[0].ZoneList[8].Id.ObjectId);
+            Assert.AreEqual(10, systemConfiguration.Hardware.Devices[0].ZoneList[9].Id.ObjectId);
+            Assert.AreEqual(11, systemConfiguration.Hardware.Devices[0].ZoneList[10].Id.ObjectId);
+            Assert.AreEqual(12, systemConfiguration.Hardware.Devices[0].ZoneList[11].Id.ObjectId);
 
             TestContext.WriteLine("Testing device source parameters...");
             Assert.AreEqual(6, systemConfiguration.Hardware.Devices[0].Sources.Count);

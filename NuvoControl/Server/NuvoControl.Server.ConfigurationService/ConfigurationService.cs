@@ -139,7 +139,7 @@ namespace NuvoControl.Server.ConfigurationService
         public Zone GetZoneHWConfiguration(Address zoneId)
         {
             Device device = _systemConfiguration.Hardware.getDevice(zoneId);
-            foreach (Zone zone in device.Zones)
+            foreach (Zone zone in device.ZoneList)
             {
                 if (zone.Id == zoneId)
                 {
@@ -495,7 +495,7 @@ namespace NuvoControl.Server.ConfigurationService
                     if (device == null)
                         return false;
 
-                    List<Zone> zoneIds = (from zoneId in device.Zones where zoneId.Id.ObjectId == address.ObjectId select zoneId).ToList<Zone>();
+                    List<Zone> zoneIds = (from zoneId in device.ZoneList where zoneId.Id.ObjectId == address.ObjectId select zoneId).ToList<Zone>();
                     if (zoneIds.Count == 0)
                         return false;
 

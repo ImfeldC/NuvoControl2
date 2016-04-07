@@ -53,7 +53,7 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All zones of the device.
         /// </summary>
-        private List<Zone> _zones = new List<Zone>();
+        private Dictionary<Address, Zone> _zones = new Dictionary<Address, Zone>();
 
         /// <summary>
         /// All sources of the device.
@@ -88,7 +88,10 @@ namespace NuvoControl.Common.Configuration
             _id = id;
             _communication = communication;
             _protocolDriver = protocolDriver;
-            _zones = zones;
+            foreach( Zone zone in zones)
+            {
+                _zones[zone.Id] = zone;
+            }
             _sources = sources;
             _audioDevices = audioDevices;
             _oscDevices = oscDevices;
@@ -125,9 +128,17 @@ namespace NuvoControl.Common.Configuration
         /// <summary>
         /// All zones of the device.
         /// </summary>
-        public List<Zone> Zones
+        public Dictionary<Address,Zone> ZoneDict
         {
             get { return _zones; }
+        }
+
+        /// <summary>
+        /// All zones of the device.
+        /// </summary>
+        public List<Zone> ZoneList
+        {
+            get { return _zones.Values.ToList<Zone>(); }
         }
 
         /// <summary>
@@ -167,7 +178,7 @@ namespace NuvoControl.Common.Configuration
 
             // all Zones ...
             strDevice += String.Format("Zones=[");
-            foreach (Zone zone in _zones)
+            foreach (Zone zone in _zones.Values)
             {
                 strDevice += String.Format("Zone={0}, ", zone.ToString());
             }
