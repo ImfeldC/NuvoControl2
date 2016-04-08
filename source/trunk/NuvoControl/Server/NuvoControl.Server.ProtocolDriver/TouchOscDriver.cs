@@ -119,7 +119,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="value">Message or value to send.</param>
         public void SendMessage(string address, object value)
         {
-            if(_oscDevice.DeviceType == eOSCDeviceType.OSCClient && _oscDevice.SendPort > -1)
+            if( (_oscDevice != null) && (_oscDevice.DeviceType == eOSCDeviceType.OSCClient) && (_oscDevice.SendPort > -1) )
             {
                 sendOscMessage(address, value, _oscDevice.IpAddress, _oscDevice.SendPort);
             }
@@ -131,7 +131,7 @@ namespace NuvoControl.Server.ProtocolDriver
         /// <param name="oscEvent">Osc event to send (incl. message and values).</param>
         public void SendMessage(OscEvent oscEvent)
         {
-            if (_oscDevice.DeviceType == eOSCDeviceType.OSCClient && _oscDevice.SendPort > -1)
+            if ((_oscDevice != null) && (_oscDevice.DeviceType == eOSCDeviceType.OSCClient) && (_oscDevice.SendPort > -1) )
             {
                 sendOscMessage(oscEvent.OscLabel, oscEvent.OscData, _oscDevice.IpAddress, _oscDevice.SendPort);
             }

@@ -208,6 +208,14 @@ namespace NuvoControl.Server.OscServer
 
                 _oscDriver.SendMessage(String.Format("/NuvoControl/ZoneStatus/{0}/1", zoneAddress.ObjectId), (newState.PowerStatus ? 1.0 : 0.0));
             }
+
+            if( _genericZoneId == zoneAddress.ObjectId )
+            {
+                string zoneBaseAdress = String.Format("/NuvoControl/Generic");
+                _oscDriver.SendMessage(String.Format("{0}/Status", zoneBaseAdress), (newState.PowerStatus ? 1.0 : 0.0));
+                _oscDriver.SendMessage(String.Format("{0}/Volume", zoneBaseAdress), newState.Volume);
+                _oscDriver.SendMessage(String.Format("{0}/SourceSelection/1/{1}", zoneBaseAdress, newState.Source.ObjectId), 1);
+            }
         }
 
         /// <summary>
@@ -252,7 +260,17 @@ namespace NuvoControl.Server.OscServer
         private void _oscDriver_onOscNuvoEventReceived(object sender, OscEventReceivedEventArgs e)
         {
             _log.Trace(m => m("OSCC.onOscNuvoEventReceived: Osc Device (with id {0}) osc event received: {1}", e.OscDevice, e.OscEvent.ToString()));
-            processOscNuvoEventAsServer(new Address(e.OscDeviceId, e.OscEvent.getZoneId), e.OscEvent);
+            if (e.OscEvent.OscLabel.Contains("/Generic"))
+            {
+                if ( _genericZoneId > -1 )
+                {
+                    processOscNuvoEventAsServer(new Address(e.OscDeviceId, _genericZoneId), e.OscEvent);
+                }
+            }
+            else
+            {
+                processOscNuvoEventAsServer(new Address(e.OscDeviceId, e.OscEvent.getZoneId), e.OscEvent);
+            }
         }
 
 
@@ -374,7 +392,6 @@ namespace NuvoControl.Server.OscServer
             // forward (debug) message to client
             _oscDriver.SendMessage("/NuvoControl/message", String.Format("Notify {0}: {1}", _oscDeviceId, oscEvent.ToString()));
 
-            bool bGeneric = false;
             if (oscEvent.OscLabel.Contains("/Generic"))
             {
                 if (oscEvent.OscLabel.Contains("/ZoneSelection"))
@@ -388,9 +405,12 @@ namespace NuvoControl.Server.OscServer
                         _genericZoneId = oscEvent.getZoneId;
                         _oscDriver.SendMessage(String.Format("/NuvoControl/Generic/ZoneName"), _zones[zoneAddress].Name);
                         _oscDriver.SendMessage("/NuvoControl/message", String.Format("Zone '{0}' selected", _zones[zoneAddress].Name));
+
+                        // update generic items with zone status of selected zone
+                        Address genericZoneAddress = new Address(zoneAddress.DeviceId,_genericZoneId);
+                        UpdateZoneStateOnOscClient(genericZoneAddress, _zoneStateList[genericZoneAddress]);
                     }
                 }
-                bGeneric = true;
             }
         }
 
