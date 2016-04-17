@@ -260,6 +260,7 @@ namespace NuvoControl.Server.OscServer
         private void _oscDriver_onOscNuvoEventReceived(object sender, OscEventReceivedEventArgs e)
         {
             _log.Trace(m => m("OSCC.onOscNuvoEventReceived: Osc Device (with id {0}) osc event received: {1}", e.OscDevice, e.OscEvent.ToString()));
+
             if (e.OscEvent.OscLabel.Contains("/Generic"))
             {
                 if ( _genericZoneId > -1 )

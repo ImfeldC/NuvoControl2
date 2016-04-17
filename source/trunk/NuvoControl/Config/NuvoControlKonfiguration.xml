@@ -2,10 +2,10 @@
 <!-- sAuthors: C. Imfeld, B. Limacher -->
 <!-- Date: 20-Feb-2016 -->
 <NuvoControl>
-  <Configuration Version="2.1">
+  <Configuration Version="2.2">
     
     <Hardware>
-      <Device Id="100">
+      <Device Id="100" Name="Laptop" >
         <ProtocolDriver Name="Nuvo Essentia Protokoll Driver" AssemblyName="NuvoControl.Server.ProtocolDriver" ClassName="NuvoControl.Server.ProtocolDriver.NuvoEssentiaProtocolDriver" />
         <Communication Port="COM1" BaudRate="9600" DataBits="8" ParityBit="1" ParityMode="None" />
         <AudioDevices>
@@ -14,7 +14,7 @@
           <AudioDevice Id="3" Player="mpg321" DeviceType="alsa" Device="hw:2,0" Name="(Reserve 2)" SourceId="100.4" />
         </AudioDevices>
         <OSCDevices>
-          <OSCServer Id="1" Name="Server1" IPAddress="0.0.0.0"  ListenPort="8000" SendPort="9000"></OSCServer>  
+          <OSCServer Id="1" Name="Laptop" IPAddress="0.0.0.0"  ListenPort="8000" SendPort="9000"></OSCServer>  
           <OSCClient Id="2" Name="Client1" IPAddress="192.168.1.126" SendPort="9000" />
           <OSCClient Id="3" Name="Client2" IPAddress="192.168.1.122" SendPort="9000">
             <Zones>
@@ -347,11 +347,14 @@
 
       -->
 
-      <OscEventFunction Id="505" OscDevice="100.1" OscEvent="SwitchOn" OscLabel="/4/toggle3">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.3" Volume="22" Id="505-1" />
+      <OscEventFunction Id="504" OscDevice="100.1" OscEvent="NuvoControl" OscLabel="/NuvoControl/Generic/Status" >
+        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"  Id="504-2" />
       </OscEventFunction>
-      <OscEventFunction Id="506" OscDevice="100.1" OscEvent="SwitchOff" OscLabel="/4/toggle3">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="OFF" SourceId="100.3" Volume="22" Id="506-1" />
+      <OscEventFunction Id="505" OscDevice="100.1" OscEvent="NuvoControl" OscLabel="/NuvoControl/Generic/Status" OscValue="1">
+        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"  Id="505-2" />
+      </OscEventFunction>
+      <OscEventFunction Id="506" OscDevice="100.1" OscEvent="NuvoControl" OscLabel="/NuvoControl/Generic/Status" OscValue="0">
+        <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"  Id="506-2" />
       </OscEventFunction>
       <OscEventFunction Id="507" OscDevice="100.1" OscEvent="SetValue" OscLabel="/1/fader1" OscValue="50">
         <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.3" Volume="22" Id="507-1" />

@@ -4,11 +4,21 @@ using System.Linq;
 using System.Text;
 using System.Diagnostics;
 using Common.Logging;
+using System.Net;
 
 namespace NuvoControl.Common
 {
     public class EnvironmentHelper
     {
+        /// <summary>
+        /// Returns the host name.
+        /// </summary>
+        /// <returns>Host name.</returns>
+        public static string getHostName()
+        {
+            return Dns.GetHostName();
+        }
+
         /// <summary>
         /// Returns a a string about the detected operating system.
         /// See http://mono.wikia.com/wiki/Detecting_the_execution_platform 

@@ -414,7 +414,7 @@ namespace NuvoControl.Server.HostConsole
             List<IZoneController> zoneControllers = new List<IZoneController>();
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
-                LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.ToString()));
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.Name));
                 foreach (Zone zone in device.ZoneList)
                 {
                     zoneControllers.Add(new ZoneController(new Address(device.Id, zone.Id.ObjectId), _protocolDrivers[device.Id]));
@@ -447,7 +447,7 @@ namespace NuvoControl.Server.HostConsole
             List<OscDeviceController> oscDeviceControllers = new List<OscDeviceController>();
             foreach (Device device in _configurationService.SystemConfiguration.Hardware.Devices)
             {
-                LogHelper.Log(LogLevel.Info, String.Format(">>>   device {0} loaded ...", device.ToString()));
+                LogHelper.Log(LogLevel.Info, String.Format(">>>   device '{0}' loaded ...", device.Name));
                 foreach (OSCDevice oscDevice in device.OscDevices)
                 {
                     oscDeviceControllers.Add(new OscDeviceController(new Address(device.Id, oscDevice.DeviceId.ObjectId), oscDevice, _protocolDrivers[device.Id], _oscDrivers[oscDevice.DeviceId.ObjectId], device.ZoneDict, device.Sources));
