@@ -349,6 +349,7 @@ namespace NuvoControl.Server.Dal
                 from device in _configuration.Root.Element("Configuration").Element("Hardware").Elements("Device")
                 select new Device(
                     (int)device.Attribute("Id"),
+                    (device.Attribute("Name") != null ? (string)device.Attribute("Name") : "(no name)"),
                     new Communication((string)device.Element("Communication").Attribute("Port"),
                         (int)device.Element("Communication").Attribute("BaudRate"),
                         (int)device.Element("Communication").Attribute("DataBits"),

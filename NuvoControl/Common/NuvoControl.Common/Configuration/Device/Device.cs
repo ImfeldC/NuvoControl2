@@ -41,6 +41,11 @@ namespace NuvoControl.Common.Configuration
         private int _id = SystemConfiguration.ID_UNDEFINED;
 
         /// <summary>
+        /// The name of the device.
+        /// </summary>
+        private string _name = "";
+
+        /// <summary>
         /// The communication parameters of the link to the device.
         /// </summary>
         Communication _communication = null;
@@ -78,14 +83,16 @@ namespace NuvoControl.Common.Configuration
         /// Constructor
         /// </summary>
         /// <param name="id">The id of the device.</param>
+        /// <param name="name">Name of the device.</param>
         /// <param name="communication">The communication parameters of the link to the device.</param>
         /// <param name="protocolDriver">The protocol driver to be used to communicate with the device.</param>
         /// <param name="zones">All zones of the device.</param>
         /// <param name="sources">All sources of the device.</param>
         /// <param name="audioDevices">All audio devices of the device.</param>
-        public Device(int id, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources, List<AudioDevice> audioDevices, List<OSCDevice> oscDevices)
+        public Device(int id, string name, Communication communication, Protocol protocolDriver, List<Zone> zones, List<Source> sources, List<AudioDevice> audioDevices, List<OSCDevice> oscDevices)
         {
             _id = id;
+            _name = name;
             _communication = communication;
             _protocolDriver = protocolDriver;
             foreach( Zone zone in zones)
@@ -107,6 +114,14 @@ namespace NuvoControl.Common.Configuration
         public int Id
         {
             get { return _id; }
+        }
+
+        /// <summary>
+        /// The name of the device.
+        /// </summary>
+        public string Name
+        {
+            get { return _name; }
         }
 
         /// <summary>
@@ -172,7 +187,7 @@ namespace NuvoControl.Common.Configuration
         {
             string strDevice = "";
 
-            strDevice += String.Format("Id={0} /", _id);
+            strDevice += String.Format("{0} [Id={1}] /", _name, _id);
             strDevice += String.Format("Communication=[{0}] /", _communication.ToString());
             strDevice += String.Format("Protocol Driver=[{0}] /", _protocolDriver.ToString());
 

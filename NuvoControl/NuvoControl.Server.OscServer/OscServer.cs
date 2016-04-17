@@ -14,6 +14,7 @@ using NuvoControl.Common;
 using NuvoControl.Common.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 
 
@@ -39,6 +40,11 @@ namespace NuvoControl.Server.OscServer
         private Dictionary<Address, OscDeviceController> _oscDeviceControllers = new Dictionary<Address, OscDeviceController>();
 
         /// <summary>
+        /// Private member to store last update of the osc devices
+        /// </summary>
+        private Dictionary<IPAddress, DateTime> _oscDeviceLastUpdate = new Dictionary<IPAddress, DateTime>();
+
+        /// <summary>
         /// Private member to hold the timer used to periodically update (blink) the server status LED
         /// </summary>
         private System.Timers.Timer _timerUpdateServerStatus = new System.Timers.Timer();
@@ -58,7 +64,9 @@ namespace NuvoControl.Server.OscServer
             foreach (OscDeviceController oscDeviceController in oscDeviceControllers)
             {
                 _oscDeviceControllers[oscDeviceController.OscDeviceId] = oscDeviceController;
+                _oscDeviceControllers[oscDeviceController.OscDeviceId].GetOscDriver().onOscEventReceived += OscServer_onOscEventReceived;
                 _oscDeviceControllers[oscDeviceController.OscDeviceId].GetOscDriver().onOscNuvoEventReceived += OscServer_onOscNuvoEventReceived;
+                _oscDeviceLastUpdate[oscDeviceController.OscDevice.IpAddress] = new DateTime(1970, 1, 1);    // set to a default time
             }
         }
 
@@ -112,7 +120,7 @@ namespace NuvoControl.Server.OscServer
             {
                 foreach (OscDeviceController oscDeviceController in _oscDeviceControllers.Values)
                 {
-                    //oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Server ping at {0}", DateTime.Now));
+                    oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/message", String.Format("Ping from {0} at {1}", EnvironmentHelper.getHostName(), DateTime.Now));
                     oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 0.25);
                     Thread.Sleep(500);
                     oscDeviceController.GetOscDriver().SendMessage("/NuvoControl/ServerStatus", 1.0);
@@ -124,7 +132,22 @@ namespace NuvoControl.Server.OscServer
 
 
 
-        private static int sMessagesReceivedCount = 0;
+        private static int sOscMessagesReceivedCount = 0;
+
+        /// <summary>
+        /// Event method, to receive osc messages from osc devices.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void OscServer_onOscEventReceived(object sender, ProtocolDriver.Interface.OscEventReceivedEventArgs e)
+        {
+            sOscMessagesReceivedCount++;
+            _log.Trace(m => m("OSCS: Device (id={0}) osc event ({1}) from {2}: {3}", e.OscDevice, sOscMessagesReceivedCount, e.SourceEndPoint, e.OscEvent.ToString()));
+            _oscDeviceLastUpdate[e.SourceEndPoint.Address] = DateTime.Now;
+        }
+
+
+        private static int sNuvoMessagesReceivedCount = 0;
 
         /// <summary>
         /// Event method, to receive nuvo control messages from osc devices.
@@ -134,8 +157,9 @@ namespace NuvoControl.Server.OscServer
         /// <param name="e"></param>
         void OscServer_onOscNuvoEventReceived(object sender, ProtocolDriver.Interface.OscEventReceivedEventArgs e)
         {
-            _log.Trace(m => m("OSCS.onOscNuvoEventReceived: Osc Device (with id {0}) osc event received from {1}: {2}", e.OscDevice, e.SourceEndPoint, e.OscEvent.ToString()));
-            sMessagesReceivedCount++;
+            sNuvoMessagesReceivedCount++;
+            _log.Trace(m => m("OSCS: Device (id={0}) nuvo control event ({1}) from {2}: {3}", e.OscDevice, sNuvoMessagesReceivedCount, e.SourceEndPoint, e.OscEvent.ToString()));
+            _oscDeviceLastUpdate[e.SourceEndPoint.Address] = DateTime.Now;
 
             bool bKnown = false;
             foreach (OscDeviceController oscDeviceController in _oscDeviceControllers.Values)
