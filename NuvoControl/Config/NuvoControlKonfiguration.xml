@@ -356,11 +356,23 @@
       <OscEventFunction Id="506" OscDevice="100.1" OscEvent="NuvoControl" OscLabel="/NuvoControl/Generic/Status" OscValue="0">
         <Command cmd="PlaySound" SourceId="100.6" onFunctionStart="True" url="http://stream.srg-ssr.ch/m/drs3/mp3_128"  Id="506-2" />
       </OscEventFunction>
-      <OscEventFunction Id="507" OscDevice="100.1" OscEvent="SetValue" OscLabel="/1/fader1" OscValue="50">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.3" Volume="22" Id="507-1" />
+      <OscEventFunction Id="507" OscDevice="100.1" OscEvent="NuvoControl" OscLabel="/NuvoControl/Generic/Function1" OscValue="1" >
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.1" Volume="22" Id="507-1" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="ON" SourceId="100.1" Id="507-1" />
       </OscEventFunction>
-      <OscEventFunction Id="508" OscDevice="100.1" OscEvent="SetValue" OscLabel="/1/fader1" OscValue="100">
-        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="ON" SourceId="100.3" Volume="22" Id="508-1" />
+      <OscEventFunction Id="508" OscDevice="100.1" OscEvent="NuvoControl" OscLabel="/NuvoControl/Generic/Function2" OscValue="1" >
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.1" PowerStatus="OFF" SourceId="100.1" Id="508-1" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.2" PowerStatus="OFF" SourceId="100.1" Id="508-2" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.3" PowerStatus="OFF" SourceId="100.1" Id="508-3" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.4" PowerStatus="OFF" SourceId="100.1" Id="508-4" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.5" PowerStatus="OFF" SourceId="100.1" Id="508-5" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.6" PowerStatus="OFF" SourceId="100.1" Id="508-6" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.7" PowerStatus="OFF" SourceId="100.1" Id="508-7" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.8" PowerStatus="OFF" SourceId="100.1" Id="508-8" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.9" PowerStatus="OFF" SourceId="100.1" Id="508-9" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.10" PowerStatus="OFF" SourceId="100.1" Id="508-10" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.11" PowerStatus="OFF" SourceId="100.1" Id="508-11" />
+        <Command cmd="SendNuvoCommand" onValidityStart="False" onFunctionStart="True" ZoneId="100.12" PowerStatus="OFF" SourceId="100.1" Id="508-12" />
       </OscEventFunction>
 
     </Functions>
