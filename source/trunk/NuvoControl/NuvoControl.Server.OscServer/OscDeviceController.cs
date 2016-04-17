@@ -378,6 +378,14 @@ namespace NuvoControl.Server.OscServer
                         // Trace error, received an unkown status
                     }
                 }
+                else if (oscEvent.OscLabel.Contains("/Bass"))
+                {
+                    _protocolDriver.CommandSetBassLevel(zoneAddress, oscEvent.getOscData);
+                }
+                else if (oscEvent.OscLabel.Contains("/Treble"))
+                {
+                    _protocolDriver.CommandSetTrebleLevel(zoneAddress, oscEvent.getOscData);
+                }
             }
         }
 
